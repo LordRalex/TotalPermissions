@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
@@ -13,9 +14,10 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public class PermissionGroup {
 
-    private String groupName;
-    private Map<String, Boolean> perms = new HashMap<String, Boolean>();
-    private List<PermissionGroup> inheritance = new ArrayList<PermissionGroup>();
+    private final String groupName;
+    private final Map<String, Boolean> perms = new HashMap<String, Boolean>();
+    private final List<PermissionGroup> inheritance = new ArrayList<PermissionGroup>();
+    private final Map<String, Object> options = new HashMap<String, Object>();
 
     public static PermissionGroup loadGroup(String name) {
         return new PermissionGroup(name);
@@ -23,7 +25,7 @@ public class PermissionGroup {
 
     public PermissionGroup(String name) {
         groupName = name;
-        ConfigurationSection groupSec = PermissionsAR.permFile.getConfigurationSection("groups." + name);
+        ConfigurationSection groupSec = PermissionsAR.permFile.getConfigurationSection("groups." + groupName);
         List<String> permList = groupSec.getStringList("permissions");
         for (String perm : permList) {
             if (perm.startsWith("-")) {
@@ -44,6 +46,11 @@ public class PermissionGroup {
                 }
             }
             inheritance.add(tempGroup);
+        }
+        ConfigurationSection optionSec = groupSec.getConfigurationSection("options");
+        Set<String> optionsList = optionSec.getKeys(true);
+        for (String option : optionsList) {
+            options.put(option, optionSec.get(option));
         }
     }
 
@@ -71,5 +78,15 @@ public class PermissionGroup {
             permList.add(perm);
         }
         return permList;
+    }
+    
+    public Object getOption(String key)
+    {
+        return options.get(key);
+    }
+    
+    public List<PermissionGroup> getInheritance()
+    {
+        return inheritance;
     }
 }

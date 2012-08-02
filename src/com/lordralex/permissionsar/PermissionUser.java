@@ -1,7 +1,7 @@
 package com.lordralex.permissionsar;
 
-import java.util.Map.Entry;
 import java.util.*;
+import java.util.Map.Entry;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
@@ -9,19 +9,30 @@ import org.bukkit.permissions.PermissionAttachment;
 /**
  * @version 1.0
  * @author Joshua
+ * @since 1.0
  */
 public class PermissionUser {
 
-    private String playerName;
-    private Map<String, Boolean> perms = new HashMap<String, Boolean>();
-    private List<PermissionGroup> groups = new ArrayList<PermissionGroup>();
+    private final String playerName;
+    private final Map<String, Boolean> perms = new HashMap<String, Boolean>();
+    private final List<PermissionGroup> groups = new ArrayList<PermissionGroup>();
+    private final Map<String, Object> options = new HashMap<String, Object>();
 
+    /**
+     * Gets a permission user
+     *
+     * @param name Name of player to get
+     * @return The PermissionUser for that player
+     */
     public static PermissionUser loadUser(String name) {
         return new PermissionUser(name);
     }
 
     public PermissionUser(String name) {
         playerName = name;
+        perms.clear();
+        groups.clear();
+        options.clear();
         ConfigurationSection userSec = PermissionsAR.permFile.getConfigurationSection("users." + name);
         List<String> permList = userSec.getStringList("permissions");
         for (String perm : permList) {
@@ -43,6 +54,11 @@ public class PermissionUser {
                 }
             }
             groups.add(group);
+        }
+        ConfigurationSection optionSec = userSec.getConfigurationSection("options");
+        Set<String> optionsList = optionSec.getKeys(true);
+        for (String option : optionsList) {
+            options.put(option, optionSec.get(option));
         }
     }
 
@@ -77,13 +93,15 @@ public class PermissionUser {
         return permList;
     }
 
-    public PermissionGroup[] getGroups()
-    {
+    public PermissionGroup[] getGroups() {
         return groups.toArray(new PermissionGroup[0]);
     }
 
-    public String getName()
-    {
+    public String getName() {
         return playerName;
+    }
+
+    public Object getOption(String path) {
+        return options.get(path);
     }
 }

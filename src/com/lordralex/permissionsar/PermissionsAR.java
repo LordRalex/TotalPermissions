@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.lordralex.permissionsar;
 
 import java.io.File;
@@ -28,24 +24,22 @@ public class PermissionsAR extends JavaPlugin {
     public void onLoad() {
         try {
             log.info("[PAR] Beginning initial preperations");
-            if(!getDataFolder().exists())
+            if (!getDataFolder().exists()) {
                 getDataFolder().mkdirs();
-            if(!(new File(getDataFolder(), "config.yml").exists()))
+            }
+            if (!(new File(getDataFolder(), "config.yml").exists())) {
                 this.saveResource("config.yml", true);
-            if(!(new File(getDataFolder(), "permissions.yml").exists()))
+            }
+            if (!(new File(getDataFolder(), "permissions.yml").exists())) {
                 this.saveResource("permissions.yml", true);
+            }
             configFile = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "config.yml"));
             permFile = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "permissions.yml"));
             log.info("[PAR] Initial preperations complete");
-        }
-        catch (Exception e)
-        {
-            if(e instanceof InvalidConfigurationException)
-            {
+        } catch (Exception e) {
+            if (e instanceof InvalidConfigurationException) {
                 log.log(Level.SEVERE, "[PAR] YAML error in your file", e);
-            }
-            else
-            {
+            } else {
                 log.log(Level.SEVERE, "Error in starting up PermissionsAR (Version " + this.getDescription().getVersion() + ")", e);
             }
             this.getPluginLoader().disablePlugin(this);
@@ -61,8 +55,7 @@ public class PermissionsAR extends JavaPlugin {
     public void onDisable() {
     }
 
-    public static PermissionManager getManager()
-    {
+    public static PermissionManager getManager() {
         return manager;
     }
 }
