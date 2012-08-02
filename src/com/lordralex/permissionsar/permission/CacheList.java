@@ -1,8 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.lordralex.permissionsar;
+package com.lordralex.permissionsar.permission;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -12,7 +8,7 @@ import java.util.logging.Logger;
  *
  * @author Joshua
  */
-public final class CacheList<T> extends ArrayList {
+public class CacheList<T> extends ArrayList {
 
     Class stored;
 
@@ -44,12 +40,6 @@ public final class CacheList<T> extends ArrayList {
             Logger.getLogger(CacheList.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
-    }
-
-    public void update() {
-    }
-
-    public void update(String name) {
     }
 
     public boolean remove(String name) {

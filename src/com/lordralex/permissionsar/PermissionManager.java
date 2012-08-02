@@ -1,12 +1,14 @@
 package com.lordralex.permissionsar;
 
+import com.lordralex.permissionsar.permission.PermissionGroup;
+import com.lordralex.permissionsar.permission.PermissionUser;
 import org.bukkit.entity.Player;
 
 /**
  * @version 1.0
  * @author Joshua
  */
-public class PermissionManager {
+public final class PermissionManager {
 
     private static PermissionsAR plugin;
 
@@ -15,22 +17,22 @@ public class PermissionManager {
         plugin = aP;
     }
 
-    public static PermissionUser getUser(String player)
+    public PermissionUser getUser(String player)
     {
         return PermissionUser.loadUser(player);
     }
 
-    public static PermissionUser getUser(Player player)
+    public PermissionUser getUser(Player player)
     {
         return getUser(player.getName());
     }
 
-    public static PermissionsAR getPlugin()
+    public PermissionsAR getPlugin()
     {
         return plugin;
     }
 
-    public static PermissionGroup getGroup(String name)
+    public PermissionGroup getGroup(String name)
     {
         return PermissionGroup.loadGroup(name);
     }

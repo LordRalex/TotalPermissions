@@ -1,5 +1,10 @@
-package com.lordralex.permissionsar;
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.lordralex.permissionsar.permission;
 
+import com.lordralex.permissionsar.PermissionsAR;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +14,7 @@ import java.util.Set;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
- * @version 1.0
+ *
  * @author Joshua
  */
 public class PermissionGroup {
@@ -30,7 +35,7 @@ public class PermissionGroup {
 
     public PermissionGroup(String name) {
         groupName = name;
-        ConfigurationSection groupSec = PermissionsAR.permFile.getConfigurationSection("groups." + groupName);
+        ConfigurationSection groupSec = PermissionsAR.getPermFile().getConfigurationSection("groups." + groupName);
         List<String> permList = groupSec.getStringList("permissions");
         for (String perm : permList) {
             if (perm.startsWith("-")) {

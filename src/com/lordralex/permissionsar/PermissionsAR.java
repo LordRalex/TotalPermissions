@@ -13,12 +13,12 @@ import org.bukkit.plugin.java.JavaPlugin;
  *
  * @author Joshua
  */
-public class PermissionsAR extends JavaPlugin {
+public final class PermissionsAR extends JavaPlugin {
 
-    static FileConfiguration permFile;
-    static FileConfiguration configFile;
+    private static FileConfiguration permFile;
+    private static FileConfiguration configFile;
     public static final Logger log = Bukkit.getLogger();
-    static PermissionManager manager;
+    private static PermissionManager manager;
 
     @Override
     public void onLoad() {
@@ -57,5 +57,13 @@ public class PermissionsAR extends JavaPlugin {
 
     public static PermissionManager getManager() {
         return manager;
+    }
+
+    public static FileConfiguration getPermFile() {
+        return permFile;
+    }
+
+    public static FileConfiguration getConfigFile() {
+        return configFile;
     }
 }

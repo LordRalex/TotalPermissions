@@ -1,23 +1,32 @@
-package com.lordralex.permissionsar;
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.lordralex.permissionsar.permission;
 
-import java.util.*;
+import com.lordralex.permissionsar.PermissionsAR;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
 
 /**
- * @version 1.0
+ *
  * @author Joshua
- * @since 1.0
  */
 public class PermissionUser {
-
+    
     private final static CacheList<PermissionUser> userCache = new CacheList(PermissionUser.class);
     private final String playerName;
     private final Map<String, Boolean> perms = new HashMap<String, Boolean>();
     private final List<PermissionGroup> groups = new ArrayList<PermissionGroup>();
     private final Map<String, Object> options = new HashMap<String, Object>();
+    private PermissionAttachment attachment;
 
     /**
      * Gets a permission user
@@ -38,7 +47,7 @@ public class PermissionUser {
         perms.clear();
         groups.clear();
         options.clear();
-        ConfigurationSection userSec = PermissionsAR.permFile.getConfigurationSection("users." + name);
+        ConfigurationSection userSec = PermissionsAR.getPermFile().getConfigurationSection("users." + name);
         List<String> permList = userSec.getStringList("permissions");
         for (String perm : permList) {
             if (perm.startsWith("-")) {
@@ -49,7 +58,7 @@ public class PermissionUser {
         }
         List<String> groupsList = userSec.getStringList("group");
         for (String groupName : groupsList) {
-            PermissionGroup group = PermissionManager.getGroup(groupName);
+            PermissionGroup group = PermissionsAR.getManager().getGroup(groupName);
             List<String> groupPerms = group.getPerms();
             for (String perm : groupPerms) {
                 if (perm.startsWith("-")) {
@@ -80,10 +89,10 @@ public class PermissionUser {
                 }
             }
         }
-        PermissionAttachment att = player.addAttachment(PermissionManager.getPlugin());
+        attachment = player.addAttachment(PermissionsAR.getManager().getPlugin());
         Set<Entry<String, Boolean>> entries = perms.entrySet();
         for (Entry entry : entries) {
-            att.setPermission((String) entry.getKey(), ((Boolean) entry.getValue()).booleanValue());
+            attachment.setPermission((String) entry.getKey(), ((Boolean) entry.getValue()).booleanValue());
         }
     }
 
@@ -118,4 +127,9 @@ public class PermissionUser {
         }
         return false;
     }
+    
+    public PermissionAttachment getAtt()
+    {
+        return attachment;
+    }        
 }
