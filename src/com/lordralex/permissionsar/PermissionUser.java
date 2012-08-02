@@ -13,6 +13,7 @@ import org.bukkit.permissions.PermissionAttachment;
  */
 public class PermissionUser {
 
+    private final static CacheList<PermissionUser> userCache = new CacheList(PermissionUser.class);
     private final String playerName;
     private final Map<String, Boolean> perms = new HashMap<String, Boolean>();
     private final List<PermissionGroup> groups = new ArrayList<PermissionGroup>();
@@ -25,6 +26,10 @@ public class PermissionUser {
      * @return The PermissionUser for that player
      */
     public static PermissionUser loadUser(String name) {
+        PermissionUser user = userCache.get(name);
+        if (user != null) {
+            return user;
+        }
         return new PermissionUser(name);
     }
 
@@ -60,6 +65,8 @@ public class PermissionUser {
         for (String option : optionsList) {
             options.put(option, optionSec.get(option));
         }
+        userCache.remove(playerName);
+        userCache.add(this);
     }
 
     public void setPerms(Player player) {
@@ -103,5 +110,12 @@ public class PermissionUser {
 
     public Object getOption(String path) {
         return options.get(path);
+    }
+
+    public boolean equals(PermissionUser anotherUser) {
+        if (anotherUser.getName().equalsIgnoreCase(this.playerName)) {
+            return true;
+        }
+        return false;
     }
 }

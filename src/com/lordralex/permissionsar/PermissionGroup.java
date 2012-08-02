@@ -14,12 +14,17 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public class PermissionGroup {
 
+    private final static CacheList<PermissionGroup> groupCache = new CacheList(PermissionGroup.class);
     private final String groupName;
     private final Map<String, Boolean> perms = new HashMap<String, Boolean>();
     private final List<PermissionGroup> inheritance = new ArrayList<PermissionGroup>();
     private final Map<String, Object> options = new HashMap<String, Object>();
 
     public static PermissionGroup loadGroup(String name) {
+        PermissionGroup user = groupCache.get(name);
+        if (user != null) {
+            return user;
+        }
         return new PermissionGroup(name);
     }
 
@@ -52,6 +57,8 @@ public class PermissionGroup {
         for (String option : optionsList) {
             options.put(option, optionSec.get(option));
         }
+        groupCache.remove(groupName);
+        groupCache.add(this);
     }
 
     public void setPerms(String group) {
@@ -79,14 +86,23 @@ public class PermissionGroup {
         }
         return permList;
     }
-    
-    public Object getOption(String key)
-    {
+
+    public Object getOption(String key) {
         return options.get(key);
     }
-    
-    public List<PermissionGroup> getInheritance()
-    {
+
+    public List<PermissionGroup> getInheritance() {
         return inheritance;
+    }
+
+    public String getName() {
+        return groupName;
+    }
+
+    public boolean equals(PermissionGroup group) {
+        if (group.getName().equalsIgnoreCase(this.groupName)) {
+            return true;
+        }
+        return false;
     }
 }
