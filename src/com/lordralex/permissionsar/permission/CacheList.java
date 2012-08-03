@@ -1,5 +1,6 @@
 package com.lordralex.permissionsar.permission;
 
+import com.lordralex.permissionsar.PermissionsAR;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,9 +51,9 @@ public class CacheList<T> extends ArrayList {
                 }
             }
         } catch (InstantiationException ex) {
-            Logger.getLogger(CacheList.class.getName()).log(Level.SEVERE, null, ex);
+            PermissionsAR.log.log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            Logger.getLogger(CacheList.class.getName()).log(Level.SEVERE, null, ex);
+            PermissionsAR.log.log(Level.SEVERE, null, ex);
         }
         return null;
     }
