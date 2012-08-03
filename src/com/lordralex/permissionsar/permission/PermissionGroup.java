@@ -85,27 +85,10 @@ public class PermissionGroup {
     }
 
     /**
+     * Gets a list of the permissions for this group, including those that are
+     * inherited. A '-' is added in front of negative nodes.
      *
-     * @param group
-     *
-     * @since 1.0
-     */
-    public void setPerms(String group) {
-        if (perms == null) {
-            List<String> permList = new PermissionGroup(group).getPerms();
-            for (String perm : permList) {
-                if (perm.startsWith("-")) {
-                    perms.put(perm, Boolean.FALSE);
-                } else {
-                    perms.put(perm, Boolean.TRUE);
-                }
-            }
-        }
-    }
-
-    /**
-     *
-     * @return
+     * @return List of permissions with - in front of negative nodes
      *
      * @since 1.0
      */
@@ -123,9 +106,11 @@ public class PermissionGroup {
     }
 
     /**
+     * Gets an option for the group. This is what is stored in the options:
+     * section of the permissions in the groups
      *
-     * @param key
-     * @return
+     * @param key Path to option
+     * @return Value of that option, or null if no option
      *
      * @since 1.0
      */
@@ -134,8 +119,9 @@ public class PermissionGroup {
     }
 
     /**
+     * Gets this group's inherited groups.
      *
-     * @return
+     * @return List of groups this inherits from
      *
      * @since 1.0
      */
@@ -144,8 +130,9 @@ public class PermissionGroup {
     }
 
     /**
+     * Get the name of this group.
      *
-     * @return
+     * @return Name of group
      *
      * @since 1.0
      */
@@ -154,9 +141,11 @@ public class PermissionGroup {
     }
 
     /**
+     * Compares the name of the parameter with that of the group. If they match,
+     * this will return true.
      *
-     * @param group
-     * @return
+     * @param group Name of another group
+     * @return True if names match, false otherwise
      *
      * @since 1.0
      */

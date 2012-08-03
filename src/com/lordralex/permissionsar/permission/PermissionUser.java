@@ -30,10 +30,11 @@ public class PermissionUser {
     private PermissionAttachment attachment;
 
     /**
-     * Gets a permission user
+     * Returns the PermissionUser with that name. This can refer to the cache if
+     * needed.
      *
-     * @param name Name of player to get
-     * @return The PermissionUser for that player
+     * @param name Name of the group.
+     * @return The PermissionUser to load
      *
      * @since 1.0
      */
@@ -46,8 +47,10 @@ public class PermissionUser {
     }
 
     /**
+     * Creates a new PermissionUser with the given name. This will load all the
+     * values and then save it to the cache.
      *
-     * @param name
+     * @param name The name of the user
      *
      * @since 1.0
      */
@@ -88,8 +91,12 @@ public class PermissionUser {
     }
 
     /**
+     * Adds the permissions for this PermissionUser to the given Player. If the
+     * PermissionUser is not defined or has no permissions, this will create a
+     * new instance of the PermissionUser and give those permissions to the
+     * player
      *
-     * @param player
+     * @param player Player to add the permissions to
      *
      * @since 1.0
      */
@@ -112,8 +119,10 @@ public class PermissionUser {
     }
 
     /**
+     * Gets a list of the permissions for this user, including those that are
+     * inherited. A '-' is added in front of negative nodes.
      *
-     * @return
+     * @return List of permissions with - in front of negative nodes
      *
      * @since 1.0
      */
@@ -131,18 +140,18 @@ public class PermissionUser {
     }
 
     /**
+     * Returns all the groups this user is in.
      *
-     * @return
-     *
-     * @since 1.0
+     * @return Groups this user is in
      */
     public PermissionGroup[] getGroups() {
         return groups.toArray(new PermissionGroup[0]);
     }
 
     /**
+     * Get the name of this user.
      *
-     * @return
+     * @return Name of user
      *
      * @since 1.0
      */
@@ -151,9 +160,11 @@ public class PermissionUser {
     }
 
     /**
+     * Gets an option for the user. This is what is stored in the options:
+     * section of the permissions in the user
      *
-     * @param path
-     * @return
+     * @param key Path to option
+     * @return Value of that option, or null if no option
      *
      * @since 1.0
      */
@@ -162,9 +173,11 @@ public class PermissionUser {
     }
 
     /**
+     * Compares the name of the parameter with that of the user. If they match,
+     * this will return true.
      *
-     * @param anotherUser
-     * @return
+     * @param anotherUser Name of another user
+     * @return True if names match, false otherwise
      *
      * @since 1.0
      */
@@ -176,10 +189,10 @@ public class PermissionUser {
     }
 
     /**
+     * Returns the {@link org.bukkit.permissions.PermissionAttachment}
+     * associated with this user.
      *
-     * @return
-     *
-     * @since 1.0
+     * @return PermissionAttachment for user
      */
     public PermissionAttachment getAtt() {
         return attachment;
