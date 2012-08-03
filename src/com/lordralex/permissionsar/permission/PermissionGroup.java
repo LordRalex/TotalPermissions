@@ -25,6 +25,10 @@ public class PermissionGroup {
     private final Map<String, Boolean> perms = new HashMap<String, Boolean>();
     private final List<PermissionGroup> inheritance = new ArrayList<PermissionGroup>();
     private final Map<String, Object> options = new HashMap<String, Object>();
+    
+    public PermissionGroup(){
+        groupName = "";
+    }
 
     /**
      * Returns the PermissionGroup with that name. This can refer to the cache

@@ -28,6 +28,10 @@ public class PermissionUser {
     private final List<PermissionGroup> groups = new ArrayList<PermissionGroup>();
     private final Map<String, Object> options = new HashMap<String, Object>();
     private PermissionAttachment attachment;
+    
+    public PermissionUser(){
+        playerName = "";
+    }
 
     /**
      * Returns the PermissionUser with that name. This can refer to the cache if
