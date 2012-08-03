@@ -14,8 +14,9 @@ import java.util.Set;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
- *
+ * @version 1.0
  * @author Joshua
+ * @since 1.0
  */
 public class PermissionGroup {
 
@@ -25,6 +26,15 @@ public class PermissionGroup {
     private final List<PermissionGroup> inheritance = new ArrayList<PermissionGroup>();
     private final Map<String, Object> options = new HashMap<String, Object>();
 
+    /**
+     * Returns the PermissionGroup with that name. This can refer to the cache
+     * if needed.
+     *
+     * @param name Name of the group.
+     * @return The PermissionGroup to load
+     *
+     * @since 1.0
+     */
     public static PermissionGroup loadGroup(String name) {
         PermissionGroup user = groupCache.get(name);
         if (user != null) {
@@ -33,6 +43,14 @@ public class PermissionGroup {
         return new PermissionGroup(name);
     }
 
+    /**
+     * Creates a new PermissionGroup with the given name. This will load all the
+     * values and then save it to the cache.
+     *
+     * @param name The name of the group
+     *
+     * @since 1.0
+     */
     public PermissionGroup(String name) {
         groupName = name;
         ConfigurationSection groupSec = PermissionsAR.getPermFile().getConfigurationSection("groups." + groupName);
@@ -66,6 +84,12 @@ public class PermissionGroup {
         groupCache.add(this);
     }
 
+    /**
+     *
+     * @param group
+     *
+     * @since 1.0
+     */
     public void setPerms(String group) {
         if (perms == null) {
             List<String> permList = new PermissionGroup(group).getPerms();
@@ -79,6 +103,12 @@ public class PermissionGroup {
         }
     }
 
+    /**
+     *
+     * @return
+     *
+     * @since 1.0
+     */
     public List<String> getPerms() {
         List<String> permList = new ArrayList<String>();
         Entry[] permKeys = perms.entrySet().toArray(new Entry[0]);
@@ -92,18 +122,44 @@ public class PermissionGroup {
         return permList;
     }
 
+    /**
+     *
+     * @param key
+     * @return
+     *
+     * @since 1.0
+     */
     public Object getOption(String key) {
         return options.get(key);
     }
 
+    /**
+     *
+     * @return
+     *
+     * @since 1.0
+     */
     public List<PermissionGroup> getInheritance() {
         return inheritance;
     }
 
+    /**
+     *
+     * @return
+     *
+     * @since 1.0
+     */
     public String getName() {
         return groupName;
     }
 
+    /**
+     *
+     * @param group
+     * @return
+     *
+     * @since 1.0
+     */
     public boolean equals(PermissionGroup group) {
         if (group.getName().equalsIgnoreCase(this.groupName)) {
             return true;

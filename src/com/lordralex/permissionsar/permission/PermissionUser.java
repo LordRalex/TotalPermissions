@@ -16,11 +16,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
 
 /**
- *
+ * @version 1.0
  * @author Joshua
+ * @since 1.0
  */
 public class PermissionUser {
-    
+
     private final static CacheList<PermissionUser> userCache = new CacheList(PermissionUser.class);
     private final String playerName;
     private final Map<String, Boolean> perms = new HashMap<String, Boolean>();
@@ -33,6 +34,8 @@ public class PermissionUser {
      *
      * @param name Name of player to get
      * @return The PermissionUser for that player
+     *
+     * @since 1.0
      */
     public static PermissionUser loadUser(String name) {
         PermissionUser user = userCache.get(name);
@@ -42,6 +45,12 @@ public class PermissionUser {
         return new PermissionUser(name);
     }
 
+    /**
+     *
+     * @param name
+     *
+     * @since 1.0
+     */
     public PermissionUser(String name) {
         playerName = name;
         perms.clear();
@@ -78,6 +87,12 @@ public class PermissionUser {
         userCache.add(this);
     }
 
+    /**
+     *
+     * @param player
+     *
+     * @since 1.0
+     */
     public void setPerms(Player player) {
         if (perms == null) {
             List<String> permList = new PermissionUser(player.getName()).getPerms();
@@ -96,6 +111,12 @@ public class PermissionUser {
         }
     }
 
+    /**
+     *
+     * @return
+     *
+     * @since 1.0
+     */
     public List<String> getPerms() {
         List<String> permList = new ArrayList<String>();
         Entry[] permKeys = perms.entrySet().toArray(new Entry[0]);
@@ -109,27 +130,58 @@ public class PermissionUser {
         return permList;
     }
 
+    /**
+     *
+     * @return
+     *
+     * @since 1.0
+     */
     public PermissionGroup[] getGroups() {
         return groups.toArray(new PermissionGroup[0]);
     }
 
+    /**
+     *
+     * @return
+     *
+     * @since 1.0
+     */
     public String getName() {
         return playerName;
     }
 
+    /**
+     *
+     * @param path
+     * @return
+     *
+     * @since 1.0
+     */
     public Object getOption(String path) {
         return options.get(path);
     }
 
+    /**
+     *
+     * @param anotherUser
+     * @return
+     *
+     * @since 1.0
+     */
     public boolean equals(PermissionUser anotherUser) {
         if (anotherUser.getName().equalsIgnoreCase(this.playerName)) {
             return true;
         }
         return false;
     }
-    
-    public PermissionAttachment getAtt()
-    {
+
+    /**
+     *
+     * @return
+     *
+     * @since 1.0
+     */
+    public PermissionAttachment getAtt() {
         return attachment;
-    }        
+    }
 }

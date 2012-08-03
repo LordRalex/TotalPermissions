@@ -10,8 +10,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- *
+ * @version 1.0
  * @author Joshua
+ * @since 1.0
  */
 public final class PermissionsAR extends JavaPlugin {
 
@@ -55,14 +56,37 @@ public final class PermissionsAR extends JavaPlugin {
     public void onDisable() {
     }
 
+    /**
+     * Gets the {@link PermissionManager} for this plugin.
+     *
+     * @return The {@link PermissionManager} that this is using
+     *
+     * @since 1.0
+     */
     public static PermissionManager getManager() {
         return manager;
     }
 
+    /**
+     * Gets the permissions file. This does not load the file, this only
+     * provides the stored object.
+     *
+     * @return The perm file in the FileConfiguration form.
+     *
+     * @since 1.0
+     */
     public static FileConfiguration getPermFile() {
         return permFile;
     }
 
+    /**
+     * Gets the configuration file. This does not load the file, this only
+     * provides the stored object.
+     *
+     * @return The configuration file in the FileConfiguration form.
+     *
+     * @since 1.0
+     */
     public static FileConfiguration getConfigFile() {
         return configFile;
     }
