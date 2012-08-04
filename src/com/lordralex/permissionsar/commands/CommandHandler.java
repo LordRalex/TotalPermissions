@@ -1,5 +1,7 @@
 package com.lordralex.permissionsar.commands;
 
+import com.lordralex.permissionsar.Configuration;
+import com.lordralex.permissionsar.PermissionsAR;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -10,6 +12,9 @@ import org.bukkit.command.CommandSender;
  * @since 1.0
  */
 public class CommandHandler implements CommandExecutor {
+    
+    public static PermissionsAR plugin;
+    public static Configuration config;
 
     public boolean onCommand(CommandSender cs, Command cmnd, String string, String[] args) {
         //TODO: 
