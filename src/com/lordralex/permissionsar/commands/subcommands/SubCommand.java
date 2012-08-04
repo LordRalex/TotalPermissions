@@ -30,4 +30,11 @@ public abstract class SubCommand {
      * Executes the command. Only the args and sender are needed.
      */
     public abstract void execute(CommandSender sender, String[] args);
+    
+    /**
+     * Returns the permission to use this command.
+     * 
+     * @return The permission 
+     */
+    public abstract String getPerm();
 }
