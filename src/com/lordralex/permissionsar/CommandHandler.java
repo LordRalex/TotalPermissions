@@ -4,8 +4,7 @@ package com.lordralex.permissionsar;
 // Decided I liked the other idea better. I just commented this in case we want to steal a couple of methods.
 
 /**
- * 
- * @depracated
+ * @deprecated Use the CommandHandler and abstract class
  */
 public class CommandHandler {
     
