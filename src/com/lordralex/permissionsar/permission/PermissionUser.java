@@ -116,7 +116,7 @@ public class PermissionUser {
                 }
             }
         }
-        attachment = player.addAttachment(PermissionsAR.getManager().getPlugin());
+        attachment = player.addAttachment(PermissionsAR.getPlugin());
         Set<Entry<String, Boolean>> entries = perms.entrySet();
         for (Entry entry : entries) {
             attachment.setPermission((String) entry.getKey(), ((Boolean) entry.getValue()).booleanValue());

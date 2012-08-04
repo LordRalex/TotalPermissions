@@ -1,5 +1,6 @@
 package com.lordralex.permissionsar;
 
+import com.lordralex.permissionsar.configuration.Configuration;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,9 +21,12 @@ public final class PermissionsAR extends JavaPlugin {
     private static FileConfiguration configFile;
     public static final Logger log = Bukkit.getLogger();
     private static PermissionManager manager;
+    private static PermissionsAR instance;
+    private static Configuration config;
 
     @Override
     public void onLoad() {
+        instance = this;
         try {
             log.info("[PAR] Beginning initial preperations");
             if (!getDataFolder().exists()) {
@@ -36,6 +40,7 @@ public final class PermissionsAR extends JavaPlugin {
             }
             configFile = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "config.yml"));
             permFile = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "permissions.yml"));
+            config = new Configuration();
             log.info("[PAR] Initial preperations complete");
         } catch (Exception e) {
             if (e instanceof InvalidConfigurationException) {
@@ -49,7 +54,7 @@ public final class PermissionsAR extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        manager = new PermissionManager(this);
+        manager = new PermissionManager();
     }
 
     @Override
@@ -89,5 +94,14 @@ public final class PermissionsAR extends JavaPlugin {
      */
     public static FileConfiguration getConfigFile() {
         return configFile;
+    }
+
+    /**
+     * Gets the instance of the plugin.
+     *
+     * @return Instance of the plugin
+     */
+    public static PermissionsAR getPlugin() {
+        return instance;
     }
 }
