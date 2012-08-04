@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
@@ -28,8 +29,8 @@ public class PermissionUser {
     private final List<PermissionGroup> groups = new ArrayList<PermissionGroup>();
     private final Map<String, Object> options = new HashMap<String, Object>();
     private PermissionAttachment attachment;
-    
-    public PermissionUser(){
+
+    public PermissionUser() {
         playerName = "";
     }
 
@@ -200,5 +201,28 @@ public class PermissionUser {
      */
     public PermissionAttachment getAtt() {
         return attachment;
+    }
+
+    /**
+     * Add a permission node to the user. This will also add the perm to the
+     * player if they are online. This will apply for adding negative nodes too.
+     *
+     * @param perm Perm to add to this user
+     */
+    public void addPerm(String perm) {
+        if (perm.startsWith("-")) {
+            perm = perm.substring(1);
+            perms.put(perm, Boolean.FALSE);
+            Player player = Bukkit.getPlayerExact(playerName);
+            if (player != null) {
+                attachment.setPermission(perm, false);
+            }
+        } else {
+            perms.put(perm, Boolean.TRUE);
+            Player player = Bukkit.getPlayerExact(playerName);
+            if (player != null) {
+                attachment.setPermission(perm, false);
+            }
+        }
     }
 }

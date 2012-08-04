@@ -25,8 +25,8 @@ public class PermissionGroup {
     private final Map<String, Boolean> perms = new HashMap<String, Boolean>();
     private final List<PermissionGroup> inheritance = new ArrayList<PermissionGroup>();
     private final Map<String, Object> options = new HashMap<String, Object>();
-    
-    public PermissionGroup(){
+
+    public PermissionGroup() {
         groupName = "";
     }
 
@@ -158,5 +158,14 @@ public class PermissionGroup {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Add a permission node to the group. This will apply for adding negative
+     * nodes too.
+     *
+     * @param perm Perm to add to this user
+     */
+    public void addPerm(String perm) {
     }
 }
