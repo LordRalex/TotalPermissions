@@ -14,8 +14,9 @@ import java.util.Set;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
- *
+ * @version 1.0
  * @author Joshua
+ * @since 1.0
  */
 public class PermissionGroup {
 
@@ -25,6 +26,19 @@ public class PermissionGroup {
     private final List<PermissionGroup> inheritance = new ArrayList<PermissionGroup>();
     private final Map<String, Object> options = new HashMap<String, Object>();
 
+    public PermissionGroup() {
+        groupName = "";
+    }
+
+    /**
+     * Returns the PermissionGroup with that name. This can refer to the cache
+     * if needed.
+     *
+     * @param name Name of the group.
+     * @return The PermissionGroup to load
+     *
+     * @since 1.0
+     */
     public static PermissionGroup loadGroup(String name) {
         PermissionGroup user = groupCache.get(name);
         if (user != null) {
@@ -33,6 +47,14 @@ public class PermissionGroup {
         return new PermissionGroup(name);
     }
 
+    /**
+     * Creates a new PermissionGroup with the given name. This will load all the
+     * values and then save it to the cache.
+     *
+     * @param name The name of the group
+     *
+     * @since 1.0
+     */
     public PermissionGroup(String name) {
         groupName = name;
         ConfigurationSection groupSec = PermissionsAR.getPermFile().getConfigurationSection("groups." + groupName);
@@ -66,19 +88,14 @@ public class PermissionGroup {
         groupCache.add(this);
     }
 
-    public void setPerms(String group) {
-        if (perms == null) {
-            List<String> permList = new PermissionGroup(group).getPerms();
-            for (String perm : permList) {
-                if (perm.startsWith("-")) {
-                    perms.put(perm, Boolean.FALSE);
-                } else {
-                    perms.put(perm, Boolean.TRUE);
-                }
-            }
-        }
-    }
-
+    /**
+     * Gets a list of the permissions for this group, including those that are
+     * inherited. A '-' is added in front of negative nodes.
+     *
+     * @return List of permissions with - in front of negative nodes
+     *
+     * @since 1.0
+     */
     public List<String> getPerms() {
         List<String> permList = new ArrayList<String>();
         Entry[] permKeys = perms.entrySet().toArray(new Entry[0]);
@@ -92,22 +109,63 @@ public class PermissionGroup {
         return permList;
     }
 
+    /**
+     * Gets an option for the group. This is what is stored in the options:
+     * section of the permissions in the groups
+     *
+     * @param key Path to option
+     * @return Value of that option, or null if no option
+     *
+     * @since 1.0
+     */
     public Object getOption(String key) {
         return options.get(key);
     }
 
+    /**
+     * Gets this group's inherited groups.
+     *
+     * @return List of groups this inherits from
+     *
+     * @since 1.0
+     */
     public List<PermissionGroup> getInheritance() {
         return inheritance;
     }
 
+    /**
+     * Get the name of this group.
+     *
+     * @return Name of group
+     *
+     * @since 1.0
+     */
     public String getName() {
         return groupName;
     }
 
+    /**
+     * Compares the name of the parameter with that of the group. If they match,
+     * this will return true.
+     *
+     * @param group Name of another group
+     * @return True if names match, false otherwise
+     *
+     * @since 1.0
+     */
     public boolean equals(PermissionGroup group) {
         if (group.getName().equalsIgnoreCase(this.groupName)) {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Add a permission node to the group. This will apply for adding negative
+     * nodes too.
+     *
+     * @param perm Perm to add to this user
+     */
+    public void addPerm(String perm) {
     }
 }
