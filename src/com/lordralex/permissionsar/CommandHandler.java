@@ -1,5 +1,18 @@
 package com.lordralex.permissionsar;
-import java.util.List;
+
+
+// Decided I liked the other idea better. I just commented this in case we want to steal a couple of methods.
+
+/**
+ * 
+ * @depracated
+ */
+public class CommandHandler {
+    
+}
+
+
+/*import java.util.List;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -24,7 +37,7 @@ public abstract class CommandHandler implements CommandExecutor {
     public static void setup(PermissionsAR aPlugin) {
         plugin = aPlugin;
         /*PluginClass var = new PluginClass();
-        plugin.getCommand(var.getName()).setExecutor(var);*/
+        plugin.getCommand(var.getName()).setExecutor(var);*//*
     }
     
     
@@ -41,7 +54,7 @@ public abstract class CommandHandler implements CommandExecutor {
     public static final Logger logger = Bukkit.getLogger();
     public void out(String message) {
   	  /*PluginDescriptionFile pdfFile = plugin.getDescription();
-  	  logger.info("[" + pdfFile.getName() + "] " + message);*/
+  	  logger.info("[" + pdfFile.getName() + "] " + message);*//*
         logger.info(message);
   	  }
     public void outc(CommandSender cs, String message) {
@@ -68,4 +81,4 @@ public abstract class CommandHandler implements CommandExecutor {
 		out += center + line.substring(pivot + center.length() / 2);
 		output(s, out);
 	}
-}
+}*/
