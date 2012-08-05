@@ -18,7 +18,7 @@ public final class Listener implements org.bukkit.event.Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLogin(PlayerLoginEvent event) {
         //Adds a player to our cache and set up their permissions
-        PermissionUser user = PermissionUser.loadUser(event.getPlayer().getName());
+        PermissionUser user = PermissionsAR.getManager().getUser(event.getPlayer());
         user.setPerms(event.getPlayer());
     }
 

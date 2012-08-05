@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.lordralex.permissionsar.permission;
 
 import com.lordralex.permissionsar.PermissionsAR;
@@ -14,7 +10,9 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.permissions.PermissionDefault;
 
 /**
  * @version 1.0
@@ -23,7 +21,6 @@ import org.bukkit.permissions.PermissionAttachment;
  */
 public class PermissionUser {
 
-    private final static CacheList<PermissionUser> userCache = new CacheList(PermissionUser.class);
     private final String playerName;
     private final Map<String, Boolean> perms = new HashMap<String, Boolean>();
     private final List<PermissionGroup> groups = new ArrayList<PermissionGroup>();
@@ -35,25 +32,8 @@ public class PermissionUser {
     }
 
     /**
-     * Returns the PermissionUser with that name. This can refer to the cache if
-     * needed.
-     *
-     * @param name Name of the group.
-     * @return The PermissionUser to load
-     *
-     * @since 1.0
-     */
-    public static PermissionUser loadUser(String name) {
-        PermissionUser user = userCache.get(name);
-        if (user != null) {
-            return user;
-        }
-        return new PermissionUser(name);
-    }
-
-    /**
      * Creates a new PermissionUser with the given name. This will load all the
-     * values and then save it to the cache.
+     * values.
      *
      * @param name The name of the user
      *
@@ -67,10 +47,37 @@ public class PermissionUser {
         ConfigurationSection userSec = PermissionsAR.getPermFile().getConfigurationSection("users." + name);
         List<String> permList = userSec.getStringList("permissions");
         for (String perm : permList) {
-            if (perm.startsWith("-")) {
-                perms.put(perm, Boolean.FALSE);
+            if (perm.equals("**")) {
+                Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                for (Permission permTest : permT) {
+                    if (!perms.containsKey(permTest.getName())) {
+                        perms.put(permTest.getName(), Boolean.TRUE);
+                    }
+                }
+            } else if (perm.equals("*")) {
+                Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                for (Permission permTest : permT) {
+                    if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                        if (!perms.containsKey(permTest.getName())) {
+                            perms.put(permTest.getName(), Boolean.TRUE);
+                        }
+                    }
+                }
+            } else if (perm.equals("-*")) {
+                Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                for (Permission permTest : permT) {
+                    if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                        perms.put(perm, Boolean.FALSE);
+                    }
+                }
+            } else if (perm.startsWith("-")) {
+                if (!perms.containsKey(perm)) {
+                    perms.put(perm, Boolean.FALSE);
+                }
             } else {
-                perms.put(perm, Boolean.TRUE);
+                if (!perms.containsKey(perm)) {
+                    perms.put(perm, Boolean.TRUE);
+                }
             }
         }
         List<String> groupsList = userSec.getStringList("group");
@@ -78,10 +85,37 @@ public class PermissionUser {
             PermissionGroup group = PermissionsAR.getManager().getGroup(groupName);
             List<String> groupPerms = group.getPerms();
             for (String perm : groupPerms) {
-                if (perm.startsWith("-")) {
-                    perms.put(perm, Boolean.FALSE);
+                if (perm.equals("**")) {
+                    Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                    for (Permission permTest : permT) {
+                        if (!perms.containsKey(permTest.getName())) {
+                            perms.put(permTest.getName(), Boolean.TRUE);
+                        }
+                    }
+                } else if (perm.equals("*")) {
+                    Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                    for (Permission permTest : permT) {
+                        if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                            if (!perms.containsKey(permTest.getName())) {
+                                perms.put(permTest.getName(), Boolean.TRUE);
+                            }
+                        }
+                    }
+                } else if (perm.equals("-*")) {
+                    Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                    for (Permission permTest : permT) {
+                        if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                            perms.put(perm, Boolean.FALSE);
+                        }
+                    }
+                } else if (perm.startsWith("-")) {
+                    if (!perms.containsKey(perm)) {
+                        perms.put(perm, Boolean.FALSE);
+                    }
                 } else {
-                    perms.put(perm, Boolean.TRUE);
+                    if (!perms.containsKey(perm)) {
+                        perms.put(perm, Boolean.TRUE);
+                    }
                 }
             }
             groups.add(group);
@@ -91,8 +125,6 @@ public class PermissionUser {
         for (String option : optionsList) {
             options.put(option, optionSec.get(option));
         }
-        userCache.remove(playerName);
-        userCache.add(this);
     }
 
     /**
