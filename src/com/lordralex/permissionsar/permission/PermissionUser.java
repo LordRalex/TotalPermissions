@@ -14,7 +14,9 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.permissions.PermissionDefault;
 
 /**
  * @version 1.0
@@ -62,7 +64,27 @@ public class PermissionUser {
         ConfigurationSection userSec = PermissionsAR.getPermFile().getConfigurationSection("users." + name);
         List<String> permList = userSec.getStringList("permissions");
         for (String perm : permList) {
-            if (perm.startsWith("-")) {
+            if (perm.equals("**")) {
+                Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                for (Permission permTest : permT) {
+                    if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                    }
+                }
+            } else if (perm.equals("*")) {
+                Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                for (Permission permTest : permT) {
+                    if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                        perms.put(perm, Boolean.TRUE);
+                    }
+                }
+            } else if (perm.equals("-*")) {
+                Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                for (Permission permTest : permT) {
+                    if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                        perms.put(perm, Boolean.FALSE);
+                    }
+                }
+            } else if (perm.startsWith("-")) {
                 if (!perms.containsKey(perm)) {
                     perms.put(perm, Boolean.FALSE);
                 }
