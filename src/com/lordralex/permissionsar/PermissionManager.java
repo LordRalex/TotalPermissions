@@ -59,7 +59,6 @@ public final class PermissionManager {
      * @since 1.0
      */
     public PermissionGroup getGroup(String name) {
-
         PermissionGroup group = groups.get(name.toLowerCase());
         if (group == null) {
             group = new PermissionGroup(name);

@@ -29,21 +29,8 @@ public class PermissionGroup {
     }
 
     /**
-     * Returns the PermissionGroup with that name. This can refer to the cache
-     * if needed.
-     *
-     * @param name Name of the group.
-     * @return The PermissionGroup to load
-     *
-     * @since 1.0
-     */
-    public static PermissionGroup loadGroup(String name) {
-        return new PermissionGroup(name);
-    }
-
-    /**
      * Creates a new PermissionGroup with the given name. This will load all the
-     * values and then save it to the cache.
+     * values.
      *
      * @param name The name of the group
      *
@@ -89,10 +76,33 @@ public class PermissionGroup {
         }
         List<String> inherList = groupSec.getStringList("inheritance");
         for (String tempName : inherList) {
-            PermissionGroup tempGroup = loadGroup(tempName);
+            PermissionGroup tempGroup = PermissionsAR.getManager().getGroup(tempName);
             List<String> tempGroupPerms = tempGroup.getPerms();
             for (String perm : tempGroupPerms) {
-                if (perm.startsWith("-")) {
+                if (perm.equals("**")) {
+                    Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                    for (Permission permTest : permT) {
+                        if (!perms.containsKey(permTest.getName())) {
+                            perms.put(permTest.getName(), Boolean.TRUE);
+                        }
+                    }
+                } else if (perm.equals("*")) {
+                    Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                    for (Permission permTest : permT) {
+                        if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                            if (!perms.containsKey(permTest.getName())) {
+                                perms.put(permTest.getName(), Boolean.TRUE);
+                            }
+                        }
+                    }
+                } else if (perm.equals("-*")) {
+                    Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                    for (Permission permTest : permT) {
+                        if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                            perms.put(perm, Boolean.FALSE);
+                        }
+                    }
+                } else if (perm.startsWith("-")) {
                     if (!perms.containsKey(perm)) {
                         perms.put(perm, Boolean.FALSE);
                     }
@@ -190,5 +200,9 @@ public class PermissionGroup {
      * @param perm Perm to add to this user
      */
     public void addPerm(String perm) {
+        if(perm.startsWith("-"))
+        {
+            
+        }
     }
 }

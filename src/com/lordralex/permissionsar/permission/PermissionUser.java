@@ -32,21 +32,8 @@ public class PermissionUser {
     }
 
     /**
-     * Returns the PermissionUser with that name. This can refer to the cache if
-     * needed.
-     *
-     * @param name Name of the group.
-     * @return The PermissionUser to load
-     *
-     * @since 1.0
-     */
-    public static PermissionUser loadUser(String name) {
-        return new PermissionUser(name);
-    }
-
-    /**
      * Creates a new PermissionUser with the given name. This will load all the
-     * values and then save it to the cache.
+     * values.
      *
      * @param name The name of the user
      *
@@ -98,7 +85,30 @@ public class PermissionUser {
             PermissionGroup group = PermissionsAR.getManager().getGroup(groupName);
             List<String> groupPerms = group.getPerms();
             for (String perm : groupPerms) {
-                if (perm.startsWith("-")) {
+                if (perm.equals("**")) {
+                    Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                    for (Permission permTest : permT) {
+                        if (!perms.containsKey(permTest.getName())) {
+                            perms.put(permTest.getName(), Boolean.TRUE);
+                        }
+                    }
+                } else if (perm.equals("*")) {
+                    Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                    for (Permission permTest : permT) {
+                        if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                            if (!perms.containsKey(permTest.getName())) {
+                                perms.put(permTest.getName(), Boolean.TRUE);
+                            }
+                        }
+                    }
+                } else if (perm.equals("-*")) {
+                    Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                    for (Permission permTest : permT) {
+                        if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                            perms.put(perm, Boolean.FALSE);
+                        }
+                    }
+                } else if (perm.startsWith("-")) {
                     if (!perms.containsKey(perm)) {
                         perms.put(perm, Boolean.FALSE);
                     }
