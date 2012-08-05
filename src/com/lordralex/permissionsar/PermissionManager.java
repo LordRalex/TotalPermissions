@@ -27,7 +27,10 @@ public final class PermissionManager {
      * @since 1.0
      */
     public PermissionUser getUser(String player) {
-        PermissionUser user = new PermissionUser(player);
+        PermissionUser user = users.get(player.toLowerCase());
+        if (user == null) {
+            user = new PermissionUser(player);
+        }
         users.put(player.toLowerCase(), user);
         return user;
     }
@@ -56,7 +59,11 @@ public final class PermissionManager {
      * @since 1.0
      */
     public PermissionGroup getGroup(String name) {
-        PermissionGroup group = new PermissionGroup(name);
+
+        PermissionGroup group = groups.get(name.toLowerCase());
+        if (group == null) {
+            group = new PermissionGroup(name);
+        }
         groups.put(name.toLowerCase(), group);
         return group;
     }
