@@ -11,7 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
 /**
  * @version 1.0
@@ -55,7 +58,30 @@ public class PermissionGroup {
         ConfigurationSection groupSec = PermissionsAR.getPermFile().getConfigurationSection("groups." + groupName);
         List<String> permList = groupSec.getStringList("permissions");
         for (String perm : permList) {
-            if (perm.startsWith("-")) {
+            if (perm.equals("**")) {
+                Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                for (Permission permTest : permT) {
+                    if (!perms.containsKey(permTest.getName())) {
+                        perms.put(permTest.getName(), Boolean.TRUE);
+                    }
+                }
+            } else if (perm.equals("*")) {
+                Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                for (Permission permTest : permT) {
+                    if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                        if (!perms.containsKey(permTest.getName())) {
+                            perms.put(permTest.getName(), Boolean.TRUE);
+                        }
+                    }
+                }
+            } else if (perm.equals("-*")) {
+                Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                for (Permission permTest : permT) {
+                    if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                        perms.put(perm, Boolean.FALSE);
+                    }
+                }
+            } else if (perm.startsWith("-")) {
                 if (!perms.containsKey(perm)) {
                     perms.put(perm, Boolean.FALSE);
                 }
