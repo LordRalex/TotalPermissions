@@ -67,26 +67,4 @@ public final class PermissionManager {
         groups.put(name.toLowerCase(), group);
         return group;
     }
-
-    /**
-     * Checks to see if a player has a specific permission.
-     *
-     * @param player Player to check
-     * @param node Node
-     * @return True if player has the perm, false otherwise
-     */
-    public boolean has(Player player, String node) {
-        return false;
-    }
-
-    /**
-     * Checks to see if a player has a specific permission.
-     *
-     * @param name Name of player to check
-     * @param node Node
-     * @return True if player has the perm, false otherwise
-     */
-    public boolean has(String name, String node) {
-        return false;
-    }
 }
