@@ -2,6 +2,8 @@ package com.lordralex.permissionsar;
 
 import com.lordralex.permissionsar.permission.PermissionGroup;
 import com.lordralex.permissionsar.permission.PermissionUser;
+import java.util.HashMap;
+import java.util.Map;
 import org.bukkit.entity.Player;
 
 /**
@@ -10,6 +12,9 @@ import org.bukkit.entity.Player;
  * @since 1.0
  */
 public final class PermissionManager {
+
+    private Map<String, PermissionGroup> groups = new HashMap<String, PermissionGroup>();
+    private Map<String, PermissionUser> users = new HashMap<String, PermissionUser>();
 
     /**
      * Loads a player's {@link PermissionUser} object. This can return the one
@@ -22,7 +27,9 @@ public final class PermissionManager {
      * @since 1.0
      */
     public PermissionUser getUser(String player) {
-        return PermissionUser.loadUser(player);
+        PermissionUser user = new PermissionUser(player);
+        users.put(player.toLowerCase(), user);
+        return user;
     }
 
     /**
@@ -49,6 +56,30 @@ public final class PermissionManager {
      * @since 1.0
      */
     public PermissionGroup getGroup(String name) {
-        return PermissionGroup.loadGroup(name);
+        PermissionGroup group = new PermissionGroup(name);
+        groups.put(name.toLowerCase(), group);
+        return group;
+    }
+
+    /**
+     * Checks to see if a player has a specific permission.
+     *
+     * @param player Player to check
+     * @param node Node
+     * @return True if player has the perm, false otherwise
+     */
+    public boolean has(Player player, String node) {
+        return false;
+    }
+
+    /**
+     * Checks to see if a player has a specific permission.
+     *
+     * @param name Name of player to check
+     * @param node Node
+     * @return True if player has the perm, false otherwise
+     */
+    public boolean has(String name, String node) {
+        return false;
     }
 }
