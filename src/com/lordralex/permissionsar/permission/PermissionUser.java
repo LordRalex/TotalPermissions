@@ -67,14 +67,17 @@ public class PermissionUser {
             if (perm.equals("**")) {
                 Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
                 for (Permission permTest : permT) {
-                    if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                    if (!perms.containsKey(permTest.getName())) {
+                        perms.put(permTest.getName(), Boolean.TRUE);
                     }
                 }
             } else if (perm.equals("*")) {
                 Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
                 for (Permission permTest : permT) {
                     if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
-                        perms.put(perm, Boolean.TRUE);
+                        if (!perms.containsKey(permTest.getName())) {
+                            perms.put(permTest.getName(), Boolean.TRUE);
+                        }
                     }
                 }
             } else if (perm.equals("-*")) {
