@@ -52,7 +52,7 @@ public class Utils {
 
     /**
      * Sends a message to an instance of {@link CommandSender}
-     * 
+     *
      * @param sender Target
      * @param message Message to send
      */
@@ -60,10 +60,24 @@ public class Utils {
         sender.sendMessage(formatColors(message));
     }
 
+    /**
+     * Sends a message to an instance of {@link Player}
+     *
+     * @param player Target
+     * @param message Message to send
+     */
     public static void output(Player player, String message) {
         player.sendMessage(formatColors(message));
     }
 
+    /**
+     * Formats a title bar. The text will be in the center surrounded by "-"
+     *
+     * @param title The title to show
+     * @param barcolor Color for the bars
+     * @param titlecolor Color for the title
+     * @return Title in form of a String
+     */
     public static String formatTitle(String title, ChatColor barcolor, ChatColor titlecolor) {
         String line = barcolor + "------------------------------------------------------------";
         int pivot = line.length() / 2;
@@ -73,12 +87,24 @@ public class Utils {
         return out;
     }
 
+    /**
+     * Generates the colors in a message
+     *
+     * @param message Message to handle
+     * @return New message with colors shown
+     */
     public static String formatColors(String message) {
         String newMessage = message;
         newMessage = ChatColor.translateAlternateColorCodes(ChatColor.COLOR_CHAR, newMessage);
         return newMessage;
     }
 
+    /**
+     * Removes colors from a message
+     *
+     * @param message Message to strip
+     * @return The non-colored version
+     */
     public static String stripColors(String message) {
         String newMessage = message;
         newMessage = ChatColor.stripColor(newMessage);
