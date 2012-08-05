@@ -20,7 +20,6 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public class PermissionGroup {
 
-    private final static CacheList<PermissionGroup> groupCache = new CacheList(PermissionGroup.class);
     private final String groupName;
     private final Map<String, Boolean> perms = new HashMap<String, Boolean>();
     private final List<PermissionGroup> inheritance = new ArrayList<PermissionGroup>();
@@ -40,10 +39,6 @@ public class PermissionGroup {
      * @since 1.0
      */
     public static PermissionGroup loadGroup(String name) {
-        PermissionGroup user = groupCache.get(name);
-        if (user != null) {
-            return user;
-        }
         return new PermissionGroup(name);
     }
 
@@ -61,9 +56,13 @@ public class PermissionGroup {
         List<String> permList = groupSec.getStringList("permissions");
         for (String perm : permList) {
             if (perm.startsWith("-")) {
-                perms.put(perm, Boolean.FALSE);
+                if (!perms.containsKey(perm)) {
+                    perms.put(perm, Boolean.FALSE);
+                }
             } else {
-                perms.put(perm, Boolean.TRUE);
+                if (!perms.containsKey(perm)) {
+                    perms.put(perm, Boolean.TRUE);
+                }
             }
         }
         List<String> inherList = groupSec.getStringList("inheritance");
@@ -72,9 +71,13 @@ public class PermissionGroup {
             List<String> tempGroupPerms = tempGroup.getPerms();
             for (String perm : tempGroupPerms) {
                 if (perm.startsWith("-")) {
-                    perms.put(perm, Boolean.FALSE);
+                    if (!perms.containsKey(perm)) {
+                        perms.put(perm, Boolean.FALSE);
+                    }
                 } else {
-                    perms.put(perm, Boolean.TRUE);
+                    if (!perms.containsKey(perm)) {
+                        perms.put(perm, Boolean.TRUE);
+                    }
                 }
             }
             inheritance.add(tempGroup);
@@ -84,8 +87,6 @@ public class PermissionGroup {
         for (String option : optionsList) {
             options.put(option, optionSec.get(option));
         }
-        groupCache.remove(groupName);
-        groupCache.add(this);
     }
 
     /**

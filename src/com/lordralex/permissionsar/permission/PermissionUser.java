@@ -23,7 +23,6 @@ import org.bukkit.permissions.PermissionAttachment;
  */
 public class PermissionUser {
 
-    private final static CacheList<PermissionUser> userCache = new CacheList(PermissionUser.class);
     private final String playerName;
     private final Map<String, Boolean> perms = new HashMap<String, Boolean>();
     private final List<PermissionGroup> groups = new ArrayList<PermissionGroup>();
@@ -44,10 +43,6 @@ public class PermissionUser {
      * @since 1.0
      */
     public static PermissionUser loadUser(String name) {
-        PermissionUser user = userCache.get(name);
-        if (user != null) {
-            return user;
-        }
         return new PermissionUser(name);
     }
 
@@ -68,9 +63,13 @@ public class PermissionUser {
         List<String> permList = userSec.getStringList("permissions");
         for (String perm : permList) {
             if (perm.startsWith("-")) {
-                perms.put(perm, Boolean.FALSE);
+                if (!perms.containsKey(perm)) {
+                    perms.put(perm, Boolean.FALSE);
+                }
             } else {
-                perms.put(perm, Boolean.TRUE);
+                if (!perms.containsKey(perm)) {
+                    perms.put(perm, Boolean.TRUE);
+                }
             }
         }
         List<String> groupsList = userSec.getStringList("group");
@@ -79,9 +78,13 @@ public class PermissionUser {
             List<String> groupPerms = group.getPerms();
             for (String perm : groupPerms) {
                 if (perm.startsWith("-")) {
-                    perms.put(perm, Boolean.FALSE);
+                    if (!perms.containsKey(perm)) {
+                        perms.put(perm, Boolean.FALSE);
+                    }
                 } else {
-                    perms.put(perm, Boolean.TRUE);
+                    if (!perms.containsKey(perm)) {
+                        perms.put(perm, Boolean.TRUE);
+                    }
                 }
             }
             groups.add(group);
@@ -91,8 +94,6 @@ public class PermissionUser {
         for (String option : optionsList) {
             options.put(option, optionSec.get(option));
         }
-        userCache.remove(playerName);
-        userCache.add(this);
     }
 
     /**
