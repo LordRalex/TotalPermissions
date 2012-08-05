@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.lordralex.permissionsar.permission;
 
 import com.lordralex.permissionsar.PermissionsAR;
@@ -11,7 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
 /**
  * @version 1.0
@@ -20,7 +19,6 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public class PermissionGroup {
 
-    private final static CacheList<PermissionGroup> groupCache = new CacheList(PermissionGroup.class);
     private final String groupName;
     private final Map<String, Boolean> perms = new HashMap<String, Boolean>();
     private final List<PermissionGroup> inheritance = new ArrayList<PermissionGroup>();
@@ -31,25 +29,8 @@ public class PermissionGroup {
     }
 
     /**
-     * Returns the PermissionGroup with that name. This can refer to the cache
-     * if needed.
-     *
-     * @param name Name of the group.
-     * @return The PermissionGroup to load
-     *
-     * @since 1.0
-     */
-    public static PermissionGroup loadGroup(String name) {
-        PermissionGroup user = groupCache.get(name);
-        if (user != null) {
-            return user;
-        }
-        return new PermissionGroup(name);
-    }
-
-    /**
      * Creates a new PermissionGroup with the given name. This will load all the
-     * values and then save it to the cache.
+     * values.
      *
      * @param name The name of the group
      *
@@ -60,21 +41,75 @@ public class PermissionGroup {
         ConfigurationSection groupSec = PermissionsAR.getPermFile().getConfigurationSection("groups." + groupName);
         List<String> permList = groupSec.getStringList("permissions");
         for (String perm : permList) {
-            if (perm.startsWith("-")) {
-                perms.put(perm, Boolean.FALSE);
+            if (perm.equals("**")) {
+                Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                for (Permission permTest : permT) {
+                    if (!perms.containsKey(permTest.getName())) {
+                        perms.put(permTest.getName(), Boolean.TRUE);
+                    }
+                }
+            } else if (perm.equals("*")) {
+                Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                for (Permission permTest : permT) {
+                    if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                        if (!perms.containsKey(permTest.getName())) {
+                            perms.put(permTest.getName(), Boolean.TRUE);
+                        }
+                    }
+                }
+            } else if (perm.equals("-*")) {
+                Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                for (Permission permTest : permT) {
+                    if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                        perms.put(perm, Boolean.FALSE);
+                    }
+                }
+            } else if (perm.startsWith("-")) {
+                if (!perms.containsKey(perm)) {
+                    perms.put(perm, Boolean.FALSE);
+                }
             } else {
-                perms.put(perm, Boolean.TRUE);
+                if (!perms.containsKey(perm)) {
+                    perms.put(perm, Boolean.TRUE);
+                }
             }
         }
         List<String> inherList = groupSec.getStringList("inheritance");
         for (String tempName : inherList) {
-            PermissionGroup tempGroup = loadGroup(tempName);
+            PermissionGroup tempGroup = PermissionsAR.getManager().getGroup(tempName);
             List<String> tempGroupPerms = tempGroup.getPerms();
             for (String perm : tempGroupPerms) {
-                if (perm.startsWith("-")) {
-                    perms.put(perm, Boolean.FALSE);
+                if (perm.equals("**")) {
+                    Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                    for (Permission permTest : permT) {
+                        if (!perms.containsKey(permTest.getName())) {
+                            perms.put(permTest.getName(), Boolean.TRUE);
+                        }
+                    }
+                } else if (perm.equals("*")) {
+                    Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                    for (Permission permTest : permT) {
+                        if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                            if (!perms.containsKey(permTest.getName())) {
+                                perms.put(permTest.getName(), Boolean.TRUE);
+                            }
+                        }
+                    }
+                } else if (perm.equals("-*")) {
+                    Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                    for (Permission permTest : permT) {
+                        if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                            perms.put(perm, Boolean.FALSE);
+                        }
+                    }
+                } else if (perm.startsWith("-")) {
+                    if (!perms.containsKey(perm)) {
+                        perms.put(perm, Boolean.FALSE);
+                    }
                 } else {
-                    perms.put(perm, Boolean.TRUE);
+                    if (!perms.containsKey(perm)) {
+                        perms.put(perm, Boolean.TRUE);
+                    }
                 }
             }
             inheritance.add(tempGroup);
@@ -84,8 +119,6 @@ public class PermissionGroup {
         for (String option : optionsList) {
             options.put(option, optionSec.get(option));
         }
-        groupCache.remove(groupName);
-        groupCache.add(this);
     }
 
     /**
@@ -167,5 +200,9 @@ public class PermissionGroup {
      * @param perm Perm to add to this user
      */
     public void addPerm(String perm) {
+        if(perm.startsWith("-"))
+        {
+            
+        }
     }
 }
