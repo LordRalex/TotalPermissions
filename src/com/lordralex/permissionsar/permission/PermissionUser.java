@@ -236,24 +236,42 @@ public class PermissionUser {
     }
 
     /**
-     * Add a permission node to the user. This will also add the perm to the
-     * player if they are online. This will apply for adding negative nodes too.
+     * Add a permission node to the user. This will apply for adding negative
+     * nodes too.
      *
      * @param perm Perm to add to this user
      */
     public void addPerm(String perm) {
-        if (perm.startsWith("-")) {
-            perm = perm.substring(1);
-            perms.put(perm, Boolean.FALSE);
-            Player player = Bukkit.getPlayerExact(playerName);
-            if (player != null) {
-                attachment.setPermission(perm, false);
+        if (perm.equals("**")) {
+            Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+            for (Permission permTest : permT) {
+                if (!perms.containsKey(permTest.getName())) {
+                    perms.put(permTest.getName(), Boolean.TRUE);
+                }
+            }
+        } else if (perm.equals("*")) {
+            Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+            for (Permission permTest : permT) {
+                if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                    if (!perms.containsKey(permTest.getName())) {
+                        perms.put(permTest.getName(), Boolean.TRUE);
+                    }
+                }
+            }
+        } else if (perm.equals("-*")) {
+            Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+            for (Permission permTest : permT) {
+                if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                    perms.put(perm, Boolean.FALSE);
+                }
+            }
+        } else if (perm.startsWith("-")) {
+            if (!perms.containsKey(perm)) {
+                perms.put(perm, Boolean.FALSE);
             }
         } else {
-            perms.put(perm, Boolean.TRUE);
-            Player player = Bukkit.getPlayerExact(playerName);
-            if (player != null) {
-                attachment.setPermission(perm, false);
+            if (!perms.containsKey(perm)) {
+                perms.put(perm, Boolean.TRUE);
             }
         }
     }

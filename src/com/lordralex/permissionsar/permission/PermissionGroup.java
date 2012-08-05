@@ -197,12 +197,40 @@ public class PermissionGroup {
      * Add a permission node to the group. This will apply for adding negative
      * nodes too.
      *
-     * @param perm Perm to add to this user
+     * @param perm Perm to add to this group
      */
     public void addPerm(String perm) {
-        if(perm.startsWith("-"))
-        {
-            
+        if (perm.equals("**")) {
+            Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+            for (Permission permTest : permT) {
+                if (!perms.containsKey(permTest.getName())) {
+                    perms.put(permTest.getName(), Boolean.TRUE);
+                }
+            }
+        } else if (perm.equals("*")) {
+            Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+            for (Permission permTest : permT) {
+                if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                    if (!perms.containsKey(permTest.getName())) {
+                        perms.put(permTest.getName(), Boolean.TRUE);
+                    }
+                }
+            }
+        } else if (perm.equals("-*")) {
+            Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+            for (Permission permTest : permT) {
+                if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                    perms.put(perm, Boolean.FALSE);
+                }
+            }
+        } else if (perm.startsWith("-")) {
+            if (!perms.containsKey(perm)) {
+                perms.put(perm, Boolean.FALSE);
+            }
+        } else {
+            if (!perms.containsKey(perm)) {
+                perms.put(perm, Boolean.TRUE);
+            }
         }
     }
 }
