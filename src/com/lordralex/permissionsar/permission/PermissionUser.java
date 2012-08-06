@@ -163,7 +163,7 @@ public class PermissionUser {
      *
      * @since 1.0
      */
-    public List<String> getPerms() {
+    public synchronized List<String> getPerms() {
         List<String> permList = new ArrayList<String>();
         Entry[] permKeys = perms.entrySet().toArray(new Entry[0]);
         for (Entry entry : permKeys) {
@@ -236,25 +236,48 @@ public class PermissionUser {
     }
 
     /**
-     * Add a permission node to the user. This will also add the perm to the
-     * player if they are online. This will apply for adding negative nodes too.
+     * Add a permission node to the user. This will apply for adding negative
+     * nodes too.
      *
      * @param perm Perm to add to this user
      */
-    public void addPerm(String perm) {
-        if (perm.startsWith("-")) {
-            perm = perm.substring(1);
-            perms.put(perm, Boolean.FALSE);
-            Player player = Bukkit.getPlayerExact(playerName);
-            if (player != null) {
-                attachment.setPermission(perm, false);
+    public synchronized void addPerm(String perm) {
+        if (perm.equals("**")) {
+            Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+            for (Permission permTest : permT) {
+                perms.remove(permTest.getName());
+                perms.put(permTest.getName(), Boolean.TRUE);
             }
-        } else {
+        } else if (perm.equals("*")) {
+            Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+            for (Permission permTest : permT) {
+                if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                    perms.remove(permTest.getName());
+                    perms.put(permTest.getName(), Boolean.TRUE);
+                }
+            }
+        } else if (perm.equals("-*")) {
+            Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+            for (Permission permTest : permT) {
+                if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                    perms.remove(permTest.getName());
+                    perms.put(permTest.getName(), Boolean.FALSE);
+                }
+            }
+        } else if (perm.startsWith("-")) {
+            perms.remove(perm);
             perms.put(perm, Boolean.TRUE);
-            Player player = Bukkit.getPlayerExact(playerName);
-            if (player != null) {
-                attachment.setPermission(perm, false);
-            }
+        } else {
+            perms.remove(perm);
+            perms.put(perm, Boolean.TRUE);
         }
+    }
+
+    public synchronized boolean has(String perm) {
+        Boolean result = perms.get(perm);
+        if (result != null && result.booleanValue()) {
+            return true;
+        }
+        return false;
     }
 }
