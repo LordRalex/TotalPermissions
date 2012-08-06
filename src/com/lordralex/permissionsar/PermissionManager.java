@@ -4,6 +4,7 @@ import com.lordralex.permissionsar.permission.PermissionGroup;
 import com.lordralex.permissionsar.permission.PermissionUser;
 import java.util.HashMap;
 import java.util.Map;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 /**
@@ -26,7 +27,7 @@ public final class PermissionManager {
      *
      * @since 1.0
      */
-    public PermissionUser getUser(String player) {
+    public synchronized PermissionUser getUser(String player) {
         PermissionUser user = users.get(player.toLowerCase());
         if (user == null) {
             user = new PermissionUser(player);
@@ -45,7 +46,7 @@ public final class PermissionManager {
      *
      * @since 1.0
      */
-    public PermissionUser getUser(Player player) {
+    public synchronized PermissionUser getUser(Player player) {
         return getUser(player.getName());
     }
 
@@ -58,12 +59,75 @@ public final class PermissionManager {
      *
      * @since 1.0
      */
-    public PermissionGroup getGroup(String name) {
+    public synchronized PermissionGroup getGroup(String name) {
         PermissionGroup group = groups.get(name.toLowerCase());
         if (group == null) {
             group = new PermissionGroup(name);
         }
         groups.put(name.toLowerCase(), group);
         return group;
+    }
+
+    public synchronized boolean has(Player player, String perm) {
+        return has(player.getName(), perm);
+    }
+
+    public synchronized boolean has(String player, String perm) {
+        String name = player.toLowerCase();
+        PermissionUser user = users.get(name);
+        if (user == null) {
+            user = new PermissionUser(name);
+            users.put(name, user);
+        }
+        return user.has(perm);
+    }
+
+    public synchronized boolean groupHas(String groupName, String perm) {
+        String name = groupName.toLowerCase();
+        PermissionGroup group = groups.get(name);
+        if (group == null) {
+            group = new PermissionGroup(name);
+            groups.put(name, group);
+        }
+        return false;
+    }
+
+    public synchronized void addPerm(Player player, String perm, boolean allowance) {
+        String name = player.getName().toLowerCase();
+        PermissionUser user = users.get(name);
+        if (user == null) {
+            user = new PermissionUser(name);
+            users.put(name, user);
+        }
+        if (!allowance) {
+            perm = "-" + perm;
+        }
+        user.addPerm(perm);
+    }
+
+    public synchronized void addPerm(OfflinePlayer player, String perm, boolean allowance) {
+        String name = player.getName().toLowerCase();
+        PermissionUser user = users.get(name);
+        if (user == null) {
+            user = new PermissionUser(name);
+            users.put(name, user);
+        }
+        if (!allowance) {
+            perm = "-" + perm;
+        }
+        user.addPerm(perm);
+    }
+
+    public synchronized void addPerm(String group, String perm, boolean allowance) {
+        String name = group.toLowerCase();
+        PermissionGroup gr = groups.get(name);
+        if (gr == null) {
+            gr = new PermissionGroup(name);
+            groups.put(name, gr);
+        }
+        if (!allowance) {
+            perm = "-" + perm;
+        }
+        gr.addPerm(perm);
     }
 }

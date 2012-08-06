@@ -129,7 +129,7 @@ public class PermissionGroup {
      *
      * @since 1.0
      */
-    public List<String> getPerms() {
+    public synchronized List<String> getPerms() {
         List<String> permList = new ArrayList<String>();
         Entry[] permKeys = perms.entrySet().toArray(new Entry[0]);
         for (Entry entry : permKeys) {
@@ -199,38 +199,43 @@ public class PermissionGroup {
      *
      * @param perm Perm to add to this group
      */
-    public void addPerm(String perm) {
+    public synchronized void addPerm(String perm) {
         if (perm.equals("**")) {
             Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
             for (Permission permTest : permT) {
-                if (!perms.containsKey(permTest.getName())) {
-                    perms.put(permTest.getName(), Boolean.TRUE);
-                }
+                perms.remove(permTest.getName());
+                perms.put(permTest.getName(), Boolean.TRUE);
             }
         } else if (perm.equals("*")) {
             Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
             for (Permission permTest : permT) {
                 if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
-                    if (!perms.containsKey(permTest.getName())) {
-                        perms.put(permTest.getName(), Boolean.TRUE);
-                    }
+                    perms.remove(permTest.getName());
+                    perms.put(permTest.getName(), Boolean.TRUE);
                 }
             }
         } else if (perm.equals("-*")) {
             Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
             for (Permission permTest : permT) {
                 if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
-                    perms.put(perm, Boolean.FALSE);
+                    perms.remove(permTest.getName());
+                    perms.put(permTest.getName(), Boolean.FALSE);
                 }
             }
         } else if (perm.startsWith("-")) {
-            if (!perms.containsKey(perm)) {
-                perms.put(perm, Boolean.FALSE);
-            }
+            perms.remove(perm);
+            perms.put(perm, Boolean.TRUE);
         } else {
-            if (!perms.containsKey(perm)) {
-                perms.put(perm, Boolean.TRUE);
-            }
+            perms.remove(perm);
+            perms.put(perm, Boolean.TRUE);
         }
+    }
+
+    public synchronized boolean has(String perm) {
+        Boolean result = perms.get(perm);
+        if (result != null && result.booleanValue()) {
+            return true;
+        }
+        return false;
     }
 }
