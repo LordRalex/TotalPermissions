@@ -22,6 +22,7 @@ import org.bukkit.permissions.PermissionDefault;
 public class PermissionUser {
 
     private final String playerName;
+    private Player player;
     private final Map<String, Boolean> perms = new HashMap<String, Boolean>();
     private final List<PermissionGroup> groups = new ArrayList<PermissionGroup>();
     private final Map<String, Object> options = new HashMap<String, Object>();
@@ -41,6 +42,7 @@ public class PermissionUser {
      */
     public PermissionUser(String name) {
         playerName = name;
+        player = Bukkit.getPlayerExact(playerName);
         perms.clear();
         groups.clear();
         options.clear();
@@ -125,6 +127,9 @@ public class PermissionUser {
         for (String option : optionsList) {
             options.put(option, optionSec.get(option));
         }
+        if (player != null) {
+            setPerms(player);
+        }
     }
 
     /**
@@ -137,7 +142,8 @@ public class PermissionUser {
      *
      * @since 1.0
      */
-    public void setPerms(Player player) {
+    public void setPerms(Player aPlayer) {
+        player = aPlayer;
         if (perms == null) {
             List<String> permList = new PermissionUser(player.getName()).getPerms();
             for (String perm : permList) {
@@ -279,5 +285,11 @@ public class PermissionUser {
             return true;
         }
         return false;
+    }
+
+    public synchronized void update() {
+        for (String perm : perms.keySet()) {
+            attachment.setPermission(perm, perms.get(perm).booleanValue());
+        }
     }
 }
