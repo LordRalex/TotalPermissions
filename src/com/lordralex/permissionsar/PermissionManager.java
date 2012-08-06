@@ -68,6 +68,12 @@ public final class PermissionManager {
         return group;
     }
 
+    /**
+     *
+     * @param player
+     * @param perm 
+     * @return True if player has been given this perm, false otherwise
+     */
     public synchronized boolean has(Player player, String perm) {
         return has(player.getName(), perm);
     }
