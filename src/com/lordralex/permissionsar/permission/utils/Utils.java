@@ -35,7 +35,7 @@ public class Utils {
      * @param message Message to send
      */
     public static void out(String message) {
-        PermissionsAR.log.info(stripColors(message));
+        PermissionsAR.getLog().info(stripColors(message));
     }
 
     /**

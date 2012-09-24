@@ -4,7 +4,11 @@ import com.lordralex.permissionsar.permission.PermissionGroup;
 import com.lordralex.permissionsar.permission.PermissionUser;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 /**
@@ -16,6 +20,34 @@ public final class PermissionManager {
 
     private Map<String, PermissionGroup> groups = new HashMap<String, PermissionGroup>();
     private Map<String, PermissionUser> users = new HashMap<String, PermissionUser>();
+    private String defaultGroup = null;
+
+    public PermissionManager() {
+    }
+
+    public void load() throws InvalidConfigurationException {
+        FileConfiguration perms = PermissionsAR.getPermFile();
+        ConfigurationSection filegroups = perms.getConfigurationSection("groups");
+        if (groups == null) {
+            throw new InvalidConfigurationException("You must define at least one group");
+        }
+        Set<String> allGroups = filegroups.getKeys(false);
+        for (String group : allGroups) {
+            System.out.println(group);
+            PermissionGroup temp = new PermissionGroup(group);
+            groups.put(group.toLowerCase(), temp);
+            if (temp.isDefault()) {
+                defaultGroup = temp.getName();
+            }
+        }
+        if (defaultGroup == null) {
+            throw new InvalidConfigurationException("You must define at least one default group");
+        }
+    }
+
+    public String getDefaultGroup() {
+        return defaultGroup;
+    }
 
     /**
      * Loads a player's {@link PermissionUser} object. This can return the one
@@ -47,7 +79,12 @@ public final class PermissionManager {
      * @since 1.0
      */
     public synchronized PermissionUser getUser(Player player) {
-        return getUser(player.getName());
+        PermissionUser user = users.get(player.getName().toLowerCase());
+        if (user == null) {
+            user = new PermissionUser(player);
+        }
+        users.put(player.getName().toLowerCase(), user);
+        return user;
     }
 
     /**
@@ -71,7 +108,7 @@ public final class PermissionManager {
     /**
      *
      * @param player
-     * @param perm 
+     * @param perm
      * @return True if player has been given this perm, false otherwise
      */
     public synchronized boolean has(Player player, String perm) {

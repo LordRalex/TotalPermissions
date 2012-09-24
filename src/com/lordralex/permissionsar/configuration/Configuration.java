@@ -29,7 +29,7 @@ public class Configuration {
         try {
             config.save(configPath);
         } catch (IOException e) {
-            PermissionsAR.log.log(Level.SEVERE, null, e);
+            PermissionsAR.getLog().log(Level.SEVERE, null, e);
         }
     }
 

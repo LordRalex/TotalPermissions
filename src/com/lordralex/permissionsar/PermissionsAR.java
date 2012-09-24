@@ -19,16 +19,19 @@ public final class PermissionsAR extends JavaPlugin {
 
     private static FileConfiguration permFile;
     private static FileConfiguration configFile;
-    public static final Logger log = Bukkit.getLogger();
+    public Logger log;
     private static PermissionManager manager;
     private static PermissionsAR instance;
     private static Configuration config;
+    private static Listener listener;
 
     @Override
     public void onLoad() {
         instance = this;
+        log = this.getLogger();
+        String fileLoading = null;
         try {
-            log.info("[PAR] Beginning initial preperations");
+            log.info("Beginning initial preperations");
             if (!getDataFolder().exists()) {
                 getDataFolder().mkdirs();
             }
@@ -38,13 +41,18 @@ public final class PermissionsAR extends JavaPlugin {
             if (!(new File(getDataFolder(), "permissions.yml").exists())) {
                 this.saveResource("permissions.yml", true);
             }
-            configFile = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "config.yml"));
-            permFile = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "permissions.yml"));
+            fileLoading = "config";
+            configFile = new YamlConfiguration();
+            configFile.load(new File(this.getDataFolder(), "config.yml"));
+            fileLoading = "permissions";
+            permFile = new YamlConfiguration();
+            permFile.load(new File(this.getDataFolder(), "permissions.yml"));
             config = new Configuration();
-            log.info("[PAR] Initial preperations complete");
+            log.info("Initial preperations complete");
         } catch (Exception e) {
             if (e instanceof InvalidConfigurationException) {
-                log.log(Level.SEVERE, "[PAR] YAML error in your file", e);
+                log.log(Level.SEVERE, "YAML error in your " + fileLoading + " file");
+                log.log(Level.SEVERE, ((InvalidConfigurationException) e).getMessage());
             } else {
                 log.log(Level.SEVERE, "Error in starting up PermissionsAR (Version " + this.getDescription().getVersion() + ")", e);
             }
@@ -54,7 +62,14 @@ public final class PermissionsAR extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        manager = new PermissionManager();
+        try {
+            manager = new PermissionManager();
+            manager.load();
+            listener = new Listener();
+            Bukkit.getPluginManager().registerEvents(listener, this);
+        } catch (Exception ex) {
+            Logger.getLogger(PermissionsAR.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
@@ -103,5 +118,13 @@ public final class PermissionsAR extends JavaPlugin {
      */
     public static PermissionsAR getPlugin() {
         return instance;
+    }
+
+    public static Configuration getConfiguration() {
+        return config;
+    }
+
+    public static Logger getLog() {
+        return instance.log;
     }
 }

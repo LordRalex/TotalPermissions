@@ -1,14 +1,19 @@
 package com.lordralex.permissionsar.permission;
 
 import com.lordralex.permissionsar.PermissionsAR;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
@@ -19,7 +24,7 @@ import org.bukkit.permissions.PermissionDefault;
  * @author Joshua
  * @since 1.0
  */
-public class PermissionUser {
+public final class PermissionUser {
 
     private final String playerName;
     private Player player;
@@ -32,61 +37,28 @@ public class PermissionUser {
         playerName = "";
     }
 
-    /**
-     * Creates a new PermissionUser with the given name. This will load all the
-     * values.
-     *
-     * @param name The name of the user
-     *
-     * @since 1.0
-     */
-    public PermissionUser(String name) {
-        playerName = name;
-        player = Bukkit.getPlayerExact(playerName);
+    public PermissionUser(Player aPlayer) {
+        player = aPlayer;
+        playerName = player.getName();
         perms.clear();
         groups.clear();
         options.clear();
-        ConfigurationSection userSec = PermissionsAR.getPermFile().getConfigurationSection("users." + name);
-        List<String> permList = userSec.getStringList("permissions");
-        for (String perm : permList) {
-            if (perm.equals("**")) {
-                Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
-                for (Permission permTest : permT) {
-                    if (!perms.containsKey(permTest.getName())) {
-                        perms.put(permTest.getName(), Boolean.TRUE);
-                    }
-                }
-            } else if (perm.equals("*")) {
-                Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
-                for (Permission permTest : permT) {
-                    if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
-                        if (!perms.containsKey(permTest.getName())) {
-                            perms.put(permTest.getName(), Boolean.TRUE);
-                        }
-                    }
-                }
-            } else if (perm.equals("-*")) {
-                Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
-                for (Permission permTest : permT) {
-                    if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
-                        perms.put(perm, Boolean.FALSE);
-                    }
-                }
-            } else if (perm.startsWith("-")) {
-                if (!perms.containsKey(perm)) {
-                    perms.put(perm, Boolean.FALSE);
-                }
-            } else {
-                if (!perms.containsKey(perm)) {
-                    perms.put(perm, Boolean.TRUE);
-                }
+        ConfigurationSection userSec = PermissionsAR.getPermFile().getConfigurationSection("users." + playerName);
+        if (userSec == null) {
+            FileConfiguration conf = PermissionsAR.getPermFile();
+            List<String> def = new ArrayList<String>();
+            def.add(PermissionsAR.getManager().getDefaultGroup());
+            conf.set("users." + playerName + ".group", def);
+            try {
+                conf.save(new File(PermissionsAR.getPlugin().getDataFolder(), "permissions.yml"));
+            } catch (IOException ex) {
+                Logger.getLogger(PermissionUser.class.getName()).log(Level.SEVERE, null, ex);
             }
+            userSec = conf.getConfigurationSection("users." + playerName);
         }
-        List<String> groupsList = userSec.getStringList("group");
-        for (String groupName : groupsList) {
-            PermissionGroup group = PermissionsAR.getManager().getGroup(groupName);
-            List<String> groupPerms = group.getPerms();
-            for (String perm : groupPerms) {
+        List<String> permList = userSec.getStringList("permissions");
+        if (permList != null) {
+            for (String perm : permList) {
                 if (perm.equals("**")) {
                     Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
                     for (Permission permTest : permT) {
@@ -120,16 +92,71 @@ public class PermissionUser {
                     }
                 }
             }
-            groups.add(group);
+        }
+        List<String> groupsList = userSec.getStringList("group");
+        if (groupsList != null) {
+            for (String groupName : groupsList) {
+                PermissionGroup group = PermissionsAR.getManager().getGroup(groupName);
+                List<String> groupPerms = group.getPerms();
+                for (String perm : groupPerms) {
+                    if (perm.equals("**")) {
+                        Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                        for (Permission permTest : permT) {
+                            if (!perms.containsKey(permTest.getName())) {
+                                perms.put(permTest.getName(), Boolean.TRUE);
+                            }
+                        }
+                    } else if (perm.equals("*")) {
+                        Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                        for (Permission permTest : permT) {
+                            if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                                if (!perms.containsKey(permTest.getName())) {
+                                    perms.put(permTest.getName(), Boolean.TRUE);
+                                }
+                            }
+                        }
+                    } else if (perm.equals("-*")) {
+                        Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+                        for (Permission permTest : permT) {
+                            if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                                perms.put(perm, Boolean.FALSE);
+                            }
+                        }
+                    } else if (perm.startsWith("-")) {
+                        if (!perms.containsKey(perm)) {
+                            perms.put(perm, Boolean.FALSE);
+                        }
+                    } else {
+                        if (!perms.containsKey(perm)) {
+                            perms.put(perm, Boolean.TRUE);
+                        }
+                    }
+                }
+                groups.add(group);
+            }
         }
         ConfigurationSection optionSec = userSec.getConfigurationSection("options");
-        Set<String> optionsList = optionSec.getKeys(true);
-        for (String option : optionsList) {
-            options.put(option, optionSec.get(option));
+        if (optionSec != null) {
+            Set<String> optionsList = optionSec.getKeys(true);
+            for (String option : optionsList) {
+                options.put(option, optionSec.get(option));
+            }
         }
         if (player != null) {
             setPerms(player);
         }
+    }
+
+    /**
+     * Creates a new PermissionUser with the given name. This will load all the
+     * values.
+     *
+     * @param name The name of the user
+     *
+     * @since 1.0
+     */
+    public PermissionUser(String name) {
+        this(Bukkit.getPlayerExact(name));
     }
 
     /**

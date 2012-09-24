@@ -1,0 +1,12 @@
+groups:
+  Member:
+    permissions:
+    - node1.node
+    - node2.node
+  Admin:
+    permissions:
+    - '*'
+users:
+  Lord_Ralex:
+    groups:
+    - Admin

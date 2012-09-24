@@ -23,6 +23,7 @@ public class PermissionGroup {
     private final Map<String, Boolean> perms = new HashMap<String, Boolean>();
     private final List<PermissionGroup> inheritance = new ArrayList<PermissionGroup>();
     private final Map<String, Object> options = new HashMap<String, Object>();
+    private boolean isDefault = false;
 
     public PermissionGroup() {
         groupName = "";
@@ -39,6 +40,9 @@ public class PermissionGroup {
     public PermissionGroup(String name) {
         groupName = name;
         ConfigurationSection groupSec = PermissionsAR.getPermFile().getConfigurationSection("groups." + groupName);
+        if (name.equalsIgnoreCase("default") || groupSec.getBoolean("default", false)) {
+            isDefault = true;
+        }
         List<String> permList = groupSec.getStringList("permissions");
         for (String perm : permList) {
             if (perm.equals("**")) {
@@ -115,9 +119,11 @@ public class PermissionGroup {
             inheritance.add(tempGroup);
         }
         ConfigurationSection optionSec = groupSec.getConfigurationSection("options");
-        Set<String> optionsList = optionSec.getKeys(true);
-        for (String option : optionsList) {
-            options.put(option, optionSec.get(option));
+        if (optionSec != null) {
+            Set<String> optionsList = optionSec.getKeys(true);
+            for (String option : optionsList) {
+                options.put(option, optionSec.get(option));
+            }
         }
     }
 
@@ -237,5 +243,9 @@ public class PermissionGroup {
             return true;
         }
         return false;
+    }
+
+    public boolean isDefault() {
+        return isDefault;
     }
 }
