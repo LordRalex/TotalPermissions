@@ -32,6 +32,7 @@ public final class PermissionUser {
     private final List<PermissionGroup> groups = new ArrayList<PermissionGroup>();
     private final Map<String, Object> options = new HashMap<String, Object>();
     private PermissionAttachment attachment;
+    private boolean isDebug;
 
     public PermissionUser() {
         playerName = "";
@@ -318,5 +319,13 @@ public final class PermissionUser {
         for (String perm : perms.keySet()) {
             attachment.setPermission(perm, perms.get(perm).booleanValue());
         }
+    }
+
+    public void setDebug(boolean newState) {
+        isDebug = newState;
+    }
+
+    public boolean getDebugState() {
+        return isDebug;
     }
 }

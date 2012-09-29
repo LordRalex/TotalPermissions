@@ -1,3 +1,14 @@
 main: com.lordralex.permissionsar.PermissionsAR
 name: PermissionsAR
 version: 0.1
+permissions:
+  par.*:
+    default: op
+    children:
+      par.command.*: true
+  par.command.*:
+    default: op
+    children:
+      par.command.help: true
+  par.command.help:
+    default: op

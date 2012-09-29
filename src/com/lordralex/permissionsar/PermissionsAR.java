@@ -1,6 +1,7 @@
 package com.lordralex.permissionsar;
 
 import com.lordralex.permissionsar.configuration.Configuration;
+import com.lordralex.permissionsar.permission.utils.Update;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,8 +28,13 @@ public final class PermissionsAR extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        instance = this;
-        log = this.getLogger();
+        if (log == null) {
+            log = this.getLogger();
+        }
+        if (instance == null) {
+            log.info("Storing instance");
+            instance = this;
+        }
         String fileLoading = null;
         try {
             log.info("Beginning initial preperations");
@@ -47,6 +53,9 @@ public final class PermissionsAR extends JavaPlugin {
             fileLoading = "permissions";
             permFile = new YamlConfiguration();
             permFile.load(new File(this.getDataFolder(), "permissions.yml"));
+            Update update = new Update();
+            update.backup();
+            update.runUpdate();
             config = new Configuration();
             log.info("Initial preperations complete");
         } catch (Exception e) {
@@ -63,9 +72,15 @@ public final class PermissionsAR extends JavaPlugin {
     @Override
     public void onEnable() {
         try {
-            manager = new PermissionManager();
+            if (manager == null) {
+                log.info("Creating perms manager");
+                manager = new PermissionManager();
+            }
             manager.load();
-            listener = new Listener();
+            if (listener == null) {
+                log.info("Creating player listener");
+                listener = new Listener();
+            }
             Bukkit.getPluginManager().registerEvents(listener, this);
         } catch (Exception ex) {
             Logger.getLogger(PermissionsAR.class.getName()).log(Level.SEVERE, null, ex);
@@ -74,6 +89,7 @@ public final class PermissionsAR extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        manager.unload();
     }
 
     /**

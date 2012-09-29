@@ -33,7 +33,6 @@ public final class PermissionManager {
         }
         Set<String> allGroups = filegroups.getKeys(false);
         for (String group : allGroups) {
-            System.out.println(group);
             PermissionGroup temp = new PermissionGroup(group);
             groups.put(group.toLowerCase(), temp);
             if (temp.isDefault()) {
@@ -43,6 +42,11 @@ public final class PermissionManager {
         if (defaultGroup == null) {
             throw new InvalidConfigurationException("You must define at least one default group");
         }
+    }
+
+    public void unload() {
+        users.clear();
+        groups.clear();
     }
 
     public String getDefaultGroup() {

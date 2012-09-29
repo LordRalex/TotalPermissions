@@ -1,6 +1,6 @@
 package com.lordralex.permissionsar.commands;
 
-import com.lordralex.permissionsar.commands.subcommands.SubCommand;
+import com.lordralex.permissionsar.commands.subcommands.*;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.ChatColor;
@@ -18,6 +18,9 @@ public final class CommandHandler implements CommandExecutor {
     private Map<String, SubCommand> commands = new HashMap<String, SubCommand>();
     
     public CommandHandler() {
+        //Create and store all commands to the map here
+        HelpCommand help = new HelpCommand();
+        commands.put("help", help);
     }
     
     public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {
