@@ -1,5 +1,6 @@
 package com.lordralex.permissionsar;
 
+import com.lordralex.permissionsar.commands.CommandHandler;
 import com.lordralex.permissionsar.configuration.Configuration;
 import com.lordralex.permissionsar.permission.utils.Update;
 import java.io.File;
@@ -27,6 +28,7 @@ public final class PermissionsAR extends JavaPlugin {
     private static Configuration config;
     private static Listener listener;
     private Metrics metrics;
+    private CommandHandler commands;
 
     @Override
     public void onLoad() {
@@ -91,6 +93,12 @@ public final class PermissionsAR extends JavaPlugin {
                 listener = new Listener();
             }
             Bukkit.getPluginManager().registerEvents(listener, this);
+            if(commands == null)
+            {
+                log.info("Creating command handler");
+                commands = new CommandHandler();
+            }
+            getCommand("par").setExecutor(commands);
             metrics = new Metrics(this);
             if (metrics.start()) {
                 log.info("Plugin Metrics is on, you can opt-out in the PluginMetrics config");

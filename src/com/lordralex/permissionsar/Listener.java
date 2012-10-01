@@ -4,6 +4,7 @@ import com.lordralex.permissionsar.permission.PermissionUser;
 import java.util.List;
 import java.util.logging.Level;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -42,22 +43,25 @@ public final class Listener implements org.bukkit.event.Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-        if (!event.getMessage().startsWith("/")) {
-            return;
-        }
         PermissionUser user = PermissionsAR.getManager().getUser(event.getPlayer());
         if (!user.getDebugState()) {
             return;
         }
-        try {
+        //try {
             String command = null;
-            try {
+            //try {
                 command = event.getMessage().split(" ", 2)[0].substring(1);
-                Bukkit.getPluginCommand(command).testPermissionSilent(event.getPlayer());
-            } catch (NullPointerException e) {
+                Command cmd = Bukkit.getPluginCommand(command);
+                if (cmd.testPermissionSilent(event.getPlayer())) {
+                    PermissionsAR.getLog().info("Player can use the command, has " + cmd.getPermission());
+                } else
+                {
+                    PermissionsAR.getLog().info("Player cannot use the command, does not have " + cmd.getPermission());
+                }
+            /*} catch (NullPointerException e) {
                 PermissionsAR.getLog().log(Level.CONFIG, command + " is not a registered command");
             }
         } catch (IndexOutOfBoundsException e) {
-        }
+        }*/
     }
 }

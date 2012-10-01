@@ -12,3 +12,8 @@ permissions:
       par.command.help: true
   par.command.help:
     default: op
+  par.command:
+    default: op
+commands:
+  par:
+    permission: par.command
