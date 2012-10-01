@@ -10,6 +10,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.lr.mcstats.Metrics;
 
 /**
  * @version 1.0
@@ -25,6 +26,7 @@ public final class PermissionsAR extends JavaPlugin {
     private static PermissionsAR instance;
     private static Configuration config;
     private static Listener listener;
+    private Metrics metrics;
 
     @Override
     public void onLoad() {
@@ -35,7 +37,6 @@ public final class PermissionsAR extends JavaPlugin {
             log.info("Storing instance");
             instance = this;
         }
-        String fileLoading = null;
         try {
             log.info("Beginning initial preperations");
             if (!getDataFolder().exists()) {
@@ -47,24 +48,32 @@ public final class PermissionsAR extends JavaPlugin {
             if (!(new File(getDataFolder(), "permissions.yml").exists())) {
                 this.saveResource("permissions.yml", true);
             }
-            fileLoading = "config";
+
             configFile = new YamlConfiguration();
             configFile.load(new File(this.getDataFolder(), "config.yml"));
-            fileLoading = "permissions";
-            permFile = new YamlConfiguration();
-            permFile.load(new File(this.getDataFolder(), "permissions.yml"));
-            Update update = new Update();
-            update.backup();
-            update.runUpdate();
+            try {
+                permFile = new YamlConfiguration();
+                permFile.load(new File(this.getDataFolder(), "permissions.yml"));
+                Update update = new Update();
+                update.backup(true);
+                update.runUpdate();
+            } catch (InvalidConfigurationException e) {
+                log.log(Level.SEVERE, "YAML error in your permissions.yml file");
+                log.log(Level.SEVERE, e.getMessage());
+                log.log(Level.SEVERE, "Attempting to load backup perms");
+                try {
+                    permFile = new YamlConfiguration();
+                    permFile.load(new File(this.getLastBackupFolder(), "permissions.yml"));
+                } catch (InvalidConfigurationException e2) {
+                    log.log(Level.SEVERE, "Errors in the last backup up, cannot load");
+                    log.log(Level.SEVERE, "Shutting down perms plugin as there is nothing I can do ;~;");
+                    throw e2;
+                }
+            }
             config = new Configuration();
             log.info("Initial preperations complete");
         } catch (Exception e) {
-            if (e instanceof InvalidConfigurationException) {
-                log.log(Level.SEVERE, "YAML error in your " + fileLoading + " file");
-                log.log(Level.SEVERE, ((InvalidConfigurationException) e).getMessage());
-            } else {
-                log.log(Level.SEVERE, "Error in starting up PermissionsAR (Version " + this.getDescription().getVersion() + ")", e);
-            }
+            log.log(Level.SEVERE, "Error in starting up PermissionsAR (Version " + this.getDescription().getVersion() + ")", e);
             this.getPluginLoader().disablePlugin(this);
         }
     }
@@ -82,14 +91,26 @@ public final class PermissionsAR extends JavaPlugin {
                 listener = new Listener();
             }
             Bukkit.getPluginManager().registerEvents(listener, this);
-        } catch (Exception ex) {
-            Logger.getLogger(PermissionsAR.class.getName()).log(Level.SEVERE, null, ex);
+            metrics = new Metrics(this);
+            if (metrics.start()) {
+                log.info("Plugin Metrics is on, you can opt-out in the PluginMetrics config");
+            }
+        } catch (Exception e) {
+            if (e instanceof InvalidConfigurationException) {
+                log.log(Level.SEVERE, "YAML error in your permissions file");
+                log.log(Level.SEVERE, ((InvalidConfigurationException) e).getMessage());
+            } else {
+                log.log(Level.SEVERE, "Error in starting up PermissionsAR (Version " + this.getDescription().getVersion() + ")", e);
+            }
+            this.getPluginLoader().disablePlugin(this);
         }
     }
 
     @Override
     public void onDisable() {
-        manager.unload();
+        if (manager != null) {
+            manager.unload();
+        }
     }
 
     /**
@@ -142,5 +163,32 @@ public final class PermissionsAR extends JavaPlugin {
 
     public static Logger getLog() {
         return instance.log;
+    }
+
+    public File getBackupFolder() {
+        return new File(this.getDataFolder(), "backup");
+    }
+
+    public File getLastBackupFolder() {
+        int highest = 0;
+        File[] files = getBackupFolder().listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file == null) {
+                    continue;
+                }
+                if (!file.isDirectory()) {
+                    continue;
+                }
+                try {
+                    int num = Integer.parseInt(file.getName());
+                    if (highest < num) {
+                        highest = num;
+                    }
+                } catch (NumberFormatException e) {
+                }
+            }
+        }
+        return new File(getBackupFolder(), Integer.toString(highest));
     }
 }
