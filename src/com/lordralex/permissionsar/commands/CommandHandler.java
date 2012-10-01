@@ -14,15 +14,17 @@ import org.bukkit.command.CommandSender;
  * @since 1.0
  */
 public final class CommandHandler implements CommandExecutor {
-    
+
     private Map<String, SubCommand> commands = new HashMap<String, SubCommand>();
-    
+
     public CommandHandler() {
         //Create and store all commands to the map here
         HelpCommand help = new HelpCommand();
-        commands.put("help", help);
+        commands.put(help.getName().toLowerCase().trim(), help);
+        DebugCommand debug = new DebugCommand();
+        commands.put(debug.getName().toLowerCase().trim(), debug);
     }
-    
+
     public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {
         String subCommand;
         if (args.length >= 1) {
@@ -32,7 +34,8 @@ public final class CommandHandler implements CommandExecutor {
         }
         SubCommand executor = commands.get(subCommand.toLowerCase());
         if (executor == null) {
-            return false;
+            sender.sendMessage("No command found, use /par help for command list");
+            return true;
         }
         int length = args.length - 1;
         if (length < 0) {
