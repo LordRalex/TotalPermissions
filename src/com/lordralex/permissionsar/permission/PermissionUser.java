@@ -1,6 +1,7 @@
 package com.lordralex.permissionsar.permission;
 
 import com.lordralex.permissionsar.PermissionsAR;
+import com.lordralex.permissionsar.permission.utils.Utils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.permissions.PermissionDefault;
 
 /**
@@ -27,7 +29,7 @@ import org.bukkit.permissions.PermissionDefault;
 public final class PermissionUser {
 
     private final String playerName;
-    private Player player;
+    private Player player = null;
     private final Map<String, Boolean> perms = new HashMap<String, Boolean>();
     private final List<PermissionGroup> groups = new ArrayList<PermissionGroup>();
     private final Map<String, Object> options = new HashMap<String, Object>();
@@ -38,9 +40,8 @@ public final class PermissionUser {
         playerName = "";
     }
 
-    public PermissionUser(Player aPlayer) {
-        player = aPlayer;
-        playerName = player.getName();
+    public PermissionUser(String aName) {
+        playerName = aName;
         perms.clear();
         groups.clear();
         options.clear();
@@ -61,36 +62,30 @@ public final class PermissionUser {
         if (permList != null) {
             for (String perm : permList) {
                 if (perm.equals("**")) {
-                    Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
-                    for (Permission permTest : permT) {
-                        if (!perms.containsKey(permTest.getName())) {
-                            perms.put(permTest.getName(), Boolean.TRUE);
+                    List<String> allPerms = Utils.handleWildcard(true);
+                    for (String perm_ : allPerms) {
+                        if (!perms.containsKey(perm_)) {
+                            perms.put(perm_, Boolean.TRUE);
                         }
                     }
                 } else if (perm.equals("*")) {
-                    Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
-                    for (Permission permTest : permT) {
-                        if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
-                            if (!perms.containsKey(permTest.getName())) {
-                                perms.put(permTest.getName(), Boolean.TRUE);
-                            }
+                    List<String> allPerms = Utils.handleWildcard(false);
+                    for (String perm_ : allPerms) {
+                        if (!perms.containsKey(perm_)) {
+                            perms.put(perm_, Boolean.TRUE);
                         }
                     }
                 } else if (perm.equals("-*")) {
-                    Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
-                    for (Permission permTest : permT) {
-                        if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
-                            perms.put(perm, Boolean.FALSE);
+                    List<String> allPerms = Utils.handleWildcard(false);
+                    for (String perm_ : allPerms) {
+                        if (!perms.containsKey(perm_)) {
+                            perms.put(perm_, Boolean.TRUE);
                         }
                     }
                 } else if (perm.startsWith("-")) {
-                    if (!perms.containsKey(perm)) {
-                        perms.put(perm, Boolean.FALSE);
-                    }
+                    perms.put(perm.substring(1), Boolean.FALSE);
                 } else {
-                    if (!perms.containsKey(perm)) {
-                        perms.put(perm, Boolean.TRUE);
-                    }
+                    perms.put(perm, Boolean.TRUE);
                 }
             }
         }
@@ -100,37 +95,69 @@ public final class PermissionUser {
                 PermissionGroup group = PermissionsAR.getManager().getGroup(groupName);
                 List<String> groupPerms = group.getPerms();
                 for (String perm : groupPerms) {
+                    PermissionsAR.getLog().info("Adding perm: " + perm);
                     if (perm.equals("**")) {
-                        Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
-                        for (Permission permTest : permT) {
-                            if (!perms.containsKey(permTest.getName())) {
-                                perms.put(permTest.getName(), Boolean.TRUE);
+                        List<String> allPerms = Utils.handleWildcard(true);
+                        for (String perm_ : allPerms) {
+                            if (!perms.containsKey(perm_)) {
+                                perms.put(perm_, Boolean.TRUE);
                             }
                         }
                     } else if (perm.equals("*")) {
-                        Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
-                        for (Permission permTest : permT) {
-                            if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
-                                if (!perms.containsKey(permTest.getName())) {
-                                    perms.put(permTest.getName(), Boolean.TRUE);
-                                }
+                        List<String> allPerms = Utils.handleWildcard(false);
+                        for (String perm_ : allPerms) {
+                            if (!perms.containsKey(perm_)) {
+                                perms.put(perm_, Boolean.TRUE);
                             }
                         }
                     } else if (perm.equals("-*")) {
-                        Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
-                        for (Permission permTest : permT) {
-                            if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
-                                perms.put(perm, Boolean.FALSE);
+                        List<String> allPerms = Utils.handleWildcard(false);
+                        for (String perm_ : allPerms) {
+                            if (!perms.containsKey(perm_)) {
+                                perms.put(perm_, Boolean.TRUE);
                             }
                         }
                     } else if (perm.startsWith("-")) {
-                        if (!perms.containsKey(perm)) {
-                            perms.put(perm, Boolean.FALSE);
-                        }
+                        perms.put(perm.substring(1), Boolean.FALSE);
                     } else {
-                        if (!perms.containsKey(perm)) {
-                            perms.put(perm, Boolean.TRUE);
+                        perms.put(perm, Boolean.TRUE);
+                    }
+
+                }
+                groups.add(group);
+            }
+        }
+        List<String> groupsList2 = userSec.getStringList("groups");
+        if (groupsList2 != null) {
+            for (String groupName : groupsList2) {
+                PermissionGroup group = PermissionsAR.getManager().getGroup(groupName);
+                List<String> groupPerms = group.getPerms();
+                for (String perm : groupPerms) {
+                    if (perm.equals("**")) {
+                        List<String> allPerms = Utils.handleWildcard(true);
+                        for (String perm_ : allPerms) {
+                            if (!perms.containsKey(perm_)) {
+                                perms.put(perm_, Boolean.TRUE);
+                            }
                         }
+                    } else if (perm.equals("*")) {
+                        List<String> allPerms = Utils.handleWildcard(false);
+                        for (String perm_ : allPerms) {
+                            if (!perms.containsKey(perm_)) {
+                                perms.put(perm_, Boolean.TRUE);
+                            }
+                        }
+                    } else if (perm.equals("-*")) {
+                        List<String> allPerms = Utils.handleWildcard(false);
+                        for (String perm_ : allPerms) {
+                            if (!perms.containsKey(perm_)) {
+                                perms.put(perm_, Boolean.TRUE);
+                            }
+                        }
+                    } else if (perm.startsWith("-")) {
+                        perms.put(perm.substring(1), Boolean.FALSE);
+                    } else {
+                        perms.put(perm, Boolean.TRUE);
                     }
                 }
                 groups.add(group);
@@ -143,7 +170,12 @@ public final class PermissionUser {
                 options.put(option, optionSec.get(option));
             }
         }
-        if (player != null) {
+
+        //checks to see if a player already on the server matches this,
+        //if so, then set perms up now
+        Player test = Bukkit.getPlayerExact(playerName);
+        if (test != null) {
+            player = test;
             setPerms(player);
         }
     }
@@ -156,8 +188,12 @@ public final class PermissionUser {
      *
      * @since 1.0
      */
-    public PermissionUser(String name) {
-        this(Bukkit.getPlayerExact(name));
+    public PermissionUser(Player aPlayer) {
+        this(aPlayer.getName());
+        player = aPlayer;
+        if (player != null) {
+            setPerms(player);
+        }
     }
 
     /**
@@ -235,7 +271,7 @@ public final class PermissionUser {
      * section of the permissions in the user
      *
      * @param key Path to option
-     * @return Value of that option, or null if no option
+     * @return Object representing that key, or null if no option
      *
      * @since 1.0
      */
@@ -277,32 +313,29 @@ public final class PermissionUser {
      */
     public synchronized void addPerm(String perm) {
         if (perm.equals("**")) {
-            Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
-            for (Permission permTest : permT) {
-                perms.remove(permTest.getName());
-                perms.put(permTest.getName(), Boolean.TRUE);
+            List<String> allPerms = Utils.handleWildcard(true);
+            for (String perm_ : allPerms) {
+                if (!perms.containsKey(perm_)) {
+                    perms.put(perm_, Boolean.TRUE);
+                }
             }
         } else if (perm.equals("*")) {
-            Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
-            for (Permission permTest : permT) {
-                if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
-                    perms.remove(permTest.getName());
-                    perms.put(permTest.getName(), Boolean.TRUE);
+            List<String> allPerms = Utils.handleWildcard(false);
+            for (String perm_ : allPerms) {
+                if (!perms.containsKey(perm_)) {
+                    perms.put(perm_, Boolean.TRUE);
                 }
             }
         } else if (perm.equals("-*")) {
-            Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
-            for (Permission permTest : permT) {
-                if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
-                    perms.remove(permTest.getName());
-                    perms.put(permTest.getName(), Boolean.FALSE);
+            List<String> allPerms = Utils.handleWildcard(false);
+            for (String perm_ : allPerms) {
+                if (!perms.containsKey(perm_)) {
+                    perms.put(perm_, Boolean.TRUE);
                 }
             }
         } else if (perm.startsWith("-")) {
-            perms.remove(perm);
-            perms.put(perm, Boolean.TRUE);
+            perms.put(perm.substring(1), Boolean.FALSE);
         } else {
-            perms.remove(perm);
             perms.put(perm, Boolean.TRUE);
         }
     }

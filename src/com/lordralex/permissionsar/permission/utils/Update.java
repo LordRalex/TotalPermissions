@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.lordralex.permissionsar.permission.utils;
 
 import com.lordralex.permissionsar.PermissionsAR;
@@ -16,21 +12,36 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
- *
+ * @version 1.0
  * @author Joshua
+ * @since 1.0
  */
 public class Update {
 
-    boolean backupFiles = false;
+    private boolean backupFiles = false;
 
     public void Update() {
         backupFiles = true;
     }
 
+    /**
+     * Backs up the perms and config files if they have not been backed up
+     * already
+     *
+     * @since 1.0
+     */
     public void backup() {
         backup(backupFiles);
     }
 
+    /**
+     * Runs a backup of the permission and config files. If true, it will
+     * backup, false will not.
+     *
+     * @param bu Whether to back up or not.
+     *
+     * @since 1.0
+     */
     public void backup(boolean bu) {
         if (bu == false) {
             return;
@@ -75,6 +86,13 @@ public class Update {
         backupFiles = false;
     }
 
+    /**
+     * Merges the groups, users, and update files with the permissions file.
+     * This will first check to see if a backup is needed to be ran first. Once
+     * complete, the update files will be placed into a backup folder.
+     *
+     * @since 1.0
+     */
     public void runUpdate() {
         backup();
         FileConfiguration updateFile;

@@ -6,8 +6,8 @@ import org.bukkit.command.CommandSender;
  *
  * @author AmberK
  */
-public class HelpCommand extends SubCommand {
-    
+public class HelpCommand implements SubCommand {
+
     @Override
     public void execute(CommandSender cs, String[] args) {
         if (args.length == 1) {
@@ -26,18 +26,13 @@ public class HelpCommand extends SubCommand {
         }
         switch (page) {
             case 1:
-                pageOne(cs);
+                break;
+            case 2:
+                break;
+            case 3:
                 break;
         }
         cs.sendMessage("Use /par <command> help for help with a command");
-    }
-
-    /**
-     * First page to handle both none and one argument. Unfinished, falling
-     * asleep
-     */
-    public void pageOne(CommandSender cs) {
-        //cs.sendMessage();
     }
 
     @Override

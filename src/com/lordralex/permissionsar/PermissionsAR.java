@@ -15,7 +15,7 @@ import org.lr.mcstats.Metrics;
 
 /**
  * @version 1.0
- * @author Joshua
+ * @author Lord_Ralex
  * @since 1.0
  */
 public final class PermissionsAR extends JavaPlugin {
@@ -62,10 +62,11 @@ public final class PermissionsAR extends JavaPlugin {
             } catch (InvalidConfigurationException e) {
                 log.log(Level.SEVERE, "YAML error in your permissions.yml file");
                 log.log(Level.SEVERE, e.getMessage());
-                log.log(Level.SEVERE, "Attempting to load backup perms");
+                log.log(Level.WARNING, "Attempting to load backup perms");
                 try {
                     permFile = new YamlConfiguration();
                     permFile.load(new File(this.getLastBackupFolder(), "permissions.yml"));
+                    log.log(Level.WARNING, "Loaded an older perms files. Please repair your permissions before doing anything else though.");
                 } catch (InvalidConfigurationException e2) {
                     log.log(Level.SEVERE, "Errors in the last backup up, cannot load");
                     log.log(Level.SEVERE, "Shutting down perms plugin as there is nothing I can do ;~;");
@@ -84,18 +85,17 @@ public final class PermissionsAR extends JavaPlugin {
     public void onEnable() {
         try {
             if (manager == null) {
-                log.info("Creating perms manager");
+                log.config("Creating perms manager");
                 manager = new PermissionManager();
             }
             manager.load();
             if (listener == null) {
-                log.info("Creating player listener");
+                log.config("Creating player listener");
                 listener = new Listener();
             }
             Bukkit.getPluginManager().registerEvents(listener, this);
-            if(commands == null)
-            {
-                log.info("Creating command handler");
+            if (commands == null) {
+                log.config("Creating command handler");
                 commands = new CommandHandler();
             }
             getCommand("par").setExecutor(commands);
@@ -165,18 +165,52 @@ public final class PermissionsAR extends JavaPlugin {
         return instance;
     }
 
+    public static Listener getListener() {
+        return listener;
+    }
+
+    /**
+     * Returns the {@link Configuration} that is loaded
+     *
+     * @return The {@link Configuration} in use
+     *
+     * @since 1.0
+     */
     public static Configuration getConfiguration() {
         return config;
     }
 
+    /**
+     * Returns the Logger instance in use by the plugin
+     *
+     * @return The instance of the logger
+     *
+     * @since 1.0
+     */
     public static Logger getLog() {
         return instance.log;
     }
 
+    /**
+     * Returns the backup folder
+     *
+     * @return The backup folder
+     *
+     * @since 1.0
+     */
     public File getBackupFolder() {
         return new File(this.getDataFolder(), "backup");
     }
 
+    /**
+     * Returns the location of the last folder used to back up perms. This may
+     * not be exact, but uses the folder numbers.
+     *
+     * @return The File instance of the folder that contains the last backed up
+     * files
+     *
+     * @since 1.0
+     */
     public File getLastBackupFolder() {
         int highest = 0;
         File[] files = getBackupFolder().listFiles();

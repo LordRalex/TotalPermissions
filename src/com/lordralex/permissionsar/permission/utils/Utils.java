@@ -1,15 +1,19 @@
 package com.lordralex.permissionsar.permission.utils;
 
 import com.lordralex.permissionsar.PermissionsAR;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
 /**
  * @version 1.0
- * @author AmberK
+ * @author Rogue
  * @since 1.0
  */
 public class Utils {
@@ -94,9 +98,7 @@ public class Utils {
      * @return New message with colors shown
      */
     public static String formatColors(String message) {
-        String newMessage = message;
-        newMessage = ChatColor.translateAlternateColorCodes(ChatColor.COLOR_CHAR, newMessage);
-        return newMessage;
+        return ChatColor.translateAlternateColorCodes(ChatColor.COLOR_CHAR, message);
     }
 
     /**
@@ -106,8 +108,26 @@ public class Utils {
      * @return The non-colored version
      */
     public static String stripColors(String message) {
-        String newMessage = message;
-        newMessage = ChatColor.stripColor(newMessage);
-        return newMessage;
+        return ChatColor.stripColor(message);
+    }
+
+    public static List<String> handleWildcard() {
+        return handleWildcard(false);
+    }
+
+    public static List<String> handleWildcard(boolean isAll) {
+        List<String> perms = new ArrayList<String>();
+        Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
+        for (Permission permTest : permT) {
+            if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
+                perms.add(permTest.getName());
+            } else if (isAll) {
+                perms.add(permTest.getName());
+            }
+        }
+        return perms;
+    }
+
+    private Utils() {
     }
 }

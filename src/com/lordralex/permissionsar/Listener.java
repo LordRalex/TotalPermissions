@@ -47,21 +47,21 @@ public final class Listener implements org.bukkit.event.Listener {
         if (!user.getDebugState()) {
             return;
         }
-        //try {
+        try {
             String command = null;
-            //try {
+            try {
                 command = event.getMessage().split(" ", 2)[0].substring(1);
                 Command cmd = Bukkit.getPluginCommand(command);
                 if (cmd.testPermissionSilent(event.getPlayer())) {
-                    PermissionsAR.getLog().info("Player can use the command, has " + cmd.getPermission());
-                } else
-                {
-                    PermissionsAR.getLog().info("Player cannot use the command, does not have " + cmd.getPermission());
+                    PermissionsAR.getLog().info(event.getPlayer().getName() + " can use the command, has " + cmd.getPermission());
+                } else {
+                    PermissionsAR.getLog().info(event.getPlayer().getName() + " cannot use the command, does not have " + cmd.getPermission());
                 }
-            /*} catch (NullPointerException e) {
-                PermissionsAR.getLog().log(Level.CONFIG, command + " is not a registered command");
+            } catch (NullPointerException e) {
+                PermissionsAR.getLog().info(command + " is not a registered command");
             }
         } catch (IndexOutOfBoundsException e) {
-        }*/
+            PermissionsAR.getLog().info(event.getMessage() + " produced an IOoBE");
+        }
     }
 }

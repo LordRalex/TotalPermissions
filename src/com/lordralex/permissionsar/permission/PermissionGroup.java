@@ -1,6 +1,7 @@
 package com.lordralex.permissionsar.permission;
 
 import com.lordralex.permissionsar.PermissionsAR;
+import com.lordralex.permissionsar.permission.utils.Utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,37 +46,32 @@ public class PermissionGroup {
         }
         List<String> permList = groupSec.getStringList("permissions");
         for (String perm : permList) {
+            PermissionsAR.getLog().info("Adding perm: " + perm);
             if (perm.equals("**")) {
-                Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
-                for (Permission permTest : permT) {
-                    if (!perms.containsKey(permTest.getName())) {
-                        perms.put(permTest.getName(), Boolean.TRUE);
+                List<String> allPerms = Utils.handleWildcard(true);
+                for (String perm_ : allPerms) {
+                    if (!perms.containsKey(perm_)) {
+                        perms.put(perm_, Boolean.TRUE);
                     }
                 }
             } else if (perm.equals("*")) {
-                Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
-                for (Permission permTest : permT) {
-                    if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
-                        if (!perms.containsKey(permTest.getName())) {
-                            perms.put(permTest.getName(), Boolean.TRUE);
-                        }
+                List<String> allPerms = Utils.handleWildcard(false);
+                for (String perm_ : allPerms) {
+                    if (!perms.containsKey(perm_)) {
+                        perms.put(perm_, Boolean.TRUE);
                     }
                 }
             } else if (perm.equals("-*")) {
-                Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
-                for (Permission permTest : permT) {
-                    if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
-                        perms.put(perm, Boolean.FALSE);
+                List<String> allPerms = Utils.handleWildcard(false);
+                for (String perm_ : allPerms) {
+                    if (!perms.containsKey(perm_)) {
+                        perms.put(perm_, Boolean.TRUE);
                     }
                 }
             } else if (perm.startsWith("-")) {
-                if (!perms.containsKey(perm)) {
-                    perms.put(perm, Boolean.FALSE);
-                }
+                perms.put(perm.substring(1), Boolean.FALSE);
             } else {
-                if (!perms.containsKey(perm)) {
-                    perms.put(perm, Boolean.TRUE);
-                }
+                perms.put(perm, Boolean.TRUE);
             }
         }
         List<String> inherList = groupSec.getStringList("inheritance");
@@ -84,36 +80,30 @@ public class PermissionGroup {
             List<String> tempGroupPerms = tempGroup.getPerms();
             for (String perm : tempGroupPerms) {
                 if (perm.equals("**")) {
-                    Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
-                    for (Permission permTest : permT) {
-                        if (!perms.containsKey(permTest.getName())) {
-                            perms.put(permTest.getName(), Boolean.TRUE);
+                    List<String> allPerms = Utils.handleWildcard(true);
+                    for (String perm_ : allPerms) {
+                        if (!perms.containsKey(perm_)) {
+                            perms.put(perm_, Boolean.TRUE);
                         }
                     }
                 } else if (perm.equals("*")) {
-                    Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
-                    for (Permission permTest : permT) {
-                        if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
-                            if (!perms.containsKey(permTest.getName())) {
-                                perms.put(permTest.getName(), Boolean.TRUE);
-                            }
+                    List<String> allPerms = Utils.handleWildcard(false);
+                    for (String perm_ : allPerms) {
+                        if (!perms.containsKey(perm_)) {
+                            perms.put(perm_, Boolean.TRUE);
                         }
                     }
                 } else if (perm.equals("-*")) {
-                    Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
-                    for (Permission permTest : permT) {
-                        if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
-                            perms.put(perm, Boolean.FALSE);
+                    List<String> allPerms = Utils.handleWildcard(false);
+                    for (String perm_ : allPerms) {
+                        if (!perms.containsKey(perm_)) {
+                            perms.put(perm_, Boolean.TRUE);
                         }
                     }
                 } else if (perm.startsWith("-")) {
-                    if (!perms.containsKey(perm)) {
-                        perms.put(perm, Boolean.FALSE);
-                    }
+                    perms.put(perm.substring(1), Boolean.FALSE);
                 } else {
-                    if (!perms.containsKey(perm)) {
-                        perms.put(perm, Boolean.TRUE);
-                    }
+                    perms.put(perm, Boolean.TRUE);
                 }
             }
             inheritance.add(tempGroup);
@@ -207,32 +197,29 @@ public class PermissionGroup {
      */
     public synchronized void addPerm(String perm) {
         if (perm.equals("**")) {
-            Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
-            for (Permission permTest : permT) {
-                perms.remove(permTest.getName());
-                perms.put(permTest.getName(), Boolean.TRUE);
+            List<String> allPerms = Utils.handleWildcard(true);
+            for (String perm_ : allPerms) {
+                if (!perms.containsKey(perm_)) {
+                    perms.put(perm_, Boolean.TRUE);
+                }
             }
         } else if (perm.equals("*")) {
-            Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
-            for (Permission permTest : permT) {
-                if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
-                    perms.remove(permTest.getName());
-                    perms.put(permTest.getName(), Boolean.TRUE);
+            List<String> allPerms = Utils.handleWildcard(false);
+            for (String perm_ : allPerms) {
+                if (!perms.containsKey(perm_)) {
+                    perms.put(perm_, Boolean.TRUE);
                 }
             }
         } else if (perm.equals("-*")) {
-            Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
-            for (Permission permTest : permT) {
-                if (permTest.getDefault() == PermissionDefault.OP || permTest.getDefault() == PermissionDefault.TRUE) {
-                    perms.remove(permTest.getName());
-                    perms.put(permTest.getName(), Boolean.FALSE);
+            List<String> allPerms = Utils.handleWildcard(false);
+            for (String perm_ : allPerms) {
+                if (!perms.containsKey(perm_)) {
+                    perms.put(perm_, Boolean.TRUE);
                 }
             }
         } else if (perm.startsWith("-")) {
-            perms.remove(perm);
-            perms.put(perm, Boolean.TRUE);
+            perms.put(perm.substring(1), Boolean.FALSE);
         } else {
-            perms.remove(perm);
             perms.put(perm, Boolean.TRUE);
         }
     }

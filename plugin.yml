@@ -1,6 +1,7 @@
 main: com.lordralex.permissionsar.PermissionsAR
 name: PermissionsAR
-version: 0.1
+version: 0.0.1
+author: Lord_Ralex
 permissions:
   par.*:
     default: op
@@ -10,7 +11,13 @@ permissions:
     default: op
     children:
       par.command.help: true
+      par.command.debug: true
+      par.command.reload: true
   par.command.help:
+    default: op
+  par.command.debug:
+    default: op
+  par.command.reload:
     default: op
   par.command:
     default: op

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.lordralex.permissionsar.commands.subcommands;
 
 import com.lordralex.permissionsar.PermissionsAR;
@@ -12,7 +8,7 @@ import org.bukkit.command.CommandSender;
  *
  * @author Joshua
  */
-public class DebugCommand extends SubCommand {
+public class DebugCommand implements SubCommand {
 
     @Override
     public String getName() {
