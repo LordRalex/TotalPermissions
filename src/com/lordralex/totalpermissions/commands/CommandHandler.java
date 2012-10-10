@@ -1,6 +1,7 @@
-package com.lordralex.permissionsar.commands;
+package com.lordralex.totalpermissions.commands;
 
-import com.lordralex.permissionsar.commands.subcommands.SubCommand;
+import com.lordralex.totalpermissions.TotalPermissions;
+import com.lordralex.totalpermissions.commands.subcommands.*;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.ChatColor;
@@ -13,13 +14,18 @@ import org.bukkit.command.CommandSender;
  * @author Joshua
  * @since 1.0
  */
-public final class CommandHandler implements CommandExecutor {
-    
+public final class CommandHandler implements CommandExecutor, SubCommand {
+
     private Map<String, SubCommand> commands = new HashMap<String, SubCommand>();
-    
+
     public CommandHandler() {
+        //Create and store all commands to the map here
+        HelpCommand help = new HelpCommand();
+        commands.put(help.getName().toLowerCase().trim(), help);
+        DebugCommand debug = new DebugCommand();
+        commands.put(debug.getName().toLowerCase().trim(), debug);
     }
-    
+
     public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {
         String subCommand;
         if (args.length >= 1) {
@@ -29,7 +35,8 @@ public final class CommandHandler implements CommandExecutor {
         }
         SubCommand executor = commands.get(subCommand.toLowerCase());
         if (executor == null) {
-            return false;
+            sender.sendMessage("No command found, use /totalperms help for command list");
+            return true;
         }
         int length = args.length - 1;
         if (length < 0) {
@@ -46,5 +53,17 @@ public final class CommandHandler implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "You cannot use that command");
         }
         return true;
+    }
+
+    public String getName() {
+        return "";
+    }
+
+    public void execute(CommandSender sender, String[] args) {
+        onCommand(sender, TotalPermissions.getPlugin().getCommand("totalpermissions"), "totalpermissions", args);
+    }
+
+    public String getPerm() {
+        return "totalpermissions.command";
     }
 }

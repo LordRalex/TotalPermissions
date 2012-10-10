@@ -1,4 +1,4 @@
-package com.lordralex.permissionsar.commands.subcommands;
+package com.lordralex.totalpermissions.commands.subcommands;
 
 import org.bukkit.command.CommandSender;
 
@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
  *
  * @author Joshua
  */
-public abstract class SubCommand {
+public interface SubCommand {
 
     /**
      * Returns the command's name. When used, it is the /par [name].
