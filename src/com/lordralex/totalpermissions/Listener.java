@@ -1,6 +1,6 @@
-package com.lordralex.permissionsar;
+package com.lordralex.totalpermissions;
 
-import com.lordralex.permissionsar.permission.PermissionUser;
+import com.lordralex.totalpermissions.permission.PermissionUser;
 import java.util.List;
 import java.util.logging.Level;
 import org.bukkit.Bukkit;
@@ -23,7 +23,7 @@ public final class Listener implements org.bukkit.event.Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLogin(PlayerLoginEvent event) {
         //Adds a player to our cache and set up their permissions
-        PermissionUser user = PermissionsAR.getManager().getUser(event.getPlayer());
+        PermissionUser user = TotalPermissions.getManager().getUser(event.getPlayer());
         user.setPerms(event.getPlayer());
     }
 
@@ -31,19 +31,19 @@ public final class Listener implements org.bukkit.event.Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         //removes permissions from a player, leaves them in the cache though
         Player player = event.getPlayer();
-        player.removeAttachment(PermissionsAR.getManager().getUser(player).getAtt());
+        player.removeAttachment(TotalPermissions.getManager().getUser(player).getAtt());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerKickEvent event) {
         //removes permissions from a player, leaves them in the cache though
         Player player = event.getPlayer();
-        player.removeAttachment(PermissionsAR.getManager().getUser(player).getAtt());
+        player.removeAttachment(TotalPermissions.getManager().getUser(player).getAtt());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-        PermissionUser user = PermissionsAR.getManager().getUser(event.getPlayer());
+        PermissionUser user = TotalPermissions.getManager().getUser(event.getPlayer());
         if (!user.getDebugState()) {
             return;
         }
@@ -53,15 +53,15 @@ public final class Listener implements org.bukkit.event.Listener {
                 command = event.getMessage().split(" ", 2)[0].substring(1);
                 Command cmd = Bukkit.getPluginCommand(command);
                 if (cmd.testPermissionSilent(event.getPlayer())) {
-                    PermissionsAR.getLog().info(event.getPlayer().getName() + " can use the command, has " + cmd.getPermission());
+                    TotalPermissions.getLog().info(event.getPlayer().getName() + " can use the command, has " + cmd.getPermission());
                 } else {
-                    PermissionsAR.getLog().info(event.getPlayer().getName() + " cannot use the command, does not have " + cmd.getPermission());
+                    TotalPermissions.getLog().info(event.getPlayer().getName() + " cannot use the command, does not have " + cmd.getPermission());
                 }
             } catch (NullPointerException e) {
-                PermissionsAR.getLog().info(command + " is not a registered command");
+                TotalPermissions.getLog().info(command + " is not a registered command");
             }
         } catch (IndexOutOfBoundsException e) {
-            PermissionsAR.getLog().info(event.getMessage() + " produced an IOoBE");
+            TotalPermissions.getLog().info(event.getMessage() + " produced an IOoBE");
         }
     }
 }

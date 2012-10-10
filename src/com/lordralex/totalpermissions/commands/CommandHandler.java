@@ -1,7 +1,7 @@
-package com.lordralex.permissionsar.commands;
+package com.lordralex.totalpermissions.commands;
 
-import com.lordralex.permissionsar.PermissionsAR;
-import com.lordralex.permissionsar.commands.subcommands.*;
+import com.lordralex.totalpermissions.TotalPermissions;
+import com.lordralex.totalpermissions.commands.subcommands.*;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.ChatColor;
@@ -35,7 +35,7 @@ public final class CommandHandler implements CommandExecutor, SubCommand {
         }
         SubCommand executor = commands.get(subCommand.toLowerCase());
         if (executor == null) {
-            sender.sendMessage("No command found, use /par help for command list");
+            sender.sendMessage("No command found, use /totalperms help for command list");
             return true;
         }
         int length = args.length - 1;
@@ -60,10 +60,10 @@ public final class CommandHandler implements CommandExecutor, SubCommand {
     }
 
     public void execute(CommandSender sender, String[] args) {
-        onCommand(sender, PermissionsAR.getPlugin().getCommand("par"), "par", args);
+        onCommand(sender, TotalPermissions.getPlugin().getCommand("totalpermissions"), "totalpermissions", args);
     }
 
     public String getPerm() {
-        return "permissionsar.command";
+        return "totalpermissions.command";
     }
 }

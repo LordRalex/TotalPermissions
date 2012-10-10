@@ -1,6 +1,6 @@
-package com.lordralex.permissionsar.permission.utils;
+package com.lordralex.totalpermissions.permission.utils;
 
-import com.lordralex.permissionsar.PermissionsAR;
+import com.lordralex.totalpermissions.TotalPermissions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -40,7 +40,7 @@ public class Utils {
      * @param message Message to send
      */
     public static void out(String message) {
-        PermissionsAR.getLog().info(stripColors(message));
+        TotalPermissions.getLog().info(stripColors(message));
     }
 
     /**

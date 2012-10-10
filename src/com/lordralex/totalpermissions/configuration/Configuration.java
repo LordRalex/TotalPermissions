@@ -1,6 +1,6 @@
-package com.lordralex.permissionsar.configuration;
+package com.lordralex.totalpermissions.configuration;
 
-import com.lordralex.permissionsar.PermissionsAR;
+import com.lordralex.totalpermissions.TotalPermissions;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -12,13 +12,13 @@ public class Configuration {
     File configPath;
 
     public Configuration() {
-        config = PermissionsAR.getConfigFile(); //loads the file from the plugin's view.
-        configPath = new File(PermissionsAR.getPlugin().getDataFolder(), "config.yml");
+        config = TotalPermissions.getConfigFile(); //loads the file from the plugin's view.
+        configPath = new File(TotalPermissions.getPlugin().getDataFolder(), "config.yml");
     }
 
     public void loadDefaults() {
         if (!configPath.exists()) {
-            PermissionsAR.getPlugin().saveDefaultConfig();
+            TotalPermissions.getPlugin().saveDefaultConfig();
         }
         
         //whether this operates in a strict mode, ignoring perms given by default. True means use strict.
@@ -29,7 +29,7 @@ public class Configuration {
         try {
             config.save(configPath);
         } catch (IOException e) {
-            PermissionsAR.getLog().log(Level.SEVERE, null, e);
+            TotalPermissions.getLog().log(Level.SEVERE, null, e);
         }
     }
 

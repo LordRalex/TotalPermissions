@@ -1,4 +1,4 @@
-package com.lordralex.permissionsar.commands.subcommands;
+package com.lordralex.totalpermissions.commands.subcommands;
 
 import org.bukkit.command.CommandSender;
 

@@ -1,8 +1,8 @@
-package com.lordralex.permissionsar;
+package com.lordralex.totalpermissions;
 
-import com.lordralex.permissionsar.commands.CommandHandler;
-import com.lordralex.permissionsar.configuration.Configuration;
-import com.lordralex.permissionsar.permission.utils.Update;
+import com.lordralex.totalpermissions.commands.CommandHandler;
+import com.lordralex.totalpermissions.configuration.Configuration;
+import com.lordralex.totalpermissions.permission.utils.Update;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,13 +18,13 @@ import org.lr.mcstats.Metrics;
  * @author Lord_Ralex
  * @since 1.0
  */
-public final class PermissionsAR extends JavaPlugin {
+public final class TotalPermissions extends JavaPlugin {
 
     private static FileConfiguration permFile;
     private static FileConfiguration configFile;
     public Logger log;
     private static PermissionManager manager;
-    private static PermissionsAR instance;
+    private static TotalPermissions instance;
     private static Configuration config;
     private static Listener listener;
     private Metrics metrics;
@@ -76,7 +76,7 @@ public final class PermissionsAR extends JavaPlugin {
             config = new Configuration();
             log.info("Initial preperations complete");
         } catch (Exception e) {
-            log.log(Level.SEVERE, "Error in starting up PermissionsAR (Version " + this.getDescription().getVersion() + ")", e);
+            log.log(Level.SEVERE, "Error in starting up " + getName() + " (Version " + this.getDescription().getVersion() + ")", e);
             this.getPluginLoader().disablePlugin(this);
         }
     }
@@ -161,7 +161,7 @@ public final class PermissionsAR extends JavaPlugin {
      *
      * @return Instance of the plugin
      */
-    public static PermissionsAR getPlugin() {
+    public static TotalPermissions getPlugin() {
         return instance;
     }
 

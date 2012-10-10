@@ -1,6 +1,6 @@
-package com.lordralex.permissionsar.permission.utils;
+package com.lordralex.totalpermissions.permission.utils;
 
-import com.lordralex.permissionsar.PermissionsAR;
+import com.lordralex.totalpermissions.TotalPermissions;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class Update {
         if (bu == false) {
             return;
         }
-        File dataFolder = PermissionsAR.getPlugin().getDataFolder();
+        File dataFolder = TotalPermissions.getPlugin().getDataFolder();
         if (!dataFolder.exists()) {
             dataFolder.mkdirs();
         }
@@ -74,12 +74,12 @@ public class Update {
         File backupFolder = new File(backup, Integer.toString(highest));
         backupFolder.mkdirs();
         try {
-            PermissionsAR.getConfigFile().save(new File(backupFolder, "config.yml"));
+            TotalPermissions.getConfigFile().save(new File(backupFolder, "config.yml"));
         } catch (IOException ex) {
             Logger.getLogger(Update.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
-            PermissionsAR.getPermFile().save(new File(backupFolder, "permissions.yml"));
+            TotalPermissions.getPermFile().save(new File(backupFolder, "permissions.yml"));
         } catch (IOException ex) {
             Logger.getLogger(Update.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -96,8 +96,8 @@ public class Update {
     public void runUpdate() {
         backup();
         FileConfiguration updateFile;
-        FileConfiguration perms = PermissionsAR.getPermFile();
-        File datafolder = PermissionsAR.getPlugin().getDataFolder();
+        FileConfiguration perms = TotalPermissions.getPermFile();
+        File datafolder = TotalPermissions.getPlugin().getDataFolder();
         String[] updateFileNames = new String[]{
             "groups.yml",
             "users.yml",
@@ -162,7 +162,7 @@ public class Update {
     }
 
     private void moveFiles() {
-        File dataFolder = PermissionsAR.getPlugin().getDataFolder();
+        File dataFolder = TotalPermissions.getPlugin().getDataFolder();
         if (!dataFolder.exists()) {
             dataFolder.mkdirs();
         }
@@ -195,15 +195,15 @@ public class Update {
             "update.yml"
         };
         for (String name : updateFileNames) {
-            if (!(new File(PermissionsAR.getPlugin().getDataFolder(), name).exists())) {
+            if (!(new File(TotalPermissions.getPlugin().getDataFolder(), name).exists())) {
                 continue;
             }
             try {
-                YamlConfiguration.loadConfiguration(new File(PermissionsAR.getPlugin().getDataFolder(), name)).save(new File(backupFolder, name));
+                YamlConfiguration.loadConfiguration(new File(TotalPermissions.getPlugin().getDataFolder(), name)).save(new File(backupFolder, name));
             } catch (IOException ex) {
                 Logger.getLogger(Update.class.getName()).log(Level.SEVERE, null, ex);
             }
-            new File(PermissionsAR.getPlugin().getDataFolder(), name).delete();
+            new File(TotalPermissions.getPlugin().getDataFolder(), name).delete();
         }
     }
 }

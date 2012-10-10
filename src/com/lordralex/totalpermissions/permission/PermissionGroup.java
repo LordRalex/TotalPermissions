@@ -1,4 +1,4 @@
-package com.lordralex.permissionsar.permission;
+package com.lordralex.totalpermissions.permission;
 
 /**
  * @version 1.0

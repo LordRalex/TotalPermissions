@@ -1,25 +1,12 @@
-package com.lordralex.permissionsar.permission;
+package com.lordralex.totalpermissions.permission;
 
-import com.lordralex.permissionsar.PermissionsAR;
-import com.lordralex.permissionsar.permission.utils.Utils;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.lordralex.totalpermissions.TotalPermissions;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
-import org.bukkit.permissions.PermissionAttachmentInfo;
-import org.bukkit.permissions.PermissionDefault;
 
 /**
  * @version 1.0
@@ -81,7 +68,7 @@ public final class PermissionUser extends PermissionBase {
                 }
             }
         }
-        attachment = player.addAttachment(PermissionsAR.getPlugin());
+        attachment = player.addAttachment(TotalPermissions.getPlugin());
         Set<Entry<String, Boolean>> entries = perms.entrySet();
         for (Entry entry : entries) {
             attachment.setPermission((String) entry.getKey(), ((Boolean) entry.getValue()).booleanValue());

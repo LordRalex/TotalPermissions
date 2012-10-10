@@ -2,10 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.lordralex.permissionsar.commands.subcommands;
+package com.lordralex.totalpermissions.commands.subcommands;
 
-import com.lordralex.permissionsar.PermissionManager;
-import com.lordralex.permissionsar.PermissionsAR;
+import com.lordralex.totalpermissions.PermissionManager;
+import com.lordralex.totalpermissions.TotalPermissions;
 import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -27,29 +27,29 @@ public class ReloadCommand implements SubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        sender.sendMessage(ChatColor.YELLOW + "Reloading " + PermissionsAR.getPlugin().getDescription().getFullName());
-        PermissionManager manager = PermissionsAR.getManager();
+        sender.sendMessage(ChatColor.YELLOW + "Reloading " + TotalPermissions.getPlugin().getDescription().getFullName());
+        PermissionManager manager = TotalPermissions.getManager();
         manager.unload();
         try {
             manager.load();
         } catch (InvalidConfigurationException ex) {
             sender.sendMessage(ChatColor.RED + "An error occured when reloading, check your server logs");
-            PermissionsAR.getLog().log(Level.SEVERE, null, ex);
+            TotalPermissions.getLog().log(Level.SEVERE, null, ex);
         }
         for (Player player : Bukkit.getOnlinePlayers()) {
             PlayerLoginEvent refreshEvent = new PlayerLoginEvent(player, "", null);
             try {
-                PermissionsAR.getListener().onPlayerLogin(refreshEvent);
+                TotalPermissions.getListener().onPlayerLogin(refreshEvent);
             } catch (Exception e) {
                 sender.sendMessage(ChatColor.RED + "An error occured while reloading " + player.getName());
-                PermissionsAR.getLog().log(Level.SEVERE, null, e);
+                TotalPermissions.getLog().log(Level.SEVERE, null, e);
             }
         }
-        sender.sendMessage(ChatColor.GREEN + PermissionsAR.getPlugin().getDescription().getFullName() + " has reloaded");
+        sender.sendMessage(ChatColor.GREEN + TotalPermissions.getPlugin().getDescription().getFullName() + " has reloaded");
     }
 
     @Override
     public String getPerm() {
-        return "permissionsar.command.reload";
+        return "totalpermissions.command.reload";
     }
 }

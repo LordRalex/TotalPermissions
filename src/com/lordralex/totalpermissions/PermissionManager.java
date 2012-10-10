@@ -1,7 +1,7 @@
-package com.lordralex.permissionsar;
+package com.lordralex.totalpermissions;
 
-import com.lordralex.permissionsar.permission.PermissionGroup;
-import com.lordralex.permissionsar.permission.PermissionUser;
+import com.lordralex.totalpermissions.permission.PermissionGroup;
+import com.lordralex.totalpermissions.permission.PermissionUser;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -26,7 +26,7 @@ public final class PermissionManager {
     }
 
     public void load() throws InvalidConfigurationException {
-        FileConfiguration perms = PermissionsAR.getPermFile();
+        FileConfiguration perms = TotalPermissions.getPermFile();
         ConfigurationSection filegroups = perms.getConfigurationSection("groups");
         if (groups == null) {
             throw new InvalidConfigurationException("You must define at least one group");

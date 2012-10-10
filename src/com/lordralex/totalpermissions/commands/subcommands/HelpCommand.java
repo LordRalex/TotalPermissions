@@ -1,4 +1,4 @@
-package com.lordralex.permissionsar.commands.subcommands;
+package com.lordralex.totalpermissions.commands.subcommands;
 
 import org.bukkit.command.CommandSender;
 
@@ -32,7 +32,7 @@ public class HelpCommand implements SubCommand {
             case 3:
                 break;
         }
-        cs.sendMessage("Use /par <command> help for help with a command");
+        cs.sendMessage("Use /totalperms <command> help for help with a command");
     }
 
     @Override
@@ -42,6 +42,6 @@ public class HelpCommand implements SubCommand {
 
     @Override
     public String getPerm() {
-        return "par.command.help";
+        return "totalpermissions.command.help";
     }
 }

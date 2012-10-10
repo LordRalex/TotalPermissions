@@ -1,7 +1,7 @@
-package com.lordralex.permissionsar.commands.subcommands;
+package com.lordralex.totalpermissions.commands.subcommands;
 
-import com.lordralex.permissionsar.PermissionsAR;
-import com.lordralex.permissionsar.permission.PermissionUser;
+import com.lordralex.totalpermissions.TotalPermissions;
+import com.lordralex.totalpermissions.permission.PermissionUser;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -21,7 +21,7 @@ public class DebugCommand implements SubCommand {
             sender.sendMessage("No target specified, for help, use /par help debug");
             return;
         }
-        PermissionUser target = PermissionsAR.getManager().getUser(args[0]);
+        PermissionUser target = TotalPermissions.getManager().getUser(args[0]);
         if (target == null) {
             sender.sendMessage("Target user (" + args[0] + ") was not found");
             return;
@@ -46,6 +46,6 @@ public class DebugCommand implements SubCommand {
 
     @Override
     public String getPerm() {
-        return "permissionsar.command.debug";
+        return "totalpermissions.command.debug";
     }
 }
