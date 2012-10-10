@@ -1,5 +1,6 @@
 package com.lordralex.permissionsar.commands;
 
+import com.lordralex.permissionsar.PermissionsAR;
 import com.lordralex.permissionsar.commands.subcommands.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +14,7 @@ import org.bukkit.command.CommandSender;
  * @author Joshua
  * @since 1.0
  */
-public final class CommandHandler implements CommandExecutor {
+public final class CommandHandler implements CommandExecutor, SubCommand {
 
     private Map<String, SubCommand> commands = new HashMap<String, SubCommand>();
 
@@ -52,5 +53,17 @@ public final class CommandHandler implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "You cannot use that command");
         }
         return true;
+    }
+
+    public String getName() {
+        return "";
+    }
+
+    public void execute(CommandSender sender, String[] args) {
+        onCommand(sender, PermissionsAR.getPlugin().getCommand("par"), "par", args);
+    }
+
+    public String getPerm() {
+        return "permissionsar.command";
     }
 }

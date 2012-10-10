@@ -108,7 +108,7 @@ public final class PermissionsAR extends JavaPlugin {
                 log.log(Level.SEVERE, "YAML error in your permissions file");
                 log.log(Level.SEVERE, ((InvalidConfigurationException) e).getMessage());
             } else {
-                log.log(Level.SEVERE, "Error in starting up PermissionsAR (Version " + this.getDescription().getVersion() + ")", e);
+                log.log(Level.SEVERE, "Error in starting up " + getName() + " (Version " + this.getDescription().getVersion() + ")", e);
             }
             this.getPluginLoader().disablePlugin(this);
         }

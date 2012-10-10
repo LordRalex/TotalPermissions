@@ -1,5 +1,6 @@
 groups:
   Member:
+    default: true
     permissions:
     - node1.node
     - node2.node
@@ -7,6 +8,6 @@ groups:
     permissions:
     - '*'
 users:
-  Lord_Ralex:
+  whatisyourname:
     groups:
     - Admin

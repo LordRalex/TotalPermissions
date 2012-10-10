@@ -7,11 +7,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
+ * Loads all permissions for every type of setup. This may load and try to find
+ * excess information, such as inheritance in users.
  *
+ * @since 1.0
  * @author Joshua
+ * @version 1.0
  */
 public abstract class PermissionBase {
 
@@ -28,32 +34,7 @@ public abstract class PermissionBase {
         if (permList != null) {
             for (String perm : permList) {
                 PermissionsAR.getLog().info("Adding perm: " + perm);
-                if (perm.equals("**")) {
-                    List<String> allPerms = Utils.handleWildcard(true);
-                    for (String perm_ : allPerms) {
-                        if (!perms.containsKey(perm_)) {
-                            perms.put(perm_, Boolean.TRUE);
-                        }
-                    }
-                } else if (perm.equals("*")) {
-                    List<String> allPerms = Utils.handleWildcard(false);
-                    for (String perm_ : allPerms) {
-                        if (!perms.containsKey(perm_)) {
-                            perms.put(perm_, Boolean.TRUE);
-                        }
-                    }
-                } else if (perm.equals("-*")) {
-                    List<String> allPerms = Utils.handleWildcard(false);
-                    for (String perm_ : allPerms) {
-                        if (!perms.containsKey(perm_)) {
-                            perms.put(perm_, Boolean.TRUE);
-                        }
-                    }
-                } else if (perm.startsWith("-")) {
-                    perms.put(perm.substring(1), Boolean.FALSE);
-                } else {
-                    perms.put(perm, Boolean.TRUE);
-                }
+                addPerm(perm);
             }
         }
 
@@ -63,32 +44,7 @@ public abstract class PermissionBase {
                 PermissionGroup tempGroup = PermissionsAR.getManager().getGroup(tempName);
                 List<String> tempGroupPerms = tempGroup.getPerms();
                 for (String perm : tempGroupPerms) {
-                    if (perm.equals("**")) {
-                        List<String> allPerms = Utils.handleWildcard(true);
-                        for (String perm_ : allPerms) {
-                            if (!perms.containsKey(perm_)) {
-                                perms.put(perm_, Boolean.TRUE);
-                            }
-                        }
-                    } else if (perm.equals("*")) {
-                        List<String> allPerms = Utils.handleWildcard(false);
-                        for (String perm_ : allPerms) {
-                            if (!perms.containsKey(perm_)) {
-                                perms.put(perm_, Boolean.TRUE);
-                            }
-                        }
-                    } else if (perm.equals("-*")) {
-                        List<String> allPerms = Utils.handleWildcard(false);
-                        for (String perm_ : allPerms) {
-                            if (!perms.containsKey(perm_)) {
-                                perms.put(perm_, Boolean.TRUE);
-                            }
-                        }
-                    } else if (perm.startsWith("-")) {
-                        perms.put(perm.substring(1), Boolean.FALSE);
-                    } else {
-                        perms.put(perm, Boolean.TRUE);
-                    }
+                    addPerm(perm);
                 }
             }
         }
@@ -99,32 +55,7 @@ public abstract class PermissionBase {
                 PermissionGroup tempGroup = PermissionsAR.getManager().getGroup(tempName);
                 List<String> tempGroupPerms = tempGroup.getPerms();
                 for (String perm : tempGroupPerms) {
-                    if (perm.equals("**")) {
-                        List<String> allPerms = Utils.handleWildcard(true);
-                        for (String perm_ : allPerms) {
-                            if (!perms.containsKey(perm_)) {
-                                perms.put(perm_, Boolean.TRUE);
-                            }
-                        }
-                    } else if (perm.equals("*")) {
-                        List<String> allPerms = Utils.handleWildcard(false);
-                        for (String perm_ : allPerms) {
-                            if (!perms.containsKey(perm_)) {
-                                perms.put(perm_, Boolean.TRUE);
-                            }
-                        }
-                    } else if (perm.equals("-*")) {
-                        List<String> allPerms = Utils.handleWildcard(false);
-                        for (String perm_ : allPerms) {
-                            if (!perms.containsKey(perm_)) {
-                                perms.put(perm_, Boolean.TRUE);
-                            }
-                        }
-                    } else if (perm.startsWith("-")) {
-                        perms.put(perm.substring(1), Boolean.FALSE);
-                    } else {
-                        perms.put(perm, Boolean.TRUE);
-                    }
+                    addPerm(perm);
                 }
             }
         }
@@ -135,32 +66,7 @@ public abstract class PermissionBase {
                 PermissionGroup tempGroup = PermissionsAR.getManager().getGroup(tempName);
                 List<String> tempGroupPerms = tempGroup.getPerms();
                 for (String perm : tempGroupPerms) {
-                    if (perm.equals("**")) {
-                        List<String> allPerms = Utils.handleWildcard(true);
-                        for (String perm_ : allPerms) {
-                            if (!perms.containsKey(perm_)) {
-                                perms.put(perm_, Boolean.TRUE);
-                            }
-                        }
-                    } else if (perm.equals("*")) {
-                        List<String> allPerms = Utils.handleWildcard(false);
-                        for (String perm_ : allPerms) {
-                            if (!perms.containsKey(perm_)) {
-                                perms.put(perm_, Boolean.TRUE);
-                            }
-                        }
-                    } else if (perm.equals("-*")) {
-                        List<String> allPerms = Utils.handleWildcard(false);
-                        for (String perm_ : allPerms) {
-                            if (!perms.containsKey(perm_)) {
-                                perms.put(perm_, Boolean.TRUE);
-                            }
-                        }
-                    } else if (perm.startsWith("-")) {
-                        perms.put(perm.substring(1), Boolean.FALSE);
-                    } else {
-                        perms.put(perm, Boolean.TRUE);
-                    }
+                    addPerm(perm);
                 }
             }
         }
@@ -170,6 +76,27 @@ public abstract class PermissionBase {
             Set<String> optionsList = optionSec.getKeys(true);
             for (String option : optionsList) {
                 options.put(option, optionSec.get(option));
+            }
+        }
+
+        //handles the loading of the commands aspect of the plugin
+        List<String> commandList = section.getStringList("commands");
+        if (commandList != null) {
+            for (String command : commandList) {
+                PluginCommand cmd = Bukkit.getPluginCommand(command);
+                if (cmd == null) {
+                    //removes a trailing / if possible
+                    if (command.startsWith("/")) {
+                        command = command.substring(1);
+                        cmd = Bukkit.getPluginCommand(command);
+                        if (cmd == null) {
+                            continue;
+                        }
+                    } else {
+                        continue;
+                    }
+                }
+                perms.put(cmd.getPermission(), Boolean.TRUE);
             }
         }
     }
@@ -243,7 +170,7 @@ public abstract class PermissionBase {
      *
      * @param perm Perm to add to this group
      */
-    public synchronized void addPerm(String perm) {
+    public final synchronized void addPerm(String perm) {
         if (perm.equals("**")) {
             List<String> allPerms = Utils.handleWildcard(true);
             for (String perm_ : allPerms) {
@@ -267,11 +194,20 @@ public abstract class PermissionBase {
             }
         } else if (perm.startsWith("-")) {
             perms.put(perm.substring(1), Boolean.FALSE);
+        } else if (perm.startsWith("^")) {
+            perms.put(perm.substring(1), Boolean.FALSE);
         } else {
             perms.put(perm, Boolean.TRUE);
         }
     }
 
+    /**
+     * Checks to see if permission is given. This only checks the plugin-given
+     * permissions
+     *
+     * @param perm Permission to check for
+     * @return True if user/group has permission based on plugin
+     */
     public synchronized boolean has(String perm) {
         Boolean result = perms.get(perm);
         if (result != null && result.booleanValue()) {

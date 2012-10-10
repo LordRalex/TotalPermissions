@@ -37,11 +37,11 @@ public class ReloadCommand implements SubCommand {
             PermissionsAR.getLog().log(Level.SEVERE, null, ex);
         }
         for (Player player : Bukkit.getOnlinePlayers()) {
-            PlayerLoginEvent refreshEvent = new PlayerLoginEvent(player, player.getAddress().getAddress().getHostName(), player.getAddress().getAddress());
+            PlayerLoginEvent refreshEvent = new PlayerLoginEvent(player, "", null);
             try {
                 PermissionsAR.getListener().onPlayerLogin(refreshEvent);
             } catch (Exception e) {
-                sender.sendMessage(ChatColor.RED + "An error occured while reload " + player.getName());
+                sender.sendMessage(ChatColor.RED + "An error occured while reloading " + player.getName());
                 PermissionsAR.getLog().log(Level.SEVERE, null, e);
             }
         }
