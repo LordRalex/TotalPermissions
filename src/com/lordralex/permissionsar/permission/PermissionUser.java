@@ -26,154 +26,17 @@ import org.bukkit.permissions.PermissionDefault;
  * @author Joshua
  * @since 1.0
  */
-public final class PermissionUser {
+public final class PermissionUser extends PermissionBase {
 
-    private final String playerName;
     private Player player = null;
-    private final Map<String, Boolean> perms = new HashMap<String, Boolean>();
-    private final List<PermissionGroup> groups = new ArrayList<PermissionGroup>();
-    private final Map<String, Object> options = new HashMap<String, Object>();
     private PermissionAttachment attachment;
     private boolean isDebug;
 
-    public PermissionUser() {
-        playerName = "";
-    }
-
     public PermissionUser(String aName) {
-        playerName = aName;
-        perms.clear();
-        groups.clear();
-        options.clear();
-        ConfigurationSection userSec = PermissionsAR.getPermFile().getConfigurationSection("users." + playerName);
-        if (userSec == null) {
-            FileConfiguration conf = PermissionsAR.getPermFile();
-            List<String> def = new ArrayList<String>();
-            def.add(PermissionsAR.getManager().getDefaultGroup());
-            conf.set("users." + playerName + ".group", def);
-            try {
-                conf.save(new File(PermissionsAR.getPlugin().getDataFolder(), "permissions.yml"));
-            } catch (IOException ex) {
-                Logger.getLogger(PermissionUser.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            userSec = conf.getConfigurationSection("users." + playerName);
-        }
-        List<String> permList = userSec.getStringList("permissions");
-        if (permList != null) {
-            for (String perm : permList) {
-                if (perm.equals("**")) {
-                    List<String> allPerms = Utils.handleWildcard(true);
-                    for (String perm_ : allPerms) {
-                        if (!perms.containsKey(perm_)) {
-                            perms.put(perm_, Boolean.TRUE);
-                        }
-                    }
-                } else if (perm.equals("*")) {
-                    List<String> allPerms = Utils.handleWildcard(false);
-                    for (String perm_ : allPerms) {
-                        if (!perms.containsKey(perm_)) {
-                            perms.put(perm_, Boolean.TRUE);
-                        }
-                    }
-                } else if (perm.equals("-*")) {
-                    List<String> allPerms = Utils.handleWildcard(false);
-                    for (String perm_ : allPerms) {
-                        if (!perms.containsKey(perm_)) {
-                            perms.put(perm_, Boolean.TRUE);
-                        }
-                    }
-                } else if (perm.startsWith("-")) {
-                    perms.put(perm.substring(1), Boolean.FALSE);
-                } else {
-                    perms.put(perm, Boolean.TRUE);
-                }
-            }
-        }
-        List<String> groupsList = userSec.getStringList("group");
-        if (groupsList != null) {
-            for (String groupName : groupsList) {
-                PermissionGroup group = PermissionsAR.getManager().getGroup(groupName);
-                List<String> groupPerms = group.getPerms();
-                for (String perm : groupPerms) {
-                    PermissionsAR.getLog().info("Adding perm: " + perm);
-                    if (perm.equals("**")) {
-                        List<String> allPerms = Utils.handleWildcard(true);
-                        for (String perm_ : allPerms) {
-                            if (!perms.containsKey(perm_)) {
-                                perms.put(perm_, Boolean.TRUE);
-                            }
-                        }
-                    } else if (perm.equals("*")) {
-                        List<String> allPerms = Utils.handleWildcard(false);
-                        for (String perm_ : allPerms) {
-                            if (!perms.containsKey(perm_)) {
-                                perms.put(perm_, Boolean.TRUE);
-                            }
-                        }
-                    } else if (perm.equals("-*")) {
-                        List<String> allPerms = Utils.handleWildcard(false);
-                        for (String perm_ : allPerms) {
-                            if (!perms.containsKey(perm_)) {
-                                perms.put(perm_, Boolean.TRUE);
-                            }
-                        }
-                    } else if (perm.startsWith("-")) {
-                        perms.put(perm.substring(1), Boolean.FALSE);
-                    } else {
-                        perms.put(perm, Boolean.TRUE);
-                    }
-
-                }
-                groups.add(group);
-            }
-        }
-        List<String> groupsList2 = userSec.getStringList("groups");
-        if (groupsList2 != null) {
-            for (String groupName : groupsList2) {
-                PermissionGroup group = PermissionsAR.getManager().getGroup(groupName);
-                List<String> groupPerms = group.getPerms();
-                for (String perm : groupPerms) {
-                    if (perm.equals("**")) {
-                        List<String> allPerms = Utils.handleWildcard(true);
-                        for (String perm_ : allPerms) {
-                            if (!perms.containsKey(perm_)) {
-                                perms.put(perm_, Boolean.TRUE);
-                            }
-                        }
-                    } else if (perm.equals("*")) {
-                        List<String> allPerms = Utils.handleWildcard(false);
-                        for (String perm_ : allPerms) {
-                            if (!perms.containsKey(perm_)) {
-                                perms.put(perm_, Boolean.TRUE);
-                            }
-                        }
-                    } else if (perm.equals("-*")) {
-                        List<String> allPerms = Utils.handleWildcard(false);
-                        for (String perm_ : allPerms) {
-                            if (!perms.containsKey(perm_)) {
-                                perms.put(perm_, Boolean.TRUE);
-                            }
-                        }
-                    } else if (perm.startsWith("-")) {
-                        perms.put(perm.substring(1), Boolean.FALSE);
-                    } else {
-                        perms.put(perm, Boolean.TRUE);
-                    }
-                }
-                groups.add(group);
-            }
-        }
-        ConfigurationSection optionSec = userSec.getConfigurationSection("options");
-        if (optionSec != null) {
-            Set<String> optionsList = optionSec.getKeys(true);
-            for (String option : optionsList) {
-                options.put(option, optionSec.get(option));
-            }
-        }
-
+        super("users", aName);
         //checks to see if a player already on the server matches this,
         //if so, then set perms up now
-        Player test = Bukkit.getPlayerExact(playerName);
+        Player test = Bukkit.getPlayerExact(name);
         if (test != null) {
             player = test;
             setPerms(player);
@@ -226,76 +89,6 @@ public final class PermissionUser {
     }
 
     /**
-     * Gets a list of the permissions for this user, including those that are
-     * inherited. A '-' is added in front of negative nodes.
-     *
-     * @return List of permissions with - in front of negative nodes
-     *
-     * @since 1.0
-     */
-    public synchronized List<String> getPerms() {
-        List<String> permList = new ArrayList<String>();
-        Entry[] permKeys = perms.entrySet().toArray(new Entry[0]);
-        for (Entry entry : permKeys) {
-            String perm = (String) entry.getKey();
-            if (!((Boolean) entry.getValue()).booleanValue()) {
-                perm = "-" + perm;
-            }
-            permList.add(perm);
-        }
-        return permList;
-    }
-
-    /**
-     * Returns all the groups this user is in.
-     *
-     * @return Groups this user is in
-     */
-    public PermissionGroup[] getGroups() {
-        return groups.toArray(new PermissionGroup[0]);
-    }
-
-    /**
-     * Get the name of this user.
-     *
-     * @return Name of user
-     *
-     * @since 1.0
-     */
-    public String getName() {
-        return playerName;
-    }
-
-    /**
-     * Gets an option for the user. This is what is stored in the options:
-     * section of the permissions in the user
-     *
-     * @param key Path to option
-     * @return Object representing that key, or null if no option
-     *
-     * @since 1.0
-     */
-    public Object getOption(String path) {
-        return options.get(path);
-    }
-
-    /**
-     * Compares the name of the parameter with that of the user. If they match,
-     * this will return true.
-     *
-     * @param anotherUser Name of another user
-     * @return True if names match, false otherwise
-     *
-     * @since 1.0
-     */
-    public boolean equals(PermissionUser anotherUser) {
-        if (anotherUser.getName().equalsIgnoreCase(this.playerName)) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Returns the {@link org.bukkit.permissions.PermissionAttachment}
      * associated with this user.
      *
@@ -303,49 +96,6 @@ public final class PermissionUser {
      */
     public PermissionAttachment getAtt() {
         return attachment;
-    }
-
-    /**
-     * Add a permission node to the user. This will apply for adding negative
-     * nodes too.
-     *
-     * @param perm Perm to add to this user
-     */
-    public synchronized void addPerm(String perm) {
-        if (perm.equals("**")) {
-            List<String> allPerms = Utils.handleWildcard(true);
-            for (String perm_ : allPerms) {
-                if (!perms.containsKey(perm_)) {
-                    perms.put(perm_, Boolean.TRUE);
-                }
-            }
-        } else if (perm.equals("*")) {
-            List<String> allPerms = Utils.handleWildcard(false);
-            for (String perm_ : allPerms) {
-                if (!perms.containsKey(perm_)) {
-                    perms.put(perm_, Boolean.TRUE);
-                }
-            }
-        } else if (perm.equals("-*")) {
-            List<String> allPerms = Utils.handleWildcard(false);
-            for (String perm_ : allPerms) {
-                if (!perms.containsKey(perm_)) {
-                    perms.put(perm_, Boolean.TRUE);
-                }
-            }
-        } else if (perm.startsWith("-")) {
-            perms.put(perm.substring(1), Boolean.FALSE);
-        } else {
-            perms.put(perm, Boolean.TRUE);
-        }
-    }
-
-    public synchronized boolean has(String perm) {
-        Boolean result = perms.get(perm);
-        if (result != null && result.booleanValue()) {
-            return true;
-        }
-        return false;
     }
 
     public synchronized void update() {

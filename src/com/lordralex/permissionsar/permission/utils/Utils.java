@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
@@ -123,6 +124,17 @@ public class Utils {
                 perms.add(permTest.getName());
             } else if (isAll) {
                 perms.add(permTest.getName());
+            }
+        }
+        return perms;
+    }
+
+    public static List<String> getPermsForCommands(List<String> commands) {
+        List<String> perms = new ArrayList<String>();
+        for (String command : commands) {
+            Command cmd = Bukkit.getPluginCommand(command);
+            if (cmd != null) {
+                perms.add(cmd.getPermission());
             }
         }
         return perms;
