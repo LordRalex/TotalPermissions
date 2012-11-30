@@ -20,15 +20,15 @@ import org.lr.mcstats.Metrics;
  */
 public final class TotalPermissions extends JavaPlugin {
 
-    private static FileConfiguration permFile;
+    protected static FileConfiguration permFile;
     private static FileConfiguration configFile;
-    public Logger log;
-    private static PermissionManager manager;
-    private static TotalPermissions instance;
-    private static Configuration config;
-    private static Listener listener;
-    private Metrics metrics;
-    private CommandHandler commands;
+    protected static Logger log;
+    protected static PermissionManager manager;
+    protected static TotalPermissions instance;
+    protected static Configuration config;
+    protected static Listener listener;
+    protected static Metrics metrics;
+    protected CommandHandler commands;
 
     @Override
     public void onLoad() {
@@ -98,7 +98,7 @@ public final class TotalPermissions extends JavaPlugin {
                 log.config("Creating command handler");
                 commands = new CommandHandler();
             }
-            getCommand("par").setExecutor(commands);
+            getCommand("totalpermissions").setExecutor(commands);
             metrics = new Metrics(this);
             if (metrics.start()) {
                 log.info("Plugin Metrics is on, you can opt-out in the PluginMetrics config");

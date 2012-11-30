@@ -1,6 +1,5 @@
 package com.lordralex.totalpermissions.commands;
 
-import com.lordralex.totalpermissions.TotalPermissions;
 import com.lordralex.totalpermissions.commands.subcommands.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,9 +13,9 @@ import org.bukkit.command.CommandSender;
  * @author Joshua
  * @since 1.0
  */
-public final class CommandHandler implements CommandExecutor, SubCommand {
+public final class CommandHandler implements CommandExecutor {
 
-    private Map<String, SubCommand> commands = new HashMap<String, SubCommand>();
+    protected final Map<String, SubCommand> commands = new HashMap<String, SubCommand>();
 
     public CommandHandler() {
         //Create and store all commands to the map here
@@ -24,6 +23,10 @@ public final class CommandHandler implements CommandExecutor, SubCommand {
         commands.put(help.getName().toLowerCase().trim(), help);
         DebugCommand debug = new DebugCommand();
         commands.put(debug.getName().toLowerCase().trim(), debug);
+        ReloadCommand reload = new ReloadCommand();
+        commands.put(reload.getName().toLowerCase().trim(), reload);
+        BackupCommand backup = new BackupCommand();
+        commands.put(backup.getName().toLowerCase().trim(), backup);
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {
@@ -53,17 +56,5 @@ public final class CommandHandler implements CommandExecutor, SubCommand {
             sender.sendMessage(ChatColor.RED + "You cannot use that command");
         }
         return true;
-    }
-
-    public String getName() {
-        return "";
-    }
-
-    public void execute(CommandSender sender, String[] args) {
-        onCommand(sender, TotalPermissions.getPlugin().getCommand("totalpermissions"), "totalpermissions", args);
-    }
-
-    public String getPerm() {
-        return "totalpermissions.command";
     }
 }

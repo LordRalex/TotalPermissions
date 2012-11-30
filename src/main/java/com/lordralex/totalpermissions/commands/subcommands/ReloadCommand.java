@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.lordralex.totalpermissions.commands.subcommands;
 
 import com.lordralex.totalpermissions.PermissionManager;
@@ -51,5 +47,12 @@ public class ReloadCommand implements SubCommand {
     @Override
     public String getPerm() {
         return "totalpermissions.command.reload";
+    }
+
+    public String[] getHelp() {
+        return new String[]{
+                    "Usage: /totalperms reload",
+                    "Reloads TotalPermissions, clearing the cache and re-reading the files"
+                };
     }
 }

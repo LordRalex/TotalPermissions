@@ -26,4 +26,6 @@ public interface SubCommand {
      * @return The permission
      */
     public abstract String getPerm();
+
+    public abstract String[] getHelp();
 }

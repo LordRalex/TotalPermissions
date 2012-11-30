@@ -5,8 +5,9 @@ import com.lordralex.totalpermissions.permission.PermissionUser;
 import org.bukkit.command.CommandSender;
 
 /**
- *
+ * @since 1.0
  * @author Joshua
+ * @version 1.0
  */
 public class DebugCommand implements SubCommand {
 
@@ -18,7 +19,7 @@ public class DebugCommand implements SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage("No target specified, for help, use /par help debug");
+            sender.sendMessage("No target specified, for help, use /totalperms help debug");
             return;
         }
         PermissionUser target = TotalPermissions.getManager().getUser(args[0]);
@@ -47,5 +48,13 @@ public class DebugCommand implements SubCommand {
     @Override
     public String getPerm() {
         return "totalpermissions.command.debug";
+    }
+
+    public String[] getHelp() {
+        return new String[]{
+                    "Usage: /totalperms debug <user name>",
+                    "This turns on debug mode for a user, which shows perms "
+                    + "needed to use commands by them and the permissions they have"
+                };
     }
 }

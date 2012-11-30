@@ -5,6 +5,7 @@ import com.lordralex.totalpermissions.permission.PermissionUser;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -18,9 +19,9 @@ import org.bukkit.entity.Player;
  */
 public final class PermissionManager {
 
-    private Map<String, PermissionGroup> groups = new HashMap<String, PermissionGroup>();
-    private Map<String, PermissionUser> users = new HashMap<String, PermissionUser>();
-    private String defaultGroup = null;
+    protected Map<String, PermissionGroup> groups = new ConcurrentHashMap<String, PermissionGroup>();
+    protected Map<String, PermissionUser> users = new ConcurrentHashMap<String, PermissionUser>();
+    protected String defaultGroup = null;
 
     public PermissionManager() {
     }
@@ -165,12 +166,25 @@ public final class PermissionManager {
         user.addPerm(perm);
     }
 
-    public synchronized void addPerm(String group, String perm, boolean allowance) {
+    public synchronized void addPermToGroup(String group, String perm, boolean allowance) {
         String name = group.toLowerCase();
         PermissionGroup gr = groups.get(name);
         if (gr == null) {
             gr = new PermissionGroup(name);
             groups.put(name, gr);
+        }
+        if (!allowance) {
+            perm = "-" + perm;
+        }
+        gr.addPerm(perm);
+    }
+
+    public synchronized void addPermToUser(String user, String perm, boolean allowance) {
+        String name = user.toLowerCase();
+        PermissionUser gr = users.get(name);
+        if (gr == null) {
+            gr = new PermissionUser(name);
+            users.put(name, gr);
         }
         if (!allowance) {
             perm = "-" + perm;

@@ -1,4 +1,4 @@
-main: com.lordralex.totalpermissions.PermissionsAR
+main: com.lordralex.totalpermissions.TotalPermissions
 name: TotalPermissions
 version: 0.0.1
 author: Lord_Ralex
@@ -8,20 +8,22 @@ permissions:
     children:
       totalpermissions.command.*: true
   totalpermissions.command.*:
-    default: op
+    default: false
     children:
+      totalpermissions.command: true
       totalpermissions.command.help: true
       totalpermissions.command.debug: true
       totalpermissions.command.reload: true
+      totalpermissions.command.backup: true
   totalpermissions.command.help:
-    default: op
+    default: false
   totalpermissions.command.debug:
-    default: op
+    default: false
   totalpermissions.command.reload:
-    default: op
+    default: false
   totalpermissions.command:
-    default: op
+    default: false
 commands:
   totalpermissions:
     permission: totalpermissions.command
-    aliases: ["totalperms"]
+    aliases: ["totalperms", "totalperm", "tperm", "tperms"]

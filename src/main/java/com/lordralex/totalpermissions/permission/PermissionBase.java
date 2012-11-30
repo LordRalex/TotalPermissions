@@ -21,82 +21,89 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public abstract class PermissionBase {
 
-    protected String name;
+    protected final String name;
     protected final Map<String, Boolean> perms = new HashMap<String, Boolean>();
     protected final Map<String, Object> options = new HashMap<String, Object>();
+    protected final ConfigurationSection section;
 
     public PermissionBase(String aKey, String aName) {
         name = aName;
+        perms.clear();
+        options.clear();
 
-        ConfigurationSection section = TotalPermissions.getPermFile().getConfigurationSection(aKey + "." + name);
+        TotalPermissions.getLog().info("Adding perms for " + aKey + "." + name);
 
-        List<String> permList = section.getStringList("permissions");
-        if (permList != null) {
-            for (String perm : permList) {
-                TotalPermissions.getLog().info("Adding perm: " + perm);
-                addPerm(perm);
-            }
-        }
+        section = TotalPermissions.getPermFile().getConfigurationSection(aKey + "." + name);
 
-        List<String> inherList = section.getStringList("inheritance");
-        if (inherList != null) {
-            for (String tempName : inherList) {
-                PermissionGroup tempGroup = TotalPermissions.getManager().getGroup(tempName);
-                List<String> tempGroupPerms = tempGroup.getPerms();
-                for (String perm : tempGroupPerms) {
+        if (section != null) {
+            List<String> permList = section.getStringList("permissions");
+            if (permList != null) {
+                for (String perm : permList) {
+                    TotalPermissions.getLog().info("Adding perm: " + perm);
                     addPerm(perm);
                 }
             }
-        }
 
-        List<String> groupList = section.getStringList("groups");
-        if (groupList != null) {
-            for (String tempName : groupList) {
-                PermissionGroup tempGroup = TotalPermissions.getManager().getGroup(tempName);
-                List<String> tempGroupPerms = tempGroup.getPerms();
-                for (String perm : tempGroupPerms) {
-                    addPerm(perm);
-                }
-            }
-        }
-
-        List<String> groupList2 = section.getStringList("group");
-        if (groupList2 != null) {
-            for (String tempName : groupList2) {
-                PermissionGroup tempGroup = TotalPermissions.getManager().getGroup(tempName);
-                List<String> tempGroupPerms = tempGroup.getPerms();
-                for (String perm : tempGroupPerms) {
-                    addPerm(perm);
-                }
-            }
-        }
-
-        ConfigurationSection optionSec = section.getConfigurationSection("options");
-        if (optionSec != null) {
-            Set<String> optionsList = optionSec.getKeys(true);
-            for (String option : optionsList) {
-                options.put(option, optionSec.get(option));
-            }
-        }
-
-        //handles the loading of the commands aspect of the plugin
-        List<String> commandList = section.getStringList("commands");
-        if (commandList != null) {
-            for (String command : commandList) {
-                PluginCommand cmd = Bukkit.getPluginCommand(command);
-                if (cmd == null) {
-                    //removes a trailing / if possible
-                    if (command.startsWith("/")) {
-                        command = command.substring(1);
-                        cmd = Bukkit.getPluginCommand(command);
-                        if (cmd == null) {
-                            continue;
-                        }
-                    } else {
-                        continue;
+            List<String> inherList = section.getStringList("inheritance");
+            if (inherList != null) {
+                for (String tempName : inherList) {
+                    PermissionGroup tempGroup = TotalPermissions.getManager().getGroup(tempName);
+                    List<String> tempGroupPerms = tempGroup.getPerms();
+                    for (String perm : tempGroupPerms) {
+                        addPerm(perm);
                     }
                 }
-                perms.put(cmd.getPermission(), Boolean.TRUE);
+            }
+
+            List<String> groupList = section.getStringList("groups");
+            if (groupList != null) {
+                for (String tempName : groupList) {
+                    PermissionGroup tempGroup = TotalPermissions.getManager().getGroup(tempName);
+                    List<String> tempGroupPerms = tempGroup.getPerms();
+                    for (String perm : tempGroupPerms) {
+                        addPerm(perm);
+                    }
+                }
+            }
+
+            List<String> groupList2 = section.getStringList("group");
+            if (groupList2 != null) {
+                for (String tempName : groupList2) {
+                    PermissionGroup tempGroup = TotalPermissions.getManager().getGroup(tempName);
+                    List<String> tempGroupPerms = tempGroup.getPerms();
+                    for (String perm : tempGroupPerms) {
+                        addPerm(perm);
+                    }
+                }
+            }
+
+            ConfigurationSection optionSec = section.getConfigurationSection("options");
+            if (optionSec != null) {
+                Set<String> optionsList = optionSec.getKeys(true);
+                for (String option : optionsList) {
+                    options.put(option, optionSec.get(option));
+                }
+            }
+
+            //handles the loading of the commands aspect of the plugin
+            List<String> commandList = section.getStringList("commands");
+            if (commandList != null) {
+                for (String command : commandList) {
+                    PluginCommand cmd = Bukkit.getPluginCommand(command);
+                    if (cmd == null) {
+                        //removes a trailing / if possible
+                        if (command.startsWith("/")) {
+                            command = command.substring(1);
+                            cmd = Bukkit.getPluginCommand(command);
+                            if (cmd == null) {
+                                continue;
+                            }
+                        } else {
+                            continue;
+                        }
+                    }
+                    perms.put(cmd.getPermission(), Boolean.TRUE);
+                }
             }
         }
     }

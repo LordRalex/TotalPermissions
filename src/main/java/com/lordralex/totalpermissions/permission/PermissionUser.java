@@ -98,4 +98,8 @@ public final class PermissionUser extends PermissionBase {
     public boolean getDebugState() {
         return isDebug;
     }
+
+    public void changeWorld(String name) {
+        
+    }
 }
