@@ -42,13 +42,13 @@ public class HelpCommand implements SubCommand {
 
     @Override
     public String getPerm() {
-        return "totalpermissions.command.help";
+        return "totalpermissions.cmd.help";
     }
 
     public String[] getHelp() {
         return new String[]{
-                    "Usage: /totalperms help",
-                    "Return the help center for TotalPermissions"
-                };
+            "Usage: /totalperms help",
+            "Return the help center for TotalPermissions"
+        };
     }
 }

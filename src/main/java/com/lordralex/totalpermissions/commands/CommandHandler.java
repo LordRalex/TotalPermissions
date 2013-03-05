@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender;
 
 /**
  * @version 1.0
- * @author Joshua
+ * @author Lord_Ralex
  * @since 1.0
  */
 public final class CommandHandler implements CommandExecutor {

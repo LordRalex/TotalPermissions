@@ -1,6 +1,7 @@
 package com.lordralex.totalpermissions;
 
 import com.lordralex.totalpermissions.permission.PermissionUser;
+import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
@@ -8,7 +9,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -19,10 +19,16 @@ import org.bukkit.event.player.PlayerQuitEvent;
  */
 public final class Listener implements org.bukkit.event.Listener {
 
+    TotalPermissions plugin;
+
+    public Listener(TotalPermissions p) {
+        plugin = p;
+    }
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLogin(PlayerLoginEvent event) {
         //Adds a player to our cache and set up their permissions
-        PermissionUser user = TotalPermissions.getManager().getUser(event.getPlayer());
+        PermissionUser user = plugin.getManager().getUser(event.getPlayer());
         user.setPerms(event.getPlayer());
     }
 
@@ -30,44 +36,35 @@ public final class Listener implements org.bukkit.event.Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         //removes permissions from a player, leaves them in the cache though
         Player player = event.getPlayer();
-        player.removeAttachment(TotalPermissions.getManager().getUser(player).getAtt());
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerQuit(PlayerKickEvent event) {
-        //removes permissions from a player, leaves them in the cache though
-        Player player = event.getPlayer();
-        player.removeAttachment(TotalPermissions.getManager().getUser(player).getAtt());
+        player.removeAttachment(plugin.getManager().getUser(player).getAtt());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerWorldChange(PlayerChangedWorldEvent event) {
         Player player = event.getPlayer();
-        PermissionUser user = TotalPermissions.getManager().getUser(player);
+        PermissionUser user = plugin.getManager().getUser(player);
         user.changeWorld(player.getWorld().getName());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-        PermissionUser user = TotalPermissions.getManager().getUser(event.getPlayer());
+        PermissionUser user = plugin.getManager().getUser(event.getPlayer());
         if (!user.getDebugState()) {
             return;
         }
+        plugin.getLogger().info("Command used by " + event.getPlayer().getName() + ": " + event.getMessage());
         try {
-            String command = null;
-            try {
-                command = event.getMessage().split(" ", 2)[0].substring(1);
-                Command cmd = Bukkit.getPluginCommand(command);
-                if (cmd.testPermissionSilent(event.getPlayer())) {
-                    TotalPermissions.getLog().info(event.getPlayer().getName() + " can use the command, has " + cmd.getPermission());
-                } else {
-                    TotalPermissions.getLog().info(event.getPlayer().getName() + " cannot use the command, does not have " + cmd.getPermission());
-                }
-            } catch (NullPointerException e) {
-                TotalPermissions.getLog().info(command + " is not a registered command");
+            String command = event.getMessage().split(" ", 2)[0].substring(1);
+            Command cmd = Bukkit.getPluginCommand(command);
+            if (cmd.testPermissionSilent(event.getPlayer())) {
+                plugin.getLogger().info(event.getPlayer().getName() + " can use the command, has " + cmd.getPermission());
+            } else {
+                plugin.getLogger().info(event.getPlayer().getName() + " cannot use the command, does not have " + cmd.getPermission());
             }
+        } catch (NullPointerException e) {
+            plugin.getLogger().log(Level.SEVERE, "The command used is not a registered command", e);
         } catch (IndexOutOfBoundsException e) {
-            TotalPermissions.getLog().info(event.getMessage() + " produced an IOoBE");
+            plugin.getLogger().log(Level.SEVERE, event.getMessage() + " produced an IOoBE", e);
         }
     }
 }

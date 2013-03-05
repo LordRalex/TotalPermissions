@@ -2,7 +2,6 @@ package com.lordralex.totalpermissions;
 
 import com.lordralex.totalpermissions.permission.PermissionGroup;
 import com.lordralex.totalpermissions.permission.PermissionUser;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,7 +26,7 @@ public final class PermissionManager {
     }
 
     public void load() throws InvalidConfigurationException {
-        FileConfiguration perms = TotalPermissions.getPermFile();
+        FileConfiguration perms = TotalPermissions.getPlugin().getPermFile();
         ConfigurationSection filegroups = perms.getConfigurationSection("groups");
         if (groups == null) {
             throw new InvalidConfigurationException("You must define at least one group");

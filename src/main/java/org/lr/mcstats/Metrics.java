@@ -27,13 +27,14 @@
  */
 
 /*
- * This code is from the Metrics github page, and has no modifcations to the code, 
- * however comments have been removed from the code. This is still the work of the
- * Metrics developer and I do not claim this to be of my own work. Used with permissions
- * given on the Metrics page.
+ * This code is from the Metrics github page, with modifications prefixed with
+ * //TotalPermissions where changes are made. This is still the work of the
+ * Metrics developer and I do not claim this to be of my own work. Used with
+ * permissions given on the Metrics page.
  */
 package org.lr.mcstats;
 
+import com.lordralex.totalpermissions.TotalPermissions;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -58,14 +59,15 @@ public final class Metrics {
     private static final String BASE_URL = "http://mcstats.org";
     private static final String REPORT_URL = "/report/%s";
     private final static int PING_INTERVAL = 10;
-    private final Plugin plugin;
+    //TotalPermissions - change from Plugin to TotalPermissions
+    private final TotalPermissions plugin;
     private final YamlConfiguration configuration;
     private final File configurationFile;
     private final String guid;
     private final Object optOutLock = new Object();
     private volatile int taskId = -1;
 
-    public Metrics(Plugin plugin) throws IOException {
+    public Metrics(TotalPermissions plugin) throws IOException {
         if (plugin == null) {
             throw new IllegalArgumentException("Plugin cannot be null");
         }
@@ -203,6 +205,8 @@ public final class Metrics {
         encodeDataPair(data, "server", Bukkit.getVersion());
         encodeDataPair(data, "players", Integer.toString(Bukkit.getServer().getOnlinePlayers().length));
         encodeDataPair(data, "revision", String.valueOf(REVISION));
+        //TotalPermissions
+        encodeDataPair(data, "strict", plugin.getConfiguration().getString("strict-mode"));
 
         if (isPing) {
             encodeDataPair(data, "ping", "true");

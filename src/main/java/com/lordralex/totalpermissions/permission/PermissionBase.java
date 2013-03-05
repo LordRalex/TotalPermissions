@@ -31,15 +31,15 @@ public abstract class PermissionBase {
         perms.clear();
         options.clear();
 
-        TotalPermissions.getLog().info("Adding perms for " + aKey + "." + name);
+        TotalPermissions.getPlugin().getLogger().info("Adding perms for " + aKey + "." + name);
 
-        section = TotalPermissions.getPermFile().getConfigurationSection(aKey + "." + name);
+        section = TotalPermissions.getPlugin().getPermFile().getConfigurationSection(aKey + "." + name);
 
         if (section != null) {
             List<String> permList = section.getStringList("permissions");
             if (permList != null) {
                 for (String perm : permList) {
-                    TotalPermissions.getLog().info("Adding perm: " + perm);
+                    TotalPermissions.getPlugin().getLogger().info("Adding perm: " + perm);
                     addPerm(perm);
                 }
             }
@@ -47,7 +47,7 @@ public abstract class PermissionBase {
             List<String> inherList = section.getStringList("inheritance");
             if (inherList != null) {
                 for (String tempName : inherList) {
-                    PermissionGroup tempGroup = TotalPermissions.getManager().getGroup(tempName);
+                    PermissionGroup tempGroup = TotalPermissions.getPlugin().getManager().getGroup(tempName);
                     List<String> tempGroupPerms = tempGroup.getPerms();
                     for (String perm : tempGroupPerms) {
                         addPerm(perm);
@@ -58,7 +58,7 @@ public abstract class PermissionBase {
             List<String> groupList = section.getStringList("groups");
             if (groupList != null) {
                 for (String tempName : groupList) {
-                    PermissionGroup tempGroup = TotalPermissions.getManager().getGroup(tempName);
+                    PermissionGroup tempGroup = TotalPermissions.getPlugin().getManager().getGroup(tempName);
                     List<String> tempGroupPerms = tempGroup.getPerms();
                     for (String perm : tempGroupPerms) {
                         addPerm(perm);
@@ -69,7 +69,7 @@ public abstract class PermissionBase {
             List<String> groupList2 = section.getStringList("group");
             if (groupList2 != null) {
                 for (String tempName : groupList2) {
-                    PermissionGroup tempGroup = TotalPermissions.getManager().getGroup(tempName);
+                    PermissionGroup tempGroup = TotalPermissions.getPlugin().getManager().getGroup(tempName);
                     List<String> tempGroupPerms = tempGroup.getPerms();
                     for (String perm : tempGroupPerms) {
                         addPerm(perm);

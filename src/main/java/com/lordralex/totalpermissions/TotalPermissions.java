@@ -5,7 +5,6 @@ import com.lordralex.totalpermissions.configuration.Configuration;
 import com.lordralex.totalpermissions.permission.utils.Update;
 import java.io.File;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -20,27 +19,23 @@ import org.lr.mcstats.Metrics;
  */
 public final class TotalPermissions extends JavaPlugin {
 
-    protected static FileConfiguration permFile;
-    private static FileConfiguration configFile;
-    protected static Logger log;
-    protected static PermissionManager manager;
+    protected FileConfiguration permFile;
+    private FileConfiguration configFile;
+    protected PermissionManager manager;
     protected static TotalPermissions instance;
-    protected static Configuration config;
-    protected static Listener listener;
-    protected static Metrics metrics;
+    protected Configuration config;
+    protected Listener listener;
+    protected Metrics metrics;
     protected CommandHandler commands;
 
     @Override
     public void onLoad() {
-        if (log == null) {
-            log = this.getLogger();
-        }
         if (instance == null) {
-            log.info("Storing instance");
+            getLogger().info("Storing instance");
             instance = this;
         }
         try {
-            log.info("Beginning initial preperations");
+            getLogger().info("Beginning initial preperations");
             if (!getDataFolder().exists()) {
                 getDataFolder().mkdirs();
             }
@@ -53,30 +48,31 @@ public final class TotalPermissions extends JavaPlugin {
 
             configFile = new YamlConfiguration();
             configFile.load(new File(this.getDataFolder(), "config.yml"));
+            permFile = new YamlConfiguration();
             try {
-                permFile = new YamlConfiguration();
                 permFile.load(new File(this.getDataFolder(), "permissions.yml"));
                 Update update = new Update();
                 update.backup(true);
                 update.runUpdate();
             } catch (InvalidConfigurationException e) {
-                log.log(Level.SEVERE, "YAML error in your permissions.yml file");
-                log.log(Level.SEVERE, e.getMessage());
-                log.log(Level.WARNING, "Attempting to load backup perms");
+                getLogger().log(Level.SEVERE, "YAML error in your permissions.yml file");
+                getLogger().log(Level.SEVERE, "-> " + e.getMessage());
+                getLogger().log(Level.WARNING, "Attempting to load backup permission file");
                 try {
                     permFile = new YamlConfiguration();
                     permFile.load(new File(this.getLastBackupFolder(), "permissions.yml"));
-                    log.log(Level.WARNING, "Loaded an older perms files. Please repair your permissions before doing anything else though.");
+                    getLogger().log(Level.WARNING, "Loaded an older perms files. Please repair your permissions before doing anything else though.");
+                    getLogger().log(Level.WARNING, "I will also disable timed backups so you can fix your file and (hopefully) not back up bugged copies");
                 } catch (InvalidConfigurationException e2) {
-                    log.log(Level.SEVERE, "Errors in the last backup up, cannot load");
-                    log.log(Level.SEVERE, "Shutting down perms plugin as there is nothing I can do ;~;");
+                    getLogger().log(Level.SEVERE, "Errors in the last backup up, cannot load");
+                    getLogger().log(Level.SEVERE, "Shutting down perms plugin as there is nothing I can do ;~;");
                     throw e2;
                 }
             }
             config = new Configuration();
-            log.info("Initial preperations complete");
+            getLogger().info("Initial preperations complete");
         } catch (Exception e) {
-            log.log(Level.SEVERE, "Error in starting up " + getName() + " (Version " + this.getDescription().getVersion() + ")", e);
+            getLogger().log(Level.SEVERE, "Error in starting up " + getName() + " (Version " + this.getDescription().getVersion() + ")", e);
             this.getPluginLoader().disablePlugin(this);
         }
     }
@@ -84,31 +80,25 @@ public final class TotalPermissions extends JavaPlugin {
     @Override
     public void onEnable() {
         try {
-            if (manager == null) {
-                log.config("Creating perms manager");
-                manager = new PermissionManager();
-            }
+            getLogger().config("Creating perms manager");
+            manager = new PermissionManager();
             manager.load();
-            if (listener == null) {
-                log.config("Creating player listener");
-                listener = new Listener();
-            }
+            getLogger().config("Creating player listener");
+            listener = new Listener(this);
             Bukkit.getPluginManager().registerEvents(listener, this);
-            if (commands == null) {
-                log.config("Creating command handler");
-                commands = new CommandHandler();
-            }
+            getLogger().config("Creating command handler");
+            commands = new CommandHandler();
             getCommand("totalpermissions").setExecutor(commands);
             metrics = new Metrics(this);
             if (metrics.start()) {
-                log.info("Plugin Metrics is on, you can opt-out in the PluginMetrics config");
+                getLogger().info("Plugin Metrics is on, you can opt-out in the PluginMetrics config");
             }
         } catch (Exception e) {
             if (e instanceof InvalidConfigurationException) {
-                log.log(Level.SEVERE, "YAML error in your permissions file");
-                log.log(Level.SEVERE, ((InvalidConfigurationException) e).getMessage());
+                getLogger().log(Level.SEVERE, "YAML error in your permissions file");
+                getLogger().log(Level.SEVERE, ((InvalidConfigurationException) e).getMessage());
             } else {
-                log.log(Level.SEVERE, "Error in starting up " + getName() + " (Version " + this.getDescription().getVersion() + ")", e);
+                getLogger().log(Level.SEVERE, "Error in starting up " + getName() + " (Version " + this.getDescription().getVersion() + ")", e);
             }
             this.getPluginLoader().disablePlugin(this);
         }
@@ -128,7 +118,7 @@ public final class TotalPermissions extends JavaPlugin {
      *
      * @since 1.0
      */
-    public static PermissionManager getManager() {
+    public PermissionManager getManager() {
         return manager;
     }
 
@@ -140,7 +130,7 @@ public final class TotalPermissions extends JavaPlugin {
      *
      * @since 1.0
      */
-    public static FileConfiguration getPermFile() {
+    public FileConfiguration getPermFile() {
         return permFile;
     }
 
@@ -152,7 +142,7 @@ public final class TotalPermissions extends JavaPlugin {
      *
      * @since 1.0
      */
-    public static FileConfiguration getConfigFile() {
+    public FileConfiguration getConfigFile() {
         return configFile;
     }
 
@@ -165,7 +155,7 @@ public final class TotalPermissions extends JavaPlugin {
         return instance;
     }
 
-    public static Listener getListener() {
+    public Listener getListener() {
         return listener;
     }
 
@@ -176,19 +166,8 @@ public final class TotalPermissions extends JavaPlugin {
      *
      * @since 1.0
      */
-    public static Configuration getConfiguration() {
+    public Configuration getConfiguration() {
         return config;
-    }
-
-    /**
-     * Returns the Logger instance in use by the plugin
-     *
-     * @return The instance of the logger
-     *
-     * @since 1.0
-     */
-    public static Logger getLog() {
-        return instance.log;
     }
 
     /**
@@ -199,7 +178,7 @@ public final class TotalPermissions extends JavaPlugin {
      * @since 1.0
      */
     public File getBackupFolder() {
-        return new File(this.getDataFolder(), "backup");
+        return new File(this.getDataFolder(), "backups");
     }
 
     /**

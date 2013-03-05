@@ -24,21 +24,21 @@ public class ReloadCommand implements SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         sender.sendMessage(ChatColor.YELLOW + "Reloading " + TotalPermissions.getPlugin().getDescription().getFullName());
-        PermissionManager manager = TotalPermissions.getManager();
+        PermissionManager manager = TotalPermissions.getPlugin().getManager();
         manager.unload();
         try {
             manager.load();
         } catch (InvalidConfigurationException ex) {
             sender.sendMessage(ChatColor.RED + "An error occured when reloading, check your server logs");
-            TotalPermissions.getLog().log(Level.SEVERE, null, ex);
+            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, null, ex);
         }
         for (Player player : Bukkit.getOnlinePlayers()) {
             PlayerLoginEvent refreshEvent = new PlayerLoginEvent(player, "", null);
             try {
-                TotalPermissions.getListener().onPlayerLogin(refreshEvent);
+                TotalPermissions.getPlugin().getListener().onPlayerLogin(refreshEvent);
             } catch (Exception e) {
                 sender.sendMessage(ChatColor.RED + "An error occured while reloading " + player.getName());
-                TotalPermissions.getLog().log(Level.SEVERE, null, e);
+                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, null, e);
             }
         }
         sender.sendMessage(ChatColor.GREEN + TotalPermissions.getPlugin().getDescription().getFullName() + " has reloaded");
@@ -46,13 +46,13 @@ public class ReloadCommand implements SubCommand {
 
     @Override
     public String getPerm() {
-        return "totalpermissions.command.reload";
+        return "totalpermissions.cmd.reload";
     }
 
     public String[] getHelp() {
         return new String[]{
-                    "Usage: /totalperms reload",
-                    "Reloads TotalPermissions, clearing the cache and re-reading the files"
-                };
+            "Usage: /totalperms reload",
+            "Reloads TotalPermissions, clearing the cache and re-reading the files"
+        };
     }
 }

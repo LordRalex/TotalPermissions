@@ -40,7 +40,7 @@ public class Utils {
      * @param message Message to send
      */
     public static void out(String message) {
-        TotalPermissions.getLog().info(stripColors(message));
+        TotalPermissions.getPlugin().getLogger().info(stripColors(message));
     }
 
     /**
@@ -51,7 +51,7 @@ public class Utils {
      */
     public static void outc(CommandSender cs, String message) {
         if (cs instanceof Player) {
-            Bukkit.getLogger().info("[PLAYER COMMAND] " + cs.getName() + ": /" + message);
+            TotalPermissions.getPlugin().getLogger().info("[PLAYER COMMAND] " + cs.getName() + ": /" + message);
         }
     }
 

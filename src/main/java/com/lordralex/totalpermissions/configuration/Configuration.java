@@ -12,7 +12,7 @@ public class Configuration {
     File configPath;
 
     public Configuration() {
-        config = TotalPermissions.getConfigFile(); //loads the file from the plugin's view.
+        config = TotalPermissions.getPlugin().getConfigFile(); //loads the file from the plugin's view.
         configPath = new File(TotalPermissions.getPlugin().getDataFolder(), "config.yml");
     }
 
@@ -20,16 +20,16 @@ public class Configuration {
         if (!configPath.exists()) {
             TotalPermissions.getPlugin().saveDefaultConfig();
         }
-        
+
         //whether this operates in a strict mode, ignoring perms given by default. True means use strict.
         if (!config.contains("strict-mode")) {
             config.set("strict-mode", false);
         }
-        
+
         try {
             config.save(configPath);
         } catch (IOException e) {
-            TotalPermissions.getLog().log(Level.SEVERE, null, e);
+            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, null, e);
         }
     }
 

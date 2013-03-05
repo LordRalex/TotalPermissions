@@ -74,12 +74,12 @@ public class Update {
         File backupFolder = new File(backup, Integer.toString(highest));
         backupFolder.mkdirs();
         try {
-            TotalPermissions.getConfigFile().save(new File(backupFolder, "config.yml"));
+            TotalPermissions.getPlugin().getConfigFile().save(new File(backupFolder, "config.yml"));
         } catch (IOException ex) {
             Logger.getLogger(Update.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
-            TotalPermissions.getPermFile().save(new File(backupFolder, "permissions.yml"));
+            TotalPermissions.getPlugin().getPermFile().save(new File(backupFolder, "permissions.yml"));
         } catch (IOException ex) {
             Logger.getLogger(Update.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -96,7 +96,7 @@ public class Update {
     public void runUpdate() {
         backup();
         FileConfiguration updateFile;
-        FileConfiguration perms = TotalPermissions.getPermFile();
+        FileConfiguration perms = TotalPermissions.getPlugin().getPermFile();
         File datafolder = TotalPermissions.getPlugin().getDataFolder();
         String[] updateFileNames = new String[]{
             "groups.yml",
