@@ -19,8 +19,9 @@ package com.lordralex.totalpermissions.commands.subcommands;
 import org.bukkit.command.CommandSender;
 
 /**
- * @author LordRalex
- * @version 1.0
+ * @since 0.1
+ * @author Lord_Ralex
+ * @version 0.1
  */
 public class BackupCommand implements SubCommand {
 
