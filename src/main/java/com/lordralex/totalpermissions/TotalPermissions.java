@@ -18,6 +18,7 @@ package com.lordralex.totalpermissions;
 
 import com.lordralex.totalpermissions.commands.CommandHandler;
 import com.lordralex.totalpermissions.configuration.Configuration;
+import com.lordralex.totalpermissions.mcstats.Metrics;
 import com.lordralex.totalpermissions.permission.utils.Update;
 import java.io.File;
 import java.util.logging.Level;
@@ -26,7 +27,6 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.lr.mcstats.Metrics;
 
 /**
  * @version 0.1

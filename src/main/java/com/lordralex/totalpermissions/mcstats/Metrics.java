@@ -49,7 +49,7 @@
  * Metrics developer and I do not claim this to be of my own work. Used with
  * permissions given on the Metrics page.
  */
-package org.lr.mcstats;
+package com.lordralex.totalpermissions.mcstats;
 
 import com.lordralex.totalpermissions.TotalPermissions;
 import java.io.BufferedReader;
