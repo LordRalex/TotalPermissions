@@ -1,0 +1,6 @@
+Features planned to add in:
+
+Advanced Debug, likely reflection, but very restrictive
+Support name.* via relective list if enabled in config
+Default to using no reflection, reflection support can be enabled, allowing above
+Setting console and rcon perms
