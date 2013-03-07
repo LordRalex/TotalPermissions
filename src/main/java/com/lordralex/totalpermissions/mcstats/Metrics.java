@@ -24,9 +24,8 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and contributors and should not be interpreted as representing official policies,
  * either expressed or implied, of anybody else.
- */
-
-/*
+ *
+ *
  * Copyright (C) 2013 LordRalex
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,9 +40,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-/*
+ *
+ *
  * This code is from the Metrics github page, with modifications prefixed with
  * //TotalPermissions where changes are made. This is still the work of the
  * Metrics developer and I do not claim this to be of my own work. Used with
@@ -68,6 +66,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.scheduler.BukkitTask;
 
 public final class Metrics {
 
@@ -81,7 +80,7 @@ public final class Metrics {
     private final File configurationFile;
     private final String guid;
     private final Object optOutLock = new Object();
-    private volatile int taskId = -1;
+    private volatile BukkitTask task;
 
     public Metrics(TotalPermissions plugin) throws IOException {
         if (plugin == null) {
@@ -118,19 +117,20 @@ public final class Metrics {
                 return false;
             }
 
-            if (taskId >= 0) {
+            if (task != null) {
                 return true;
             }
 
-            taskId = plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new Runnable() {
+            //TotalPermissions - remove deprecated method call
+            task = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
                 private boolean firstPost = true;
 
                 public void run() {
                     try {
                         synchronized (optOutLock) {
-                            if (isOptOut() && taskId > 0) {
-                                plugin.getServer().getScheduler().cancelTask(taskId);
-                                taskId = -1;
+                            if (isOptOut() && task != null) {
+                                task.cancel();
+                                task = null;
                             }
                         }
 
@@ -180,7 +180,7 @@ public final class Metrics {
                 configuration.save(configurationFile);
             }
 
-            if (taskId < 0) {
+            if (task == null) {
                 start();
             }
         }
@@ -199,9 +199,9 @@ public final class Metrics {
                 configuration.save(configurationFile);
             }
 
-            if (taskId > 0) {
-                this.plugin.getServer().getScheduler().cancelTask(taskId);
-                taskId = -1;
+            if (task != null) {
+                task.cancel();
+                task = null;
             }
         }
     }
