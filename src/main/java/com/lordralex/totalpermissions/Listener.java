@@ -17,7 +17,10 @@
 package com.lordralex.totalpermissions;
 
 import com.lordralex.totalpermissions.permission.PermissionUser;
+import com.lordralex.totalpermissions.reflection.TPPermissibleBase;
+import java.lang.reflect.Field;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
@@ -45,6 +48,24 @@ public final class Listener implements org.bukkit.event.Listener {
     public void onPlayerLogin(PlayerLoginEvent event) {
         PermissionUser user = plugin.getManager().getUser(event.getPlayer());
         user.setPerms(event.getPlayer());
+        if (user.getDebugState()) {
+            //forgive me for saying I did not want to do this
+            Player player = event.getPlayer();
+            Class cl = player.getClass();
+            try {
+                Field field = cl.getField("perm");
+                field.setAccessible(true);
+                field.set(player, new TPPermissibleBase(player));
+            } catch (NoSuchFieldException ex) {
+                plugin.getLogger().log(Level.SEVERE, "Error in reflecting in", ex);
+            } catch (SecurityException ex) {
+                plugin.getLogger().log(Level.SEVERE, "Error in reflecting in", ex);
+            } catch (IllegalArgumentException ex) {
+                plugin.getLogger().log(Level.SEVERE, "Error in reflecting in", ex);
+            } catch (IllegalAccessException ex) {
+                plugin.getLogger().log(Level.SEVERE, "Error in reflecting in", ex);
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
