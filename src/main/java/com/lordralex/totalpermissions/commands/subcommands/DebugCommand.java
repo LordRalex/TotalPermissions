@@ -38,12 +38,12 @@ public class DebugCommand implements SubCommand {
             sender.sendMessage("No target specified, for help, use /totalperms help debug");
             return;
         }
-        PermissionUser target = TotalPermissions.getPlugin().getManager().getUser(args[0]);
+        PermissionUser target = TotalPermissions.getPlugin().getManager().getUser(args[1]);
         if (target == null) {
             sender.sendMessage("Target user (" + args[0] + ") was not found");
             return;
         }
-        boolean newState = true;
+        boolean newState = false;
         if (args.length == 2) {
             if (args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("enable") || args[1].equalsIgnoreCase("true")) {
                 newState = true;
