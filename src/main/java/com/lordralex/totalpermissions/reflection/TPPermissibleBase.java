@@ -19,10 +19,12 @@ package com.lordralex.totalpermissions.reflection;
 import com.lordralex.totalpermissions.TotalPermissions;
 import java.util.Set;
 import org.bukkit.command.CommandSender;
+import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.PermissibleBase;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
+import org.bukkit.permissions.ServerOperator;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -32,9 +34,9 @@ import org.bukkit.plugin.Plugin;
  */
 public class TPPermissibleBase extends PermissibleBase {
 
-    protected PermissibleBase initialParent;
+    protected Permissible initialParent;
 
-    public TPPermissibleBase(PermissibleBase parent) {
+    public TPPermissibleBase(CommandSender parent) {
         super(parent);
         initialParent = parent;
     }
@@ -74,7 +76,7 @@ public class TPPermissibleBase extends PermissibleBase {
         return super.getEffectivePermissions();
     }
 
-    public PermissibleBase getInitialParent() {
+    public Permissible getInitialParent() {
         return initialParent;
     }
 
