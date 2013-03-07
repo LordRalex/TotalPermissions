@@ -16,12 +16,15 @@
  */
 package com.lordralex.totalpermissions;
 
+import com.lordralex.totalpermissions.permission.PermissionConsole;
 import com.lordralex.totalpermissions.permission.PermissionGroup;
 import com.lordralex.totalpermissions.permission.PermissionUser;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -37,6 +40,7 @@ public final class PermissionManager {
     protected Map<String, PermissionGroup> groups = new ConcurrentHashMap<String, PermissionGroup>();
     protected Map<String, PermissionUser> users = new ConcurrentHashMap<String, PermissionUser>();
     protected String defaultGroup = null;
+    protected PermissionConsole console;
 
     public PermissionManager() {
     }
@@ -58,6 +62,8 @@ public final class PermissionManager {
         if (defaultGroup == null) {
             throw new InvalidConfigurationException("You must define at least one default group");
         }
+        ConsoleCommandSender cmd = Bukkit.getConsoleSender();
+        console = new PermissionConsole();
     }
 
     public void unload() {
@@ -67,6 +73,17 @@ public final class PermissionManager {
 
     public String getDefaultGroup() {
         return defaultGroup;
+    }
+
+    /**
+     * Gets the {@link PermissionConsole}. This is the console's perms.
+     *
+     * @return The {@link PermissionConsole} for the console
+     *
+     * @since 1.0
+     */
+    public synchronized PermissionConsole getConsole() {
+        return console;
     }
 
     /**
