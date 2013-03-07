@@ -18,6 +18,7 @@ package com.lordralex.totalpermissions.reflection;
 
 import com.lordralex.totalpermissions.TotalPermissions;
 import java.util.Set;
+import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.PermissibleBase;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
@@ -80,7 +81,12 @@ public class TPPermissibleBase extends PermissibleBase {
     @Override
     public boolean hasPermission(Permission perm) {
         boolean has = hasPermission(perm.getName());
-        TotalPermissions.getPlugin().getLogger().info("Checking for " + perm.getName() + ": " + has);
+        if (initialParent instanceof CommandSender) {
+            CommandSender cs = (CommandSender) initialParent;
+            TotalPermissions.getPlugin().getLogger().info("Checking if " + cs.getName() + " has " + perm.getName() + ": " + has);
+        } else {
+            TotalPermissions.getPlugin().getLogger().info("Checking for " + perm.getName() + ": " + has);
+        }
         return has;
     }
 
