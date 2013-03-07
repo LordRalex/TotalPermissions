@@ -17,15 +17,10 @@
 package com.lordralex.totalpermissions.reflection;
 
 import com.lordralex.totalpermissions.TotalPermissions;
-import java.util.Set;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.PermissibleBase;
 import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionAttachment;
-import org.bukkit.permissions.PermissionAttachmentInfo;
-import org.bukkit.permissions.ServerOperator;
-import org.bukkit.plugin.Plugin;
 
 /**
  * @author Lord_Ralex
@@ -42,47 +37,9 @@ public class TPPermissibleBase extends PermissibleBase {
     }
 
     @Override
-    public PermissionAttachment addAttachment(Plugin plugin) {
-        return initialParent.addAttachment(plugin);
-    }
-
-    @Override
-    public PermissionAttachment addAttachment(Plugin plugin, int ticks) {
-        return super.addAttachment(plugin, ticks);
-    }
-
-    @Override
-    public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value) {
-        return super.addAttachment(plugin, name, value);
-    }
-
-    @Override
-    public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value, int ticks) {
-        return super.addAttachment(plugin, name, value, ticks);
-    }
-
-    @Override
-    public synchronized void clearPermissions() {
-        super.clearPermissions();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return initialParent.equals(obj);
-    }
-
-    @Override
-    public Set<PermissionAttachmentInfo> getEffectivePermissions() {
-        return super.getEffectivePermissions();
-    }
-
-    public Permissible getInitialParent() {
-        return initialParent;
-    }
-
-    @Override
     public boolean hasPermission(Permission perm) {
-        boolean has = hasPermission(perm.getName());
+
+        boolean has = super.hasPermission(perm);
         if (initialParent instanceof CommandSender) {
             CommandSender cs = (CommandSender) initialParent;
             TotalPermissions.getPlugin().getLogger().info("Checking if " + cs.getName() + " has " + perm.getName() + ": " + has);
@@ -93,51 +50,14 @@ public class TPPermissibleBase extends PermissibleBase {
     }
 
     @Override
-    public boolean hasPermission(String inName) {
-        return initialParent.hasPermission(inName);
-    }
-
-    @Override
-    public boolean isOp() {
-        return initialParent.isOp();
-    }
-
-    @Override
-    public int hashCode() {
-        return initialParent.hashCode();
-    }
-
-    @Override
-    public boolean isPermissionSet(Permission perm) {
-        return initialParent.isPermissionSet(perm);
-    }
-
-    @Override
-    public boolean isPermissionSet(String name) {
-        return initialParent.isPermissionSet(name);
-    }
-
-    @Override
-    public void recalculatePermissions() {
-        initialParent.recalculatePermissions();
-    }
-
-    @Override
-    public void removeAttachment(PermissionAttachment attachment) {
-        initialParent.removeAttachment(attachment);
-    }
-
-    public void setInitialParent(PermissibleBase initialParent) {
-        this.initialParent = initialParent;
-    }
-
-    @Override
-    public void setOp(boolean value) {
-        super.setOp(value);
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
+    public boolean hasPermission(String perm) {
+        boolean has = super.hasPermission(perm);
+        if (initialParent instanceof CommandSender) {
+            CommandSender cs = (CommandSender) initialParent;
+            TotalPermissions.getPlugin().getLogger().info("Checking if " + cs.getName() + " has " + perm + ": " + has);
+        } else {
+            TotalPermissions.getPlugin().getLogger().info("Checking for " + perm + ": " + has);
+        }
+        return has;
     }
 }
