@@ -20,7 +20,6 @@ import com.lordralex.totalpermissions.permission.PermissionUser;
 import com.lordralex.totalpermissions.reflection.TPPermissibleBase;
 import java.lang.reflect.Field;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
@@ -29,7 +28,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
  * @version 0.1
@@ -47,15 +45,16 @@ public final class Listener implements org.bukkit.event.Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLogin(PlayerLoginEvent event) {
         PermissionUser user = plugin.getManager().getUser(event.getPlayer());
-        user.setPerms(event.getPlayer());
         if (user.getDebugState()) {
             //forgive me for saying I did not want to do this
-            Player player = event.getPlayer();
-            Class cl = player.getClass();
+            Object player = event.getPlayer();
             try {
-                Field field = cl.getField("perm");
+                Class cl = Class.forName("org.bukkit.craftbukkit.v1_4_R1.entity.CraftHumanEntity");
+                //plugin.getLogger().info(Arrays.toString(cl.getDeclaredMethods()));
+                Field field = cl.getDeclaredField("perm");
                 field.setAccessible(true);
-                field.set(player, new TPPermissibleBase(player));
+                field.set(player, new TPPermissibleBase(event.getPlayer()));
+                plugin.getLogger().info("Reflection hook established");
             } catch (NoSuchFieldException ex) {
                 plugin.getLogger().log(Level.SEVERE, "Error in reflecting in", ex);
             } catch (SecurityException ex) {
@@ -64,14 +63,11 @@ public final class Listener implements org.bukkit.event.Listener {
                 plugin.getLogger().log(Level.SEVERE, "Error in reflecting in", ex);
             } catch (IllegalAccessException ex) {
                 plugin.getLogger().log(Level.SEVERE, "Error in reflecting in", ex);
+            } catch (ClassNotFoundException ex) {
+                plugin.getLogger().log(Level.SEVERE, "Error in reflecting in", ex);
             }
         }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        player.removeAttachment(plugin.getManager().getUser(player).getAtt());
+        user.setPerms(event.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -97,9 +93,9 @@ public final class Listener implements org.bukkit.event.Listener {
                 plugin.getLogger().info(event.getPlayer().getName() + " cannot use the command, does not have " + cmd.getPermission());
             }
         } catch (NullPointerException e) {
-            plugin.getLogger().log(Level.SEVERE, "The command used is not a registered command", e);
+            plugin.getLogger().log(Level.SEVERE, "The command used is not a registered command");
         } catch (IndexOutOfBoundsException e) {
-            plugin.getLogger().log(Level.SEVERE, event.getMessage() + " produced an IOoBE", e);
+            plugin.getLogger().log(Level.SEVERE, event.getMessage() + " produced an IOoBE");
         }
     }
 }
