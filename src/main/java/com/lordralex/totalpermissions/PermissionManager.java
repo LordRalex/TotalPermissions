@@ -18,6 +18,7 @@ package com.lordralex.totalpermissions;
 
 import com.lordralex.totalpermissions.permission.PermissionConsole;
 import com.lordralex.totalpermissions.permission.PermissionGroup;
+import com.lordralex.totalpermissions.permission.PermissionRcon;
 import com.lordralex.totalpermissions.permission.PermissionUser;
 import java.util.Map;
 import java.util.Set;
@@ -41,6 +42,7 @@ public final class PermissionManager {
     protected Map<String, PermissionUser> users = new ConcurrentHashMap<String, PermissionUser>();
     protected String defaultGroup = null;
     protected PermissionConsole console;
+    protected PermissionRcon remote;
 
     public PermissionManager() {
     }
@@ -64,6 +66,7 @@ public final class PermissionManager {
         }
         ConsoleCommandSender cmd = Bukkit.getConsoleSender();
         console = new PermissionConsole();
+        remote = new PermissionRcon();
     }
 
     public void unload() {
@@ -84,6 +87,17 @@ public final class PermissionManager {
      */
     public synchronized PermissionConsole getConsole() {
         return console;
+    }
+
+    /**
+     * Gets the {@link PermissionRcon}. This is the rcon's perms.
+     *
+     * @return The {@link PermissionRcon} for the console
+     *
+     * @since 1.0
+     */
+    public synchronized PermissionRcon getRcon() {
+        return remote;
     }
 
     /**

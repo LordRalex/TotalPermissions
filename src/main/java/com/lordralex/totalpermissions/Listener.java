@@ -19,15 +19,19 @@ package com.lordralex.totalpermissions;
 import com.lordralex.totalpermissions.permission.PermissionUser;
 import com.lordralex.totalpermissions.reflection.TPPermissibleBase;
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.server.RemoteServerCommandEvent;
+import org.bukkit.permissions.PermissionAttachment;
 
 /**
  * @version 0.1
@@ -96,6 +100,19 @@ public final class Listener implements org.bukkit.event.Listener {
             plugin.getLogger().log(Level.SEVERE, "The command used is not a registered command");
         } catch (IndexOutOfBoundsException e) {
             plugin.getLogger().log(Level.SEVERE, event.getMessage() + " produced an IOoBE");
+        }
+    }
+
+    public void onRemoteConsoleEvent(RemoteServerCommandEvent event) {
+        CommandSender sender = event.getSender();
+        PermissionAttachment att = sender.addAttachment(plugin);
+        List<String> perms = plugin.getManager().getRcon().getPerms();
+        for (String perm : perms) {
+            if (perm.startsWith("-")) {
+                att.setPermission(perm.substring(1).trim(), false);
+            } else {
+                att.setPermission(perm, true);
+            }
         }
     }
 }
