@@ -47,7 +47,7 @@ public abstract class PermissionBase {
         perms.clear();
         options.clear();
 
-        TotalPermissions.getPlugin().getLogger().info("Adding perms for " + aKey + "." + name);
+        TotalPermissions.getPlugin().getLogger().fine("Adding perms for " + aKey + "." + name);
 
         section = TotalPermissions.getPlugin().getPermFile().getConfigurationSection(aKey + "." + name);
 
@@ -55,7 +55,7 @@ public abstract class PermissionBase {
             List<String> permList = section.getStringList("permissions");
             if (permList != null) {
                 for (String perm : permList) {
-                    TotalPermissions.getPlugin().getLogger().info("Adding perm: " + perm);
+                    TotalPermissions.getPlugin().getLogger().fine("Adding perm: " + perm);
                     addPerm(perm);
                 }
             }
@@ -173,18 +173,26 @@ public abstract class PermissionBase {
      * Compares the name of the parameter with that of the group. If they match,
      * this will return true.
      *
-     * @param group Name of another group
+     * @param base Name of another group
      * @return True if names match, false otherwise
      *
      * @since 1.0
      */
-    public boolean equals(PermissionBase test) {
-        if (test.getClass().isInstance(this)) {
-            if (test.getName().equalsIgnoreCase(name)) {
-                return true;
-            }
+    public boolean equals(PermissionBase base) {
+        if (base.getName().equalsIgnoreCase(name)) {
+            return true;
+
         }
         return false;
+    }
+
+    @Override
+    public boolean equals(Object val) {
+        if (val instanceof PermissionBase) {
+            return equals((PermissionBase) val);
+        } else {
+            return super.equals(val);
+        }
     }
 
     /**
