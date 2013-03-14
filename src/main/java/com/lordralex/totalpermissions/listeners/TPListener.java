@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.lordralex.totalpermissions;
+package com.lordralex.totalpermissions.listeners;
 
+import com.lordralex.totalpermissions.TotalPermissions;
 import com.lordralex.totalpermissions.permission.PermissionUser;
 import com.lordralex.totalpermissions.reflection.TPPermissibleBase;
 import java.lang.reflect.Field;
@@ -38,11 +39,11 @@ import org.bukkit.permissions.PermissionAttachment;
  * @author Lord_Ralex
  * @since 0.1
  */
-public final class Listener implements org.bukkit.event.Listener {
+public class TPListener implements org.bukkit.event.Listener {
 
     TotalPermissions plugin;
 
-    public Listener(TotalPermissions p) {
+    public TPListener(TotalPermissions p) {
         plugin = p;
     }
 
@@ -51,10 +52,11 @@ public final class Listener implements org.bukkit.event.Listener {
         PermissionUser user = plugin.getManager().getUser(event.getPlayer());
         if (user.getDebugState()) {
             //forgive me for saying I did not want to do this
+            //or as squid says
+            //"Forgive me for my sins"
             Object player = event.getPlayer();
             try {
                 Class cl = Class.forName("org.bukkit.craftbukkit.v1_4_R1.entity.CraftHumanEntity");
-                //plugin.getLogger().info(Arrays.toString(cl.getDeclaredMethods()));
                 Field field = cl.getDeclaredField("perm");
                 field.setAccessible(true);
                 field.set(player, new TPPermissibleBase(event.getPlayer()));
@@ -74,14 +76,14 @@ public final class Listener implements org.bukkit.event.Listener {
         user.setPerms(event.getPlayer());
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerWorldChange(PlayerChangedWorldEvent event) {
         Player player = event.getPlayer();
         PermissionUser user = plugin.getManager().getUser(player);
         user.changeWorld(player.getWorld().getName());
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         PermissionUser user = plugin.getManager().getUser(event.getPlayer());
         if (!user.getDebugState()) {
@@ -97,12 +99,13 @@ public final class Listener implements org.bukkit.event.Listener {
                 plugin.getLogger().info(event.getPlayer().getName() + " cannot use the command, does not have " + cmd.getPermission());
             }
         } catch (NullPointerException e) {
-            plugin.getLogger().log(Level.SEVERE, "The command used is not a registered command");
+            plugin.getLogger().log(Level.SEVERE, "The command used (" + event.getMessage() + ") is not a registered command");
         } catch (IndexOutOfBoundsException e) {
             plugin.getLogger().log(Level.SEVERE, event.getMessage() + " produced an IOoBE");
         }
     }
 
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onRemoteConsoleEvent(RemoteServerCommandEvent event) {
         CommandSender sender = event.getSender();
         PermissionAttachment att = sender.addAttachment(plugin);

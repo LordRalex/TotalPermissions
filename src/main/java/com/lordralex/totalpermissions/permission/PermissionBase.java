@@ -44,8 +44,6 @@ public abstract class PermissionBase {
 
     public PermissionBase(String aKey, String aName) {
         name = aName;
-        perms.clear();
-        options.clear();
 
         TotalPermissions.getPlugin().getLogger().fine("Adding perms for " + aKey + "." + name);
 

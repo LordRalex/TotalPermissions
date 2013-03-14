@@ -18,6 +18,7 @@ package com.lordralex.totalpermissions;
 
 import com.lordralex.totalpermissions.commands.CommandHandler;
 import com.lordralex.totalpermissions.configuration.Configuration;
+import com.lordralex.totalpermissions.listeners.TPListener;
 import com.lordralex.totalpermissions.mcstats.Metrics;
 import com.lordralex.totalpermissions.permission.utils.Update;
 import java.io.File;
@@ -33,14 +34,14 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author Lord_Ralex
  * @since 0.1
  */
-public final class TotalPermissions extends JavaPlugin {
+public class TotalPermissions extends JavaPlugin {
 
     protected FileConfiguration permFile;
-    private FileConfiguration configFile;
+    protected FileConfiguration configFile;
     protected PermissionManager manager;
     protected static TotalPermissions instance;
     protected Configuration config;
-    protected Listener listener;
+    protected TPListener listener;
     protected Metrics metrics;
     protected CommandHandler commands;
 
@@ -86,6 +87,14 @@ public final class TotalPermissions extends JavaPlugin {
                 }
             }
             config = new Configuration();
+
+            try {
+                Class.forName("org.bukkit.craftbukkit.v1_4_R1.entity.CraftHumanEntity");
+            } catch (ClassNotFoundException e) {
+                getLogger().severe("You are using a version of Craftbukkit that differs from what this is used for. Please update.");
+                getLogger().severe("While this will run, advanced features such as debug and reflection will be disabled");
+            }
+
             getLogger().info("Initial preperations complete");
         } catch (Exception e) {
             getLogger().log(Level.SEVERE, "Error in starting up " + getName() + " (Version " + this.getDescription().getVersion() + ")", e);
@@ -100,7 +109,7 @@ public final class TotalPermissions extends JavaPlugin {
             manager = new PermissionManager();
             manager.load();
             getLogger().config("Creating player listener");
-            listener = new Listener(this);
+            listener = new TPListener(this);
             Bukkit.getPluginManager().registerEvents(listener, this);
             getLogger().config("Creating command handler");
             commands = new CommandHandler();
@@ -171,7 +180,7 @@ public final class TotalPermissions extends JavaPlugin {
         return instance;
     }
 
-    public Listener getListener() {
+    public TPListener getListener() {
         return listener;
     }
 

@@ -32,6 +32,7 @@ import org.bukkit.permissions.PermissionDefault;
  * @version 0.1
  * @author Rogue
  * @since 0.1
+ * @deprecated
  */
 public class Utils {
 
@@ -40,10 +41,12 @@ public class Utils {
      *
      * @param name Name to search
      * @return Closest name, or null if none
+     *
+     * @deprecated
      */
     public static String match(String name) {
         List<Player> matches = Bukkit.matchPlayer(name);
-        if (matches.isEmpty()) {
+        if (!matches.isEmpty()) {
             return matches.get(0).getName();
         } else {
             return null;
