@@ -17,6 +17,9 @@
 package com.lordralex.totalpermissions.reflection;
 
 import com.lordralex.totalpermissions.TotalPermissions;
+import java.lang.reflect.Field;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.PermissibleBase;
@@ -29,35 +32,43 @@ import org.bukkit.permissions.Permission;
  */
 public class TPPermissibleBase extends PermissibleBase {
 
-    protected Permissible initialParent;
+    protected final PermissibleBase initialParent;
+    protected final CommandSender parent;
 
-    public TPPermissibleBase(CommandSender parent) {
-        super(parent);
-        initialParent = parent;
+    public TPPermissibleBase(CommandSender p) {
+        super(p);
+        parent = p;
+        Object obj = null;
+        try {
+            Class cl = Class.forName("org.bukkit.craftbukkit.v1_4_R1.entity.CraftHumanEntity");
+            Field field = cl.getDeclaredField("perm");
+            field.setAccessible(true);
+            obj = field.get(parent);
+        } catch (NoSuchFieldException ex) {
+            Logger.getLogger(TPPermissibleBase.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SecurityException ex) {
+            Logger.getLogger(TPPermissibleBase.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(TPPermissibleBase.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(TPPermissibleBase.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(TPPermissibleBase.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        initialParent = (PermissibleBase) obj;
     }
 
     @Override
     public boolean hasPermission(Permission perm) {
-
-        boolean has = super.hasPermission(perm);
-        if (initialParent instanceof CommandSender) {
-            CommandSender cs = (CommandSender) initialParent;
-            TotalPermissions.getPlugin().getLogger().info("Checking if " + cs.getName() + " has " + perm.getName() + ": " + has);
-        } else {
-            TotalPermissions.getPlugin().getLogger().info("Checking for " + perm.getName() + ": " + has);
-        }
+        boolean has = initialParent.hasPermission(perm);
+        TotalPermissions.getPlugin().getLogger().info("Checking if " + parent.getName() + " has " + perm.getName() + ": " + has);
         return has;
     }
 
     @Override
     public boolean hasPermission(String perm) {
-        boolean has = super.hasPermission(perm);
-        if (initialParent instanceof CommandSender) {
-            CommandSender cs = (CommandSender) initialParent;
-            TotalPermissions.getPlugin().getLogger().info("Checking if " + cs.getName() + " has " + perm + ": " + has);
-        } else {
-            TotalPermissions.getPlugin().getLogger().info("Checking for " + perm + ": " + has);
-        }
+        boolean has = initialParent.hasPermission(perm);
+        TotalPermissions.getPlugin().getLogger().info("Checking if " + parent.getName() + " has " + perm + ": " + has);
         return has;
     }
 }
