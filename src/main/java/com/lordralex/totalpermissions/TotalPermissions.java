@@ -39,7 +39,6 @@ public class TotalPermissions extends JavaPlugin {
     protected FileConfiguration permFile;
     protected FileConfiguration configFile;
     protected PermissionManager manager;
-    protected static TotalPermissions instance;
     protected Configuration config;
     protected TPListener listener;
     protected Metrics metrics;
@@ -47,10 +46,6 @@ public class TotalPermissions extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        if (instance == null) {
-            getLogger().info("Storing instance");
-            instance = this;
-        }
         try {
             getLogger().info("Beginning initial preperations");
             if (!getDataFolder().exists()) {
@@ -177,7 +172,7 @@ public class TotalPermissions extends JavaPlugin {
      * @return Instance of the plugin
      */
     public static TotalPermissions getPlugin() {
-        return instance;
+        return (TotalPermissions) Bukkit.getPluginManager().getPlugin("TotalPermissions");
     }
 
     public TPListener getListener() {
