@@ -32,7 +32,7 @@ import org.bukkit.permissions.PermissionDefault;
  * @version 0.1
  * @author Rogue
  * @since 0.1
- * @deprecated
+ * @deprecated Will be replaced by improved utility class
  */
 public class Utils {
 
@@ -57,6 +57,8 @@ public class Utils {
      * Sends a message to the console.
      *
      * @param message Message to send
+     *
+     * @deprecated
      */
     public static void out(String message) {
         TotalPermissions.getPlugin().getLogger().info(stripColors(message));
@@ -67,6 +69,8 @@ public class Utils {
      *
      * @param cs Command user
      * @param message Message to amend
+     *
+     * @deprecated
      */
     public static void outc(CommandSender cs, String message) {
         if (cs instanceof Player) {
@@ -79,6 +83,8 @@ public class Utils {
      *
      * @param sender Target
      * @param message Message to send
+     *
+     * @deprecated
      */
     public static void output(CommandSender sender, String message) {
         sender.sendMessage(formatColors(message));
@@ -89,6 +95,8 @@ public class Utils {
      *
      * @param player Target
      * @param message Message to send
+     *
+     * @deprecated
      */
     public static void output(Player player, String message) {
         player.sendMessage(formatColors(message));
@@ -101,6 +109,8 @@ public class Utils {
      * @param barcolor Color for the bars
      * @param titlecolor Color for the title
      * @return Title in form of a String
+     *
+     * @deprecated
      */
     public static String formatTitle(String title, ChatColor barcolor, ChatColor titlecolor) {
         String line = barcolor + "------------------------------------------------------------";
@@ -116,6 +126,8 @@ public class Utils {
      *
      * @param message Message to handle
      * @return New message with colors shown
+     *
+     * @deprecated
      */
     public static String formatColors(String message) {
         return ChatColor.translateAlternateColorCodes(ChatColor.COLOR_CHAR, message);
@@ -126,15 +138,23 @@ public class Utils {
      *
      * @param message Message to strip
      * @return The non-colored version
+     *
+     * @deprecated
      */
     public static String stripColors(String message) {
         return ChatColor.stripColor(message);
     }
 
+    /**
+     * @deprecated
+     */
     public static List<String> handleWildcard() {
         return handleWildcard(false);
     }
 
+    /**
+     * @deprecated
+     */
     public static List<String> handleWildcard(boolean isAll) {
         List<String> perms = new ArrayList<String>();
         Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
@@ -148,6 +168,9 @@ public class Utils {
         return perms;
     }
 
+    /**
+     * @deprecated
+     */
     public static List<String> getPermsForCommands(List<String> commands) {
         List<String> perms = new ArrayList<String>();
         for (String command : commands) {
