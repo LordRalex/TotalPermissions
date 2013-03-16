@@ -16,7 +16,6 @@
  */
 package com.lordralex.totalpermissions.permission.utils;
 
-import static com.lordralex.totalpermissions.permission.utils.Utils.handleWildcard;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
