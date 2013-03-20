@@ -54,7 +54,7 @@ public class TPListener implements org.bukkit.event.Listener {
             //forgive me for saying I did not want to do this
             //or as squid says
             //"Forgive me for my sins"
-            Object player = event.getPlayer();
+            Player player = event.getPlayer();
             try {
                 Class cl = Class.forName("org.bukkit.craftbukkit.v1_4_R1.entity.CraftHumanEntity");
                 Field field = cl.getDeclaredField("perm");
