@@ -38,9 +38,13 @@ import org.bukkit.configuration.ConfigurationSection;
 public abstract class PermissionBase {
 
     protected final String name;
+    /**
+     * @deprecated
+     */
     protected final Map<String, Boolean> perms = new HashMap<String, Boolean>();
     protected final Map<String, Object> options = new HashMap<String, Object>();
     protected final ConfigurationSection section;
+    protected final Map<String, Map<String, Boolean>> worldPerms = new HashMap<String, Map<String, Boolean>>();
 
     public PermissionBase(String aKey, String aName) {
         name = aName;
@@ -123,16 +127,34 @@ public abstract class PermissionBase {
     }
 
     /**
-     * Gets a list of the permissions for this group, including those that are
-     * inherited. A '-' is added in front of negative nodes.
+     * Gets a list of the permissions for this group that are global. This
+     * includes inherited perms. Negative perms start with a '-'.
      *
      * @return List of permissions with - in front of negative nodes
      *
      * @since 1.0
      */
     public synchronized List<String> getPerms() {
+        return getPerms(null);
+    }
+
+    /**
+     * Gets a list of the permissions for this group in the given world. This
+     * includes inherited perms. Negative perms start with a '-'.
+     *
+     * @param world World to get perms
+     *
+     * @return List of permissions with - in front of negative nodes
+     *
+     * @since 1.0
+     */
+    public synchronized List<String> getPerms(String world) {
         List<String> permList = new ArrayList<String>();
-        Map.Entry[] permKeys = perms.entrySet().toArray(new Map.Entry[0]);
+        Map<String, Boolean> permMap = worldPerms.get(world);
+        if (permMap == null || permMap.isEmpty()) {
+            return new ArrayList<String>();
+        }
+        Map.Entry[] permKeys = permMap.entrySet().toArray(new Map.Entry[0]);
         for (Map.Entry entry : permKeys) {
             String perm = (String) entry.getKey();
             if (!((Boolean) entry.getValue()).booleanValue()) {
@@ -179,7 +201,6 @@ public abstract class PermissionBase {
     public boolean equals(PermissionBase base) {
         if (base.getName().equalsIgnoreCase(name)) {
             return true;
-
         }
         return false;
     }
@@ -200,34 +221,50 @@ public abstract class PermissionBase {
      * @param perm Perm to add to this group
      */
     public final synchronized void addPerm(String perm) {
+        addPerm(perm, null);
+    }
+
+    /**
+     * Add a permission node to the group to this world. This will apply for
+     * adding negative nodes too.
+     *
+     * @param perm Perm to add to this group
+     * @param world World to have this perm affect
+     */
+    public final synchronized void addPerm(String perm, String world) {
+        Map<String, Boolean> permList = worldPerms.get(world);
+        if (permList == null) {
+            permList = new HashMap<String, Boolean>();
+        }
         if (perm.equals("**")) {
             List<String> allPerms = Utility.handleWildcard(true);
             for (String perm_ : allPerms) {
-                if (!perms.containsKey(perm_)) {
-                    perms.put(perm_, Boolean.TRUE);
+                if (!permList.containsKey(perm_)) {
+                    permList.put(perm_, Boolean.TRUE);
                 }
             }
         } else if (perm.equals("*")) {
             List<String> allPerms = Utility.handleWildcard(false);
             for (String perm_ : allPerms) {
-                if (!perms.containsKey(perm_)) {
-                    perms.put(perm_, Boolean.TRUE);
+                if (!permList.containsKey(perm_)) {
+                    permList.put(perm_, Boolean.TRUE);
                 }
             }
         } else if (perm.equals("-*")) {
             List<String> allPerms = Utility.handleWildcard(false);
             for (String perm_ : allPerms) {
-                if (!perms.containsKey(perm_)) {
-                    perms.put(perm_, Boolean.TRUE);
+                if (!permList.containsKey(perm_)) {
+                    permList.put(perm_, Boolean.TRUE);
                 }
             }
         } else if (perm.startsWith("-")) {
-            perms.put(perm.substring(1), Boolean.FALSE);
+            permList.put(perm.substring(1), Boolean.FALSE);
         } else if (perm.startsWith("^")) {
-            perms.put(perm.substring(1), Boolean.FALSE);
+            permList.put(perm.substring(1), Boolean.FALSE);
         } else {
-            perms.put(perm, Boolean.TRUE);
+            permList.put(perm, Boolean.TRUE);
         }
+        worldPerms.put(world, permList);
     }
 
     /**
@@ -238,7 +275,23 @@ public abstract class PermissionBase {
      * @return True if user/group has permission based on plugin
      */
     public synchronized boolean has(String perm) {
-        Boolean result = perms.get(perm);
+        return has(perm, null);
+    }
+
+    /**
+     * Checks to see if permission is given. This only checks the plugin-given
+     * permissions
+     *
+     * @param perm Permission to check for
+     * @param world The world to check in
+     * @return True if user/group has permission based on plugin
+     */
+    public synchronized boolean has(String perm, String world) {
+        Map<String, Boolean> permList = worldPerms.get(world);
+        if (permList == null || permList.isEmpty()) {
+            return false;
+        }
+        Boolean result = permList.get(perm);
         if (result != null && result.booleanValue()) {
             return true;
         }
