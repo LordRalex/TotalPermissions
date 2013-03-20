@@ -18,7 +18,6 @@ package com.lordralex.totalpermissions.permission;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionAttachment;
 
 /**
  * @version 0.1
