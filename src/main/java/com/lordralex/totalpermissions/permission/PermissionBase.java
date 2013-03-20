@@ -22,10 +22,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachment;
 
 /**
  * Loads all permissions for every type of setup. This may load and try to find
@@ -296,5 +300,32 @@ public abstract class PermissionBase {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Adds the permissions for this PermissionBase to the given CommandSender.
+     *
+     * @param cs CommandSender to add the permissions to
+     *
+     * @since 1.0
+     */
+    public void setPerms(CommandSender cs) {
+        Map<String, Boolean> permList = worldPerms.get(null);
+        if (permList == null) {
+            permList = new HashMap<String, Boolean>();
+        }
+        PermissionAttachment attachment = cs.addAttachment(TotalPermissions.getPlugin());
+        for (Entry entry : permList.entrySet()) {
+            attachment.setPermission((String) entry.getKey(), (Boolean) entry.getValue());
+        }
+        if (cs instanceof Player) {
+            Map<String, Boolean> worldList = worldPerms.get(((Player) cs).getWorld().getName());
+            if (worldList == null) {
+                worldList = new HashMap<String, Boolean>();
+            }
+            for (Entry entry : worldList.entrySet()) {
+                attachment.setPermission((String) entry.getKey(), (Boolean) entry.getValue());
+            }
+        }
     }
 }

@@ -70,6 +70,8 @@ public final class PermissionUser extends PermissionBase {
      *
      * @param player Player to add the permissions to
      *
+     * @deprecated Moving to PermissionBase::setPerms(CommandSender)
+     *
      * @since 1.0
      */
     public void setPerms(Player aPlayer) {
