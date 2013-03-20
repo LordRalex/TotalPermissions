@@ -16,10 +16,6 @@
  */
 package com.lordralex.totalpermissions.permission;
 
-import com.lordralex.totalpermissions.TotalPermissions;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
@@ -31,9 +27,7 @@ import org.bukkit.permissions.PermissionAttachment;
  */
 public final class PermissionUser extends PermissionBase {
 
-    private Player player = null;
-    private PermissionAttachment attachment;
-    private boolean isDebug;
+    private boolean isDebug = false;
 
     public PermissionUser(String aName) {
         super("users", aName);
@@ -41,8 +35,7 @@ public final class PermissionUser extends PermissionBase {
         //if so, then set perms up now
         Player test = Bukkit.getPlayerExact(name);
         if (test != null) {
-            player = test;
-            setPerms(player);
+            setPerms(test);
         }
     }
 
@@ -54,22 +47,11 @@ public final class PermissionUser extends PermissionBase {
      *
      * @since 1.0
      */
-    public PermissionUser(Player aPlayer) {
-        this(aPlayer.getName());
-        player = aPlayer;
+    public PermissionUser(Player player) {
+        this(player.getName());
         if (player != null) {
             setPerms(player);
         }
-    }
-
-    /**
-     * Returns the {@link org.bukkit.permissions.PermissionAttachment}
-     * associated with this user.
-     *
-     * @return PermissionAttachment for user
-     */
-    public PermissionAttachment getAtt() {
-        return attachment;
     }
 
     public void setDebug(boolean newState) {
