@@ -63,37 +63,6 @@ public final class PermissionUser extends PermissionBase {
     }
 
     /**
-     * Adds the permissions for this PermissionUser to the given Player. If the
-     * PermissionUser is not defined or has no permissions, this will create a
-     * new instance of the PermissionUser and give those permissions to the
-     * player
-     *
-     * @param player Player to add the permissions to
-     *
-     * @deprecated Moving to PermissionBase::setPerms(CommandSender)
-     *
-     * @since 1.0
-     */
-    public void setPerms(Player aPlayer) {
-        player = aPlayer;
-        if (perms == null) {
-            List<String> permList = new PermissionUser(player.getName()).getPerms();
-            for (String perm : permList) {
-                if (perm.startsWith("-")) {
-                    perms.put(perm, Boolean.FALSE);
-                } else {
-                    perms.put(perm, Boolean.TRUE);
-                }
-            }
-        }
-        attachment = player.addAttachment(TotalPermissions.getPlugin());
-        Set<Entry<String, Boolean>> entries = perms.entrySet();
-        for (Entry entry : entries) {
-            attachment.setPermission((String) entry.getKey(), ((Boolean) entry.getValue()).booleanValue());
-        }
-    }
-
-    /**
      * Returns the {@link org.bukkit.permissions.PermissionAttachment}
      * associated with this user.
      *
@@ -101,12 +70,6 @@ public final class PermissionUser extends PermissionBase {
      */
     public PermissionAttachment getAtt() {
         return attachment;
-    }
-
-    public synchronized void update() {
-        for (String perm : perms.keySet()) {
-            attachment.setPermission(perm, perms.get(perm).booleanValue());
-        }
     }
 
     public void setDebug(boolean newState) {
