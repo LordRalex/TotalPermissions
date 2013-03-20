@@ -30,6 +30,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.server.RemoteServerCommandEvent;
 import org.bukkit.permissions.PermissionAttachment;
@@ -74,6 +75,13 @@ public class TPListener implements org.bukkit.event.Listener {
             }
         }
         user.setPerms(event.getPlayer());
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onPlayerJoinEvent(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        PermissionUser user = plugin.getManager().getUser(player);
+        user.changeWorld(player.getWorld().getName());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
