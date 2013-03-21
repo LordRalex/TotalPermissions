@@ -309,7 +309,7 @@ public abstract class PermissionBase {
      *
      * @since 1.0
      */
-    public void setPerms(CommandSender cs) {
+    public PermissionAttachment setPerms(CommandSender cs) {
         Map<String, Boolean> permList = worldPerms.get(null);
         if (permList == null) {
             permList = new HashMap<String, Boolean>();
@@ -327,5 +327,6 @@ public abstract class PermissionBase {
                 attachment.setPermission((String) entry.getKey(), (Boolean) entry.getValue());
             }
         }
+        return attachment;
     }
 }
