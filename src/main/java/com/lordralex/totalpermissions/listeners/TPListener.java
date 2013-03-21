@@ -44,7 +44,7 @@ import org.bukkit.permissions.PermissionAttachment;
  */
 public class TPListener implements org.bukkit.event.Listener {
 
-    protected TotalPermissions plugin;
+    protected final TotalPermissions plugin;
     private final Map<String, PermissionAttachment> permAttMap = new HashMap<String, PermissionAttachment>();
 
     public TPListener(TotalPermissions p) {
@@ -54,7 +54,8 @@ public class TPListener implements org.bukkit.event.Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLogin(PlayerLoginEvent event) {
         PermissionUser user = plugin.getManager().getUser(event.getPlayer());
-        if (user.getDebugState()) {
+        if (plugin.getConfiguration().getBoolean("reflection.starperm")
+                || (user.getDebugState() && plugin.getConfiguration().getBoolean("reflection.debug"))) {
             //forgive me for saying I did not want to do this
             //or as squid says
             //"Forgive me for my sins"
@@ -63,7 +64,7 @@ public class TPListener implements org.bukkit.event.Listener {
                 Class cl = Class.forName("org.bukkit.craftbukkit.v1_4_R1.entity.CraftHumanEntity");
                 Field field = cl.getDeclaredField("perm");
                 field.setAccessible(true);
-                field.set(player, new TPPermissibleBase(event.getPlayer()));
+                field.set(player, new TPPermissibleBase(event.getPlayer(), user.getDebugState()));
                 plugin.getLogger().info("Reflection hook established");
             } catch (NoSuchFieldException ex) {
                 plugin.getLogger().log(Level.SEVERE, "Error in reflecting in", ex);

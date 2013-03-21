@@ -34,9 +34,11 @@ public class TPPermissibleBase extends PermissibleBase {
 
     protected final PermissibleBase initialParent;
     protected final CommandSender parent;
+    protected final boolean debug;
 
-    public TPPermissibleBase(CommandSender p) {
+    public TPPermissibleBase(CommandSender p, boolean debugTime) {
         super(p);
+        debug = debugTime;
         parent = p;
         Object obj = null;
         try {
@@ -61,14 +63,18 @@ public class TPPermissibleBase extends PermissibleBase {
     @Override
     public boolean hasPermission(Permission perm) {
         boolean has = initialParent.hasPermission(perm);
-        TotalPermissions.getPlugin().getLogger().info("Checking if " + parent.getName() + " has " + perm.getName() + ": " + has);
+        if (debug) {
+            TotalPermissions.getPlugin().getLogger().info("Checking if " + parent.getName() + " has " + perm.getName() + ": " + has);
+        }
         return has;
     }
 
     @Override
     public boolean hasPermission(String perm) {
         boolean has = initialParent.hasPermission(perm);
-        TotalPermissions.getPlugin().getLogger().info("Checking if " + parent.getName() + " has " + perm + ": " + has);
+        if (debug) {
+            TotalPermissions.getPlugin().getLogger().info("Checking if " + parent.getName() + " has " + perm + ": " + has);
+        }
         return has;
     }
 }

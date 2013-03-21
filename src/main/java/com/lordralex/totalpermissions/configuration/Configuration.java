@@ -46,6 +46,12 @@ public class Configuration {
         if (!config.contains("strict-mode")) {
             config.set("strict-mode", false);
         }
+        if (!config.contains("refection.starperm")) {
+            config.set("refection.starperm", false);
+        }
+        if (!config.contains("refection.debug")) {
+            config.set("refection.debug", false);
+        }
 
         try {
             config.save(configPath);
