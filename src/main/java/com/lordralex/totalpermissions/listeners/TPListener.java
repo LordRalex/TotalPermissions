@@ -42,7 +42,7 @@ import org.bukkit.permissions.PermissionAttachment;
  */
 public class TPListener implements org.bukkit.event.Listener {
 
-    TotalPermissions plugin;
+    protected TotalPermissions plugin;
 
     public TPListener(TotalPermissions p) {
         plugin = p;
