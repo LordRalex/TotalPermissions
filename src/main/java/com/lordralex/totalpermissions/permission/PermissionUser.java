@@ -16,7 +16,6 @@
  */
 package com.lordralex.totalpermissions.permission;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 /**
@@ -30,27 +29,18 @@ public final class PermissionUser extends PermissionBase {
 
     public PermissionUser(String aName) {
         super("users", aName);
-        //checks to see if a player already on the server matches this,
-        //if so, then set perms up now
-        Player test = Bukkit.getPlayerExact(name);
-        if (test != null) {
-            setPerms(test);
-        }
     }
 
     /**
      * Creates a new PermissionUser with the given name. This will load all the
      * values.
      *
-     * @param name The name of the user
+     * @param player The name of the user
      *
      * @since 1.0
      */
     public PermissionUser(Player player) {
         this(player.getName());
-        if (player != null) {
-            setPerms(player);
-        }
     }
 
     public void setDebug(boolean newState) {
