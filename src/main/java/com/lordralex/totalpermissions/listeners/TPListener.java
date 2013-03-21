@@ -20,7 +20,9 @@ import com.lordralex.totalpermissions.TotalPermissions;
 import com.lordralex.totalpermissions.permission.PermissionUser;
 import com.lordralex.totalpermissions.reflection.TPPermissibleBase;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -43,6 +45,7 @@ import org.bukkit.permissions.PermissionAttachment;
 public class TPListener implements org.bukkit.event.Listener {
 
     protected TotalPermissions plugin;
+    private final Map<String, PermissionAttachment> permAttMap = new HashMap<String, PermissionAttachment>();
 
     public TPListener(TotalPermissions p) {
         plugin = p;
@@ -124,6 +127,16 @@ public class TPListener implements org.bukkit.event.Listener {
             } else {
                 att.setPermission(perm, true);
             }
+        }
+    }
+
+    public void clearPerms() {
+        for (String name : permAttMap.keySet()) {
+            Player player = Bukkit.getPlayerExact(name);
+            if (player == null) {
+                continue;
+            }
+            player.removeAttachment(permAttMap.get(name));
         }
     }
 }
