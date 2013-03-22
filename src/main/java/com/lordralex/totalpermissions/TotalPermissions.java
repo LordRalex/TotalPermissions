@@ -36,6 +36,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class TotalPermissions extends JavaPlugin {
 
+    public static final String BUKKIT_VERSION = "v1_4_R1";
     protected FileConfiguration permFile;
     protected FileConfiguration configFile;
     protected PermissionManager manager;
@@ -84,9 +85,9 @@ public class TotalPermissions extends JavaPlugin {
             config = new Configuration();
 
             try {
-                Class.forName("org.bukkit.craftbukkit." + TPListener.BUKKIT_VERSION + ".entity.CraftHumanEntity");
+                Class.forName("org.bukkit.craftbukkit." + BUKKIT_VERSION + ".entity.CraftHumanEntity");
             } catch (ClassNotFoundException e) {
-                getLogger().severe("You are using a version of Craftbukkit that differs from what this is used for (looking for " + TPListener.BUKKIT_VERSION + "). Please update.");
+                getLogger().severe("You are using a version of Craftbukkit that differs from what this is used for (looking for " + BUKKIT_VERSION + "). Please update.");
                 getLogger().severe("While this will run, advanced features such as debug and reflection will be disabled");
             }
 

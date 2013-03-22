@@ -48,7 +48,6 @@ public class TPListener implements Listener {
 
     protected final TotalPermissions plugin;
     private final Map<String, PermissionAttachment> permAttMap = new HashMap<String, PermissionAttachment>();
-    public static final String BUKKIT_VERSION = "v1_4_R1";
 
     public TPListener(TotalPermissions p) {
         plugin = p;
@@ -64,7 +63,7 @@ public class TPListener implements Listener {
             //"Forgive me for my sins"
             Player player = event.getPlayer();
             try {
-                Class cl = Class.forName("org.bukkit.craftbukkit." + BUKKIT_VERSION + ".entity.CraftHumanEntity");
+                Class cl = Class.forName("org.bukkit.craftbukkit." + TotalPermissions.BUKKIT_VERSION + ".entity.CraftHumanEntity");
                 Field field = cl.getDeclaredField("perm");
                 field.setAccessible(true);
                 field.set(player, new TPPermissibleBase(event.getPlayer(), user.getDebugState()));
