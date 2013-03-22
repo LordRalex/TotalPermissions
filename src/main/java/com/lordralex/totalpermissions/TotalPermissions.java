@@ -84,9 +84,9 @@ public class TotalPermissions extends JavaPlugin {
             config = new Configuration();
 
             try {
-                Class.forName("org.bukkit.craftbukkit.v1_4_R1.entity.CraftHumanEntity");
+                Class.forName("org.bukkit.craftbukkit." + TPListener.BUKKIT_VERSION + ".entity.CraftHumanEntity");
             } catch (ClassNotFoundException e) {
-                getLogger().severe("You are using a version of Craftbukkit that differs from what this is used for. Please update.");
+                getLogger().severe("You are using a version of Craftbukkit that differs from what this is used for (looking for " + TPListener.BUKKIT_VERSION + "). Please update.");
                 getLogger().severe("While this will run, advanced features such as debug and reflection will be disabled");
             }
 

@@ -30,6 +30,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -43,10 +44,11 @@ import org.bukkit.permissions.PermissionAttachment;
  * @author Lord_Ralex
  * @since 0.1
  */
-public class TPListener implements org.bukkit.event.Listener {
+public class TPListener implements Listener {
 
     protected final TotalPermissions plugin;
     private final Map<String, PermissionAttachment> permAttMap = new HashMap<String, PermissionAttachment>();
+    public static final String BUKKIT_VERSION = "v1_4_R1";
 
     public TPListener(TotalPermissions p) {
         plugin = p;
@@ -62,7 +64,7 @@ public class TPListener implements org.bukkit.event.Listener {
             //"Forgive me for my sins"
             Player player = event.getPlayer();
             try {
-                Class cl = Class.forName("org.bukkit.craftbukkit.v1_4_R1.entity.CraftHumanEntity");
+                Class cl = Class.forName("org.bukkit.craftbukkit." + BUKKIT_VERSION + ".entity.CraftHumanEntity");
                 Field field = cl.getDeclaredField("perm");
                 field.setAccessible(true);
                 field.set(player, new TPPermissibleBase(event.getPlayer(), user.getDebugState()));
