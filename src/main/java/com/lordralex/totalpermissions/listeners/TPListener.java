@@ -34,6 +34,7 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.RemoteServerCommandEvent;
 import org.bukkit.permissions.PermissionAttachment;
 
@@ -78,7 +79,8 @@ public class TPListener implements org.bukkit.event.Listener {
                 plugin.getLogger().log(Level.SEVERE, "Error in reflecting in", ex);
             }
         }
-        user.setPerms(event.getPlayer());
+        PermissionAttachment att = user.setPerms(event.getPlayer());
+        permAttMap.put(event.getPlayer().getName().toLowerCase(), att);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -86,6 +88,11 @@ public class TPListener implements org.bukkit.event.Listener {
         Player player = event.getPlayer();
         PermissionUser user = plugin.getManager().getUser(player);
         user.changeWorld(player.getWorld().getName());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        permAttMap.remove(event.getPlayer().getName().toLowerCase());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -138,6 +145,15 @@ public class TPListener implements org.bukkit.event.Listener {
                 continue;
             }
             player.removeAttachment(permAttMap.get(name));
+            permAttMap.remove(name);
         }
+    }
+
+    public PermissionAttachment getAttachment(String player) {
+        return permAttMap.get(player.toLowerCase());
+    }
+
+    public PermissionAttachment getAttachment(Player player) {
+        return getAttachment(player.getName());
     }
 }
