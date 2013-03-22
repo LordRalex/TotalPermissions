@@ -89,6 +89,7 @@ public class TotalPermissions extends JavaPlugin {
             } catch (ClassNotFoundException e) {
                 getLogger().severe("You are using a version of Craftbukkit that differs from what this is used for (looking for " + BUKKIT_VERSION + "). Please update.");
                 getLogger().severe("While this will run, advanced features such as debug and reflection will be disabled");
+                config.disableRefection();
             }
 
             getLogger().info("Initial preperations complete");

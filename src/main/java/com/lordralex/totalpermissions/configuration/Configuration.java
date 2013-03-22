@@ -20,6 +20,7 @@ import com.lordralex.totalpermissions.TotalPermissions;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 /**
@@ -70,5 +71,15 @@ public class Configuration {
 
     public boolean getBoolean(String path) {
         return config.getBoolean(path);
+    }
+
+    public void disableRefection() {
+        ConfigurationSection section = config.getConfigurationSection("reflection");
+        if (section == null) {
+            return;
+        }
+        for (String key : section.getKeys(false)) {
+            section.set(key, false);
+        }
     }
 }
