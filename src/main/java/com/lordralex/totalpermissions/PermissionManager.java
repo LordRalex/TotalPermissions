@@ -20,14 +20,19 @@ import com.lordralex.totalpermissions.permission.PermissionConsole;
 import com.lordralex.totalpermissions.permission.PermissionGroup;
 import com.lordralex.totalpermissions.permission.PermissionRcon;
 import com.lordralex.totalpermissions.permission.PermissionUser;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.permissions.PermissionAttachment;
 
 /**
  * @version 0.1
@@ -38,6 +43,7 @@ public final class PermissionManager {
 
     protected final Map<String, PermissionGroup> groups = new ConcurrentHashMap<String, PermissionGroup>();
     protected final Map<String, PermissionUser> users = new ConcurrentHashMap<String, PermissionUser>();
+    protected final Map<String, PermissionAttachment> permAttMap = new HashMap<String, PermissionAttachment>();
     protected String defaultGroup;
     protected PermissionConsole console;
     protected PermissionRcon remote;
@@ -69,7 +75,7 @@ public final class PermissionManager {
     public void unload() {
         users.clear();
         groups.clear();
-        TotalPermissions.getPlugin().getListener().clearPerms();
+        clearPerms();
     }
 
     public String getDefaultGroup() {
@@ -250,6 +256,38 @@ public final class PermissionManager {
                 perm = "-" + perm;
             }
             gr.addPerm(perm);
+        }
+    }
+
+    public void handleLoginEvent(PlayerLoginEvent event) {
+        PermissionUser user = getUser(event.getPlayer());
+        PermissionAttachment att = user.setPerms(event.getPlayer());
+        permAttMap.put(event.getPlayer().getName().toLowerCase(), att);
+    }
+
+    public void handleLogoutEvent(PlayerQuitEvent event) {
+        PermissionAttachment att = permAttMap.remove(event.getPlayer().getName().toLowerCase());
+        if (att != null) {
+            event.getPlayer().removeAttachment(att);
+        }
+    }
+
+    public PermissionAttachment getAttachment(String player) {
+        return permAttMap.get(player.toLowerCase());
+    }
+
+    public PermissionAttachment getAttachment(Player player) {
+        return getAttachment(player.getName());
+    }
+
+    public void clearPerms() {
+        for (String name : permAttMap.keySet()) {
+            Player player = Bukkit.getPlayerExact(name);
+            if (player == null) {
+                continue;
+            }
+            player.removeAttachment(permAttMap.get(name));
+            permAttMap.remove(name);
         }
     }
 }

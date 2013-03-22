@@ -47,7 +47,6 @@ import org.bukkit.permissions.PermissionAttachment;
 public class TPListener implements Listener {
 
     protected final TotalPermissions plugin;
-    private final Map<String, PermissionAttachment> permAttMap = new HashMap<String, PermissionAttachment>();
 
     public TPListener(TotalPermissions p) {
         plugin = p;
@@ -80,8 +79,7 @@ public class TPListener implements Listener {
                 plugin.getLogger().log(Level.SEVERE, "Error in reflecting in", ex);
             }
         }
-        PermissionAttachment att = user.setPerms(event.getPlayer());
-        permAttMap.put(event.getPlayer().getName().toLowerCase(), att);
+        plugin.getManager().handleLoginEvent(event);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -93,7 +91,7 @@ public class TPListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        permAttMap.remove(event.getPlayer().getName().toLowerCase());
+        plugin.getManager().handleLogoutEvent(event);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -137,24 +135,5 @@ public class TPListener implements Listener {
                 att.setPermission(perm, true);
             }
         }
-    }
-
-    public void clearPerms() {
-        for (String name : permAttMap.keySet()) {
-            Player player = Bukkit.getPlayerExact(name);
-            if (player == null) {
-                continue;
-            }
-            player.removeAttachment(permAttMap.get(name));
-            permAttMap.remove(name);
-        }
-    }
-
-    public PermissionAttachment getAttachment(String player) {
-        return permAttMap.get(player.toLowerCase());
-    }
-
-    public PermissionAttachment getAttachment(Player player) {
-        return getAttachment(player.getName());
     }
 }
