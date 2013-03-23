@@ -42,7 +42,7 @@ public class TPPermissibleBase extends PermissibleBase {
         parent = p;
         Object obj = null;
         try {
-            Class cl = Class.forName("org.bukkit.craftbukkit.v1_4_R1.entity.CraftHumanEntity");
+            Class cl = Class.forName("org.bukkit.craftbukkit." + TotalPermissions.BUKKIT_VERSION + ".entity.CraftHumanEntity");
             Field field = cl.getDeclaredField("perm");
             field.setAccessible(true);
             obj = field.get(parent);
