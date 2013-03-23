@@ -36,7 +36,13 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class TotalPermissions extends JavaPlugin {
 
-    public static final String BUKKIT_VERSION = "v1_5_R2";
+    private static String BUKKIT_VERSION = "NONE";
+    private static final String[] ACCEPTABLE_VERSIONS =
+            new String[]{
+        "v1_5_R2",
+        "v1_5_R1",
+        "v1_4_R1"
+    };
     protected FileConfiguration permFile;
     protected FileConfiguration configFile;
     protected PermissionManager manager;
@@ -49,8 +55,22 @@ public class TotalPermissions extends JavaPlugin {
     public void onLoad() {
         try {
             getLogger().info("Beginning initial preperations");
+            config = new Configuration();
+            for (String version : ACCEPTABLE_VERSIONS) {
+                try {
+                    Class.forName("org.bukkit.craftbukkit." + version + ".entity.CraftHumanEntity");
+                    BUKKIT_VERSION = version;
+                } catch (ClassNotFoundException e) {
+                }
+            }
+            if (BUKKIT_VERSION.equalsIgnoreCase("NONE")) {
+                getLogger().severe("You are using a version of Craftbukkit that differs from what this is tested on. Please update.");
+                getLogger().severe("While this will run, advanced features such as debug and reflection will be disabled");
+                config.disableRefection();
+            }
             if (!getDataFolder().exists()) {
                 getDataFolder().mkdirs();
+
             }
             if (!(new File(getDataFolder(), "config.yml").exists())) {
                 this.saveResource("config.yml", true);
@@ -81,15 +101,6 @@ public class TotalPermissions extends JavaPlugin {
                     getLogger().log(Level.SEVERE, "Shutting down perms plugin as there is nothing I can do ;~;");
                     throw e2;
                 }
-            }
-            config = new Configuration();
-
-            try {
-                Class.forName("org.bukkit.craftbukkit." + BUKKIT_VERSION + ".entity.CraftHumanEntity");
-            } catch (ClassNotFoundException e) {
-                getLogger().severe("You are using a version of Craftbukkit that differs from what this is used for (looking for " + BUKKIT_VERSION + "). Please update.");
-                getLogger().severe("While this will run, advanced features such as debug and reflection will be disabled");
-                config.disableRefection();
             }
 
             getLogger().info("Initial preperations complete");
@@ -233,5 +244,9 @@ public class TotalPermissions extends JavaPlugin {
             }
         }
         return new File(getBackupFolder(), Integer.toString(highest));
+    }
+
+    public static String getBukkitVersion() {
+        return BUKKIT_VERSION;
     }
 }
