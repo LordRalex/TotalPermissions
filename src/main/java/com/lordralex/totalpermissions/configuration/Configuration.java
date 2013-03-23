@@ -47,10 +47,10 @@ public class Configuration {
         if (!config.contains("strict-mode")) {
             config.set("strict-mode", false);
         }
-        if (!config.contains("refection.starperm")) {
+        if (!config.contains("reflection.starperm")) {
             config.set("refection.starperm", false);
         }
-        if (!config.contains("refection.debug")) {
+        if (!config.contains("reflection.debug")) {
             config.set("refection.debug", false);
         }
 
