@@ -36,7 +36,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class TotalPermissions extends JavaPlugin {
 
-    public static final String BUKKIT_VERSION = "v1_4_R1";
+    public static final String BUKKIT_VERSION = "v1_5_R2";
     protected FileConfiguration permFile;
     protected FileConfiguration configFile;
     protected PermissionManager manager;
