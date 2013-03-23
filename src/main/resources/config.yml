@@ -1,1 +1,4 @@
 strict-mode: false
+reflection:
+  starperm: false
+  debug: false
