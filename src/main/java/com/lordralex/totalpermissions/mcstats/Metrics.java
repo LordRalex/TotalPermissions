@@ -222,7 +222,9 @@ public final class Metrics {
         encodeDataPair(data, "players", Integer.toString(Bukkit.getServer().getOnlinePlayers().length));
         encodeDataPair(data, "revision", String.valueOf(REVISION));
         //TotalPermissions
-        encodeDataPair(data, "strict", plugin.getConfiguration().getString("strict-mode"));
+        encodeDataPair(data, "strict", Boolean.toString(plugin.getConfiguration().getBoolean("strict-mode")));
+        encodeDataPair(data, "reflection-star", Boolean.toString(plugin.getConfiguration().getBoolean("reflection.starperm")));
+        encodeDataPair(data, "refection-debug", Boolean.toString(plugin.getConfiguration().getBoolean("reflection.debug")));
 
         if (isPing) {
             encodeDataPair(data, "ping", "true");
