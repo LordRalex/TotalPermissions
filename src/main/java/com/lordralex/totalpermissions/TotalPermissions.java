@@ -59,6 +59,7 @@ public class TotalPermissions extends JavaPlugin {
                 try {
                     Class.forName("org.bukkit.craftbukkit." + version + ".entity.CraftHumanEntity");
                     BUKKIT_VERSION = version;
+                    break;
                 } catch (ClassNotFoundException e) {
                 }
             }
