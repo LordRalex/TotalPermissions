@@ -37,8 +37,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class TotalPermissions extends JavaPlugin {
 
     private static String BUKKIT_VERSION = "NONE";
-    private static final String[] ACCEPTABLE_VERSIONS =
-            new String[]{
+    private static final String[] ACCEPTABLE_VERSIONS = new String[]{
         "v1_5_R2",
         "v1_5_R1",
         "v1_4_R1"
