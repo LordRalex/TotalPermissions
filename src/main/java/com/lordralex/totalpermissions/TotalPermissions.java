@@ -54,7 +54,7 @@ public class TotalPermissions extends JavaPlugin {
     public void onLoad() {
         try {
             getLogger().info("Beginning initial preperations");
-            config = new Configuration();
+
             for (String version : ACCEPTABLE_VERSIONS) {
                 try {
                     Class.forName("org.bukkit.craftbukkit." + version + ".entity.CraftHumanEntity");
@@ -79,8 +79,9 @@ public class TotalPermissions extends JavaPlugin {
                 this.saveResource("permissions.yml", true);
             }
 
-            configFile = new YamlConfiguration();
-            configFile.load(new File(this.getDataFolder(), "config.yml"));
+            configFile = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "config.yml"));
+            config = new Configuration();
+
             permFile = new YamlConfiguration();
             try {
                 permFile.load(new File(this.getDataFolder(), "permissions.yml"));
