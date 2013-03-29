@@ -250,4 +250,8 @@ public class TotalPermissions extends JavaPlugin {
     public static String getBukkitVersion() {
         return BUKKIT_VERSION;
     }
+    
+    public CommandHandler getCommandHandler() {
+        return this.commands;
+    }
 }

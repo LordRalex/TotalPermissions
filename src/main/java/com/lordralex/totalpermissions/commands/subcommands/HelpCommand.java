@@ -16,11 +16,12 @@
  */
 package com.lordralex.totalpermissions.commands.subcommands;
 
+import com.lordralex.totalpermissions.TotalPermissions;
 import org.bukkit.command.CommandSender;
 
 /**
  * @since 0.1
- * @author AmberK
+ * @author 1Rogue
  * @version 0.1
  */
 public class HelpCommand implements SubCommand {
@@ -28,27 +29,20 @@ public class HelpCommand implements SubCommand {
     @Override
     public void execute(CommandSender cs, String[] args) {
         if (args.length == 1) {
-            args = new String[]{"1"};
+            args = new String[] {"1"};
         }
-        int page = 1;
-        try {
+        int page;
+        try
+        {
             page = Integer.parseInt(args[0]);
-            if (page > 3) {
-                page = 3;
-            }
             if (page < 1) {
                 page = 1;
             }
-        } catch (NumberFormatException e) {
         }
-        switch (page) {
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
+        catch (NumberFormatException e) {
+            page = 1;
         }
+        cs.sendMessage(getPage(page));
         cs.sendMessage("Use /totalperms <command> help for help with a command");
     }
 
@@ -64,8 +58,36 @@ public class HelpCommand implements SubCommand {
 
     public String[] getHelp() {
         return new String[]{
-            "Usage: /totalperms help",
-            "Return the help center for TotalPermissions"
+            "/ttp help",
+            "Displays help information"
         };
+    }
+    private String getPage(int page) {
+        int factor = 5;
+        int index = (page - 1) * factor;
+        int listSize = TotalPermissions.getPlugin().getCommandHandler().getCommandList().size();
+        if (index > listSize) {
+            return "";
+        }
+        int upper = index + factor;
+        if (upper >= listSize) {
+            upper = listSize;
+        }
+        Object[] list = TotalPermissions.getPlugin().getCommandHandler().getCommandList().keySet().toArray();
+        StringBuilder sb = new StringBuilder();
+        for (int i = index; i < upper; i++) {
+            Object db = TotalPermissions.getPlugin().getCommandHandler().getCommandList().get(list[i]);
+            SubCommand dd = null;
+            if ((db instanceof SubCommand)) {
+                dd = (SubCommand)db;
+            }
+            if (dd != null) {
+                sb.append(dd.getHelp()[0]).append(" - ").append(dd.getHelp()[1]);
+                if (i != upper - 1) {
+                    sb.append("\n");
+                }
+            }
+        }
+        return sb.toString();
     }
 }

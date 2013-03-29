@@ -56,6 +56,11 @@ public final class CommandHandler implements CommandExecutor {
             sender.sendMessage("No command found, use /totalperms help for command list");
             return true;
         }
+        if ((args.length > 1) && (args[1].equalsIgnoreCase("help"))) {
+            sender.sendMessage(executor.getHelp()[0]);
+            sender.sendMessage(executor.getHelp()[1]);
+            return true;
+        }
         int length = args.length - 1;
         if (length < 0) {
             length = 0;
@@ -71,5 +76,8 @@ public final class CommandHandler implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "You cannot use that command");
         }
         return true;
+    }
+    public Map getCommandList() {
+        return commands;
     }
 }
