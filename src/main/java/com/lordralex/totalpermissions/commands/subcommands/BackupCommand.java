@@ -37,6 +37,9 @@ public class BackupCommand implements SubCommand {
     }
 
     public String[] getHelp() {
-        return new String[] { "/ttp backup", "Forces back up of files" };
+        return new String[] {
+            "/ttp backup",
+            "Forces back up of files"
+        };
     }
 }

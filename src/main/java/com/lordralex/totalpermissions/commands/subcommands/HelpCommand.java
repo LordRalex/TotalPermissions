@@ -17,6 +17,7 @@
 package com.lordralex.totalpermissions.commands.subcommands;
 
 import com.lordralex.totalpermissions.TotalPermissions;
+import java.util.Arrays;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -74,6 +75,7 @@ public class HelpCommand implements SubCommand {
             upper = listSize;
         }
         Object[] list = TotalPermissions.getPlugin().getCommandHandler().getCommandList().keySet().toArray();
+        Arrays.sort(list);
         StringBuilder sb = new StringBuilder();
         for (int i = index; i < upper; i++) {
             Object db = TotalPermissions.getPlugin().getCommandHandler().getCommandList().get(list[i]);
