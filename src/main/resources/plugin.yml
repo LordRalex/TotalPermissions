@@ -1,7 +1,10 @@
 main: com.lordralex.totalpermissions.TotalPermissions
 name: TotalPermissions
-version: 0.0.1
-author: Lord_Ralex
+description: Adds configurable permissions to a bukkit server.
+version: 0.1
+authors: [Lord_Ralex, 1Rogue]
+website: http://dev.bukkit.org/server-mods/totalpermissions/
+prefix: TotalPerms
 permissions:
   totalpermissions.*:
     default: op
@@ -26,4 +29,4 @@ permissions:
 commands:
   totalpermissions:
     permission: totalpermissions.command
-    aliases: ["totalperms", "totalperm", "tperm", "tperms"]
+    aliases: ["totalperms", "totalperm", "tperm", "tperms", "ttp"]
