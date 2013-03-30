@@ -18,6 +18,7 @@ package com.lordralex.totalpermissions.commands.subcommands;
 
 import com.lordralex.totalpermissions.TotalPermissions;
 import java.util.Arrays;
+import java.util.Map;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -30,17 +31,15 @@ public class HelpCommand implements SubCommand {
     @Override
     public void execute(CommandSender cs, String[] args) {
         if (args.length == 1) {
-            args = new String[] {"1"};
+            args = new String[]{"1"};
         }
         int page;
-        try
-        {
+        try {
             page = Integer.parseInt(args[0]);
             if (page < 1) {
                 page = 1;
             }
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             page = 1;
         }
         cs.sendMessage(getPage(page));
@@ -63,10 +62,12 @@ public class HelpCommand implements SubCommand {
             "Displays help information"
         };
     }
+
     private String getPage(int page) {
         int factor = 5;
         int index = (page - 1) * factor;
-        int listSize = TotalPermissions.getPlugin().getCommandHandler().getCommandList().size();
+        Map<String, SubCommand> cmds = TotalPermissions.getPlugin().getCommandHandler().getCommandList();
+        int listSize = cmds.size();
         if (index > listSize) {
             return "";
         }
@@ -74,17 +75,14 @@ public class HelpCommand implements SubCommand {
         if (upper >= listSize) {
             upper = listSize;
         }
-        Object[] list = TotalPermissions.getPlugin().getCommandHandler().getCommandList().keySet().toArray();
-        Arrays.sort(list);
+
         StringBuilder sb = new StringBuilder();
+        String[] list = cmds.keySet().toArray(new String[listSize]);
+        Arrays.sort(list);
         for (int i = index; i < upper; i++) {
-            Object db = TotalPermissions.getPlugin().getCommandHandler().getCommandList().get(list[i]);
-            SubCommand dd = null;
-            if ((db instanceof SubCommand)) {
-                dd = (SubCommand)db;
-            }
-            if (dd != null) {
-                sb.append(dd.getHelp()[0]).append(" - ").append(dd.getHelp()[1]);
+            SubCommand db = cmds.get(list[i]);
+            if (db != null) {
+                sb.append(db.getHelp()[0]).append(" - ").append(db.getHelp()[1]);
                 if (i != upper - 1) {
                     sb.append("\n");
                 }
