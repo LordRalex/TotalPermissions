@@ -24,6 +24,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.PermissibleBase;
 import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
 /**
  * @author Lord_Ralex
@@ -70,6 +71,9 @@ public class TPPermissibleBase extends PermissibleBase {
                 has = initialParent.hasPermission(perm);
             } else if (initialParent.isPermissionSet("*")) {
                 has = initialParent.hasPermission("*");
+                if (perm.getDefault() == PermissionDefault.FALSE) {
+                    has = false;
+                }
             } else if (initialParent.isPermissionSet("**")) {
                 has = initialParent.isPermissionSet("**");
 
@@ -91,6 +95,9 @@ public class TPPermissibleBase extends PermissibleBase {
                 has = initialParent.hasPermission(perm);
             } else if (initialParent.isPermissionSet("*")) {
                 has = initialParent.hasPermission("*");
+                if (new Permission(perm).getDefault() == PermissionDefault.FALSE) {
+                    has = false;
+                }
             } else if (initialParent.isPermissionSet("**")) {
                 has = initialParent.isPermissionSet("**");
 
