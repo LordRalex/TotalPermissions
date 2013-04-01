@@ -35,11 +35,13 @@ public class TPPermissibleBase extends PermissibleBase {
     protected final PermissibleBase initialParent;
     protected final CommandSender parent;
     protected final boolean debug;
+    protected final boolean useReflectionPerm;
 
     public TPPermissibleBase(CommandSender p, boolean debugTime) {
         super(p);
         debug = debugTime;
         parent = p;
+        useReflectionPerm = TotalPermissions.getPlugin().getConfiguration().getBoolean("refection.starperm");
         Object obj = null;
         try {
             Class cl = Class.forName("org.bukkit.craftbukkit." + TotalPermissions.getBukkitVersion() + ".entity.CraftHumanEntity");
@@ -63,6 +65,18 @@ public class TPPermissibleBase extends PermissibleBase {
     @Override
     public boolean hasPermission(Permission perm) {
         boolean has = initialParent.hasPermission(perm);
+        if (useReflectionPerm) {
+            if (initialParent.isPermissionSet(perm)) {
+                has = initialParent.hasPermission(perm);
+            } else if (initialParent.isPermissionSet("*")) {
+                has = initialParent.hasPermission("*");
+            } else if (initialParent.isPermissionSet("**")) {
+                has = initialParent.isPermissionSet("**");
+
+            } else {
+                has = false;
+            }
+        }
         if (debug) {
             TotalPermissions.getPlugin().getLogger().info("Checking if " + parent.getName() + " has " + perm.getName() + ": " + has);
         }
@@ -72,6 +86,18 @@ public class TPPermissibleBase extends PermissibleBase {
     @Override
     public boolean hasPermission(String perm) {
         boolean has = initialParent.hasPermission(perm);
+        if (useReflectionPerm) {
+            if (initialParent.isPermissionSet(perm)) {
+                has = initialParent.hasPermission(perm);
+            } else if (initialParent.isPermissionSet("*")) {
+                has = initialParent.hasPermission("*");
+            } else if (initialParent.isPermissionSet("**")) {
+                has = initialParent.isPermissionSet("**");
+
+            } else {
+                has = false;
+            }
+        }
         if (debug) {
             TotalPermissions.getPlugin().getLogger().info("Checking if " + parent.getName() + " has " + perm + ": " + has);
         }
