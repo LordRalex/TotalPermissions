@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 LordRalex
+ * Copyright (C) 2013 Lord_Ralex
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.lordralex.totalpermissions.permission.utils;
+package com.lordralex.totalpermissions.permission.util;
 
 import com.lordralex.totalpermissions.TotalPermissions;
 import java.io.File;
@@ -28,11 +28,10 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
- * @version 0.1
  * @author Lord_Ralex
- * @since 0.1
+ * @version 1.0
  */
-public class Update {
+public class FileUpdater {
 
     private boolean backupFiles = false;
 
@@ -92,12 +91,12 @@ public class Update {
         try {
             TotalPermissions.getPlugin().getConfigFile().save(new File(backupFolder, "config.yml"));
         } catch (IOException ex) {
-            Logger.getLogger(Update.class.getName()).log(Level.SEVERE, null, ex);
+            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, null, ex);
         }
         try {
             TotalPermissions.getPlugin().getPermFile().save(new File(backupFolder, "permissions.yml"));
         } catch (IOException ex) {
-            Logger.getLogger(Update.class.getName()).log(Level.SEVERE, null, ex);
+            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, null, ex);
         }
         backupFiles = false;
     }
@@ -134,7 +133,7 @@ public class Update {
         try {
             perms.save(new File(datafolder, "permissions.yml"));
         } catch (IOException ex) {
-            Logger.getLogger(Update.class.getName()).log(Level.SEVERE, null, ex);
+            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, null, ex);
         }
         moveFiles();
     }
@@ -217,7 +216,7 @@ public class Update {
             try {
                 YamlConfiguration.loadConfiguration(new File(TotalPermissions.getPlugin().getDataFolder(), name)).save(new File(backupFolder, name));
             } catch (IOException ex) {
-                Logger.getLogger(Update.class.getName()).log(Level.SEVERE, null, ex);
+                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, null, ex);
             }
             new File(TotalPermissions.getPlugin().getDataFolder(), name).delete();
         }

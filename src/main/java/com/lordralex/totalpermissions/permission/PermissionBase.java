@@ -17,7 +17,7 @@
 package com.lordralex.totalpermissions.permission;
 
 import com.lordralex.totalpermissions.TotalPermissions;
-import com.lordralex.totalpermissions.permission.utils.Utility;
+import com.lordralex.totalpermissions.permission.util.PermissionUtility;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -241,21 +241,21 @@ public abstract class PermissionBase {
             permList = new HashMap<String, Boolean>();
         }
         if (perm.equals("**")) {
-            List<String> allPerms = Utility.handleWildcard(true);
+            List<String> allPerms = PermissionUtility.handleWildcard(true);
             for (String perm_ : allPerms) {
                 if (!permList.containsKey(perm_)) {
                     permList.put(perm_, Boolean.TRUE);
                 }
             }
         } else if (perm.equals("*")) {
-            List<String> allPerms = Utility.handleWildcard(false);
+            List<String> allPerms = PermissionUtility.handleWildcard(false);
             for (String perm_ : allPerms) {
                 if (!permList.containsKey(perm_)) {
                     permList.put(perm_, Boolean.TRUE);
                 }
             }
         } else if (perm.equals("-*")) {
-            List<String> allPerms = Utility.handleWildcard(false);
+            List<String> allPerms = PermissionUtility.handleWildcard(false);
             for (String perm_ : allPerms) {
                 if (!permList.containsKey(perm_)) {
                     permList.put(perm_, Boolean.TRUE);

@@ -14,66 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.lordralex.totalpermissions.permission.utils;
+package com.lordralex.totalpermissions.permission.util;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
 /**
  * @author Lord_Ralex
- * @version 0.1
- * @since 0.1
+ * @version 1.0
  */
-public final class Utility {
-
-    /**
-     * Formats a title bar. The text will be in the center surrounded by "-"
-     *
-     * @param title The title to show
-     * @param barcolor Color for the bars
-     * @param titlecolor Color for the title
-     * @return Title in form of a String
-     *
-     * @since 0.1
-     */
-    public static String formatTitle(String title, ChatColor barcolor, ChatColor titlecolor) {
-        String line = barcolor + "------------------------------------------------------------";
-        int pivot = line.length() / 2;
-        String center = "[ " + titlecolor + title + barcolor + " ]";
-        String out = line.substring(0, pivot - center.length() / 2);
-        out += center + line.substring(pivot + center.length() / 2);
-        return out;
-    }
-
-    /**
-     * Generates the colors in a message
-     *
-     * @param message Message to handle
-     * @return New message with colors shown
-     *
-     * @since 0.1
-     */
-    public static String formatColors(String message) {
-        return ChatColor.translateAlternateColorCodes(ChatColor.COLOR_CHAR, message);
-    }
-
-    /**
-     * Removes colors from a message
-     *
-     * @param message Message to strip
-     * @return The non-colored version
-     *
-     * @since 0.1
-     */
-    public static String stripColors(String message) {
-        return ChatColor.stripColor(message);
-    }
+public class PermissionUtility {
 
     /**
      * Provides a list of all perms given by using '*'. This will only look at
@@ -123,8 +78,5 @@ public final class Utility {
             }
         }
         return perms;
-    }
-
-    private Utility() {
     }
 }

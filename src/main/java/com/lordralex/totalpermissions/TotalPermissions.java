@@ -20,7 +20,7 @@ import com.lordralex.totalpermissions.commands.CommandHandler;
 import com.lordralex.totalpermissions.configuration.Configuration;
 import com.lordralex.totalpermissions.listeners.TPListener;
 import com.lordralex.totalpermissions.mcstats.Metrics;
-import com.lordralex.totalpermissions.permission.utils.Update;
+import com.lordralex.totalpermissions.permission.util.FileUpdater;
 import java.io.File;
 import java.util.logging.Level;
 import org.bukkit.Bukkit;
@@ -85,7 +85,7 @@ public class TotalPermissions extends JavaPlugin {
             permFile = new YamlConfiguration();
             try {
                 permFile.load(new File(this.getDataFolder(), "permissions.yml"));
-                Update update = new Update();
+                FileUpdater update = new FileUpdater();
                 update.backup(true);
                 update.runUpdate();
             } catch (InvalidConfigurationException e) {
@@ -250,7 +250,7 @@ public class TotalPermissions extends JavaPlugin {
     public static String getBukkitVersion() {
         return BUKKIT_VERSION;
     }
-    
+
     public CommandHandler getCommandHandler() {
         return this.commands;
     }
