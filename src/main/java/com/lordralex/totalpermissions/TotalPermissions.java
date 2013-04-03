@@ -49,6 +49,7 @@ public class TotalPermissions extends JavaPlugin {
     protected TPListener listener;
     protected Metrics metrics;
     protected CommandHandler commands;
+    protected static boolean debug = false;
 
     @Override
     public void onLoad() {
@@ -81,6 +82,7 @@ public class TotalPermissions extends JavaPlugin {
 
             configFile = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "config.yml"));
             config = new Configuration();
+            debug = config.getBoolean("angry-debug");
 
             permFile = new YamlConfiguration();
             try {
@@ -253,5 +255,9 @@ public class TotalPermissions extends JavaPlugin {
 
     public CommandHandler getCommandHandler() {
         return this.commands;
+    }
+
+    public static boolean isDebugMode() {
+        return debug;
     }
 }
