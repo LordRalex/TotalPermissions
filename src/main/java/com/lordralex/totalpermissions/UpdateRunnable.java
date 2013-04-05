@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Laptop
+ * Copyright (C) 2013 Lord_Ralex
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * @version 1.0
- * @author Laptop
+ * @author Lord_Ralex
  */
 public class UpdateRunnable extends BukkitRunnable {
 
