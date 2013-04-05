@@ -106,6 +106,21 @@ public abstract class PermissionBase {
                     options.put(option, optionSec.get(option));
                 }
             }
+            
+            ConfigurationSection worldSec = section.getConfigurationSection("world");
+            if (worldSec != null) {
+                Set<String> worldList = worldSec.getKeys(true);
+                ConfigurationSection tempSection;
+                List<String> tempWorldPerms;
+                for (String world : worldList) {
+                    tempSection = TotalPermissions.getPlugin().getPermFile().getConfigurationSection(section + "." + world);
+                    tempWorldPerms = tempSection.getStringList("permissions");
+                    for (String perm : tempWorldPerms) {
+                        addPerm(perm, world);
+                    }
+                }
+            }
+
 
             //handles the loading of the commands aspect of the plugin
             List<String> commandList = section.getStringList("commands");
