@@ -28,6 +28,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 /**
  * @version 0.1
@@ -107,6 +108,7 @@ public class TotalPermissions extends JavaPlugin {
             }
 
             getLogger().info("Initial preperations complete");
+            Bukkit.getScheduler().runTaskLater(this, new UpdateRunnable(), 1);
         } catch (Exception e) {
             getLogger().log(Level.SEVERE, "Error in starting up " + getName() + " (Version " + this.getDescription().getVersion() + ")", e);
             this.getPluginLoader().disablePlugin(this);
