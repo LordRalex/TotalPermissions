@@ -1,4 +1,5 @@
 strict-mode: false
+update-check: true
 reflection:
   starperm: false
   debug: false

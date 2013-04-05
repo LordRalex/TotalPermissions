@@ -53,6 +53,9 @@ public class Configuration {
         if (!config.contains("reflection.debug")) {
             config.set("refection.debug", false);
         }
+        if (!config.contains("update-check")) {
+            config.set("update-check", true);
+        }
 
         try {
             config.save(configPath);

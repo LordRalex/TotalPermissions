@@ -108,7 +108,9 @@ public class TotalPermissions extends JavaPlugin {
             }
 
             getLogger().info("Initial preperations complete");
-            Bukkit.getScheduler().runTaskLater(this, new UpdateRunnable(), 1);
+            if (config.getBoolean("update-check")) {
+                Bukkit.getScheduler().runTaskLater(this, new UpdateRunnable(), 1);
+            }
         } catch (Exception e) {
             getLogger().log(Level.SEVERE, "Error in starting up " + getName() + " (Version " + this.getDescription().getVersion() + ")", e);
             this.getPluginLoader().disablePlugin(this);
