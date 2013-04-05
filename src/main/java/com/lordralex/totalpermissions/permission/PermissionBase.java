@@ -110,11 +110,9 @@ public abstract class PermissionBase {
             ConfigurationSection worldSec = section.getConfigurationSection("worlds");
             if (worldSec != null) {
                 Set<String> worldList = worldSec.getKeys(true);
-                ConfigurationSection tempSection;
-                List<String> tempWorldPerms;
                 for (String world : worldList) {
-                    tempSection = TotalPermissions.getPlugin().getPermFile().getConfigurationSection(section + "." + world);
-                    tempWorldPerms = tempSection.getStringList("permissions");
+                    ConfigurationSection tempSection = TotalPermissions.getPlugin().getPermFile().getConfigurationSection(section + "." + world);
+                    List<String> tempWorldPerms = tempSection.getStringList("permissions");
                     for (String perm : tempWorldPerms) {
                         addPerm(perm, world);
                     }
