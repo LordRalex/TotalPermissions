@@ -84,7 +84,7 @@ public class TPListener implements Listener {
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         PermissionUser user = plugin.getManager().getUser(player);
-        user.changeWorld(player.getWorld().getName());
+        user.changeWorld(player, player.getWorld().getName());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -96,7 +96,7 @@ public class TPListener implements Listener {
     public void onPlayerWorldChange(PlayerChangedWorldEvent event) {
         Player player = event.getPlayer();
         PermissionUser user = plugin.getManager().getUser(player);
-        user.changeWorld(player.getWorld().getName());
+        user.changeWorld(player, player.getWorld().getName());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

@@ -322,8 +322,9 @@ public abstract class PermissionBase {
      *
      * @since 1.0
      */
-    public PermissionAttachment setPerms(CommandSender cs) {
+    public PermissionAttachment setPerms(CommandSender cs, String worldName) {
         Map<String, Boolean> permList = worldPerms.get(null);
+        permList.putAll(worldPerms.get(worldName));
         if (permList == null) {
             permList = new HashMap<String, Boolean>();
         }

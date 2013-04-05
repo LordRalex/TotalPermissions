@@ -16,6 +16,7 @@
  */
 package com.lordralex.totalpermissions.permission;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -51,6 +52,7 @@ public final class PermissionUser extends PermissionBase {
         return isDebug;
     }
 
-    public void changeWorld(String name) {
+    public void changeWorld(Player cs, String name) {
+        setPerms((CommandSender)cs, name);
     }
 }
