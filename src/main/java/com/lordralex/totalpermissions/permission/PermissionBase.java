@@ -106,7 +106,7 @@ public abstract class PermissionBase {
                     options.put(option, optionSec.get(option));
                 }
             }
-            
+
             ConfigurationSection worldSec = section.getConfigurationSection("worlds");
             if (worldSec != null) {
                 Set<String> worldList = worldSec.getKeys(false);
@@ -324,9 +324,14 @@ public abstract class PermissionBase {
      */
     public PermissionAttachment setPerms(CommandSender cs, String worldName) {
         Map<String, Boolean> permList = worldPerms.get(null);
-        permList.putAll(worldPerms.get(worldName));
         if (permList == null) {
             permList = new HashMap<String, Boolean>();
+        }
+        if (worldName != null) {
+            Map<String, Boolean> tempMap = worldPerms.get(worldName);
+            if (tempMap != null) {
+                permList.putAll(tempMap);
+            }
         }
         PermissionAttachment attachment = cs.addAttachment(TotalPermissions.getPlugin());
         for (Entry entry : permList.entrySet()) {
@@ -342,5 +347,9 @@ public abstract class PermissionBase {
             }
         }
         return attachment;
+    }
+
+    public PermissionAttachment setPerms(CommandSender cs) {
+        return setPerms(cs, null);
     }
 }
