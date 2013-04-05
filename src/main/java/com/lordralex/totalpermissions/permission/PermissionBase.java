@@ -107,7 +107,7 @@ public abstract class PermissionBase {
                 }
             }
             
-            ConfigurationSection worldSec = section.getConfigurationSection("world");
+            ConfigurationSection worldSec = section.getConfigurationSection("worlds");
             if (worldSec != null) {
                 Set<String> worldList = worldSec.getKeys(true);
                 ConfigurationSection tempSection;
