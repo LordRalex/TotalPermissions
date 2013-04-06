@@ -1,0 +1,86 @@
+command:
+  backup:
+    command: 'säkerhetskopiera'
+    help: 'Tvingar säkerhetskopiering'
+  debug:
+    command: 'debug'
+    args: 'Inget mål specifierat. För hjälp, använd /ttp debug hjälp'
+    null-target: 'Målanvändaren "{0}" fanns inte'
+    debug-on: 'Debugläge påslaget för {0}'
+    debug-off: 'Debugläge avslaget för {0}'
+    help: 'Slår på debugläge för en användare'
+  help:
+    command: 'hjälp'
+    cont: 'Använd /ttp <kommando> hjälp för hjälp med ett kommando'
+    help: 'Visar hjälpinformation'
+  reload:
+    command: 'ladda-om'
+    reloading: 'Ladda om'
+    badconfig: 'Ett fel inträffade vid omladdning; läs serverloggen'
+    general: 'Ett fel inträffade vid omladdning'
+    success: '{0} har laddats om'
+    help: 'Laddar om TotalPermissions'
+  handler:
+    ifnull: 'Inget kommando funnet, använd /ttp hjälp för kommandolista'
+    help-check: 'hjälp'
+    denied: 'Du kan inte använda det kommandot'
+configuration:
+  configuration:
+    strict-mode: 'strikt-läge'
+    reflection:
+      star: 'stjärna'
+      debug: 'debug'
+    update-check: 'kontrollera-uppdateringar'
+    angry-debug: 'angry-debug'
+language:
+  lang:
+    nullresc: 'Språkresursfilen är NULL!'
+    default: 'Använder standardvärde {0}'
+listener:
+  tplistener:
+    login:
+      hooked: 'Reflektionskrok installerad'
+      error: 'Ett reflektionsfel inträffade i {0}'
+    preprocess:
+      activate: 'Kommando använt av {0}'
+      allow: '{0} kan använda kommandot, har {1}'
+      deny: '{0} kan inte använda kommandot, har inte {1}'
+      invalid: 'Kommandot ("{0}") är inte ett registrerat kommando.'
+      index: 'kastade ett indexeringsundantag'
+permission:
+  base:
+    adding: 'Lägger till tillstånd för {0}'
+    add: 'Lägger till tillstånd {0}'
+  group:
+    default: 'standard'
+reflection:
+  checking: 'Kontrollerar om {0} har {1}'
+manager:
+  null-group: 'Du måste definiera minst en grupp'
+  null-default: 'Du måste definiera minst en standardgrupp'
+update:
+  dev: 'Du använder en utvecklingsversion, uppdateringskontroll är avstängd'
+  update-error: 'Ett fel inträffade vid uppdateringskontroll'
+  versioning-error: 'Versionskontroll slutfördes inte'
+main:
+  init: 'Påbörjar förberedelser'
+  init-done: 'Förberedelser färdiga'
+  bad-version1: 'Du använder en version av Craftbukkit som skiljer sig från vad detta testats på. Vänligen uppdatera.'
+  bad-version2: 'Detta kommer att fungera, men avancerade funktioner som debug och reflektion kommer att stängas av.'
+  yaml-error: 'YAML-fel i din permissions.yml'
+  load-backup: 'Försöker ladda säkerhetskopierad tillståndsfil'
+  loaded1: 'Laddade en gammal tillståndsfil. Vänligen reparera dina tillstånd innan du gör något annat.'
+  loaded2: 'Schemalagd säkerhetskopiering kommer också att stängas av så att du kan fixa din fil och (förhoppningsvis) inte skapa felaktiga säkerhetskopior.'
+  load-failed1: 'Fel i den senaste säkerhetskopian, kan inte ladda'
+  load-failed2: 'Stänger av tillståndsplugin eftersom det inte finns något jag kan göra ;~;'
+  create:
+    perms: 'Skapar tillståndshanterare'
+    listener: 'Skapar spelarlyssnare'
+    command: 'Skapar kommandohanterare'
+  metrics: 'Mätning av pluginstatistik är på, du kan stänga av detta i konfigurationen för PluginMetrics'
+  error: 'Fel vid uppstart av {0} (version {1})'
+variables:
+  username: 'användarnamn'
+  group: 'grupp'
+  permission: 'tillstånd'
+  node: 'nod'
