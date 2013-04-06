@@ -27,16 +27,18 @@ import org.bukkit.configuration.file.FileConfiguration;
  */
 public class Cipher {
     
-    private String currentLang = "en_US";
     FileConfiguration langFile;
-    File langFilePath;
     
-    public Cipher() {
-        langFile = TotalPermissions.getPlugin().getConfigFile();
+    public Cipher(FileConfiguration file) {
+        langFile = file;
     }
     
     public void setLangFile(FileConfiguration file) {
         langFile = file;
+    }
+    
+    public FileConfiguration getLangFile() {
+        return langFile;
     }
     
     public String getString (String path) {
@@ -48,6 +50,7 @@ public class Cipher {
     }
     
     public String getString (String path, String varOne, String varTwo) {
+        String temp = langFile.getString(path);
         return langFile.getString(path);
     }
 }

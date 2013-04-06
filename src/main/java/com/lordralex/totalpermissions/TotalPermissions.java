@@ -86,13 +86,13 @@ public class TotalPermissions extends JavaPlugin {
 
             configFile = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "config.yml"));
             config = new Configuration();
-            /*try {
-                cipher.setLangFile(YamlConfiguration.loadConfiguration(this.getResource("lang/ " + config.getString("language") + ".yml")));
+            try {
+                cipher = new Cipher(YamlConfiguration.loadConfiguration(this.getResource(config.getString("language") + ".yml")));
             } catch (NullPointerException e) {
                 getLogger().log(Level.SEVERE, "Language resource file is NULL!");
                 getLogger().log(Level.SEVERE, "Defaulting to english");
-                cipher.setLangFile(YamlConfiguration.loadConfiguration(this.getResource("lang/en_US.yml")));
-            }*/
+                cipher = new Cipher(YamlConfiguration.loadConfiguration(this.getResource("en_US.yml")));
+            }
             debug = config.getBoolean("angry-debug");
 
             permFile = new YamlConfiguration();
