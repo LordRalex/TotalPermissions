@@ -56,6 +56,9 @@ public class Configuration {
         if (!config.contains("update-check")) {
             config.set("update-check", true);
         }
+        if (!config.contains("language")) {
+            config.set("language", "en_US");
+        }
 
         try {
             config.save(configPath);

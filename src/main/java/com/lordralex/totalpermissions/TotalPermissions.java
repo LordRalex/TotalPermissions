@@ -18,6 +18,7 @@ package com.lordralex.totalpermissions;
 
 import com.lordralex.totalpermissions.commands.CommandHandler;
 import com.lordralex.totalpermissions.configuration.Configuration;
+import com.lordralex.totalpermissions.lang.Cipher;
 import com.lordralex.totalpermissions.listeners.TPListener;
 import com.lordralex.totalpermissions.mcstats.Metrics;
 import com.lordralex.totalpermissions.permission.util.FileUpdater;
@@ -45,8 +46,10 @@ public class TotalPermissions extends JavaPlugin {
     };
     protected FileConfiguration permFile;
     protected FileConfiguration configFile;
+    protected FileConfiguration langFile;
     protected PermissionManager manager;
     protected Configuration config;
+    protected Cipher cipher;
     protected TPListener listener;
     protected Metrics metrics;
     protected CommandHandler commands;
@@ -83,6 +86,13 @@ public class TotalPermissions extends JavaPlugin {
 
             configFile = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "config.yml"));
             config = new Configuration();
+            /*try {
+                cipher.setLangFile(YamlConfiguration.loadConfiguration(this.getResource("lang/ " + config.getString("language") + ".yml")));
+            } catch (NullPointerException e) {
+                getLogger().log(Level.SEVERE, "Language resource file is NULL!");
+                getLogger().log(Level.SEVERE, "Defaulting to english");
+                cipher.setLangFile(YamlConfiguration.loadConfiguration(this.getResource("lang/en_US.yml")));
+            }*/
             debug = config.getBoolean("angry-debug");
 
             permFile = new YamlConfiguration();

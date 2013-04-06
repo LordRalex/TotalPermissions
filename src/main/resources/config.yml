@@ -1,5 +1,6 @@
 strict-mode: false
 update-check: true
+language: en_US
 reflection:
   starperm: false
   debug: false
