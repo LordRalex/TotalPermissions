@@ -1,0 +1,86 @@
+command:
+  backup:
+    command: 'backup'
+    help: 'Maakt een backup van de pluginbestanden'
+  debug:
+    command: 'debug'
+    args: 'Geen doel aangegeven. Voor meer informatie, probeer /totalperms debug help'
+    null-target: 'Gebruiker ("") niet gevonden'
+    debug-on: 'Debugmode ingeschakeld voor'
+    debug-off: 'Debugmode uitgeschakeld voor'
+    help: 'Schakelt debugmode in voor een gebruiker'
+  help:
+    command: 'help'
+    cont: 'Gebruik /totalperms <commando> help om hulp te krijgen voor een commando'
+    help: 'Geeft helpinformatie weer voor commando''s'
+  reload:
+    command: 'herlaad'
+    reloading: 'Aan het herladen'
+    badconfig: 'Er ging iets fout tijdens het herladen; controleer de server logs'
+    general: 'Er ging iets fout tijdens het herladen'
+    success: 'werd herladen'
+    help: 'Herlaadt TotalPermissions'
+  handler:
+    ifnull: 'Geen commando gevonden, gebruik /totalperms help voor een lijst met commando''s'
+    help-check: 'help'
+    denied: 'Je kunt dit commando niet gebruiken'
+configuration:
+  configuration:
+    strict-mode: 'strikte mode'
+    reflection:
+      star: 'asterisk'
+      debug: 'debug'
+    update-check: 'update check'
+    angry-debug: 'angry-debug'
+language:
+  lang:
+    nullresc: 'talenbestand is NULL!'
+    default: 'Automatisch ingesteld als '
+listener:
+  tplistener:
+    login:
+      hooked: 'Reflection hook aangemaakt'
+      error: 'Error in reflecting in'
+    preprocess:
+      activate: 'Commando gebruikt door'
+      allow: 'mag het commando gebruiken, heeft'
+      deny: 'mag het commando niet gebruiken, heeft geen'
+      invalid: 'Het gebruikte commando ("{0}") is niet als commando geregistreerd.'
+      index: 'produceerde een IndexOutOfBoundsException'
+permission:
+  base:
+    adding: 'Permissies toe aan het voegen voor'
+    add: 'Permissie toe aan het voegen'
+  group:
+    default: 'standaard'
+reflection:
+  checking: 'Aan het controleren of {0} {1} heeft'
+manager:
+  null-group: 'Je moet tenminste één groep definiëren'
+  null-default: 'Je moet tenminste één standaardgroep definiëren'
+update:
+  dev: 'Je gebruikt momenteen een dev build; update checks zijn uitgeschakeld'
+  update-error: 'Er ging iets fout tijdens het zoeken naar een update'
+  versioning-error: 'Versiecontrole is niet uitgevoerd'
+main:
+  init: 'Aan het voorbereiden'
+  init-done: 'Voorbereiden voltooid'
+  bad-version1: 'Je gebruikt momenteel een Craftbukkit-versie die verschilt met de versie waar deze plugin voor getest is. Voer SVP een update uit.'
+  bad-version2: 'Hoewel de plugin zal werken, zullen geavanceerde opties zoals debuggen en reflection uitgeschakeld zijn'
+  yaml-error: 'je permissions.yml bestand bevat een YAML error'
+  load-backup: 'Een backup permissions.yml bestand zal nu geladen worden'
+  loaded1: 'Een ouder permissiebestand is geladen. Het is aanbevolen je permissies te repareren alvorens verder te gaan'
+  loaded2: 'Backups zijn ook uitgeschakeld zodat je je bestand kunt repareren zonder dat er backups gemaakt worden van niet werkende versies'
+  load-failed1: 'De laatste backup bevat errors en kan niet geladen worden'
+  load-failed2: 'Omdat er geen andere opties zijn, zal de permissies plugin nu uitgeschakeld worden'
+  create:
+    perms: 'Permissiebeheerder aan het maken'
+    listener: 'playerlistener aan het maken'
+    command: 'commandhandler aan het maken'
+  metrics: 'Plugin statistieken zijn ingeschakeld, dit kan uitgeschakeld worden in het PluginMetrics configuratiebestand.'
+  error: 'Error tijdens het opstarten van {0} (Versie {1})'
+variables:
+  username: 'gebruikersnaam'
+  group: 'groep'
+  permission: 'permissie'
+  node: 'node'
