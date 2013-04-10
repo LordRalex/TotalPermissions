@@ -17,6 +17,7 @@
 package com.lordralex.totalpermissions.commands;
 
 import com.lordralex.totalpermissions.commands.subcommands.*;
+import com.lordralex.totalpermissions.commands.subcommands.actions.ActionHandler;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.ChatColor;
@@ -32,6 +33,7 @@ import org.bukkit.command.CommandSender;
 public final class CommandHandler implements CommandExecutor {
 
     protected final Map<String, SubCommand> commands = new HashMap<String, SubCommand>();
+    private ActionHandler actions;
 
     public CommandHandler() {
         HelpCommand help = new HelpCommand();
@@ -42,6 +44,12 @@ public final class CommandHandler implements CommandExecutor {
         commands.put(reload.getName().toLowerCase().trim(), reload);
         BackupCommand backup = new BackupCommand();
         commands.put(backup.getName().toLowerCase().trim(), backup);
+        UserCommand user = new UserCommand();
+        commands.put(user.getName().toLowerCase().trim(), user);
+        GroupCommand group = new GroupCommand();
+        commands.put(group.getName().toLowerCase().trim(), group);
+        
+        actions = new ActionHandler();
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {
@@ -57,7 +65,7 @@ public final class CommandHandler implements CommandExecutor {
             return true;
         }
         if ((args.length > 1) && (args[1].equalsIgnoreCase("help"))) {
-            sender.sendMessage(executor.getHelp()[0]);
+            sender.sendMessage("Usage: " + executor.getHelp()[0]);
             sender.sendMessage(executor.getHelp()[1]);
             return true;
         }
@@ -77,7 +85,12 @@ public final class CommandHandler implements CommandExecutor {
         }
         return true;
     }
+    
     public Map getCommandList() {
         return commands;
+    }
+    
+    public ActionHandler getActionHandler() {
+        return actions;
     }
 }
