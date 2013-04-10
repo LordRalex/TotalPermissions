@@ -23,11 +23,10 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
- * @version 1.0
+ * @version 0.1
  * @author Lord_Ralex
  */
 public class UpdateRunnable extends BukkitRunnable {
@@ -39,7 +38,7 @@ public class UpdateRunnable extends BukkitRunnable {
 
     public UpdateRunnable() {
         super();
-        latest = TotalPermissions.getPlugin().getDescription().getVersion();
+        version = TotalPermissions.getPlugin().getDescription().getVersion();
     }
 
     public void run() {
