@@ -38,8 +38,7 @@ public class Formatter {
         String line = barcolor + "------------------------------------------------------------";
         int pivot = line.length() / 2;
         String center = (barcolor + "[ ") + (titlecolor + title) + (barcolor + " ]");
-        String out = line.substring(0, pivot - center.length() / 2) + center + line.substring(pivot - center.length() / 2);
-        return out;
+        return line.substring(0, pivot - center.length() / 2) + center + line.substring(0, pivot - center.length() / 2);
     }
 
     /**
