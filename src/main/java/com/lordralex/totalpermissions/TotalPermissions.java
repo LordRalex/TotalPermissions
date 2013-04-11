@@ -29,7 +29,6 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 
 /**
  * @version 0.1
@@ -166,7 +165,7 @@ public class TotalPermissions extends JavaPlugin {
      *
      * @return The {@link PermissionManager} that this is using
      *
-     * @since 1.0
+     * @since 0.1
      */
     public PermissionManager getManager() {
         return manager;
@@ -178,7 +177,7 @@ public class TotalPermissions extends JavaPlugin {
      *
      * @return The perm file in the FileConfiguration form.
      *
-     * @since 1.0
+     * @since 0.1
      */
     public FileConfiguration getPermFile() {
         return permFile;
@@ -190,7 +189,7 @@ public class TotalPermissions extends JavaPlugin {
      *
      * @return The configuration file in the FileConfiguration form.
      *
-     * @since 1.0
+     * @since 0.1
      */
     public FileConfiguration getConfigFile() {
         return configFile;
@@ -200,11 +199,20 @@ public class TotalPermissions extends JavaPlugin {
      * Gets the instance of the plugin.
      *
      * @return Instance of the plugin
+     * 
+     * @since 0.1
      */
     public static TotalPermissions getPlugin() {
         return (TotalPermissions) Bukkit.getPluginManager().getPlugin("TotalPermissions");
     }
-
+    
+    /**
+     * Returns the (@link TPListener) for TotalPermissions.
+     * 
+     * @return (@link TPListener) for the plugin.
+     * 
+     * @since 0.1
+     */
     public TPListener getListener() {
         return listener;
     }
@@ -214,10 +222,21 @@ public class TotalPermissions extends JavaPlugin {
      *
      * @return The {@link Configuration} in use
      *
-     * @since 1.0
+     * @since 0.1
      */
     public Configuration getConfiguration() {
         return config;
+    }
+    
+    /**
+     * Returns the (@link Cipher) that is loaded
+     * 
+     * @return the (@link Cipher) in use
+     * 
+     * @since 0.2
+     */
+    public Cipher getLangFile() {
+        return cipher;
     }
 
     /**
@@ -225,7 +244,7 @@ public class TotalPermissions extends JavaPlugin {
      *
      * @return The backup folder
      *
-     * @since 1.0
+     * @since 0.1
      */
     public File getBackupFolder() {
         return new File(this.getDataFolder(), "backups");
@@ -238,7 +257,7 @@ public class TotalPermissions extends JavaPlugin {
      * @return The File instance of the folder that contains the last backed up
      * files
      *
-     * @since 1.0
+     * @since 0.1
      */
     public File getLastBackupFolder() {
         int highest = 0;
@@ -266,11 +285,25 @@ public class TotalPermissions extends JavaPlugin {
     public static String getBukkitVersion() {
         return BUKKIT_VERSION;
     }
-
+    
+    /**
+     * Returns the (@link CommandHandler) for TotalPermissions
+     * 
+     * @return (@link CommandHandler)
+     * 
+     * @since 0.1
+     */
     public CommandHandler getCommandHandler() {
         return this.commands;
     }
-
+    
+    /**
+     * Boolean returning the status of debug mode.
+     * 
+     * @return whether debug is on or off
+     * 
+     * @since 0.1
+     */
     public static boolean isDebugMode() {
         return debug;
     }
