@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 LordRalex
+ * Copyright (C) 2013 AE97
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -199,18 +199,18 @@ public class TotalPermissions extends JavaPlugin {
      * Gets the instance of the plugin.
      *
      * @return Instance of the plugin
-     * 
+     *
      * @since 0.1
      */
     public static TotalPermissions getPlugin() {
         return (TotalPermissions) Bukkit.getPluginManager().getPlugin("TotalPermissions");
     }
-    
+
     /**
      * Returns the (@link TPListener) for TotalPermissions.
-     * 
+     *
      * @return (@link TPListener) for the plugin.
-     * 
+     *
      * @since 0.1
      */
     public TPListener getListener() {
@@ -227,12 +227,12 @@ public class TotalPermissions extends JavaPlugin {
     public Configuration getConfiguration() {
         return config;
     }
-    
+
     /**
      * Returns the (@link Cipher) that is loaded
-     * 
+     *
      * @return the (@link Cipher) in use
-     * 
+     *
      * @since 0.2
      */
     public Cipher getLangFile() {
@@ -285,23 +285,23 @@ public class TotalPermissions extends JavaPlugin {
     public static String getBukkitVersion() {
         return BUKKIT_VERSION;
     }
-    
+
     /**
      * Returns the (@link CommandHandler) for TotalPermissions
-     * 
+     *
      * @return (@link CommandHandler)
-     * 
+     *
      * @since 0.1
      */
     public CommandHandler getCommandHandler() {
         return this.commands;
     }
-    
+
     /**
      * Boolean returning the status of debug mode.
-     * 
+     *
      * @return whether debug is on or off
-     * 
+     *
      * @since 0.1
      */
     public static boolean isDebugMode() {
