@@ -20,7 +20,7 @@ import org.bukkit.ChatColor;
 
 /**
  * @author Lord_Ralex
- * @version 1.0
+ * @version 0.1
  */
 public class Formatter {
 

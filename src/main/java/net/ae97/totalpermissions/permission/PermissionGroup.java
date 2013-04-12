@@ -30,7 +30,7 @@ public class PermissionGroup extends PermissionBase {
      *
      * @param name The name of the group
      *
-     * @since 1.0
+     * @since 0.1
      */
     public PermissionGroup(String name) {
         super("groups", name);

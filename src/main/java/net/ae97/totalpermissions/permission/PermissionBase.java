@@ -149,7 +149,7 @@ public abstract class PermissionBase {
      *
      * @return List of permissions with - in front of negative nodes
      *
-     * @since 1.0
+     * @since 0.1
      */
     public synchronized List<String> getPerms() {
         return getPerms(null);
@@ -163,7 +163,7 @@ public abstract class PermissionBase {
      *
      * @return List of permissions with - in front of negative nodes
      *
-     * @since 1.0
+     * @since 0.1
      */
     public synchronized List<String> getPerms(String world) {
         List<String> permList = new ArrayList<String>();
@@ -189,7 +189,7 @@ public abstract class PermissionBase {
      * @param key Path to option
      * @return Value of that option, or null if no option
      *
-     * @since 1.0
+     * @since 0.1
      */
     public Object getOption(String key) {
         return options.get(key);
@@ -200,7 +200,7 @@ public abstract class PermissionBase {
      *
      * @return Name of group
      *
-     * @since 1.0
+     * @since 0.1
      */
     public String getName() {
         return name;
@@ -213,7 +213,7 @@ public abstract class PermissionBase {
      * @param base Name of another group
      * @return True if names match, false otherwise
      *
-     * @since 1.0
+     * @since 0.1
      */
     public boolean equals(PermissionBase base) {
         if (base.getName().equalsIgnoreCase(name)) {
@@ -320,7 +320,7 @@ public abstract class PermissionBase {
      *
      * @param cs CommandSender to add the permissions to
      *
-     * @since 1.0
+     * @since 0.1
      */
     public PermissionAttachment setPerms(CommandSender cs, String worldName) {
         Map<String, Boolean> permList = worldPerms.get(null);

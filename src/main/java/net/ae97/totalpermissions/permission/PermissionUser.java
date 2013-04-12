@@ -38,7 +38,7 @@ public final class PermissionUser extends PermissionBase {
      *
      * @param player The name of the user
      *
-     * @since 1.0
+     * @since 0.1
      */
     public PermissionUser(Player player) {
         this(player.getName());

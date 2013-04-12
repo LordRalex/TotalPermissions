@@ -87,7 +87,7 @@ public final class PermissionManager {
      *
      * @return The {@link PermissionConsole} for the console
      *
-     * @since 1.0
+     * @since 0.1
      */
     public PermissionConsole getConsole() {
         return console;
@@ -98,7 +98,7 @@ public final class PermissionManager {
      *
      * @return The {@link PermissionRcon} for the console
      *
-     * @since 1.0
+     * @since 0.1
      */
     public PermissionRcon getRcon() {
         return remote;
@@ -112,7 +112,7 @@ public final class PermissionManager {
      * @param player The player's name to load
      * @return The {@link PermissionUser} for that player
      *
-     * @since 1.0
+     * @since 0.1
      */
     public PermissionUser getUser(String player) {
         PermissionUser user;
@@ -134,7 +134,7 @@ public final class PermissionManager {
      * @param player The player's name to load
      * @return The {@link PermissionUser} for that player
      *
-     * @since 1.0
+     * @since 0.1
      */
     public PermissionUser getUser(Player player) {
         return getUser(player.getName());
@@ -147,7 +147,7 @@ public final class PermissionManager {
      * @param name The player's name to load
      * @return The {@link PermissionGroup} for that group
      *
-     * @since 1.0
+     * @since 0.1
      */
     public PermissionGroup getGroup(String name) {
         PermissionGroup group;

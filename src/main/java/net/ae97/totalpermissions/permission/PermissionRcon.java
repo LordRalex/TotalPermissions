@@ -18,7 +18,7 @@ package net.ae97.totalpermissions.permission;
 
 /**
  * @author Lord_Ralex
- * @version 1.0
+ * @version 0.1
  */
 public class PermissionRcon extends PermissionBase {
 
