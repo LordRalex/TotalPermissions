@@ -1,8 +1,8 @@
-main: com.lordralex.totalpermissions.TotalPermissions
-name: TotalPermissions
+main: net.ae97.totalpermissions.TotalPermissions
+name: ${project.name}
 description: Adds configurable permissions to a bukkit server.
-version: 0.1
-authors: [Lord_Ralex, 1Rogue]
+version: ${project.version}
+authors: [Lord_Ralex, 1Rogue, Icelord871]
 website: http://dev.bukkit.org/server-mods/totalpermissions/
 prefix: TotalPerms
 permissions:
