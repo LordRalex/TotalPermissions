@@ -27,6 +27,7 @@ command:
     ifnull-plain: 'Ei komentoa, /ttp help saadaksesi komentolistan'
     help-check: 'help'
     denied: 'Et voi käyttää annettua komentoa'
+    usage: 'käyttö'
   user:
     help: 'Käyttäjäkäyttöliittymä'
   group:
