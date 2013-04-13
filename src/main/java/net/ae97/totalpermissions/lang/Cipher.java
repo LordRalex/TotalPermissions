@@ -38,7 +38,7 @@ public class Cipher {
         try {
             InputStream temp = TotalPermissions.getPlugin().getResource(language);
             this.setLangFile(YamlConfiguration.loadConfiguration(temp));
-        } catch (NullPointerException e) {
+        } catch (IllegalArgumentException e) {
             TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Language resource file is NULL! Trying web files instead...");
             try {
                 URL upstr = new URL(langFileLoc + language);
