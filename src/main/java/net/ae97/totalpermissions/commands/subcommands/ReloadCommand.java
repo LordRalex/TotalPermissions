@@ -18,16 +18,13 @@ package net.ae97.totalpermissions.commands.subcommands;
 
 import net.ae97.totalpermissions.PermissionManager;
 import net.ae97.totalpermissions.TotalPermissions;
-import net.ae97.totalpermissions.listeners.TPListener;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.plugin.PluginDescriptionFile;
 
 /**
  * @since 0.1

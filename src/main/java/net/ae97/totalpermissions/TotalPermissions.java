@@ -52,6 +52,7 @@ public class TotalPermissions extends JavaPlugin {
     protected TPListener listener;
     protected Metrics metrics;
     protected CommandHandler commands;
+    protected ExternalAPI apiKey;
     protected static boolean debug = false;
 
     @Override
@@ -115,7 +116,9 @@ public class TotalPermissions extends JavaPlugin {
                     throw e2;
                 }
             }
-
+            
+            apiKey = new ExternalAPI();
+            
             getLogger().info("Initial preperations complete");
             if (config.getBoolean("update-check")) {
                 Bukkit.getScheduler().runTaskLater(this, new UpdateRunnable(), 1);
@@ -295,6 +298,17 @@ public class TotalPermissions extends JavaPlugin {
      */
     public CommandHandler getCommandHandler() {
         return this.commands;
+    }
+    
+    /**
+     * Returns the (@link ExternalAPI) for TotalPermissions
+     * 
+     * @return (@link ExternalAPI)
+     * 
+     * @since 0.1
+     */
+    public ExternalAPI getAPI() {
+        return this.apiKey;
     }
     
     /**
