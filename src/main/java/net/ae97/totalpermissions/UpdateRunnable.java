@@ -43,7 +43,7 @@ public class UpdateRunnable extends BukkitRunnable {
 
     public void run() {
         if (version.endsWith("SNAPSHOT") || version.endsWith("DEV")) {
-            TotalPermissions.getPlugin().getLogger().warning("You are using a dev build, update checks are disabled");
+            TotalPermissions.getPlugin().getLogger().warning(TotalPermissions.getPlugin().getLangFile().getString("update.dev"));
             isLatest = true;
             return;
         }
@@ -59,15 +59,15 @@ public class UpdateRunnable extends BukkitRunnable {
                 isLatest = false;
             }
         } catch (MalformedURLException ex) {
-            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Error occured while checking for an update", ex);
+            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, TotalPermissions.getPlugin().getLangFile().getString("update.update-error"), ex);
         } catch (IOException ex) {
-            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Error occured while checking for an update", ex);
+            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, TotalPermissions.getPlugin().getLangFile().getString("update.update-error"), ex);
         }
     }
 
     public boolean isUpdate() throws IllegalStateException {
         if (isLatest == null) {
-            throw new IllegalStateException("Version check was not completed");
+            throw new IllegalStateException(TotalPermissions.getPlugin().getLangFile().getString("update.versioning-error"));
         }
         return !isLatest;
     }

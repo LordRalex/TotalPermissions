@@ -75,6 +75,7 @@ public class TotalPermissions extends JavaPlugin {
             configFile = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "config.yml"));
             config = new Configuration();
             config.loadDefaults();
+            cipher = new Cipher(config.getString("language"));
 
             for (String version : ACCEPTABLE_VERSIONS) {
                 try {
@@ -85,14 +86,12 @@ public class TotalPermissions extends JavaPlugin {
                 }
             }
             if (BUKKIT_VERSION.equalsIgnoreCase("NONE")) {
-                getLogger().severe("You are using a version of Craftbukkit that differs from what this is tested on. Please update.");
-                getLogger().severe("While this will run, advanced features such as debug and reflection will be disabled");
+                getLogger().severe(TotalPermissions.getPlugin().getLangFile().getString("main.bad-version1"));
+                getLogger().severe(TotalPermissions.getPlugin().getLangFile().getString("main.bad-version2"));
                 config.disableReflection();
             }
             //force kill reflection, is buggy and I don't want it running now
             config.disableReflection();
-
-            cipher = new Cipher(config.getString("language"));
 
             debug = config.getBoolean("angry-debug");
 
@@ -109,17 +108,17 @@ public class TotalPermissions extends JavaPlugin {
                     permFile = converter.convert();
                 }
             } catch (InvalidConfigurationException e) {
-                getLogger().log(Level.SEVERE, "YAML error in your permissions.yml file");
+                getLogger().log(Level.SEVERE, TotalPermissions.getPlugin().getLangFile().getString("main.yaml-error"));
                 getLogger().log(Level.SEVERE, "-> " + e.getMessage());
-                getLogger().log(Level.WARNING, "Attempting to load backup permission file");
+                getLogger().log(Level.WARNING, TotalPermissions.getPlugin().getLangFile().getString("main.load-backup"));
                 try {
                     permFile = new YamlConfiguration();
                     permFile.load(new File(this.getLastBackupFolder(), "permissions.yml"));
-                    getLogger().log(Level.WARNING, "Loaded an older perms files. Please repair your permissions before doing anything else though.");
-                    getLogger().log(Level.WARNING, "I will also disable timed backups so you can fix your file and (hopefully) not back up bugged copies");
+                    getLogger().log(Level.WARNING, TotalPermissions.getPlugin().getLangFile().getString("main.loaded1"));
+                    getLogger().log(Level.WARNING, TotalPermissions.getPlugin().getLangFile().getString("main.loaded2"));
                 } catch (InvalidConfigurationException e2) {
-                    getLogger().log(Level.SEVERE, "Errors in the last backup up, cannot load");
-                    getLogger().log(Level.SEVERE, "Shutting down perms plugin as there is nothing I can do ;~;");
+                    getLogger().log(Level.SEVERE, TotalPermissions.getPlugin().getLangFile().getString("main.load-failed1"));
+                    getLogger().log(Level.SEVERE, TotalPermissions.getPlugin().getLangFile().getString("main.load-failed2"));
                     throw e2;
                 }
             }
@@ -131,7 +130,7 @@ public class TotalPermissions extends JavaPlugin {
                 Bukkit.getScheduler().runTaskLater(this, new UpdateRunnable(), 1);
             }
         } catch (Exception e) {
-            getLogger().log(Level.SEVERE, "Error in starting up " + getName() + " (Version " + this.getDescription().getVersion() + ")", e);
+            getLogger().log(Level.SEVERE, TotalPermissions.getPlugin().getLangFile().getString("main.error", getName(), this.getDescription().getVersion()), e);
             this.getPluginLoader().disablePlugin(this);
         }
     }
@@ -139,25 +138,25 @@ public class TotalPermissions extends JavaPlugin {
     @Override
     public void onEnable() {
         try {
-            getLogger().config("Creating perms manager");
+            getLogger().config(TotalPermissions.getPlugin().getLangFile().getString("main.create.perms"));
             manager = new PermissionManager();
             manager.load();
-            getLogger().config("Creating player listener");
+            getLogger().config(TotalPermissions.getPlugin().getLangFile().getString("main.create.listener"));
             listener = new TPListener(this);
             Bukkit.getPluginManager().registerEvents(listener, this);
-            getLogger().config("Creating command handler");
+            getLogger().config(TotalPermissions.getPlugin().getLangFile().getString("main.create.command"));
             commands = new CommandHandler();
             getCommand("totalpermissions").setExecutor(commands);
             metrics = new Metrics(this);
             if (metrics.start()) {
-                getLogger().info("Plugin Metrics is on, you can opt-out in the PluginMetrics config");
+                getLogger().info(TotalPermissions.getPlugin().getLangFile().getString("main.metrics"));
             }
         } catch (Exception e) {
             if (e instanceof InvalidConfigurationException) {
-                getLogger().log(Level.SEVERE, "YAML error in your permissions file");
+                getLogger().log(Level.SEVERE, TotalPermissions.getPlugin().getLangFile().getString("main.yaml-error"));
                 getLogger().log(Level.SEVERE, ((InvalidConfigurationException) e).getMessage());
             } else {
-                getLogger().log(Level.SEVERE, "Error in starting up " + getName() + " (Version " + this.getDescription().getVersion() + ")", e);
+                getLogger().log(Level.SEVERE, TotalPermissions.getPlugin().getLangFile().getString("main.error", getName(), this.getDescription().getVersion()), e);
             }
             this.getPluginLoader().disablePlugin(this);
         }

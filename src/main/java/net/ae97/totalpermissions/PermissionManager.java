@@ -55,7 +55,7 @@ public final class PermissionManager {
         FileConfiguration perms = TotalPermissions.getPlugin().getPermFile();
         ConfigurationSection filegroups = perms.getConfigurationSection("groups");
         if (groups == null) {
-            throw new InvalidConfigurationException("You must define at least one group");
+            throw new InvalidConfigurationException(TotalPermissions.getPlugin().getLangFile().getString("manager.null-group"));
         }
         Set<String> allGroups = filegroups.getKeys(false);
         for (String group : allGroups) {
@@ -66,7 +66,7 @@ public final class PermissionManager {
             }
         }
         if (defaultGroup == null) {
-            throw new InvalidConfigurationException("You must define at least one default group");
+            throw new InvalidConfigurationException(TotalPermissions.getPlugin().getLangFile().getString("manager.null-default"));
         }
         console = new PermissionConsole();
         remote = new PermissionRcon();

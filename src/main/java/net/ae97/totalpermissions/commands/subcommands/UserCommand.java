@@ -48,7 +48,7 @@ public class UserCommand implements SubCommand {
 
     public String[] getHelp() {
         return new String[]{
-            "/ttp user <username> [actions..]",
+            "/ttp user " + TotalPermissions.getPlugin().getLangFile().getString("variables.username") + " [actions..]",
             TotalPermissions.getPlugin().getLangFile().getString("command.user.help")
         };
     }
