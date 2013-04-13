@@ -4,3 +4,6 @@ language: en_US
 reflection:
   starperm: false
   debug: false
+permissions:
+  formatter: true
+  updater: true

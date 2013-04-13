@@ -4,16 +4,14 @@ command:
     help: 'Forces back up of files'
   debug:
     command: 'debug'
-    args: 'No target specified, for help, use /ttp debug help'
-    args-plain: 'No target specified, for help, use /ttp debug help'
+    args: 'No target specified, for help, use /totalperms debug help'
     null-target: 'Target user ("") was not found'
     debug-on: 'Debug turned on for'
     debug-off: 'Debug turned off for'
     help: 'Turns on debug mode for a user'
   help:
     command: 'help'
-    cont: 'Use /ttp {0} help for help with a command'
-    cont-plain: 'Use /ttp {0} help for help with a command'
+    cont: 'Use /totalperms <command> help for help with a command'
     help: 'Displays help information'
   reload:
     command: 'reload'
@@ -23,8 +21,7 @@ command:
     success: 'has reloaded'
     help: 'Reloads TotalPermissions'
   handler:
-    ifnull: 'No command found, use /ttp help for command list'
-    ifnull-plain: 'No command found, use /ttp help for command list'
+    ifnull: 'No command found, use /totalperms help for command list'
     help-check: 'help'
     denied: 'You cannot use that command'
 configuration:
@@ -83,8 +80,7 @@ main:
   metrics: 'Plugin Metrics is on, you can opt-out in the PluginMetrics config'
   error: 'Error in starting up {0} (Version {1})'
 variables:
-  command: '<command>'
-  username: '<username>'
-  group: '<group>'
-  permission: '<permission>'
-  node: '<node>'
+  username: 'username'
+  group: 'group'
+  permission: 'permission'
+  node: 'node'

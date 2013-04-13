@@ -4,16 +4,14 @@ command:
     help: 'Pakottaa tiedostojen varmuuskopioinnin'
   debug:
     command: 'debug'
-    args: 'Ei kohdetta. (/ttp debug help saadaksesi ohjeet)'
-    args-plain: 'Ei kohdetta. (/ttp debug help saadaksesi ohjeet)'
+    args: 'Ei kohdetta. (/totalperms debug help saadaksesi ohjeet)'
     null-target: 'Kohdekäyttäjää ("") ei löydy'
     debug-on: 'Debug kytketty päälle kohteelle'
     debug-off: 'Debug kytketty pois kohteelle'
     help: 'Kytkee debug-tilan päälle annetulle käyttäjälle'
   help:
     command: 'help'
-    cont: 'Käytä /ttp {0} help saadaksesi tietyn komennon ohjeet'
-    cont-plain: 'Käytä /ttp {0} help saadaksesi tietyn komennon ohjeet'
+    cont: 'Käytä /totalperms <komento> help saadaksesi tietyn komennon ohjeet'
     help: 'Näyttää aputietoja'
   reload:
     command: 'uudelleenlataa'
@@ -23,8 +21,7 @@ command:
     success: 'uudelleenlatautui'
     help: 'Uudelleenlataa TotalPermissionsin'
   handler:
-    ifnull: 'Ei komentoa, /ttp help saadaksesi komentolistan'
-    ifnull-plain: 'Ei komentoa, /ttp help saadaksesi komentolistan'
+    ifnull: 'Ei komentoa, /totalperms help saadaksesi komentolistan'
     help-check: 'help'
     denied: 'Et voi käyttää annettua komentoa'
 configuration:
@@ -83,8 +80,7 @@ main:
   metrics: 'Plugin-metriikat ovat päällä -- voit kytkeä ne pois PluginMetricsin konfiguraatiossa'
   error: 'Virhe käynnistäessä {0} (Versio {1})'
 variables:
-  command: '<komento>'
-  username: '<käyttäjä>'
-  group: '<ryhmä>'
-  permission: '<lupa>'
-  node: '<solmu>'
+  username: 'käyttäjä'
+  group: 'ryhmä'
+  permission: 'lupa'
+  node: 'solmu'

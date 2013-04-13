@@ -9,24 +9,34 @@ permissions:
   totalpermissions.*:
     default: op
     children:
-      totalpermissions.command.*: true
-  totalpermissions.command.*:
+      totalpermissions.cmd.*: true
+  totalpermissions.cmd.*:
     default: false
     children:
-      totalpermissions.command: true
-      totalpermissions.command.help: true
-      totalpermissions.command.debug: true
-      totalpermissions.command.reload: true
-      totalpermissions.command.backup: true
-  totalpermissions.command.help:
+      totalpermissions.cmd: true
+      totalpermissions.cmd.help: true
+      totalpermissions.cmd.debug: true
+      totalpermissions.cmd.reload: true
+      totalpermissions.cmd.backup: true
+  totalpermissions.cmd.help:
     default: false
-  totalpermissions.command.debug:
+    children: 
+      totalpermissions.cmd: true
+  totalpermissions.cmd.debug:
     default: false
-  totalpermissions.command.reload:
+    children: 
+      totalpermissions.cmd: true
+  totalpermissions.cmd.reload:
     default: false
-  totalpermissions.command:
+    children: 
+      totalpermissions.cmd: true
+  totalpermissions.cmd.backup:
+    default: false
+    children: 
+      totalpermissions.cmd: true
+  totalpermissions.cmd:
     default: false
 commands:
   totalpermissions:
-    permission: totalpermissions.command
+    permission: totalpermissions.cmd
     aliases: ["totalperms", "totalperm", "tperm", "tperms", "ttp"]
