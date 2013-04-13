@@ -30,12 +30,12 @@ public class DebugCommand implements SubCommand {
 
     public void execute(CommandSender sender, String[] args) {
         if (args.length == 1) {
-            sender.sendMessage("No target specified, for help, use /ttp debug help");
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.debug.args-plain"));
             return;
         }
         PermissionUser target = TotalPermissions.getPlugin().getManager().getUser(args[1]);
         if (target == null) {
-            sender.sendMessage("Target user (" + args[1] + ") was not found");
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.debug.null-target", args[1]));
             return;
         }
         if (args.length == 2 || args.length == 3) {
@@ -56,9 +56,9 @@ public class DebugCommand implements SubCommand {
             }
             target.setDebug(newState);
             if (target.getDebugState()) {
-                sender.sendMessage(ChatColor.GRAY + "Debug turned on for " + target.getName());
+                sender.sendMessage(ChatColor.GRAY + TotalPermissions.getPlugin().getLangFile().getString("command.debug.debug-on", target.getName()));
             } else {
-                sender.sendMessage(ChatColor.GRAY + "Debug turned off for " + target.getName());
+                sender.sendMessage(ChatColor.GRAY + TotalPermissions.getPlugin().getLangFile().getString("command.debug.debug-off", target.getName()));
             }
         }
     }
@@ -73,8 +73,8 @@ public class DebugCommand implements SubCommand {
 
     public String[] getHelp() {
         return new String[]{
-            "/ttp debug <username> [on/off]",
-            "Toggles debug mode for a user"
+            "/ttp debug " + TotalPermissions.getPlugin().getLangFile().getString("variables.username") + " [on/off]",
+            TotalPermissions.getPlugin().getLangFile().getString("command.debug.help")
         };
     }
 }

@@ -26,6 +26,7 @@ import net.ae97.totalpermissions.commands.subcommands.DebugCommand;
 import net.ae97.totalpermissions.commands.subcommands.actions.ActionHandler;
 import java.util.HashMap;
 import java.util.Map;
+import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -67,11 +68,11 @@ public final class CommandHandler implements CommandExecutor {
         }
         SubCommand executor = commands.get(subCommand.toLowerCase());
         if (executor == null) {
-            sender.sendMessage("No command found, use /totalperms help for command list");
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.handler.ifnull-plain"));
             return true;
         }
         if ((args.length > 1) && (args[1].equalsIgnoreCase("help"))) {
-            sender.sendMessage("Usage: " + executor.getHelp()[0]);
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.handler.usage", executor.getHelp()[0]));
             sender.sendMessage(executor.getHelp()[1]);
             return true;
         }
@@ -87,7 +88,7 @@ public final class CommandHandler implements CommandExecutor {
             executor.execute(sender, args);
             return true;
         } else {
-            sender.sendMessage(ChatColor.RED + "You cannot use that command");
+            sender.sendMessage(ChatColor.RED + TotalPermissions.getPlugin().getLangFile().getString("command.handler.denied"));
         }
         return true;
     }

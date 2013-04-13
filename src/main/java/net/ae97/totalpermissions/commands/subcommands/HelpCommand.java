@@ -49,7 +49,6 @@ public class HelpCommand implements SubCommand {
         int page = this.getInt(args[1]);
         Map commands = TotalPermissions.getPlugin().getCommandHandler().getCommandList();
         cs.sendMessage(getPage(page, commands));
-        cs.sendMessage("Use /ttp <command> help for help with a command");
     }
 
     @Override
@@ -65,7 +64,7 @@ public class HelpCommand implements SubCommand {
     public String[] getHelp() {
         return new String[]{
             "/ttp help",
-            "Displays help information"
+            TotalPermissions.getPlugin().getLangFile().getString("command.help.help")
         };
     }
 
@@ -100,7 +99,7 @@ public class HelpCommand implements SubCommand {
                 }
             }
         }
-        sb.append("Use /ttp <command> help for help with a command");
+        sb.append(TotalPermissions.getPlugin().getLangFile().getString("command.help.cont-plain", TotalPermissions.getPlugin().getLangFile().getString("variables.command")));
         return sb.toString();
     }
 

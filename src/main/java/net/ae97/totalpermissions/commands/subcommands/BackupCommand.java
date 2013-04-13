@@ -16,6 +16,7 @@
  */
 package net.ae97.totalpermissions.commands.subcommands;
 
+import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.util.FileUpdater;
 import org.bukkit.command.CommandSender;
 
@@ -43,7 +44,7 @@ public class BackupCommand implements SubCommand {
     public String[] getHelp() {
         return new String[]{
             "/ttp backup",
-            "Forces back up of files"
+            TotalPermissions.getPlugin().getLangFile().getString("command.backup.help")
         };
     }
 }

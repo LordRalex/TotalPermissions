@@ -6,9 +6,9 @@ command:
     command: 'debug'
     args: 'No target specified, for help, use /ttp debug help'
     args-plain: 'No target specified, for help, use /ttp debug help'
-    null-target: 'Target user ("") was not found'
-    debug-on: 'Debug turned on for'
-    debug-off: 'Debug turned off for'
+    null-target: 'Target user ("{0}") was not found'
+    debug-on: 'Debug turned on for {0}'
+    debug-off: 'Debug turned off for {0}'
     help: 'Turns on debug mode for a user'
   help:
     command: 'help'
@@ -17,16 +17,21 @@ command:
     help: 'Displays help information'
   reload:
     command: 'reload'
-    reloading: 'Reloading'
+    reloading: 'Reloading {0}'
     badconfig: 'An error occured when reloading, check your server logs'
-    general: 'An error occured while reloading'
-    success: 'has reloaded'
+    general: 'An error occured while reloading {0}'
+    success: '{0} has reloaded'
     help: 'Reloads TotalPermissions'
   handler:
     ifnull: 'No command found, use /ttp help for command list'
     ifnull-plain: 'No command found, use /ttp help for command list'
+    usage: 'Usage: {0}'
     help-check: 'help'
     denied: 'You cannot use that command'
+  user:
+    help: 'User interface'
+  group:
+    help: 'Group interface'
 configuration:
   configuration:
     strict-mode: 'strict-mode'

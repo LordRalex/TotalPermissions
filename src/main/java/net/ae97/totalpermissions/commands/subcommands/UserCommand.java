@@ -49,7 +49,7 @@ public class UserCommand implements SubCommand {
     public String[] getHelp() {
         return new String[]{
             "/ttp user <username> [actions..]",
-            "User interface"
+            TotalPermissions.getPlugin().getLangFile().getString("command.user.help")
         };
     }
 }

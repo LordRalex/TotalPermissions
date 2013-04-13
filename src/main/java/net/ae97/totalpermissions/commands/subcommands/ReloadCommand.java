@@ -18,16 +18,13 @@ package net.ae97.totalpermissions.commands.subcommands;
 
 import net.ae97.totalpermissions.PermissionManager;
 import net.ae97.totalpermissions.TotalPermissions;
-import net.ae97.totalpermissions.listeners.TPListener;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.plugin.PluginDescriptionFile;
 
 /**
  * @since 0.1
@@ -37,13 +34,13 @@ import org.bukkit.plugin.PluginDescriptionFile;
 public class ReloadCommand implements SubCommand {
 
     public void execute(CommandSender sender, String[] args) {
-        sender.sendMessage(ChatColor.YELLOW + "Reloading " + TotalPermissions.getPlugin().getDescription().getFullName());
+        sender.sendMessage(ChatColor.YELLOW + TotalPermissions.getPlugin().getLangFile().getString("command.reload.reloading", TotalPermissions.getPlugin().getDescription().getFullName()));
         PermissionManager manager = TotalPermissions.getPlugin().getManager();
         manager.unload();
         try {
             manager.load();
         } catch (InvalidConfigurationException ex) {
-            sender.sendMessage(ChatColor.RED + "An error occured when reloading, check your server logs");
+            sender.sendMessage(ChatColor.RED + TotalPermissions.getPlugin().getLangFile().getString("command.reload.badconfig"));
             TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, null, ex);
         }
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -51,11 +48,11 @@ public class ReloadCommand implements SubCommand {
             try {
                 TotalPermissions.getPlugin().getListener().onPlayerLogin(refreshEvent);
             } catch (Exception e) {
-                sender.sendMessage(ChatColor.RED + "An error occured while reloading " + player.getName());
+                sender.sendMessage(ChatColor.RED + TotalPermissions.getPlugin().getLangFile().getString("command.reload.general", player.getName()));
                 TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, null, e);
             }
         }
-        sender.sendMessage(ChatColor.GREEN + TotalPermissions.getPlugin().getDescription().getFullName() + " has reloaded");
+        sender.sendMessage(ChatColor.GREEN + TotalPermissions.getPlugin().getLangFile().getString("command.reload.success", TotalPermissions.getPlugin().getDescription().getFullName()));
     }
 
     public String getName() {
@@ -69,7 +66,7 @@ public class ReloadCommand implements SubCommand {
     public String[] getHelp() {
         return new String[]{
             "/ttp reload",
-            "Reloads TotalPermissions"
+            TotalPermissions.getPlugin().getLangFile().getString("command.reload.help")
         };
     }
 }

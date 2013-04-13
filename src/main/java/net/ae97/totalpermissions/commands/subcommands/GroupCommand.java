@@ -28,7 +28,7 @@ import org.bukkit.command.CommandSender;
 public class GroupCommand implements SubCommand {
 
     public void execute(CommandSender sender, String[] args) {
-        sender.sendMessage("User command executed.");
+        sender.sendMessage("Group command executed.");
         if (args.length > 2) { // If there is an action command
             TotalPermissions.getPlugin().getCommandHandler().getActionHandler().onAction(sender, args);
         } else if (args.length == 1) {
@@ -48,8 +48,8 @@ public class GroupCommand implements SubCommand {
 
     public String[] getHelp() {
         return new String[]{
-            "/ttp group <groupname> [actions..]",
-            "Group interface"
+            "/ttp group " + TotalPermissions.getPlugin().getLangFile().getString("variables.group") + " [actions..]",
+            TotalPermissions.getPlugin().getLangFile().getString("command.group.help")
         };
     }
 }
