@@ -36,7 +36,8 @@ public class Cipher {
     public Cipher(String language) {
         language += ".yml";
         try {
-            this.setLangFile(YamlConfiguration.loadConfiguration(TotalPermissions.getPlugin().getResource(language)));
+            InputStream temp = TotalPermissions.getPlugin().getResource(language);
+            this.setLangFile(YamlConfiguration.loadConfiguration(temp));
         } catch (NullPointerException e) {
             TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Language resource file is NULL! Trying web files instead...");
             try {
