@@ -61,6 +61,20 @@ public class TotalPermissions extends JavaPlugin {
         try {
             getLogger().info("Beginning initial preperations");
 
+            if (!getDataFolder().exists()) {
+                getDataFolder().mkdirs();
+
+            }
+            if (!(new File(getDataFolder(), "config.yml").exists())) {
+                this.saveResource("config.yml", true);
+            }
+            if (!(new File(getDataFolder(), "permissions.yml").exists())) {
+                this.saveResource("permissions.yml", true);
+            }
+
+            configFile = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "config.yml"));
+            config = new Configuration();
+
             for (String version : ACCEPTABLE_VERSIONS) {
                 try {
                     Class.forName("org.bukkit.craftbukkit." + version + ".entity.CraftHumanEntity");
@@ -76,20 +90,6 @@ public class TotalPermissions extends JavaPlugin {
             }
             //force kill reflection, is buggy and I don't want it running now
             config.disableReflection();
-
-            if (!getDataFolder().exists()) {
-                getDataFolder().mkdirs();
-
-            }
-            if (!(new File(getDataFolder(), "config.yml").exists())) {
-                this.saveResource("config.yml", true);
-            }
-            if (!(new File(getDataFolder(), "permissions.yml").exists())) {
-                this.saveResource("permissions.yml", true);
-            }
-
-            configFile = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "config.yml"));
-            config = new Configuration();
 
             cipher = new Cipher(config.getString("language"));
 
