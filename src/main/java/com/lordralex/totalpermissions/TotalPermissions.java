@@ -21,10 +21,10 @@ import com.lordralex.totalpermissions.configuration.Configuration;
 import com.lordralex.totalpermissions.lang.Cipher;
 import com.lordralex.totalpermissions.listeners.TPListener;
 import com.lordralex.totalpermissions.mcstats.Metrics;
-import com.lordralex.totalpermissions.permission.util.FileConverter;
 import com.lordralex.totalpermissions.permission.util.FileUpdater;
 import java.io.File;
 import java.util.logging.Level;
+import net.ae97.totalpermissions.ExternalAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -52,12 +52,29 @@ public class TotalPermissions extends JavaPlugin {
     protected Metrics metrics;
     protected CommandHandler commands;
     protected Cipher cipher;
+    protected ExternalAPI apiKey;
     protected static boolean debug = false;
 
     @Override
     public void onLoad() {
         try {
             getLogger().info("Beginning initial preperations");
+            
+            for (String version : ACCEPTABLE_VERSIONS) {
+                try {
+                    Class.forName("org.bukkit.craftbukkit." + version + ".entity.CraftHumanEntity");
+                    BUKKIT_VERSION = version;
+                    break;
+                } catch (ClassNotFoundException e) {
+                }
+            }
+            if (BUKKIT_VERSION.equalsIgnoreCase("NONE")) {
+                getLogger().severe("You are using a version of Craftbukkit that differs from what this is tested on. Please update.");
+                getLogger().severe("While this will run, advanced features such as debug and reflection will be disabled");
+                config.disableReflection();
+            }
+            //force kill reflection, is buggy and I don't want it running now
+            config.disableReflection();
 
             if (!getDataFolder().exists()) {
                 getDataFolder().mkdirs();
@@ -83,34 +100,18 @@ public class TotalPermissions extends JavaPlugin {
 
             debug = config.getBoolean("angry-debug");
 
-            for (String version : ACCEPTABLE_VERSIONS) {
-                try {
-                    Class.forName("org.bukkit.craftbukkit." + version + ".entity.CraftHumanEntity");
-                    BUKKIT_VERSION = version;
-                    break;
-                } catch (ClassNotFoundException e) {
-                }
-            }
-            if (BUKKIT_VERSION.equalsIgnoreCase("NONE")) {
-                getLogger().severe("You are using a version of Craftbukkit that differs from what this is tested on. Please update.");
-                getLogger().severe("While this will run, advanced features such as debug and reflection will be disabled");
-                config.disableReflection();
-            }
-            //force kill reflection, is buggy and I don't want it running now
-            config.disableReflection();
-
             permFile = new YamlConfiguration();
             try {
                 permFile.load(new File(this.getDataFolder(), "permissions.yml"));
                 FileUpdater update = new FileUpdater();
                 update.backup(true);
-                if (config.getBoolean("permissions.updater")) {
+                /*if (config.getBoolean("permissions.updater")) {               //   Not sure if master
                     update.runUpdate();
                 }
                 if (config.getBoolean("permissions.formatter")) {
                     FileConverter converter = new FileConverter(permFile, new File(this.getDataFolder(), "permissions.yml"));
                     permFile = converter.convert();
-                }
+                }*/
             } catch (InvalidConfigurationException e) {
                 getLogger().log(Level.SEVERE, "YAML error in your permissions.yml file");
                 getLogger().log(Level.SEVERE, "-> " + e.getMessage());
@@ -126,8 +127,13 @@ public class TotalPermissions extends JavaPlugin {
                     throw e2;
                 }
             }
+            
+            apiKey = new ExternalAPI();
 
             getLogger().info("Initial preperations complete");
+            /*if (config.getBoolean("update-check")) {                           //  This was in my 0.2 version
+                Bukkit.getScheduler().runTaskLater(this, new UpdateRunnable(), 1);
+            }*/
         } catch (Exception e) {
             getLogger().log(Level.SEVERE, "Error in starting up " + getName() + " (Version " + this.getDescription().getVersion() + ")", e);
             this.getPluginLoader().disablePlugin(this);
@@ -150,9 +156,9 @@ public class TotalPermissions extends JavaPlugin {
             if (metrics.start()) {
                 getLogger().info("Plugin Metrics is on, you can opt-out in the PluginMetrics config");
             }
-            if (config.getBoolean("update-check")) {
+            /*if (config.getBoolean("update-check")) {                          // Not sure if master
                 Bukkit.getScheduler().runTaskLater(this, new UpdateRunnable(), 1);
-            }
+            }*/
         } catch (Exception e) {
             if (e instanceof InvalidConfigurationException) {
                 getLogger().log(Level.SEVERE, "YAML error in your permissions file");
@@ -179,7 +185,7 @@ public class TotalPermissions extends JavaPlugin {
      * @since 0.1
      */
     public PermissionManager getManager() {
-        return manager;
+        return this.manager;
     }
 
     /**
@@ -191,7 +197,7 @@ public class TotalPermissions extends JavaPlugin {
      * @since 0.1
      */
     public FileConfiguration getPermFile() {
-        return permFile;
+        return this.permFile;
     }
 
     /**
@@ -203,7 +209,7 @@ public class TotalPermissions extends JavaPlugin {
      * @since 0.1
      */
     public FileConfiguration getConfigFile() {
-        return configFile;
+        return this.configFile;
     }
 
     /**
@@ -225,7 +231,7 @@ public class TotalPermissions extends JavaPlugin {
      * @since 0.1
      */
     public TPListener getListener() {
-        return listener;
+        return this.listener;
     }
 
     /**
@@ -236,7 +242,18 @@ public class TotalPermissions extends JavaPlugin {
      * @since 0.1
      */
     public Configuration getConfiguration() {
-        return config;
+        return this.config;
+    }
+    
+    /**
+     * Returns the (@link Cipher) that is loaded
+     * 
+     * @return the (@link Cipher) in use
+     * 
+     * @since 0.2
+     */
+    public Cipher getLangFile() {
+        return this.cipher;
     }
 
     /**
@@ -309,6 +326,17 @@ public class TotalPermissions extends JavaPlugin {
     public CommandHandler getCommandHandler() {
         return this.commands;
     }
+    
+    /**
+     * Returns the (@link ExternalAPI) for TotalPermissions
+     * 
+     * @return (@link ExternalAPI)
+     * 
+     * @since 0.1
+     */
+    public ExternalAPI getAPI() {
+        return this.apiKey;
+    }
 
     /**
      * Gets the debug mode of the plugin. If this is true, the plugin is in
@@ -320,9 +348,5 @@ public class TotalPermissions extends JavaPlugin {
      */
     public static boolean isDebugMode() {
         return debug;
-    }
-
-    public Cipher getCipher() {
-        return cipher;
     }
 }

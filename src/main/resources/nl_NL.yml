@@ -4,14 +4,16 @@ command:
     help: 'Maakt een backup van de pluginbestanden'
   debug:
     command: 'debug'
-    args: 'Geen doel aangegeven. Voor meer informatie, probeer /totalperms debug help'
+    args: 'Geen doel aangegeven. Voor meer informatie, probeer /ttp debug help'
+    args-plain: 'Geen doel aangegeven. Voor meer informatie, probeer /ttp debug help'
     null-target: 'Gebruiker ("") niet gevonden'
     debug-on: 'Debugmode ingeschakeld voor'
     debug-off: 'Debugmode uitgeschakeld voor'
     help: 'Schakelt debugmode in voor een gebruiker'
   help:
     command: 'help'
-    cont: 'Gebruik /totalperms <commando> help om hulp te krijgen voor een commando'
+    cont: 'Gebruik /ttp {0} help om hulp te krijgen voor een commando'
+    cont-plain: 'Gebruik /ttp {0} help om hulp te krijgen voor een commando'
     help: 'Geeft helpinformatie weer voor commando''s'
   reload:
     command: 'herlaad'
@@ -21,7 +23,8 @@ command:
     success: 'werd herladen'
     help: 'Herlaadt TotalPermissions'
   handler:
-    ifnull: 'Geen commando gevonden, gebruik /totalperms help voor een lijst met commando''s'
+    ifnull: 'Geen commando gevonden, gebruik /ttp help voor een lijst met commando''s'
+    ifnull-plain: 'Geen commando gevonden, gebruik /ttp help voor een lijst met commando''s'
     help-check: 'help'
     denied: 'Je kunt dit commando niet gebruiken'
 configuration:
@@ -80,7 +83,8 @@ main:
   metrics: 'Plugin statistieken zijn ingeschakeld, dit kan uitgeschakeld worden in het PluginMetrics configuratiebestand.'
   error: 'Error tijdens het opstarten van {0} (Versie {1})'
 variables:
-  username: 'gebruikersnaam'
-  group: 'groep'
-  permission: 'permissie'
-  node: 'node'
+  command: '<commando>'
+  username: '<gebruikersnaam>'
+  group: '<groep>'
+  permission: '<permissie>'
+  node: '<node>'

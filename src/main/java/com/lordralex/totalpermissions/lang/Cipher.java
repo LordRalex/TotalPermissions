@@ -16,8 +16,6 @@
  */
 package com.lordralex.totalpermissions.lang;
 
-import com.lordralex.totalpermissions.TotalPermissions;
-import java.io.File;
 import org.bukkit.configuration.file.FileConfiguration;
 
 /**
@@ -50,7 +48,6 @@ public class Cipher {
     }
     
     public String getString (String path, String varOne, String varTwo) {
-        String temp = langFile.getString(path);
-        return langFile.getString(path);
+        return langFile.getString(path).replace("{0}", varOne).replace("{1}", varTwo);
     }
 }

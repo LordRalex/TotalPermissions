@@ -5,13 +5,15 @@ command:
   debug:
     command: 'debug'
     args: 'Inget mål specifierat. För hjälp, använd /ttp debug hjälp'
+    args-plain: 'Inget mål specifierat. För hjälp, använd /ttp debug help'
     null-target: 'Målanvändaren "{0}" fanns inte'
     debug-on: 'Debugläge påslaget för {0}'
     debug-off: 'Debugläge avslaget för {0}'
     help: 'Slår på debugläge för en användare'
   help:
     command: 'hjälp'
-    cont: 'Använd /ttp <kommando> hjälp för hjälp med ett kommando'
+    cont: 'Använd /ttp {0} hjälp för hjälp med ett kommando'
+    cont-plain: 'Använd /ttp {0} help för hjälp med ett kommando'
     help: 'Visar hjälpinformation'
   reload:
     command: 'ladda-om'
@@ -22,6 +24,7 @@ command:
     help: 'Laddar om TotalPermissions'
   handler:
     ifnull: 'Inget kommando funnet, använd /ttp hjälp för kommandolista'
+    ifnull-plain: 'Inget kommando funnet, använd /ttp help för kommandolista'
     help-check: 'hjälp'
     denied: 'Du kan inte använda det kommandot'
 configuration:
@@ -80,7 +83,8 @@ main:
   metrics: 'Mätning av pluginstatistik är på, du kan stänga av detta i konfigurationen för PluginMetrics'
   error: 'Fel vid uppstart av {0} (version {1})'
 variables:
-  username: 'användarnamn'
-  group: 'grupp'
-  permission: 'tillstånd'
-  node: 'nod'
+  command: '<kommando>'  
+  username: '<användarnamn>'
+  group: '<grupp>'
+  permission: '<tillstånd>'
+  node: '<nod>'
