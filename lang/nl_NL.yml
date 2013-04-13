@@ -27,6 +27,10 @@ command:
     ifnull-plain: 'Geen commando gevonden, gebruik /ttp help voor een lijst met commando''s'
     help-check: 'help'
     denied: 'Je kunt dit commando niet gebruiken'
+  user:
+    help: 'Gebruikersinterface'
+  group:
+    help: 'Groepsinterface'
 configuration:
   configuration:
     strict-mode: 'strikte mode'
