@@ -23,6 +23,13 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>plugin.yml</include>
+                    <include>config.yml</include>
+                    <include>en_US.yml</include>
+                    <include>permissions.yml</include>
+                </includes>
             </resource>
         </resources>
         <defaultGoal>clean install</defaultGoal>
