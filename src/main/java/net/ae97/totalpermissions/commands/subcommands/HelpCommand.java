@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 LordRalex
+ * Copyright (C) 2013 AE97
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -82,18 +82,17 @@ public class HelpCommand implements SubCommand {
         }
         StringBuilder sb = new StringBuilder();
         sb.append(Formatter.formatTitle(TotalPermissions.getPlugin().getName(), ChatColor.WHITE, ChatColor.WHITE)).append("\n");
-        sb.append(ChatColor.RED).append("Page ").append(page).append(" of ").append((int)Math.ceil((double)listSize/(double)factor)).append("\n").append(ChatColor.RESET);
+        sb.append(ChatColor.RED).append("Page ").append(page).append(" of ").append((int) Math.ceil((double) listSize / (double) factor)).append("\n").append(ChatColor.RESET);
         String[] list = map.keySet().toArray(new String[listSize]);
         Arrays.sort(list);
         for (int i = index; i < upper; i++) {
             Object test = map.get(list[i]);
             if (test != null) {
                 if (test instanceof SubCommand) {
-                    SubCommand db = (SubCommand)map.get(list[i]);
+                    SubCommand db = (SubCommand) map.get(list[i]);
                     sb.append(db.getHelp()[0]).append(" - ").append(db.getHelp()[1]);
-                }
-                else if (test instanceof SubAction) {
-                    SubAction db = (SubAction)map.get(list[i]);
+                } else if (test instanceof SubAction) {
+                    SubAction db = (SubAction) map.get(list[i]);
                     sb.append(db.getHelp()[0]).append(" - ").append(db.getHelp()[1]);
                 }
                 if (i != upper - 1) {
@@ -104,7 +103,7 @@ public class HelpCommand implements SubCommand {
         sb.append("Use /ttp <command> help for help with a command");
         return sb.toString();
     }
-    
+
     private int getInt(String test) {
         int page;
         try {

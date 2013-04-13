@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 LordRalex
+ * Copyright (C) 2013 AE97
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,8 +20,7 @@ import org.bukkit.command.CommandSender;
 
 /**
  *
- * @since
- * @author 1Rogue
+ * @since @author 1Rogue
  * @version
  */
 public class CheckAction implements SubAction {
@@ -41,12 +40,11 @@ public class CheckAction implements SubAction {
             "Checks if a given target has the provided perm node"
         };
     }
-    
+
     public String[] supportedTypes() {
         return new String[]{
             "group",
             "user"
         };
     }
-    
 }

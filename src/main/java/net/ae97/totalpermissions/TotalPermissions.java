@@ -25,6 +25,7 @@ import net.ae97.totalpermissions.permission.util.FileUpdater;
 import java.io.File;
 import java.util.logging.Level;
 import net.ae97.totalpermissions.api.TotalPermissionsAPI;
+import net.ae97.totalpermissions.permission.util.FileConverter;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -59,7 +60,7 @@ public class TotalPermissions extends JavaPlugin {
     public void onLoad() {
         try {
             getLogger().info("Beginning initial preperations");
-            
+
             for (String version : ACCEPTABLE_VERSIONS) {
                 try {
                     Class.forName("org.bukkit.craftbukkit." + version + ".entity.CraftHumanEntity");
@@ -105,13 +106,13 @@ public class TotalPermissions extends JavaPlugin {
                 permFile.load(new File(this.getDataFolder(), "permissions.yml"));
                 FileUpdater update = new FileUpdater();
                 update.backup(true);
-                /*if (config.getBoolean("permissions.updater")) {               //   Not sure if master
+                if (config.getBoolean("permissions.updater")) {
                     update.runUpdate();
                 }
                 if (config.getBoolean("permissions.formatter")) {
                     FileConverter converter = new FileConverter(permFile, new File(this.getDataFolder(), "permissions.yml"));
                     permFile = converter.convert();
-                }*/
+                }
             } catch (InvalidConfigurationException e) {
                 getLogger().log(Level.SEVERE, "YAML error in your permissions.yml file");
                 getLogger().log(Level.SEVERE, "-> " + e.getMessage());
@@ -127,13 +128,13 @@ public class TotalPermissions extends JavaPlugin {
                     throw e2;
                 }
             }
-            
+
             apiKey = new TotalPermissionsAPI();
 
             getLogger().info("Initial preperations complete");
-            /*if (config.getBoolean("update-check")) {                           //  This was in my 0.2 version
+            if (config.getBoolean("update-check")) {
                 Bukkit.getScheduler().runTaskLater(this, new UpdateRunnable(), 1);
-            }*/
+            }
         } catch (Exception e) {
             getLogger().log(Level.SEVERE, "Error in starting up " + getName() + " (Version " + this.getDescription().getVersion() + ")", e);
             this.getPluginLoader().disablePlugin(this);
@@ -156,9 +157,6 @@ public class TotalPermissions extends JavaPlugin {
             if (metrics.start()) {
                 getLogger().info("Plugin Metrics is on, you can opt-out in the PluginMetrics config");
             }
-            /*if (config.getBoolean("update-check")) {                          // Not sure if master
-                Bukkit.getScheduler().runTaskLater(this, new UpdateRunnable(), 1);
-            }*/
         } catch (Exception e) {
             if (e instanceof InvalidConfigurationException) {
                 getLogger().log(Level.SEVERE, "YAML error in your permissions file");
@@ -244,12 +242,12 @@ public class TotalPermissions extends JavaPlugin {
     public Configuration getConfiguration() {
         return this.config;
     }
-    
+
     /**
      * Returns the (@link Cipher) that is loaded
-     * 
+     *
      * @return the (@link Cipher) in use
-     * 
+     *
      * @since 0.2
      */
     public Cipher getLangFile() {
@@ -326,12 +324,12 @@ public class TotalPermissions extends JavaPlugin {
     public CommandHandler getCommandHandler() {
         return this.commands;
     }
-    
+
     /**
      * Returns the (@link TotalPermissionsAPI) for TotalPermissions
-     * 
+     *
      * @return (@link TotalPermissionsAPI)
-     * 
+     *
      * @since 0.1
      */
     public TotalPermissionsAPI getAPI() {

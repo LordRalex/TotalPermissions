@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 LordRalex
+ * Copyright (C) 2013 AE97
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ public class Configuration {
     File configPath;
 
     public Configuration() {
-        config = TotalPermissions.getPlugin().getConfigFile(); //loads the file from the plugin's view.
+        config = TotalPermissions.getPlugin().getConfigFile();
         configPath = new File(TotalPermissions.getPlugin().getDataFolder(), "config.yml");
     }
 

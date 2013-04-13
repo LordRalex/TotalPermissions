@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 LordRalex
+ * Copyright (C) 2013 AE97
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,9 +45,9 @@ public interface SubCommand {
     public abstract String getPerm();
 
     /**
-     * Returns a String array of help statements. Index 0 is the command, and 
+     * Returns a String array of help statements. Index 0 is the command, and
      * index 1 is what the command does.
-     * 
+     *
      * @return Help information
      */
     public abstract String[] getHelp();

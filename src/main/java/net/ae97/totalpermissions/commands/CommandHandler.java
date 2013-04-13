@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 LordRalex
+ * Copyright (C) 2013 AE97
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ public final class CommandHandler implements CommandExecutor {
         commands.put(user.getName().toLowerCase().trim(), user);
         GroupCommand group = new GroupCommand();
         commands.put(group.getName().toLowerCase().trim(), group);
-        
+
         actions = new ActionHandler();
     }
 
@@ -91,11 +91,11 @@ public final class CommandHandler implements CommandExecutor {
         }
         return true;
     }
-    
+
     public Map getCommandList() {
         return commands;
     }
-    
+
     public ActionHandler getActionHandler() {
         return actions;
     }

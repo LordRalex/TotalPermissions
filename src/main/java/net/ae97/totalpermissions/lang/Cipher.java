@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 LordRalex
+ * Copyright (C) 2013 AE97
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,30 +24,30 @@ import org.bukkit.configuration.file.FileConfiguration;
  * @since 0.2
  */
 public class Cipher {
-    
+
     FileConfiguration langFile;
-    
+
     public Cipher(FileConfiguration file) {
         langFile = file;
     }
-    
+
     public void setLangFile(FileConfiguration file) {
         langFile = file;
     }
-    
+
     public FileConfiguration getLangFile() {
         return langFile;
     }
-    
-    public String getString (String path) {
+
+    public String getString(String path) {
         return getString(path, "", "");
     }
-    
-    public String getString (String path, String varOne) {
+
+    public String getString(String path, String varOne) {
         return getString(path, varOne, "");
     }
-    
-    public String getString (String path, String varOne, String varTwo) {
+
+    public String getString(String path, String varOne, String varTwo) {
         return langFile.getString(path).replace("{0}", varOne).replace("{1}", varTwo);
     }
 }

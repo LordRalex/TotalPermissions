@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 LordRalex
+ * Copyright (C) 2013 AE97
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -62,7 +62,7 @@ public class TPListener implements Listener {
                 Field field = cl.getDeclaredField("perm");
                 field.setAccessible(true);
                 field.set(player, new TPPermissibleBase(event.getPlayer(), user.getDebugState()));
-                plugin.getLogger().info("Reflection hook established");
+                plugin.getLogger().info("Reflection hook established for " + event.getPlayer().getName());
             } catch (NoSuchFieldException ex) {
                 plugin.getLogger().log(Level.SEVERE, "Error in reflecting in", ex);
             } catch (SecurityException ex) {

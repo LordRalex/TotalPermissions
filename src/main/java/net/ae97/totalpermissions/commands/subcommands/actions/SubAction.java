@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Spencer
+ * Copyright (C) 2013 AE97
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,14 +25,14 @@ import org.bukkit.command.CommandSender;
  * @version 0.2
  */
 public interface SubAction {
-    
+
     /**
      * Executes the command. Only the args and sender are needed.
-     * 
+     *
      * @return Success of the command. False if an issue
      */
     public abstract boolean execute(CommandSender sender, String type, String target, String[] args);
-    
+
     /**
      * Returns the action's name. Used for both info and the perm node.
      *
@@ -41,7 +41,6 @@ public interface SubAction {
     public abstract String getName();
 
     public abstract String[] getHelp();
-    
+
     public abstract String[] supportedTypes();
-    
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 LordRalex
+ * Copyright (C) 2013 AE97
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,24 +41,23 @@ public class ActionHandler {
         String type = args[0].toLowerCase();
         String target = args[1];
         String[] newArgs = ArrayShift.getEndOfStringArray(args, 2);
-        
+
         SubAction executor = actions.get(args[2].toLowerCase());
         if (executor == null) {
             sender.sendMessage("No action found, use /ttp help actions for an action list");
             return false;
         }
-        
+
         if ((newArgs.length > 1) && (newArgs[1].equalsIgnoreCase("help"))) {
             sender.sendMessage("Usage: " + executor.getHelp()[0]);
             sender.sendMessage(executor.getHelp()[1]);
             return true;
         }
-        
+
         if (sender.hasPermission("totalpermissions." + type + "." + executor.getName())) {
             if (this.isSupported(executor, type)) {
                 executor.execute(sender, type, target, args);
-            }
-            else {
+            } else {
                 sender.sendMessage(ChatColor.RED + "Action '" + args[2] + "' is not supported for " + type + "s!");
             }
             return true;
@@ -67,8 +66,8 @@ public class ActionHandler {
         }
         return true;
     }
-    
-    private boolean isSupported (SubAction action, String type) {
+
+    private boolean isSupported(SubAction action, String type) {
         for (String comp : action.supportedTypes()) {
             if (comp.equalsIgnoreCase(type)) {
                 return true;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Lord_Ralex
+ * Copyright (C) 2013 AE97
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,13 +40,13 @@ public class Formatter {
         String center = (barcolor + "[ ") + (titlecolor + title) + (barcolor + " ]");
         return line.substring(0, pivot - center.length() / 2) + center + line.substring(0, pivot - center.length() / 2);
     }
-    
+
     /**
      * Formats a footer bar.
-     * 
+     *
      * @param barcolor The color of the bar
      * @return A colored bar as a String
-     * 
+     *
      * @since 0.1
      */
     public static String formatFooter(ChatColor color) {

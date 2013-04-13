@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 LordRalex
+ * Copyright (C) 2013 AE97
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,11 +31,9 @@ public class UserCommand implements SubCommand {
         sender.sendMessage("User command executed.");
         if (args.length > 2) { // If there is an action command
             TotalPermissions.getPlugin().getCommandHandler().getActionHandler().onAction(sender, args);
-        }
-        else if (args.length == 1) {
+        } else if (args.length == 1) {
             //List all users
-        }
-        else {
+        } else {
             //Error in index length, return help
         }
     }

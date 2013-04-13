@@ -26,7 +26,7 @@
  * either expressed or implied, of anybody else.
  *
  *
- * Copyright (C) 2013 LordRalex
+ * Copyright (C) 2013 AE97
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -221,11 +221,6 @@ public final class Metrics {
         encodeDataPair(data, "server", Bukkit.getVersion());
         encodeDataPair(data, "players", Integer.toString(Bukkit.getServer().getOnlinePlayers().length));
         encodeDataPair(data, "revision", String.valueOf(REVISION));
-        //TotalPermissions
-        encodeDataPair(data, "strict", Boolean.toString(plugin.getConfiguration().getBoolean("strict-mode")));
-        encodeDataPair(data, "reflection-star", Boolean.toString(plugin.getConfiguration().getBoolean("reflection.starperm")));
-        encodeDataPair(data, "refection-debug", Boolean.toString(plugin.getConfiguration().getBoolean("reflection.debug")));
-
         if (isPing) {
             encodeDataPair(data, "ping", "true");
         }

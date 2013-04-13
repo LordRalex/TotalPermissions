@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Lord_Ralex
+ * Copyright (C) 2013 AE97
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -66,24 +66,19 @@ public class TPPermissibleBase extends PermissibleBase {
 
     @Override
     public boolean hasPermission(Permission perm) {
-        System.out.println("Stage zero");
         boolean has = initialParent.hasPermission(perm);
         if (useReflectionPerm) {
             if (initialParent.isPermissionSet(perm)) {
-                System.out.println("Stage one");
                 has = initialParent.hasPermission(perm);
             } else if (initialParent.isPermissionSet("*")) {
-                System.out.println("Stage two");
                 has = initialParent.hasPermission("*");
                 if (perm.getDefault() == PermissionDefault.FALSE) {
                     has = false;
                 }
             } else if (initialParent.isPermissionSet("**")) {
-                System.out.println("Stage three");
                 has = initialParent.hasPermission("**");
 
             } else {
-                System.out.println("Stage four");
                 has = false;
             }
         }
@@ -100,16 +95,16 @@ public class TPPermissibleBase extends PermissibleBase {
 
     @Override
     public boolean isPermissionSet(Permission perm) {
-        return initialParent.isPermissionSet(perm); //To change body of generated methods, choose Tools | Templates.
+        return initialParent.isPermissionSet(perm);
     }
 
     @Override
     public boolean isPermissionSet(String name) {
-        return initialParent.isPermissionSet(name); //To change body of generated methods, choose Tools | Templates.
+        return initialParent.isPermissionSet(name);
     }
 
     @Override
     public PermissionAttachment addAttachment(Plugin plugin) {
-        return initialParent.addAttachment(plugin); //To change body of generated methods, choose Tools | Templates.
+        return initialParent.addAttachment(plugin);
     }
 }

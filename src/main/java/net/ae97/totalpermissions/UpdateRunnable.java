@@ -42,7 +42,7 @@ public class UpdateRunnable extends BukkitRunnable {
     }
 
     public void run() {
-        if (version.endsWith("SNAPSHOT")) {
+        if (version.endsWith("SNAPSHOT") || version.endsWith("DEV")) {
             TotalPermissions.getPlugin().getLogger().warning("You are using a dev build, update checks are disabled");
             isLatest = true;
             return;

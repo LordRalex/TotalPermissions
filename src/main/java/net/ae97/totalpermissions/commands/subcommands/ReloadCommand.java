@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 LordRalex
+ * Copyright (C) 2013 AE97
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,13 +61,13 @@ public class ReloadCommand implements SubCommand {
     public String getName() {
         return "reload";
     }
-    
+
     public String getPerm() {
         return "totalpermissions.cmd.reload";
     }
 
     public String[] getHelp() {
-        return new String[] {
+        return new String[]{
             "/ttp reload",
             "Reloads TotalPermissions"
         };
