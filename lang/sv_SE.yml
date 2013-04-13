@@ -27,6 +27,10 @@ command:
     ifnull-plain: 'Inget kommando funnet, använd /ttp help för kommandolista'
     help-check: 'hjälp'
     denied: 'Du kan inte använda det kommandot'
+  user:
+    help: 'Användargränssnitt'
+  group:
+    help: 'Gruppgränssnitt'
 configuration:
   configuration:
     strict-mode: 'strikt-läge'
