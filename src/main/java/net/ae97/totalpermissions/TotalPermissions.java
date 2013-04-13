@@ -74,6 +74,7 @@ public class TotalPermissions extends JavaPlugin {
 
             configFile = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "config.yml"));
             config = new Configuration();
+            config.loadDefaults();
 
             for (String version : ACCEPTABLE_VERSIONS) {
                 try {
