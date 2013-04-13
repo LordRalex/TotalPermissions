@@ -23,7 +23,7 @@ import net.ae97.totalpermissions.TotalPermissions;
  * @since @author 1Rogue
  * @version
  */
-public class ExternalAPI {
+public class TotalPermissionsAPI {
 
     public String getName() {
         return TotalPermissions.getPlugin().getName();

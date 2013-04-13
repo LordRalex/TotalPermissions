@@ -24,7 +24,7 @@ import net.ae97.totalpermissions.mcstats.Metrics;
 import net.ae97.totalpermissions.permission.util.FileUpdater;
 import java.io.File;
 import java.util.logging.Level;
-import net.ae97.totalpermissions.api.ExternalAPI;
+import net.ae97.totalpermissions.api.TotalPermissionsAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -52,7 +52,7 @@ public class TotalPermissions extends JavaPlugin {
     protected Metrics metrics;
     protected CommandHandler commands;
     protected Cipher cipher;
-    protected ExternalAPI apiKey;
+    protected TotalPermissionsAPI apiKey;
     protected static boolean debug = false;
 
     @Override
@@ -128,7 +128,7 @@ public class TotalPermissions extends JavaPlugin {
                 }
             }
             
-            apiKey = new ExternalAPI();
+            apiKey = new TotalPermissionsAPI();
 
             getLogger().info("Initial preperations complete");
             /*if (config.getBoolean("update-check")) {                           //  This was in my 0.2 version
@@ -328,13 +328,13 @@ public class TotalPermissions extends JavaPlugin {
     }
     
     /**
-     * Returns the (@link ExternalAPI) for TotalPermissions
+     * Returns the (@link TotalPermissionsAPI) for TotalPermissions
      * 
-     * @return (@link ExternalAPI)
+     * @return (@link TotalPermissionsAPI)
      * 
      * @since 0.1
      */
-    public ExternalAPI getAPI() {
+    public TotalPermissionsAPI getAPI() {
         return this.apiKey;
     }
 
