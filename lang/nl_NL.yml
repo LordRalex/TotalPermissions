@@ -6,9 +6,9 @@ command:
     command: 'debug'
     args: 'Geen doel aangegeven. Voor meer informatie, probeer /ttp debug help'
     args-plain: 'Geen doel aangegeven. Voor meer informatie, probeer /ttp debug help'
-    null-target: 'Gebruiker ("") niet gevonden'
-    debug-on: 'Debugmode ingeschakeld voor'
-    debug-off: 'Debugmode uitgeschakeld voor'
+    null-target: 'Gebruiker ("{0}") niet gevonden'
+    debug-on: 'Debugmode ingeschakeld voor {0}'
+    debug-off: 'Debugmode uitgeschakeld voor {0}'
     help: 'Schakelt debugmode in voor een gebruiker'
   help:
     command: 'help'
@@ -17,10 +17,10 @@ command:
     help: 'Geeft helpinformatie weer voor commando''s'
   reload:
     command: 'herlaad'
-    reloading: 'Aan het herladen'
+    reloading: 'Aan het herladen {0}'
     badconfig: 'Er ging iets fout tijdens het herladen; controleer de server logs'
-    general: 'Er ging iets fout tijdens het herladen'
-    success: 'werd herladen'
+    general: 'Er ging iets fout tijdens het herladen {0}'
+    success: '{0} werd herladen'
     help: 'Herlaadt TotalPermissions'
   handler:
     ifnull: 'Geen commando gevonden, gebruik /ttp help voor een lijst met commando''s'
