@@ -91,13 +91,7 @@ public class TotalPermissions extends JavaPlugin {
             configFile = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "config.yml"));
             config = new Configuration();
 
-            try {
-                cipher = new Cipher(YamlConfiguration.loadConfiguration(this.getResource(config.getString("language") + ".yml")));
-            } catch (NullPointerException e) {
-                cipher = new Cipher(YamlConfiguration.loadConfiguration(this.getResource("en_US.yml")));
-                getLogger().log(Level.SEVERE, "Language resource file is NULL!");
-                getLogger().log(Level.SEVERE, "Defaulting to english (en_US)");
-            }
+            cipher = new Cipher(config.getString("language"));
 
             debug = config.getBoolean("angry-debug");
 
@@ -330,7 +324,7 @@ public class TotalPermissions extends JavaPlugin {
      *
      * @return (@link TotalPermissionsAPI)
      *
-     * @since 0.1
+     * @since 0.2
      */
     public TotalPermissionsAPI getAPI() {
         return this.apiKey;

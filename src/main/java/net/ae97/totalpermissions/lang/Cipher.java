@@ -16,7 +16,12 @@
  */
 package net.ae97.totalpermissions.lang;
 
+import java.io.InputStream;
+import java.net.URL;
+import java.util.logging.Level;
+import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
  * @version 0.2
@@ -25,13 +30,29 @@ import org.bukkit.configuration.file.FileConfiguration;
  */
 public class Cipher {
 
-    FileConfiguration langFile;
+    private YamlConfiguration langFile;
+    private final String langFileLoc = "https://raw.github.com/AE97/TotalPermissions/master/lang/";
 
-    public Cipher(FileConfiguration file) {
-        langFile = file;
+    public Cipher(String language) {
+        language += ".yml";
+        try {
+            this.setLangFile(YamlConfiguration.loadConfiguration(TotalPermissions.getPlugin().getResource(language)));
+        } catch (NullPointerException e) {
+            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Language resource file is NULL! Trying web files instead...");
+            try {
+                URL upstr = new URL(langFileLoc + language);
+                InputStream langs = upstr.openStream();
+                this.setLangFile(YamlConfiguration.loadConfiguration(langs));
+                langs.close();
+            } catch (Exception ex) {
+                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Error grabbing language file from web!");
+                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Defaulting to english (en_US)");
+                this.setLangFile(YamlConfiguration.loadConfiguration(TotalPermissions.getPlugin().getResource("en_US.yml")));
+            }
+        }
     }
 
-    public void setLangFile(FileConfiguration file) {
+    private void setLangFile(YamlConfiguration file) {
         langFile = file;
     }
 
