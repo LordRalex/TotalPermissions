@@ -20,19 +20,19 @@ permissions:
       totalpermissions.cmd.backup: true
   totalpermissions.cmd.help:
     default: false
-    children: 
+    children:
       totalpermissions.cmd: true
   totalpermissions.cmd.debug:
     default: false
-    children: 
+    children:
       totalpermissions.cmd: true
   totalpermissions.cmd.reload:
     default: false
-    children: 
+    children:
       totalpermissions.cmd: true
   totalpermissions.cmd.backup:
     default: false
-    children: 
+    children:
       totalpermissions.cmd: true
   totalpermissions.cmd:
     default: false
