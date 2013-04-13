@@ -27,6 +27,7 @@ command:
     ifnull-plain: 'Inget kommando funnet, använd /ttp help för kommandolista'
     help-check: 'hjälp'
     denied: 'Du kan inte använda det kommandot'
+    usage: 'användning'
   user:
     help: 'Användargränssnitt'
   group:
