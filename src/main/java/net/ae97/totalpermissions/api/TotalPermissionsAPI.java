@@ -20,8 +20,9 @@ import net.ae97.totalpermissions.TotalPermissions;
 
 /**
  *
- * @since @author 1Rogue
- * @version
+ * @since 0.2
+ * @author 1Rogue
+ * @version 0.2
  */
 public class TotalPermissionsAPI {
 
@@ -34,25 +35,24 @@ public class TotalPermissionsAPI {
     }
 
     public boolean playerHas(String world, String player, String permission) {
-        //TODO: Add world support
-        if (TotalPermissions.getPlugin().getManager().has(player, permission)) {
+        if (TotalPermissions.getPlugin().getManager().getUser(player).has(permission, world)) {
             return true;
         }
         return false;
     }
 
     public boolean playerAdd(String world, String player, String permission) {
-        //TODO: Add world support and return false if not possible
         if (permission.startsWith("-")) {
-            TotalPermissions.getPlugin().getManager().addPermToUser(player, permission, false);
+            TotalPermissions.getPlugin().getManager().getUser(player).addPerm(permission, world, false);
             return true;
         }
-        TotalPermissions.getPlugin().getManager().addPermToUser(player, permission, true);
+        TotalPermissions.getPlugin().getManager().getUser(player).addPerm(permission, world, true);
         return true;
     }
 
     public boolean playerRemove(String world, String player, String permission) {
         //TotalPermissions.getPlugin().getManager();
+        //TotalPermissions.getPlugin().getManager().getUser(player).
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
