@@ -200,6 +200,7 @@ public abstract class PermissionBase {
         }
         Permission permission = new Permission("totalpermissions.baseItem." + aKey + "." + name, permMap);
         Bukkit.getPluginManager().addPermission(permission);
+        TotalPermissions.getPlugin().getManager().addPermissionToMap(aKey, name, permission);
         perms.put(null, permission);
     }
 
@@ -292,6 +293,16 @@ public abstract class PermissionBase {
         } else {
             return super.equals(val);
         }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 79 * hash + (this.name != null ? this.name.hashCode() : 0);
+        hash = 79 * hash + (this.options != null ? this.options.hashCode() : 0);
+        hash = 79 * hash + (this.section != null ? this.section.hashCode() : 0);
+        hash = 79 * hash + (this.perms != null ? this.perms.hashCode() : 0);
+        return hash;
     }
 
     /**

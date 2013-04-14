@@ -21,6 +21,7 @@ import net.ae97.totalpermissions.permission.PermissionGroup;
 import net.ae97.totalpermissions.permission.PermissionRcon;
 import net.ae97.totalpermissions.permission.PermissionUser;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,6 +33,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 
 /**
@@ -44,6 +46,7 @@ public final class PermissionManager {
     protected final Map<String, PermissionGroup> groups = new ConcurrentHashMap<String, PermissionGroup>();
     protected final Map<String, PermissionUser> users = new ConcurrentHashMap<String, PermissionUser>();
     protected final Map<String, PermissionAttachment> permAttMap = new ConcurrentHashMap<String, PermissionAttachment>();
+    protected final Map<String, Map<String, Permission>> permissions = new ConcurrentHashMap<String, Map<String, Permission>>();
     protected String defaultGroup;
     protected PermissionConsole console;
     protected PermissionRcon remote;
@@ -77,6 +80,7 @@ public final class PermissionManager {
         users.clear();
         groups.clear();
         clearPerms();
+        clearRegisteredPerms();
     }
 
     /**
@@ -353,5 +357,30 @@ public final class PermissionManager {
     public void recalculatePermissions(Player user) {
         clearPerms(user);
         handleLoginEvent(new PlayerLoginEvent(user, null, null, null, null));
+    }
+
+    public void addPermissionToMap(String org, String key, Permission perm) {
+        Map<String, Permission> map = permissions.get(org.toLowerCase());
+        if (map == null) {
+            map = new HashMap<String, Permission>();
+        }
+        map.put(key.toLowerCase(), perm);
+        permissions.put(org.toLowerCase(), map);
+    }
+
+    public void clearRegisteredPerms() {
+        for (String org : permissions.keySet()) {
+            Map<String, Permission> map = permissions.get(org);
+            if (map != null) {
+                for (String name : map.keySet()) {
+                    Permission perm = map.get(name);
+                    if (perm != null) {
+                        Bukkit.getPluginManager().removePermission(perm);
+                    }
+                    map.remove(name);
+                }
+            }
+            permissions.remove(org);
+        }
     }
 }
