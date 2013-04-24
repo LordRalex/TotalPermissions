@@ -60,39 +60,46 @@ public abstract class PermissionBase {
         Map<String, Boolean> permMap = new HashMap<String, Boolean>();
 
         if (section != null) {
-            List<String> permList = section.getStringList("permissions");
-            if (permList != null) {
-                for (String perm : permList) {
-                    String p = perm;
-                    boolean allow = true;
-                    if (perm.startsWith("-") || perm.startsWith("^")) {
-                        p = perm.substring(1);
-                        allow = false;
-                    } else if (perm.endsWith(": true") || perm.endsWith(": false")) {
-                        if (perm.endsWith(": true")) {
-                            perm = perm.substring(0, perm.length() - ": true".length());
-                            allow = true;
-                        } else if (perm.endsWith(": false")) {
-                            perm = perm.substring(0, perm.length() - ": false".length());
+            if (section.isList("permissions")) {
+                List<String> permList = section.getStringList("permissions");
+                if (permList != null) {
+                    for (String perm : permList) {
+                        String p = perm;
+                        boolean allow = true;
+                        if (perm.startsWith("-") || perm.startsWith("^")) {
+                            p = perm.substring(1);
                             allow = false;
-                        }
-                    }
-
-                    if (TotalPermissions.isDebugMode()) {
-                        TotalPermissions.getPlugin().getLogger().info("Adding perm: " + p);
-                    }
-
-                    if ((!TotalPermissions.getPlugin().getConfiguration().getBoolean("reflection.starperm"))
-                            && (p.equalsIgnoreCase("*") || p.equalsIgnoreCase("**"))) {
-                        List<String> allPerms = PermissionUtility.handleWildcard(p.equalsIgnoreCase("**"));
-                        for (String perm_ : allPerms) {
-                            if (!permMap.containsKey(perm_)) {
-                                permMap.put(perm_, allow);
+                        } else if (perm.endsWith(": true") || perm.endsWith(": false")) {
+                            if (perm.endsWith(": true")) {
+                                perm = perm.substring(0, perm.length() - ": true".length());
+                                allow = true;
+                            } else if (perm.endsWith(": false")) {
+                                perm = perm.substring(0, perm.length() - ": false".length());
+                                allow = false;
                             }
                         }
-                    } else if (!permMap.containsKey(p)) {
-                        permMap.put(p, allow);
+
+                        if (TotalPermissions.isDebugMode()) {
+                            TotalPermissions.getPlugin().getLogger().info("Adding perm: " + p);
+                        }
+
+                        if ((!TotalPermissions.getPlugin().getConfiguration().getBoolean("reflection.starperm"))
+                                && (p.equalsIgnoreCase("*") || p.equalsIgnoreCase("**"))) {
+                            List<String> allPerms = PermissionUtility.handleWildcard(p.equalsIgnoreCase("**"));
+                            for (String perm_ : allPerms) {
+                                if (!permMap.containsKey(perm_)) {
+                                    permMap.put(perm_, allow);
+                                }
+                            }
+                        } else if (!permMap.containsKey(p)) {
+                            permMap.put(p, allow);
+                        }
                     }
+                }
+            } else {
+                Set<String> keys = section.getConfigurationSection("permissions").getKeys(false);
+                for (String key : keys) {
+                    permMap.put(key, section.getConfigurationSection("permissions").getBoolean(key, true));
                 }
             }
 
