@@ -16,6 +16,7 @@
  */
 package net.ae97.totalpermissions;
 
+import net.ae97.totalpermissions.runnable.UpdateRunnable;
 import net.ae97.totalpermissions.commands.CommandHandler;
 import net.ae97.totalpermissions.configuration.Configuration;
 import net.ae97.totalpermissions.lang.Cipher;
