@@ -40,7 +40,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class TotalPermissions extends JavaPlugin {
 
-    private static String BUKKIT_VERSION = "NONE";
+    private String BUKKIT_VERSION = "NONE";
     private static final String[] ACCEPTABLE_VERSIONS = new String[]{
         "v1_5_R2",
         "v1_5_R1",
@@ -305,7 +305,7 @@ public class TotalPermissions extends JavaPlugin {
      *
      * @since 0.1
      */
-    public static String getBukkitVersion() {
+    public String getBukkitVersion() {
         return BUKKIT_VERSION;
     }
 

@@ -46,7 +46,7 @@ public class TPPermissibleBase extends PermissibleBase {
         useReflectionPerm = TotalPermissions.getPlugin().getConfiguration().getBoolean("reflection.starperm");
         Object obj = null;
         try {
-            Class cl = Class.forName("org.bukkit.craftbukkit." + TotalPermissions.getBukkitVersion() + ".entity.CraftHumanEntity");
+            Class cl = Class.forName("org.bukkit.craftbukkit." + TotalPermissions.getPlugin().getBukkitVersion() + ".entity.CraftHumanEntity");
             Field field = cl.getDeclaredField("perm");
             field.setAccessible(true);
             obj = field.get(parent);
