@@ -217,10 +217,11 @@ public final class Metrics {
 
         final StringBuilder data = new StringBuilder();
         data.append(encode("guid")).append('=').append(encode(guid));
-        encodeDataPair(data, "version", description.getVersion());
+        encodeDataPair(data, "version", description.getVersion().split("-")[0]);
         encodeDataPair(data, "server", Bukkit.getVersion());
         encodeDataPair(data, "players", Integer.toString(Bukkit.getServer().getOnlinePlayers().length));
         encodeDataPair(data, "revision", String.valueOf(REVISION));
+        encodeDataPair(data, "full-version", description.getVersion());
         if (isPing) {
             encodeDataPair(data, "ping", "true");
         }
