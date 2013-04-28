@@ -77,16 +77,11 @@ public class Cipher {
         return langFile;
     }
 
-    public String getString(String path) {
-        return getString(path, "", "");
-    }
-
-    public String getString(String path, String varOne) {
-        return getString(path, varOne, "");
-    }
-
-    //TODO: Wtf is this?
-    public String getString(String path, String varOne, String varTwo) {
-        return langFile.getString(path).replace("{0}", varOne).replace("{1}", varTwo);
+    public String getString(String path, String... vars) {
+        String string = langFile.getString(path);
+        for (int i = 0; i < vars.length; i++) {
+            string = string.replace("{" + i + "}", vars[i]);
+        }
+        return string;
     }
 }
