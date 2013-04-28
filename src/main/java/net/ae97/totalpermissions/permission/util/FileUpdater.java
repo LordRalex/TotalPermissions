@@ -34,6 +34,11 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class FileUpdater {
 
     private boolean backupFiles = false;
+    private final TotalPermissions plugin;
+
+    public FileUpdater(TotalPermissions p) {
+        plugin = p;
+    }
 
     public void Update() {
         backupFiles = true;
@@ -61,7 +66,7 @@ public class FileUpdater {
         if (bu == false) {
             return;
         }
-        File dataFolder = TotalPermissions.getPlugin().getDataFolder();
+        File dataFolder = plugin.getDataFolder();
         if (!dataFolder.exists()) {
             dataFolder.mkdirs();
         }
@@ -89,14 +94,14 @@ public class FileUpdater {
         File backupFolder = new File(backup, Integer.toString(highest));
         backupFolder.mkdirs();
         try {
-            TotalPermissions.getPlugin().getConfigFile().save(new File(backupFolder, "config.yml"));
+            plugin.getConfigFile().save(new File(backupFolder, "config.yml"));
         } catch (IOException ex) {
-            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, null, ex);
+            plugin.getLogger().log(Level.SEVERE, null, ex);
         }
         try {
-            TotalPermissions.getPlugin().getPermFile().save(new File(backupFolder, "permissions.yml"));
+            plugin.getPermFile().save(new File(backupFolder, "permissions.yml"));
         } catch (IOException ex) {
-            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, null, ex);
+            plugin.getLogger().log(Level.SEVERE, null, ex);
         }
         backupFiles = false;
     }
@@ -111,8 +116,8 @@ public class FileUpdater {
     public void runUpdate() {
         backup();
         FileConfiguration updateFile;
-        FileConfiguration perms = TotalPermissions.getPlugin().getPermFile();
-        File datafolder = TotalPermissions.getPlugin().getDataFolder();
+        FileConfiguration perms = plugin.getPermFile();
+        File datafolder = plugin.getDataFolder();
         String[] updateFileNames = new String[]{
             "groups.yml",
             "users.yml",
@@ -133,7 +138,7 @@ public class FileUpdater {
         try {
             perms.save(new File(datafolder, "permissions.yml"));
         } catch (IOException ex) {
-            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, null, ex);
+            plugin.getLogger().log(Level.SEVERE, null, ex);
         }
         moveFiles();
     }
@@ -177,7 +182,7 @@ public class FileUpdater {
     }
 
     private void moveFiles() {
-        File dataFolder = TotalPermissions.getPlugin().getDataFolder();
+        File dataFolder = plugin.getDataFolder();
         if (!dataFolder.exists()) {
             dataFolder.mkdirs();
         }
@@ -210,15 +215,15 @@ public class FileUpdater {
             "update.yml"
         };
         for (String name : updateFileNames) {
-            if (!(new File(TotalPermissions.getPlugin().getDataFolder(), name).exists())) {
+            if (!(new File(plugin.getDataFolder(), name).exists())) {
                 continue;
             }
             try {
-                YamlConfiguration.loadConfiguration(new File(TotalPermissions.getPlugin().getDataFolder(), name)).save(new File(backupFolder, name));
+                YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), name)).save(new File(backupFolder, name));
             } catch (IOException ex) {
-                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, null, ex);
+                plugin.getLogger().log(Level.SEVERE, null, ex);
             }
-            new File(TotalPermissions.getPlugin().getDataFolder(), name).delete();
+            new File(plugin.getDataFolder(), name).delete();
         }
     }
 }

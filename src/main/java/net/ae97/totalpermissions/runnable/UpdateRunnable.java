@@ -36,15 +36,17 @@ public class UpdateRunnable extends BukkitRunnable {
     private Boolean isLatest = null;
     private String latest;
     private String version;
+    private final TotalPermissions plugin;
 
-    public UpdateRunnable() {
+    public UpdateRunnable(TotalPermissions p) {
         super();
-        version = TotalPermissions.getPlugin().getDescription().getVersion();
+        plugin = p;
+        version = plugin.getDescription().getVersion();
     }
 
     public void run() {
         if (version.endsWith("SNAPSHOT") || version.endsWith("DEV")) {
-            TotalPermissions.getPlugin().getLogger().warning(TotalPermissions.getPlugin().getLangFile().getString("update.dev"));
+            plugin.getLogger().warning(plugin.getLangFile().getString("update.dev"));
             isLatest = true;
             return;
         }
@@ -60,15 +62,15 @@ public class UpdateRunnable extends BukkitRunnable {
                 isLatest = false;
             }
         } catch (MalformedURLException ex) {
-            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, TotalPermissions.getPlugin().getLangFile().getString("update.update-error"), ex);
+            plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("update.update-error"), ex);
         } catch (IOException ex) {
-            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, TotalPermissions.getPlugin().getLangFile().getString("update.update-error"), ex);
+            plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("update.update-error"), ex);
         }
     }
 
     public boolean isUpdate() throws IllegalStateException {
         if (isLatest == null) {
-            throw new IllegalStateException(TotalPermissions.getPlugin().getLangFile().getString("update.versioning-error"));
+            throw new IllegalStateException(plugin.getLangFile().getString("update.versioning-error"));
         }
         return !isLatest;
     }

@@ -40,9 +40,12 @@ import org.bukkit.command.CommandSender;
 public final class CommandHandler implements CommandExecutor {
 
     protected final Map<String, SubCommand> commands = new HashMap<String, SubCommand>();
-    private ActionHandler actions;
+    protected final ActionHandler actions;
+    protected final TotalPermissions plugin;
 
-    public CommandHandler() {
+    public CommandHandler(TotalPermissions p) {
+        plugin = p;
+
         HelpCommand help = new HelpCommand();
         commands.put(help.getName().toLowerCase().trim(), help);
         DebugCommand debug = new DebugCommand();
@@ -68,11 +71,11 @@ public final class CommandHandler implements CommandExecutor {
         }
         SubCommand executor = commands.get(subCommand.toLowerCase());
         if (executor == null) {
-            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.handler.ifnull-plain"));
+            sender.sendMessage(plugin.getLangFile().getString("command.handler.ifnull-plain"));
             return true;
         }
         if ((args.length > 1) && (args[1].equalsIgnoreCase("help"))) {
-            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.handler.usage", executor.getHelp()[0]));
+            sender.sendMessage(plugin.getLangFile().getString("command.handler.usage", executor.getHelp()[0]));
             sender.sendMessage(executor.getHelp()[1]);
             return true;
         }
@@ -88,7 +91,7 @@ public final class CommandHandler implements CommandExecutor {
             executor.execute(sender, args);
             return true;
         } else {
-            sender.sendMessage(ChatColor.RED + TotalPermissions.getPlugin().getLangFile().getString("command.handler.denied"));
+            sender.sendMessage(ChatColor.RED + plugin.getLangFile().getString("command.handler.denied"));
         }
         return true;
     }

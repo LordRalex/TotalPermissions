@@ -74,7 +74,7 @@ public class TotalPermissions extends JavaPlugin {
             }
 
             configFile = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "config.yml"));
-            config = new Configuration();
+            config = new Configuration(this);
             config.loadDefaults();
             cipher = new Cipher(config.getString("language"));
 
@@ -87,8 +87,8 @@ public class TotalPermissions extends JavaPlugin {
                 }
             }
             if (BUKKIT_VERSION.equalsIgnoreCase("NONE")) {
-                getLogger().severe(TotalPermissions.getPlugin().getLangFile().getString("main.bad-version1"));
-                getLogger().severe(TotalPermissions.getPlugin().getLangFile().getString("main.bad-version2"));
+                getLogger().severe(this.getLangFile().getString("main.bad-version1"));
+                getLogger().severe(this.getLangFile().getString("main.bad-version2"));
                 config.disableReflection();
             }
             //force kill reflection, is buggy and I don't want it running now
@@ -99,7 +99,7 @@ public class TotalPermissions extends JavaPlugin {
             permFile = new YamlConfiguration();
             try {
                 permFile.load(new File(this.getDataFolder(), "permissions.yml"));
-                FileUpdater update = new FileUpdater();
+                FileUpdater update = new FileUpdater(this);
                 update.backup(true);
                 if (config.getBoolean("permissions.updater")) {
                     update.runUpdate();
@@ -109,17 +109,17 @@ public class TotalPermissions extends JavaPlugin {
                     permFile = converter.convert();
                 }
             } catch (InvalidConfigurationException e) {
-                getLogger().log(Level.SEVERE, TotalPermissions.getPlugin().getLangFile().getString("main.yaml-error"));
+                getLogger().log(Level.SEVERE, this.getLangFile().getString("main.yaml-error"));
                 getLogger().log(Level.SEVERE, "-> " + e.getMessage());
-                getLogger().log(Level.WARNING, TotalPermissions.getPlugin().getLangFile().getString("main.load-backup"));
+                getLogger().log(Level.WARNING, this.getLangFile().getString("main.load-backup"));
                 try {
                     permFile = new YamlConfiguration();
                     permFile.load(new File(this.getLastBackupFolder(), "permissions.yml"));
-                    getLogger().log(Level.WARNING, TotalPermissions.getPlugin().getLangFile().getString("main.loaded1"));
-                    getLogger().log(Level.WARNING, TotalPermissions.getPlugin().getLangFile().getString("main.loaded2"));
+                    getLogger().log(Level.WARNING, this.getLangFile().getString("main.loaded1"));
+                    getLogger().log(Level.WARNING, this.getLangFile().getString("main.loaded2"));
                 } catch (InvalidConfigurationException e2) {
-                    getLogger().log(Level.SEVERE, TotalPermissions.getPlugin().getLangFile().getString("main.load-failed1"));
-                    getLogger().log(Level.SEVERE, TotalPermissions.getPlugin().getLangFile().getString("main.load-failed2"));
+                    getLogger().log(Level.SEVERE, this.getLangFile().getString("main.load-failed1"));
+                    getLogger().log(Level.SEVERE, this.getLangFile().getString("main.load-failed2"));
                     throw e2;
                 }
             }
@@ -128,10 +128,10 @@ public class TotalPermissions extends JavaPlugin {
 
             getLogger().info("Initial preperations complete");
             if (config.getBoolean("update-check")) {
-                Bukkit.getScheduler().runTaskLater(this, new UpdateRunnable(), 1);
+                Bukkit.getScheduler().runTaskLater(this, new UpdateRunnable(this), 1);
             }
         } catch (Exception e) {
-            getLogger().log(Level.SEVERE, TotalPermissions.getPlugin().getLangFile().getString("main.error", getName(), this.getDescription().getVersion()), e);
+            getLogger().log(Level.SEVERE, this.getLangFile().getString("main.error", getName(), this.getDescription().getVersion()), e);
             this.getPluginLoader().disablePlugin(this);
         }
     }
@@ -139,25 +139,25 @@ public class TotalPermissions extends JavaPlugin {
     @Override
     public void onEnable() {
         try {
-            getLogger().config(TotalPermissions.getPlugin().getLangFile().getString("main.create.perms"));
-            manager = new PermissionManager();
+            getLogger().config(this.getLangFile().getString("main.create.perms"));
+            manager = new PermissionManager(this);
             manager.load();
-            getLogger().config(TotalPermissions.getPlugin().getLangFile().getString("main.create.listener"));
+            getLogger().config(this.getLangFile().getString("main.create.listener"));
             listener = new TPListener(this);
             Bukkit.getPluginManager().registerEvents(listener, this);
-            getLogger().config(TotalPermissions.getPlugin().getLangFile().getString("main.create.command"));
-            commands = new CommandHandler();
+            getLogger().config(this.getLangFile().getString("main.create.command"));
+            commands = new CommandHandler(this);
             getCommand("totalpermissions").setExecutor(commands);
             metrics = new Metrics(this);
             if (metrics.start()) {
-                getLogger().info(TotalPermissions.getPlugin().getLangFile().getString("main.metrics"));
+                getLogger().info(this.getLangFile().getString("main.metrics"));
             }
         } catch (Exception e) {
             if (e instanceof InvalidConfigurationException) {
-                getLogger().log(Level.SEVERE, TotalPermissions.getPlugin().getLangFile().getString("main.yaml-error"));
+                getLogger().log(Level.SEVERE, this.getLangFile().getString("main.yaml-error"));
                 getLogger().log(Level.SEVERE, ((InvalidConfigurationException) e).getMessage());
             } else {
-                getLogger().log(Level.SEVERE, TotalPermissions.getPlugin().getLangFile().getString("main.error", getName(), this.getDescription().getVersion()), e);
+                getLogger().log(Level.SEVERE, this.getLangFile().getString("main.error", getName(), this.getDescription().getVersion()), e);
             }
             this.getPluginLoader().disablePlugin(this);
         }

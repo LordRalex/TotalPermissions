@@ -28,7 +28,7 @@ import org.bukkit.command.CommandSender;
 public class BackupCommand implements SubCommand {
 
     public void execute(CommandSender sender, String[] args) {
-        FileUpdater update = new FileUpdater();
+        FileUpdater update = new FileUpdater(TotalPermissions.getPlugin());
         update.backup(true);
         update.runUpdate();
     }

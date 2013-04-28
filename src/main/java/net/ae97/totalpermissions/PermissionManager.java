@@ -50,15 +50,17 @@ public final class PermissionManager {
     protected String defaultGroup;
     protected PermissionConsole console;
     protected PermissionRcon remote;
+    protected final TotalPermissions plugin;
 
-    public PermissionManager() {
+    public PermissionManager(TotalPermissions p) {
+        plugin = p;
     }
 
     public void load() throws InvalidConfigurationException {
-        FileConfiguration perms = TotalPermissions.getPlugin().getPermFile();
+        FileConfiguration perms = plugin.getPermFile();
         ConfigurationSection filegroups = perms.getConfigurationSection("groups");
         if (groups == null) {
-            throw new InvalidConfigurationException(TotalPermissions.getPlugin().getLangFile().getString("manager.null-group"));
+            throw new InvalidConfigurationException(plugin.getLangFile().getString("manager.null-group"));
         }
         Set<String> allGroups = filegroups.getKeys(false);
         for (String group : allGroups) {
@@ -69,7 +71,7 @@ public final class PermissionManager {
             }
         }
         if (defaultGroup == null) {
-            throw new InvalidConfigurationException(TotalPermissions.getPlugin().getLangFile().getString("manager.null-default"));
+            throw new InvalidConfigurationException(plugin.getLangFile().getString("manager.null-default"));
         }
         console = new PermissionConsole();
         remote = new PermissionRcon();
