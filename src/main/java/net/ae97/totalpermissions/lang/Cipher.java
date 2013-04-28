@@ -16,12 +16,16 @@
  */
 package net.ae97.totalpermissions.lang;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 
 /**
  * @version 0.2
@@ -35,21 +39,33 @@ public class Cipher {
 
     public Cipher(String language) {
         language += ".yml";
+        Plugin plugin = TotalPermissions.getPlugin();
         try {
-            InputStream temp = TotalPermissions.getPlugin().getResource(language);
-            this.setLangFile(YamlConfiguration.loadConfiguration(temp));
-        } catch (IllegalArgumentException e) {
-            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Language resource file is NULL! Trying web files instead...");
-            try {
-                URL upstr = new URL(langFileLoc + language);
-                InputStream langs = upstr.openStream();
-                this.setLangFile(YamlConfiguration.loadConfiguration(langs));
-                langs.close();
-            } catch (Exception ex) {
-                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Error grabbing language file from web!");
-                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Defaulting to english (en_US)");
-                this.setLangFile(YamlConfiguration.loadConfiguration(TotalPermissions.getPlugin().getResource("en_US.yml")));
+            //first see if there is a lang file
+            if (new File(new File(plugin.getDataFolder(), "lang"), language).exists()) {
+                setLangFile(YamlConfiguration.loadConfiguration(new File(new File(plugin.getDataFolder(), "lang"), language)));
+            } else {
+                //if not, then load file jar
+                InputStream jarStream = plugin.getResource(language);
+                if (jarStream != null) {
+                    setLangFile(YamlConfiguration.loadConfiguration(jarStream));
+                } else {
+                    //if that does not work, then load from github
+                    URL upstr = new URL(langFileLoc + language);
+                    InputStream langs = upstr.openStream();
+                    setLangFile(YamlConfiguration.loadConfiguration(langs));
+                }
             }
+        } catch (Exception e) {
+            //and if we just completely crash and burn, then use en_US
+            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Fatal error occured while loading lang files", e);
+            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Defaulting to english (en_US)");
+            this.setLangFile(YamlConfiguration.loadConfiguration(TotalPermissions.getPlugin().getResource("en_US.yml")));
+        }
+        try {
+            langFile.save(new File(new File(plugin.getDataFolder(), "lang"), language));
+        } catch (IOException ex) {
+            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Fatal error occured while saving lang files", ex);
         }
     }
 
@@ -69,6 +85,7 @@ public class Cipher {
         return getString(path, varOne, "");
     }
 
+    //TODO: Wtf is this?
     public String getString(String path, String varOne, String varTwo) {
         return langFile.getString(path).replace("{0}", varOne).replace("{1}", varTwo);
     }
