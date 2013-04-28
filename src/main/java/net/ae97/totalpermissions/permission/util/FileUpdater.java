@@ -40,7 +40,7 @@ public class FileUpdater {
         plugin = p;
     }
 
-    public void Update() {
+    public void update() {
         backupFiles = true;
     }
 
