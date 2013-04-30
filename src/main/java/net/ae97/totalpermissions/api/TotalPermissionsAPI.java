@@ -26,16 +26,22 @@ import net.ae97.totalpermissions.TotalPermissions;
  */
 public class TotalPermissionsAPI {
 
+    protected final TotalPermissions plugin;
+
+    public TotalPermissionsAPI(TotalPermissions p) {
+        plugin = p;
+    }
+
     public String getName() {
-        return TotalPermissions.getPlugin().getName();
+        return plugin.getName();
     }
 
     public boolean isEnabled() {
-        return TotalPermissions.getPlugin().isEnabled();
+        return plugin.isEnabled();
     }
 
     public boolean playerHas(String world, String player, String permission) {
-        if (TotalPermissions.getPlugin().getManager().getUser(player).has(permission, world)) {
+        if (plugin.getManager().getUser(player).has(permission, world)) {
             return true;
         }
         return false;
@@ -43,21 +49,21 @@ public class TotalPermissionsAPI {
 
     public boolean playerAdd(String world, String player, String permission) {
         if (permission.startsWith("-")) {
-            TotalPermissions.getPlugin().getManager().getUser(player).addPerm(permission, world, false);
+            plugin.getManager().getUser(player).addPerm(permission, world, false);
             return true;
         }
-        TotalPermissions.getPlugin().getManager().getUser(player).addPerm(permission, world, true);
+        plugin.getManager().getUser(player).addPerm(permission, world, true);
         return true;
     }
 
     public boolean playerRemove(String world, String player, String permission) {
-        //TotalPermissions.getPlugin().getManager();
-        //TotalPermissions.getPlugin().getManager().getUser(player).
+        //plugin.getManager();
+        //plugin.getManager().getUser(player).
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public boolean groupHas(String world, String group, String permission) {
-        if (TotalPermissions.getPlugin().getManager().groupHas(group, permission)) {
+        if (plugin.getManager().groupHas(group, permission)) {
             return true;
         }
         return false;
@@ -65,10 +71,10 @@ public class TotalPermissionsAPI {
 
     public boolean groupAdd(String world, String group, String permission) {
         if (permission.startsWith("-")) {
-            TotalPermissions.getPlugin().getManager().addPermToGroup(group, permission, false);
+            plugin.getManager().addPermToGroup(group, permission, false);
             return true;
         }
-        TotalPermissions.getPlugin().getManager().addPermToGroup(group, permission, true);
+        plugin.getManager().addPermToGroup(group, permission, true);
         return true;
     }
 
@@ -78,12 +84,12 @@ public class TotalPermissionsAPI {
 
     public boolean playerInGroup(String world, String player, String group) {
         //Check if a player is in a group.
-        //TotalPermissions.getPlugin().getManager().getUser(player).
+        //plugin.getManager().getUser(player).
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public boolean playerAddGroup(String world, String player, String group) {
-        //TotalPermissions.getPlugin().getManager().getUser(player).
+        //plugin.getManager().getUser(player).
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -96,11 +102,11 @@ public class TotalPermissionsAPI {
     }
 
     public String getPrimaryGroup(String world, String player) {
-        return TotalPermissions.getPlugin().getManager().getDefaultGroup();
+        return plugin.getManager().getDefaultGroup();
     }
 
     public String[] getGroups() {
-        //return TotalPermissions.getPlugin().getManager().getGroups();
+        //return plugin.getManager().getGroups();
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }
