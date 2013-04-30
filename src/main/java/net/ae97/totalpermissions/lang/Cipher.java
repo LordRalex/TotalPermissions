@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -58,14 +57,14 @@ public class Cipher {
             }
         } catch (Exception e) {
             //and if we just completely crash and burn, then use en_US
-            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Fatal error occured while loading lang files", e);
-            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Defaulting to english (en_US)");
-            this.setLangFile(YamlConfiguration.loadConfiguration(TotalPermissions.getPlugin().getResource("en_US.yml")));
+            plugin.getLogger().log(Level.SEVERE, "Fatal error occured while loading lang files", e);
+            plugin.getLogger().log(Level.SEVERE, "Defaulting to english (en_US)");
+            this.setLangFile(YamlConfiguration.loadConfiguration(plugin.getResource("en_US.yml")));
         }
         try {
             langFile.save(new File(new File(plugin.getDataFolder(), "lang"), language));
         } catch (IOException ex) {
-            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Fatal error occured while saving lang files", ex);
+            plugin.getLogger().log(Level.SEVERE, "Fatal error occured while saving lang files", ex);
         }
     }
 
