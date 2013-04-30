@@ -16,13 +16,7 @@
  */
 package net.ae97.totalpermissions.commands;
 
-import net.ae97.totalpermissions.commands.subcommands.GroupCommand;
-import net.ae97.totalpermissions.commands.subcommands.HelpCommand;
-import net.ae97.totalpermissions.commands.subcommands.SubCommand;
-import net.ae97.totalpermissions.commands.subcommands.ReloadCommand;
-import net.ae97.totalpermissions.commands.subcommands.UserCommand;
-import net.ae97.totalpermissions.commands.subcommands.BackupCommand;
-import net.ae97.totalpermissions.commands.subcommands.DebugCommand;
+import net.ae97.totalpermissions.commands.subcommands.*;
 import net.ae97.totalpermissions.commands.subcommands.actions.ActionHandler;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,6 +52,8 @@ public final class CommandHandler implements CommandExecutor {
         commands.put(user.getName().toLowerCase().trim(), user);
         GroupCommand group = new GroupCommand();
         commands.put(group.getName().toLowerCase().trim(), group);
+        DumpCommand dump = new DumpCommand();
+        commands.put(dump.getName().toLowerCase().trim(), dump);
 
         actions = new ActionHandler();
     }

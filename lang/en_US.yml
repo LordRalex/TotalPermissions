@@ -27,6 +27,8 @@ command:
     ifnull-plain: 'No command found, use /ttp help for command list'
     help-check: 'help'
     denied: 'You cannot use that command'
+  dump:
+    help: 'Provides the registered perms for an item'
 configuration:
   configuration:
     strict-mode: 'strict-mode'
