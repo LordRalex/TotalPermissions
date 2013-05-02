@@ -83,7 +83,7 @@ public final class CommandHandler implements CommandExecutor {
         for (int i = 0; i < newArgs.length; i++) {
             newArgs[i] = args[i + 1];
         }
-        if (sender.hasPermission(executor.getPerm())) {
+        if (sender.hasPermission("totalpermissions.cmd" + executor.getName())) {
             boolean success = executor.execute(sender, args);
             if (!success) {
                 sender.sendMessage(executor.getHelp()[0]);

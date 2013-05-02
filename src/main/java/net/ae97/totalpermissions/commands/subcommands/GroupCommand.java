@@ -44,11 +44,7 @@ public class GroupCommand implements SubCommand {
     public String getName() {
         return "group";
     }
-
-    public String getPerm() {
-        return "totalpermissions.command.group";
-    }
-
+    
     public String[] getHelp() {
         return new String[]{
             "/ttp group " + TotalPermissions.getPlugin().getLangFile().getString("variables.group") + " [actions..]",

@@ -45,10 +45,6 @@ public class UserCommand implements SubCommand {
         return "user";
     }
 
-    public String getPerm() {
-        return "totalpermissions.command.user";
-    }
-
     public String[] getHelp() {
         return new String[]{
             "/ttp user " + TotalPermissions.getPlugin().getLangFile().getString("variables.username") + " [actions..]",

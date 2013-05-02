@@ -68,10 +68,6 @@ public class DebugCommand implements SubCommand {
         return "debug";
     }
 
-    public String getPerm() {
-        return "totalpermissions.cmd.debug";
-    }
-
     public String[] getHelp() {
         return new String[]{
             "/ttp debug " + TotalPermissions.getPlugin().getLangFile().getString("variables.username") + " [on/off]",

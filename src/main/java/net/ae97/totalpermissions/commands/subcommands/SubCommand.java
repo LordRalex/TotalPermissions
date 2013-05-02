@@ -40,13 +40,6 @@ public interface SubCommand {
     public abstract boolean execute(CommandSender sender, String[] args);
 
     /**
-     * Returns the permission to use this command.
-     *
-     * @return The permission
-     */
-    public abstract String getPerm();
-
-    /**
      * Returns a String array of help statements. Index 0 is the command, and
      * index 1 is what the command does.
      *

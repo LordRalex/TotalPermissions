@@ -38,10 +38,6 @@ public class BackupCommand implements SubCommand {
         return "backup";
     }
 
-    public String getPerm() {
-        return "totalpermissions.cmd.backup";
-    }
-
     public String[] getHelp() {
         return new String[]{
             "/ttp backup",

@@ -45,10 +45,6 @@ public class SpecialCommand implements SubCommand {
         return "special";
     }
 
-    public String getPerm() {
-        return "totalpermissions.command.special";
-    }
-
     public String[] getHelp() {
         return new String[] {
             "/ttp special [rcon|console|op] [actions..]",

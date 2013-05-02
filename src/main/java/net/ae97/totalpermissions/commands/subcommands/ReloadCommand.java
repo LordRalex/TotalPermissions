@@ -59,11 +59,7 @@ public class ReloadCommand implements SubCommand {
     public String getName() {
         return "reload";
     }
-
-    public String getPerm() {
-        return "totalpermissions.cmd.reload";
-    }
-
+    
     public String[] getHelp() {
         return new String[]{
             "/ttp reload",

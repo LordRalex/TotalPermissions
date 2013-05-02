@@ -44,10 +44,6 @@ public class WorldCommand implements SubCommand {
         return "world";
     }
 
-    public String getPerm() {
-        return "";
-    }
-
     public String[] getHelp() {
         return new String[] {
             "/ttp world <worldname> [actions..]",

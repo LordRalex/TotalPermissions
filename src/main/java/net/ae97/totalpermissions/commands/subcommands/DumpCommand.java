@@ -75,10 +75,6 @@ public class DumpCommand implements SubCommand {
         return true;
     }
 
-    public String getPerm() {
-        return "totalpermissions.cmd.dump";
-    }
-
     public String[] getHelp() {
         return new String[]{
             "/ttp backup [-command/-player/-plugin] [name]",

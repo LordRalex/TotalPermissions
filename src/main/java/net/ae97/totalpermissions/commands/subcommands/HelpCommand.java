@@ -57,11 +57,6 @@ public class HelpCommand implements SubCommand {
         return "help";
     }
 
-    @Override
-    public String getPerm() {
-        return "totalpermissions.cmd.help";
-    }
-
     public String[] getHelp() {
         return new String[]{
             "/ttp help",
