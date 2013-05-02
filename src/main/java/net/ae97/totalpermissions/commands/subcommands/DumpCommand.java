@@ -29,7 +29,7 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
 
 /**
- * @version 0.1
+ * @version 0.2
  * @author Lord_Ralex
  * @since 0.2
  */

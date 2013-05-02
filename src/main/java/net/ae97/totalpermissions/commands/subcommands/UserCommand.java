@@ -16,6 +16,8 @@
  */
 package net.ae97.totalpermissions.commands.subcommands;
 
+import java.util.Arrays;
+import java.util.List;
 import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.command.CommandSender;
 
@@ -30,7 +32,7 @@ public class UserCommand implements SubCommand {
     public void execute(CommandSender sender, String[] args) {
         sender.sendMessage("User command executed.");
         if (args.length > 2) { // If there is an action command
-            TotalPermissions.getPlugin().getCommandHandler().getActionHandler().onAction(sender, args);
+            TotalPermissions.getPlugin().getCommandHandler().getActionHandler().onAction(sender, args, fields());
         } else if (args.length == 1) {
             //List all users
         } else {
@@ -51,5 +53,15 @@ public class UserCommand implements SubCommand {
             "/ttp user " + TotalPermissions.getPlugin().getLangFile().getString("variables.username") + " [actions..]",
             TotalPermissions.getPlugin().getLangFile().getString("command.user.help")
         };
+    }
+    
+    private List<String> fields() {
+        return Arrays.asList(new String[]{
+            "permissions",
+            "commands",
+            "groups",
+            "prefix",
+            "suffix"
+        });
     }
 }

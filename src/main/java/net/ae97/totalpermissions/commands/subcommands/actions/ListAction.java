@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 AE97
+ * Copyright (C) 2013 Spencer Alderman
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,22 +24,21 @@ import org.bukkit.command.CommandSender;
  * @author 1Rogue
  * @version 0.2
  */
-public class RemoveAction implements SubAction {
+public class ListAction implements SubAction {
 
     public boolean execute(CommandSender sender, String type, String target, String field, String item) {
-        // Removes from a certain field (or deletes the prefix/suffix)
-        // Don't forget to catch for last group being removed, set default
+        //Self explanatory
         return true;
     }
 
     public String getName() {
-        return "remove";
+        return "list";
     }
 
     public String[] getHelp() {
         return new String[]{
-            "remove <field> <value>",
-            "Removes a value from a field"
+            "list <field>",
+            "Lists the values from a given field"
         };
     }
 

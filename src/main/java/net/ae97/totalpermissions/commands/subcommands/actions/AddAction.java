@@ -20,13 +20,14 @@ import org.bukkit.command.CommandSender;
 
 /**
  *
- * @since @author 1Rogue
- * @version
+ * @since 0.2
+ * @author 1Rogue
+ * @version 0.2
  */
 public class AddAction implements SubAction {
 
-    public boolean execute(CommandSender sender, String type, String target, String[] args) {
-        // Add perms
+    public boolean execute(CommandSender sender, String type, String target, String field, String item) {
+        // self explanatory
         return true;
     }
 
@@ -36,15 +37,17 @@ public class AddAction implements SubAction {
 
     public String[] getHelp() {
         return new String[]{
-            "add <permnode>",
-            "Adds a perm node to a user"
+            "add <field> <value>",
+            "Adds a value to a field"
         };
     }
 
     public String[] supportedTypes() {
-        return new String[]{
-            "group",
-            "user"
+        return new String[] {
+            "permission",
+            "inheritance",
+            "command",
+            "group"
         };
     }
 }

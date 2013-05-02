@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 AE97
+ * Copyright (C) 2013 Spencer Alderman
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@ package net.ae97.totalpermissions.commands.subcommands;
 
 import java.util.Arrays;
 import java.util.List;
-import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -27,41 +26,28 @@ import org.bukkit.command.CommandSender;
  * @author 1Rogue
  * @version 0.2
  */
-public class GroupCommand implements SubCommand {
+public class WorldCommand implements SubCommand {
 
     public void execute(CommandSender sender, String[] args) {
-        sender.sendMessage("Group command executed.");
-        if (args.length > 2) { // If there is an action command
-            TotalPermissions.getPlugin().getCommandHandler().getActionHandler().onAction(sender, args, fields());
-        } else if (args.length == 1) {
-            //List all groups
-        } else {
-            //Error in index length, return help
-        }
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     public String getName() {
-        return "group";
+        return "world";
     }
 
     public String getPerm() {
-        return "totalpermissions.command.group";
+        return "";
     }
 
     public String[] getHelp() {
-        return new String[]{
-            "/ttp group " + TotalPermissions.getPlugin().getLangFile().getString("variables.group") + " [actions..]",
-            TotalPermissions.getPlugin().getLangFile().getString("command.group.help")
-        };
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     private List<String> fields() {
         return Arrays.asList(new String[]{
-            "permissions",
-            "inheritance",
-            "commands",
-            "prefix",
-            "suffix"
+            "inheritance"
         });
     }
+
 }

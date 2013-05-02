@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 AE97
+ * Copyright (C) 2013 Spencer Alderman
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,35 +23,35 @@ import org.bukkit.command.CommandSender;
 
 /**
  *
- * @since 0.2
+ * @since
  * @author 1Rogue
- * @version 0.2
+ * @version
  */
-public class GroupCommand implements SubCommand {
+public class SpecialCommand {
 
     public void execute(CommandSender sender, String[] args) {
-        sender.sendMessage("Group command executed.");
+        sender.sendMessage("Special command executed.");
         if (args.length > 2) { // If there is an action command
             TotalPermissions.getPlugin().getCommandHandler().getActionHandler().onAction(sender, args, fields());
         } else if (args.length == 1) {
-            //List all groups
+            //List all specials
         } else {
             //Error in index length, return help
         }
     }
 
     public String getName() {
-        return "group";
+        return "special";
     }
 
     public String getPerm() {
-        return "totalpermissions.command.group";
+        return "totalpermissions.command.special";
     }
 
     public String[] getHelp() {
-        return new String[]{
-            "/ttp group " + TotalPermissions.getPlugin().getLangFile().getString("variables.group") + " [actions..]",
-            TotalPermissions.getPlugin().getLangFile().getString("command.group.help")
+        return new String[] {
+            "/ttp special [rcon|console|op] [actions..]",
+            TotalPermissions.getPlugin().getLangFile().getString("command.special.help")
         };
     }
     
@@ -60,8 +60,7 @@ public class GroupCommand implements SubCommand {
             "permissions",
             "inheritance",
             "commands",
-            "prefix",
-            "suffix"
+            "options",
         });
     }
 }
