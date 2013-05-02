@@ -84,7 +84,11 @@ public final class CommandHandler implements CommandExecutor {
             newArgs[i] = args[i + 1];
         }
         if (sender.hasPermission(executor.getPerm())) {
-            executor.execute(sender, args);
+            boolean success = executor.execute(sender, args);
+            if (!success) {
+                sender.sendMessage(executor.getHelp()[0]);
+                sender.sendMessage(executor.getHelp()[1]);
+            }
             return true;
         } else {
             sender.sendMessage(ChatColor.RED + plugin.getLangFile().getString("command.handler.denied"));

@@ -34,8 +34,10 @@ public interface SubCommand {
 
     /**
      * Executes the command. Only the args and sender are needed.
+     * 
+     * @return success of the command
      */
-    public abstract void execute(CommandSender sender, String[] args);
+    public abstract boolean execute(CommandSender sender, String[] args);
 
     /**
      * Returns the permission to use this command.

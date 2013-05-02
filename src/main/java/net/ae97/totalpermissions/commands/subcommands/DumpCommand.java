@@ -39,7 +39,7 @@ public class DumpCommand implements SubCommand {
         return "dumpperms";
     }
 
-    public void execute(CommandSender sender, String[] args) {
+    public boolean execute(CommandSender sender, String[] args) {
         String[] params = new String[2];
         if (args.length == 1) {
             Player possible = Bukkit.getPlayer(args[0]);
@@ -52,8 +52,7 @@ public class DumpCommand implements SubCommand {
                     if (Bukkit.getPluginManager().getPlugin(args[0]) != null) {
                         params[0] = "-plugin";
                     } else {
-                        sender.sendMessage(getHelp());
-                        return;
+                        return false;
                     }
                 }
             }
@@ -71,9 +70,9 @@ public class DumpCommand implements SubCommand {
             Command command = Bukkit.getPluginCommand(params[0]);
             sender.sendMessage(ChatColor.GREEN + "Permission for " + command.getName() + ": " + command.getPermission());
         } else {
-            sender.sendMessage(getHelp());
-            return;
+            return false;
         }
+        return true;
     }
 
     public String getPerm() {

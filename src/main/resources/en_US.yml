@@ -34,6 +34,8 @@ command:
     help: 'Group interface'
   special:
     help: 'Special permissions type interface for console and others'
+  world:
+    help: 'World interface'
 configuration:
   configuration:
     strict-mode: 'strict-mode'

@@ -27,10 +27,11 @@ import org.bukkit.command.CommandSender;
  */
 public class BackupCommand implements SubCommand {
 
-    public void execute(CommandSender sender, String[] args) {
+    public boolean execute(CommandSender sender, String[] args) {
         FileUpdater update = new FileUpdater(TotalPermissions.getPlugin());
         update.backup(true);
         update.runUpdate();
+        return true;
     }
 
     public String getName() {

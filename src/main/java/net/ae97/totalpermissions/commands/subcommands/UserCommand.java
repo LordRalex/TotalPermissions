@@ -29,15 +29,16 @@ import org.bukkit.command.CommandSender;
  */
 public class UserCommand implements SubCommand {
 
-    public void execute(CommandSender sender, String[] args) {
+    public boolean execute(CommandSender sender, String[] args) {
         sender.sendMessage("User command executed.");
         if (args.length > 2) { // If there is an action command
             TotalPermissions.getPlugin().getCommandHandler().getActionHandler().onAction(sender, args, fields());
+            return true;
         } else if (args.length == 1) {
             //List all users
-        } else {
-            //Error in index length, return help
+            return true;
         }
+        return false;
     }
 
     public String getName() {

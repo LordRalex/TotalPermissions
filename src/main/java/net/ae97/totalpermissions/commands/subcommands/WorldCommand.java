@@ -18,6 +18,7 @@ package net.ae97.totalpermissions.commands.subcommands;
 
 import java.util.Arrays;
 import java.util.List;
+import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -28,8 +29,15 @@ import org.bukkit.command.CommandSender;
  */
 public class WorldCommand implements SubCommand {
 
-    public void execute(CommandSender sender, String[] args) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean execute(CommandSender sender, String[] args) {
+        if (args.length > 2) { // If there is an action command
+            TotalPermissions.getPlugin().getCommandHandler().getActionHandler().onAction(sender, args, fields());
+            return true;
+        } else if (args.length == 1) {
+            //List all users
+            return true;
+        }
+        return false;
     }
     
     public String getName() {
@@ -41,7 +49,10 @@ public class WorldCommand implements SubCommand {
     }
 
     public String[] getHelp() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new String[] {
+            "/ttp world <worldname> [actions..]",
+            TotalPermissions.getPlugin().getLangFile().getString("command.world.help")
+        };
     }
     
     private List<String> fields() {
