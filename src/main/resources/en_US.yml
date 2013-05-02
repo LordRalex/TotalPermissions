@@ -32,6 +32,8 @@ command:
     help: 'User interface'
   group:
     help: 'Group interface'
+  special:
+    help: 'Special permissions type interface for console and others'
 configuration:
   configuration:
     strict-mode: 'strict-mode'
