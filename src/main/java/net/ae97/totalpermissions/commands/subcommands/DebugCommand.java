@@ -24,19 +24,19 @@ import org.bukkit.command.CommandSender;
 /**
  * @since 0.1
  * @author Lord_Ralex
- * @version 0.1
+ * @version 0.2
  */
 public class DebugCommand implements SubCommand {
 
-    public void execute(CommandSender sender, String[] args) {
+    public boolean execute(CommandSender sender, String[] args) {
         if (args.length == 1) {
             sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.debug.args-plain"));
-            return;
+            return true; //True because currently the message contains help info
         }
         PermissionUser target = TotalPermissions.getPlugin().getManager().getUser(args[1]);
         if (target == null) {
             sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.debug.null-target", args[1]));
-            return;
+            return true; //True because currently the message contains help info
         }
         if (args.length == 2 || args.length == 3) {
             if (args.length == 2) {
@@ -61,14 +61,11 @@ public class DebugCommand implements SubCommand {
                 sender.sendMessage(ChatColor.GRAY + TotalPermissions.getPlugin().getLangFile().getString("command.debug.debug-off", target.getName()));
             }
         }
+        return true;
     }
 
     public String getName() {
         return "debug";
-    }
-
-    public String getPerm() {
-        return "totalpermissions.cmd.debug";
     }
 
     public String[] getHelp() {

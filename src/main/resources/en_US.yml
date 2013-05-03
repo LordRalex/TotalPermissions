@@ -10,6 +10,8 @@ command:
     debug-on: 'Debug turned on for {0}'
     debug-off: 'Debug turned off for {0}'
     help: 'Turns on debug mode for a user'
+  dump:
+    help: 'Provides the registered perms for an item'
   help:
     command: 'help'
     cont: 'Use /ttp {0} help for help with a command'
@@ -32,6 +34,10 @@ command:
     help: 'User interface'
   group:
     help: 'Group interface'
+  special:
+    help: 'Special permissions type interface for console and others'
+  world:
+    help: 'World interface'
 configuration:
   configuration:
     strict-mode: 'strict-mode'

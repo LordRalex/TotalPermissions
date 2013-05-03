@@ -21,28 +21,23 @@ import org.bukkit.command.CommandSender;
 /**
  * @since 0.1
  * @author Lord_Ralex
- * @version 0.1
+ * @version 0.2
  */
 public interface SubCommand {
-
+    
+    /**
+     * Executes the command. Only the args and sender are needed.
+     * 
+     * @return Success of the command
+     */
+    public abstract boolean execute(CommandSender sender, String[] args);
+    
     /**
      * Returns the command's name. When used, it is the /ttp [name].
      *
      * @return Name of the command
      */
     public abstract String getName();
-
-    /**
-     * Executes the command. Only the args and sender are needed.
-     */
-    public abstract void execute(CommandSender sender, String[] args);
-
-    /**
-     * Returns the permission to use this command.
-     *
-     * @return The permission
-     */
-    public abstract String getPerm();
 
     /**
      * Returns a String array of help statements. Index 0 is the command, and
