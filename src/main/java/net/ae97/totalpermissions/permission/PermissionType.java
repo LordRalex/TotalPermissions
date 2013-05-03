@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 AE97
+ * Copyright (C) 2013 Laptop
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,37 +14,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.ae97.totalpermissions.commands.subcommands.actions;
-
-import org.bukkit.command.CommandSender;
+package net.ae97.totalpermissions.permission;
 
 /**
- *
- * @since @author 1Rogue
- * @version
+ * @version 1.0
+ * @author Laptop
  */
-public class AddAction implements SubAction {
+public enum PermissionType {
 
-    public boolean execute(CommandSender sender, String type, String target, String[] args) {
-        // Add perms
-        return true;
+    GROUP("group"),
+    USER("user"),
+    SPECIAL("special"),
+    WORLD("world"),
+    PERMISSIONS("permissions"),
+    INHERITENCE("inheritence"),
+    GROUPS("groups"),
+    OPTIONS("options");
+    private final String name;
+
+    private PermissionType(String aName) {
+        name = aName;
     }
 
-    public String getName() {
-        return "add";
-    }
-
-    public String[] getHelp() {
-        return new String[]{
-            "add <permnode>",
-            "Adds a perm node to a user"
-        };
-    }
-
-    public String[] supportedTypes() {
-        return new String[]{
-            "group",
-            "user"
-        };
+    public static PermissionType getType(String aType) {
+        for (PermissionType type : PermissionType.values()) {
+            if (type.name.equalsIgnoreCase(aType)) {
+                return type;
+            }
+        }
+        return null;
     }
 }

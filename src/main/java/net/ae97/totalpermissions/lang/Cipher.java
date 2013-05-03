@@ -19,9 +19,11 @@ package net.ae97.totalpermissions.lang;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -33,7 +35,7 @@ import org.bukkit.plugin.Plugin;
  */
 public class Cipher {
 
-    private YamlConfiguration langFile;
+    private FileConfiguration langFile;
     private final String langFileLoc = "https://raw.github.com/AE97/TotalPermissions/master/lang/";
 
     public Cipher(String language) {
@@ -41,20 +43,20 @@ public class Cipher {
         Plugin plugin = TotalPermissions.getPlugin();
         try {
             //first see if there is a lang file
-            if (new File(new File(plugin.getDataFolder(), "lang"), language).exists()) {
-                setLangFile(YamlConfiguration.loadConfiguration(new File(new File(plugin.getDataFolder(), "lang"), language)));
-            } else {
-                //if not, then load file jar
-                InputStream jarStream = plugin.getResource(language);
-                if (jarStream != null) {
-                    setLangFile(YamlConfiguration.loadConfiguration(jarStream));
-                } else {
-                    //if that does not work, then load from github
-                    URL upstr = new URL(langFileLoc + language);
-                    InputStream langs = upstr.openStream();
-                    setLangFile(YamlConfiguration.loadConfiguration(langs));
+            FileConfiguration file = this.getFromFolder(plugin, language);
+            if (file != null) {
+                int version = file.getInt("version", 0);
+            }
+            if (file == null) {
+                file = this.getFromJar(plugin, language);
+                if (file == null) {
+                    file = this.getFromGithub(language);
+                    if (file == null) {
+                        throw new InvalidConfigurationException("The langauage " + language + " is unsupported");
+                    }
                 }
             }
+            setLangFile(file);
         } catch (Exception e) {
             //and if we just completely crash and burn, then use en_US
             plugin.getLogger().log(Level.SEVERE, "Fatal error occured while loading lang files", e);
@@ -68,7 +70,7 @@ public class Cipher {
         }
     }
 
-    private void setLangFile(YamlConfiguration file) {
+    private void setLangFile(FileConfiguration file) {
         langFile = file;
     }
 
@@ -82,5 +84,36 @@ public class Cipher {
             string = string.replace("{" + i + "}", vars[i]);
         }
         return string;
+    }
+
+    private FileConfiguration getFromFolder(Plugin pl, String lang) {
+        File langFolder = new File(pl.getDataFolder(), "lang");
+        if (!langFolder.exists()) {
+            langFolder.mkdirs();
+        }
+        if (new File(langFolder, lang).exists()) {
+            return YamlConfiguration.loadConfiguration(new File(langFolder, lang));
+        } else {
+            return null;
+        }
+    }
+
+    private FileConfiguration getFromJar(Plugin plugin, String lang) {
+        InputStream jarStream = plugin.getResource(lang);
+        if (jarStream != null) {
+            return YamlConfiguration.loadConfiguration(jarStream);
+        } else {
+            return null;
+        }
+    }
+
+    private FileConfiguration getFromGithub(String lang) throws MalformedURLException, IOException {
+        URL upstr = new URL(langFileLoc + lang);
+        InputStream langs = upstr.openStream();
+        if (langs != null) {
+            return YamlConfiguration.loadConfiguration(langs);
+        } else {
+            return null;
+        }
     }
 }

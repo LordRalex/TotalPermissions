@@ -29,11 +29,11 @@ import org.bukkit.event.player.PlayerLoginEvent;
 /**
  * @since 0.1
  * @author Lord_Ralex
- * @version 0.2
+ * @version 0.1
  */
 public class ReloadCommand implements SubCommand {
 
-    public boolean execute(CommandSender sender, String[] args) {
+    public void execute(CommandSender sender, String[] args) {
         sender.sendMessage(ChatColor.YELLOW + TotalPermissions.getPlugin().getLangFile().getString("command.reload.reloading", TotalPermissions.getPlugin().getDescription().getFullName()));
         PermissionManager manager = TotalPermissions.getPlugin().getManager();
         manager.unload();
@@ -53,13 +53,16 @@ public class ReloadCommand implements SubCommand {
             }
         }
         sender.sendMessage(ChatColor.GREEN + TotalPermissions.getPlugin().getLangFile().getString("command.reload.success", TotalPermissions.getPlugin().getDescription().getFullName()));
-        return true;
     }
 
     public String getName() {
         return "reload";
     }
-    
+
+    public String getPerm() {
+        return "totalpermissions.cmd.reload";
+    }
+
     public String[] getHelp() {
         return new String[]{
             "/ttp reload",

@@ -60,7 +60,8 @@ worlds:
 special:
   rcon:
     permissions:
-    - -bukkit.command.say
+    - -bukkit.command.stop
+    - -bukkit.command.reload
   console:
     permissions:
-    - -bukkit.command.gamemode
+    - -bukkit.command.reload

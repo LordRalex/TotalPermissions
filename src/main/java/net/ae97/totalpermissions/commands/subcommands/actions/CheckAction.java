@@ -20,15 +20,14 @@ import org.bukkit.command.CommandSender;
 
 /**
  *
- * @since 0.2
- * @author 1Rogue
- * @version 0.2
+ * @since @author 1Rogue
+ * @version
  */
 public class CheckAction implements SubAction {
 
-    public boolean execute(CommandSender sender, String type, String target, String field, String item) {
-        //Check if the provided area has the right value within it. Not for listing
-        return false;
+    public boolean execute(CommandSender sender, String type, String target, String[] args) {
+        // Checks for a perm node
+        return true;
     }
 
     public String getName() {
@@ -37,20 +36,15 @@ public class CheckAction implements SubAction {
 
     public String[] getHelp() {
         return new String[]{
-            "check <field> <value>",
-            "Checks if a given target's field has the provided value"
+            "check <permnode>",
+            "Checks if a given target has the provided perm node"
         };
     }
-    
+
     public String[] supportedTypes() {
-        return new String[] {
-            "permission",
-            "inheritance",
-            "command",
+        return new String[]{
             "group",
-            "default",
-            "prefix",
-            "suffix"
+            "user"
         };
     }
 }

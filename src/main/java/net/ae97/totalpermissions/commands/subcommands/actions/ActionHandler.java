@@ -18,7 +18,6 @@ package net.ae97.totalpermissions.commands.subcommands.actions;
 
 import net.ae97.totalpermissions.util.ArrayShift;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.ChatColor;
@@ -37,17 +36,9 @@ public class ActionHandler {
     public ActionHandler() {
         AddAction add = new AddAction();
         actions.put(add.getName().toLowerCase().trim(), add);
-        CheckAction check = new CheckAction();
-        actions.put(check.getName().toLowerCase().trim(), check);
-        ListAction list = new ListAction();
-        actions.put(list.getName().toLowerCase().trim(), list);
-        RemoveAction remove = new RemoveAction();
-        actions.put(remove.getName().toLowerCase().trim(), remove);
-        SetAction set = new SetAction();
-        actions.put(set.getName().toLowerCase().trim(), set);
     }
 
-    public boolean onAction(CommandSender sender, String[] args, List<String> fields) {
+    public boolean onAction(CommandSender sender, String[] args) {
         String type = args[0].toLowerCase();
         String target = args[1];
         String[] newArgs = ArrayShift.getEndOfStringArray(args, 2);
@@ -57,12 +48,6 @@ public class ActionHandler {
             sender.sendMessage("No action found, use /ttp help actions for an action list");
             return false;
         }
-        
-        if (newArgs.length < 3) {
-            sender.sendMessage("Invalid use of actions.");
-            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.handler.usage", executor.getHelp()[0]));
-            sender.sendMessage(executor.getHelp()[1]);
-        }
 
         if ((newArgs.length > 1) && (newArgs[1].equalsIgnoreCase("help"))) {
             sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.handler.usage", executor.getHelp()[0]));
@@ -71,17 +56,8 @@ public class ActionHandler {
         }
 
         if (sender.hasPermission("totalpermissions." + type + "." + executor.getName())) {
-            if (this.isSupported(newArgs[1], fields)) {
-                boolean begin = executor.execute(sender, type, target, newArgs[1], newArgs[2]);
-                if (!begin) {
-                    sender.sendMessage(ChatColor.RED + "Invalid use of " + newArgs[0]);
-                    StringBuilder sb = new StringBuilder();
-                    sb.append("Editable fields: ");
-                    for (String item : executor.supportedTypes()) {
-                        sb.append(item).append(", ");
-                    }
-                    sender.sendMessage(ChatColor.RED + sb.toString());
-                }
+            if (this.isSupported(executor, type)) {
+                executor.execute(sender, type, target, args);
             } else {
                 sender.sendMessage(ChatColor.RED + "Action '" + args[2] + "' is not supported for " + type + "!");
             }
@@ -91,10 +67,12 @@ public class ActionHandler {
         }
         return true;
     }
-    
-    private boolean isSupported(String arg, List<String> allowed) {
-        if (allowed.contains(arg)) {
-            return true;
+
+    private boolean isSupported(SubAction action, String type) {
+        for (String comp : action.supportedTypes()) {
+            if (comp.equalsIgnoreCase(type)) {
+                return true;
+            }
         }
         return false;
     }

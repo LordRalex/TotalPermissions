@@ -27,7 +27,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 /**
- * @version 0.2
+ * @version 0.1
  * @author Lord_Ralex
  * @since 0.1
  */
@@ -83,12 +83,8 @@ public final class CommandHandler implements CommandExecutor {
         for (int i = 0; i < newArgs.length; i++) {
             newArgs[i] = args[i + 1];
         }
-        if (sender.hasPermission("totalpermissions.cmd" + executor.getName())) {
-            boolean success = executor.execute(sender, args);
-            if (!success) {
-                sender.sendMessage(executor.getHelp()[0]);
-                sender.sendMessage(executor.getHelp()[1]);
-            }
+        if (sender.hasPermission(executor.getPerm())) {
+            executor.execute(sender, args);
             return true;
         } else {
             sender.sendMessage(ChatColor.RED + plugin.getLangFile().getString("command.handler.denied"));

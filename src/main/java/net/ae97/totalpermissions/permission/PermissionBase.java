@@ -206,6 +206,9 @@ public abstract class PermissionBase {
             }
         }
         Permission permission = new Permission("totalpermissions.baseItem." + aKey + "." + name, permMap);
+        if (Bukkit.getPluginManager().getPermission(permission.getName()) != null) {
+            Bukkit.getPluginManager().removePermission(permission.getName());
+        }
         Bukkit.getPluginManager().addPermission(permission);
         TotalPermissions.getPlugin().getManager().addPermissionToMap(aKey, name, permission);
         perms.put(null, permission);
@@ -341,32 +344,34 @@ public abstract class PermissionBase {
 
     public final synchronized void addPerm(String perm, String world, boolean allow) {
         Permission permission = perms.get(world);
-        Map<String, Boolean> permList = permission.getChildren();
-        if (permList == null) {
-            permList = new HashMap<String, Boolean>();
-        }
-        if (!TotalPermissions.getPlugin().getConfiguration().getBoolean("reflection.starperm")) {
-            if (perm.equals("**")) {
-                List<String> allPerms = PermissionUtility.handleWildcard(true);
-                for (String perm_ : allPerms) {
-                    if (!permList.containsKey(perm_)) {
-                        permList.put(perm_, Boolean.TRUE);
+        if (permission != null) {
+            Map<String, Boolean> permList = permission.getChildren();
+            if (permList == null) {
+                permList = new HashMap<String, Boolean>();
+            }
+            if (!TotalPermissions.getPlugin().getConfiguration().getBoolean("reflection.starperm")) {
+                if (perm.equals("**")) {
+                    List<String> allPerms = PermissionUtility.handleWildcard(true);
+                    for (String perm_ : allPerms) {
+                        if (!permList.containsKey(perm_)) {
+                            permList.put(perm_, Boolean.TRUE);
+                        }
                     }
-                }
-            } else if (perm.equals("*")) {
-                List<String> allPerms = PermissionUtility.handleWildcard(false);
-                for (String perm_ : allPerms) {
-                    if (!permList.containsKey(perm_)) {
-                        permList.put(perm_, Boolean.TRUE);
+                } else if (perm.equals("*")) {
+                    List<String> allPerms = PermissionUtility.handleWildcard(false);
+                    for (String perm_ : allPerms) {
+                        if (!permList.containsKey(perm_)) {
+                            permList.put(perm_, Boolean.TRUE);
+                        }
                     }
                 }
             }
+            permList.put(perm, allow);
+            permission.getChildren().clear();
+            permission.getChildren().putAll(permList);
+            permission.recalculatePermissibles();
+            perms.put(world, permission);
         }
-        permList.put(perm, allow);
-        permission.getChildren().clear();
-        permission.getChildren().putAll(permList);
-        permission.recalculatePermissibles();
-        perms.put(world, permission);
     }
 
     /**

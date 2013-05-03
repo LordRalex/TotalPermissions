@@ -58,10 +58,11 @@ public class TPListener implements Listener {
             //"Forgive me for my sins"
             Player player = event.getPlayer();
             try {
-                Class cl = Class.forName("org.bukkit.craftbukkit." + plugin.getBukkitVersion() + ".entity.CraftHumanEntity");
-                Field field = cl.getDeclaredField("perm");
+                Class cl = Class.forName("org.bukkit.craftbukkit." + plugin.getBukkitVersion() + ".entity.CraftPlayer");
+                Field field = cl.getField("perm");
                 field.setAccessible(true);
-                field.set(player, new TPPermissibleBase(event.getPlayer(), user.getDebugState()));
+                TPPermissibleBase base = new TPPermissibleBase(event.getPlayer(), user.getDebugState());
+                field.set(player, base);
                 plugin.getLogger().info(plugin.getLangFile().getString("listener.tplistener.login.hooked", event.getPlayer().getName()));
             } catch (NoSuchFieldException ex) {
                 plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("listener.tplistener.login.error"), ex);

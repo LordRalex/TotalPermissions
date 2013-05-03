@@ -27,12 +27,12 @@ import org.bukkit.command.CommandSender;
 /**
  * @since 0.1
  * @author 1Rogue
- * @version 0.2
+ * @version 0.1
  */
 public class HelpCommand implements SubCommand {
 
     @Override
-    public boolean execute(CommandSender cs, String[] args) {
+    public void execute(CommandSender cs, String[] args) {
         if (args.length > 1 && args[1].equalsIgnoreCase("actions")) {
             if (args.length == 2) {
                 args = new String[]{"help", "actions", "1"};
@@ -41,7 +41,7 @@ public class HelpCommand implements SubCommand {
                 cs.sendMessage(getPage(page, actions));
                 cs.sendMessage("Use \"help\" without quotes after an action for help information");
             }
-            return true;
+            return;
         }
         if (args.length == 1) {
             args = new String[]{"help", "1"};
@@ -49,12 +49,16 @@ public class HelpCommand implements SubCommand {
         int page = this.getInt(args[1]);
         Map commands = TotalPermissions.getPlugin().getCommandHandler().getCommandList();
         cs.sendMessage(getPage(page, commands));
-        return true;
     }
 
     @Override
     public String getName() {
         return "help";
+    }
+
+    @Override
+    public String getPerm() {
+        return "totalpermissions.cmd.help";
     }
 
     public String[] getHelp() {

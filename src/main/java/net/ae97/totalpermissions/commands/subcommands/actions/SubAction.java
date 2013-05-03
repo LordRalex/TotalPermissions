@@ -30,14 +30,8 @@ public interface SubAction {
      * Executes the command. Only the args and sender are needed.
      *
      * @return Success of the command. False if an issue
-     * 
-     * @param sender The executor of the command
-     * @param type The top-level type being edited (e.g. group)
-     * @param target The relevant item being modified
-     * @param field The specific type of data being edited (e.g. permissions)
-     * @param item The new data value
      */
-    public abstract boolean execute(CommandSender sender, String type, String target, String field, String item);
+    public abstract boolean execute(CommandSender sender, String type, String target, String[] args);
 
     /**
      * Returns the action's name. Used for both info and the perm node.
@@ -47,6 +41,6 @@ public interface SubAction {
     public abstract String getName();
 
     public abstract String[] getHelp();
-    
+
     public abstract String[] supportedTypes();
 }

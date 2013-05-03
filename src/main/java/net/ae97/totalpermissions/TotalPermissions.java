@@ -56,6 +56,7 @@ public class TotalPermissions extends JavaPlugin {
     protected Cipher cipher;
     protected TotalPermissionsAPI apiKey;
     protected static boolean debug = false;
+    protected boolean loadingFailed = false;
 
     @Override
     public void onLoad() {
@@ -127,18 +128,24 @@ public class TotalPermissions extends JavaPlugin {
             apiKey = new TotalPermissionsAPI(this);
 
             getLogger().info("Initial preperations complete");
-            if (config.getBoolean("update-check")) {
-                Bukkit.getScheduler().runTaskLater(this, new UpdateRunnable(this), 1);
-            }
+            throw new org.bukkit.plugin.InvalidPluginException();
         } catch (Exception e) {
             getLogger().log(Level.SEVERE, this.getLangFile().getString("main.error", getName(), this.getDescription().getVersion()), e);
-            this.getPluginLoader().disablePlugin(this);
+            loadingFailed = true;
         }
     }
 
     @Override
     public void onEnable() {
         try {
+            if (loadingFailed) {
+                getLogger().log(Level.SEVERE, "There were issues with loading, not enabling plugin");
+                Bukkit.getPluginManager().disablePlugin(this);
+                return;
+            }
+            if (config.getBoolean("update-check")) {
+                Bukkit.getScheduler().runTaskLater(this, new UpdateRunnable(this), 1);
+            }
             getLogger().config(this.getLangFile().getString("main.create.perms"));
             manager = new PermissionManager(this);
             manager.load();
@@ -159,7 +166,7 @@ public class TotalPermissions extends JavaPlugin {
             } else {
                 getLogger().log(Level.SEVERE, this.getLangFile().getString("main.error", getName(), this.getDescription().getVersion()), e);
             }
-            this.getPluginLoader().disablePlugin(this);
+            Bukkit.getPluginManager().disablePlugin(this);
         }
     }
 

@@ -18,18 +18,20 @@ package net.ae97.totalpermissions.reflection;
 
 import net.ae97.totalpermissions.TotalPermissions;
 import java.lang.reflect.Field;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.PermissibleBase;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.Plugin;
 
 /**
  * @author Lord_Ralex
- * @version 0.1
+ * @version 0.2
  * @since 0.1
  */
 public class TPPermissibleBase extends PermissibleBase {
@@ -46,8 +48,8 @@ public class TPPermissibleBase extends PermissibleBase {
         useReflectionPerm = TotalPermissions.getPlugin().getConfiguration().getBoolean("reflection.starperm");
         Object obj = null;
         try {
-            Class cl = Class.forName("org.bukkit.craftbukkit." + TotalPermissions.getPlugin().getBukkitVersion() + ".entity.CraftHumanEntity");
-            Field field = cl.getDeclaredField("perm");
+            Class cl = Class.forName("org.bukkit.craftbukkit." + TotalPermissions.getPlugin().getBukkitVersion() + ".entity.CraftPlayer");
+            Field field = cl.getField("perm");
             field.setAccessible(true);
             obj = field.get(parent);
         } catch (NoSuchFieldException ex) {
@@ -106,5 +108,81 @@ public class TPPermissibleBase extends PermissibleBase {
     @Override
     public PermissionAttachment addAttachment(Plugin plugin) {
         return initialParent.addAttachment(plugin);
+    }
+
+    @Override
+    public PermissionAttachment addAttachment(Plugin plugin, int ticks) {
+        return initialParent.addAttachment(plugin, ticks);
+    }
+
+    @Override
+    public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value) {
+        return initialParent.addAttachment(plugin, name, value);
+    }
+
+    @Override
+    public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value, int ticks) {
+        return initialParent.addAttachment(plugin, name, value, ticks);
+    }
+
+    @Override
+    public synchronized void clearPermissions() {
+        initialParent.clearPermissions();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return initialParent.equals(obj);
+    }
+
+    @Override
+    public Set<PermissionAttachmentInfo> getEffectivePermissions() {
+        return initialParent.getEffectivePermissions();
+    }
+
+    public PermissibleBase getInitialParent() {
+        return initialParent;
+    }
+
+    public CommandSender getParent() {
+        return parent;
+    }
+
+    @Override
+    public int hashCode() {
+        return initialParent.hashCode();
+    }
+
+    public boolean isDebug() {
+        return debug;
+    }
+
+    @Override
+    public boolean isOp() {
+        return initialParent.isOp();
+    }
+
+    public boolean isUseReflectionPerm() {
+        return useReflectionPerm;
+    }
+
+    @Override
+    public void recalculatePermissions() {
+        initialParent.recalculatePermissions();
+    }
+
+    @Override
+    public void removeAttachment(PermissionAttachment attachment) {
+        initialParent.removeAttachment(attachment);
+    }
+
+    @Override
+    public void setOp(boolean value) {
+        initialParent.setOp(value);
+    }
+
+    @Override
+    public String toString() {
+        return initialParent.toString();
     }
 }

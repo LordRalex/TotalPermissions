@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import net.ae97.totalpermissions.permission.PermissionOp;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
@@ -51,6 +52,7 @@ public final class PermissionManager {
     protected PermissionConsole console;
     protected PermissionRcon remote;
     protected final TotalPermissions plugin;
+    protected PermissionOp op;
 
     public PermissionManager(TotalPermissions p) {
         plugin = p;
@@ -75,6 +77,7 @@ public final class PermissionManager {
         }
         console = new PermissionConsole();
         remote = new PermissionRcon();
+        op = new PermissionOp();
         permAttMap.put("console", console.setPerms(Bukkit.getConsoleSender(), null, null));
     }
 
@@ -113,6 +116,17 @@ public final class PermissionManager {
      */
     public PermissionRcon getRcon() {
         return remote;
+    }
+
+    /**
+     * Gets the {@link PermissionOp}. This has the Op's perms
+     *
+     * @return The {@link PermissionOp} loaded
+     *
+     * @since 0.2
+     */
+    public PermissionOp getOP() {
+        return op;
     }
 
     /**
@@ -183,7 +197,7 @@ public final class PermissionManager {
     public String[] getGroups() {
         String[] group;
         synchronized (groups) {
-            group = groups.keySet().toArray(new String[groups.size() - 1]);
+            group = groups.keySet().toArray(new String[groups.size()]);
             if (group == null) {
                 group = new String[]{"default"};
             }
@@ -374,7 +388,7 @@ public final class PermissionManager {
         for (String org : permissions.keySet()) {
             Map<String, Permission> map = permissions.get(org);
             if (map != null) {
-                for (String name : map.keySet()) {
+                for (String name : map.keySet().toArray(new String[0])) {
                     Permission perm = map.get(name);
                     if (perm != null) {
                         Bukkit.getPluginManager().removePermission(perm);

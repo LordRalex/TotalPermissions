@@ -16,13 +16,18 @@
  */
 package net.ae97.totalpermissions.util;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 
 /**
  * @author Lord_Ralex
- * @version 1.0
+ * @version 0.1
+ * @since 0.1
  */
 public class Formatter {
+
+    private static final String BAR = "------------------------------------------------------------";
+    private static final char BAR_CHAR = '-';
 
     /**
      * Formats a title bar. The text will be in the center surrounded by "-"
@@ -35,10 +40,7 @@ public class Formatter {
      * @since 0.1
      */
     public static String formatTitle(String title, ChatColor barcolor, ChatColor titlecolor) {
-        String line = barcolor + "------------------------------------------------------------";
-        int pivot = line.length() / 2;
-        String center = (barcolor + "[ ") + (titlecolor + title) + (barcolor + " ]");
-        return line.substring(0, pivot - center.length() / 2) + center + line.substring(0, pivot - center.length() / 2);
+        return StringUtils.center("[" + title + "]", BAR.length(), BAR_CHAR);
     }
 
     /**
@@ -50,7 +52,7 @@ public class Formatter {
      * @since 0.1
      */
     public static String formatFooter(ChatColor color) {
-        return (color + "------------------------------------------------------------");
+        return (color + BAR);
     }
 
     /**
