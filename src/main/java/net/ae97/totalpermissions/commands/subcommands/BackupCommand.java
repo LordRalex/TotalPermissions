@@ -23,22 +23,19 @@ import org.bukkit.command.CommandSender;
 /**
  * @since 0.1
  * @author Lord_Ralex
- * @version 0.1
+ * @version 0.2
  */
 public class BackupCommand implements SubCommand {
 
-    public void execute(CommandSender sender, String[] args) {
+    public boolean execute(CommandSender sender, String[] args) {
         FileUpdater update = new FileUpdater(TotalPermissions.getPlugin());
         update.backup(true);
         update.runUpdate();
+        return true;
     }
 
     public String getName() {
         return "backup";
-    }
-
-    public String getPerm() {
-        return "totalpermissions.cmd.backup";
     }
 
     public String[] getHelp() {

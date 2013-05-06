@@ -17,8 +17,9 @@
 package net.ae97.totalpermissions.permission;
 
 /**
- * @version 1.0
- * @author Laptop
+ * @since 0.2
+ * @author Lord_Ralex
+ * @version 0.2
  */
 public enum PermissionType {
 

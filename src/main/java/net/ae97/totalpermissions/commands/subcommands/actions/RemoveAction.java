@@ -20,13 +20,15 @@ import org.bukkit.command.CommandSender;
 
 /**
  *
- * @since @author 1Rogue
- * @version
+ * @since 0.2
+ * @author 1Rogue
+ * @version 0.2
  */
 public class RemoveAction implements SubAction {
 
-    public boolean execute(CommandSender sender, String type, String target, String[] args) {
-        // Remove perms
+    public boolean execute(CommandSender sender, String type, String target, String field, String item) {
+        // Removes from a certain field (or deletes the prefix/suffix)
+        // Don't forget to catch for last group being removed, set default
         return true;
     }
 
@@ -36,15 +38,19 @@ public class RemoveAction implements SubAction {
 
     public String[] getHelp() {
         return new String[]{
-            "remove <permnode>",
-            "Removes a perm node from a user"
+            "remove <field> <value>",
+            "Removes a value from a field"
         };
     }
 
     public String[] supportedTypes() {
-        return new String[]{
+        return new String[] {
+            "permission",
+            "inheritance",
+            "command",
             "group",
-            "user"
+            "prefix",
+            "suffix"
         };
     }
 }
