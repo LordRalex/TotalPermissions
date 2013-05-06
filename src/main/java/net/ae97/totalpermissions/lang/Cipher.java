@@ -41,16 +41,31 @@ public class Cipher {
     public Cipher(String language) {
         language += ".yml";
         Plugin plugin = TotalPermissions.getPlugin();
+        //load file from github in preps for future use
+        FileConfiguration github;
+        try {
+            github = getFromGithub(language);
+        } catch (IOException e) {
+            plugin.getLogger().log(Level.SEVERE, "Fatal error occured while retrieving lang files", e);
+            github = null;
+        }
         try {
             //first see if there is a lang file
             FileConfiguration file = this.getFromFolder(plugin, language);
             if (file != null) {
                 int version = file.getInt("version", 0);
-            }
-            if (file == null) {
+                int gitVersion = version;
+                if (github != null) {
+                    gitVersion = github.getInt("version", version);
+                }
+                if (gitVersion > version) {
+                    plugin.getLogger().warning("Your language file is outdated, getting new file");
+                    file = github;
+                }
+            } else {
                 file = this.getFromJar(plugin, language);
                 if (file == null) {
-                    file = this.getFromGithub(language);
+                    file = github;
                     if (file == null) {
                         throw new InvalidConfigurationException("The langauage " + language + " is unsupported");
                     }
@@ -61,7 +76,7 @@ public class Cipher {
             //and if we just completely crash and burn, then use en_US
             plugin.getLogger().log(Level.SEVERE, "Fatal error occured while loading lang files", e);
             plugin.getLogger().log(Level.SEVERE, "Defaulting to english (en_US)");
-            this.setLangFile(YamlConfiguration.loadConfiguration(plugin.getResource("en_US.yml")));
+            setLangFile(YamlConfiguration.loadConfiguration(plugin.getResource("en_US.yml")));
         }
         try {
             langFile.save(new File(new File(plugin.getDataFolder(), "lang"), language));
