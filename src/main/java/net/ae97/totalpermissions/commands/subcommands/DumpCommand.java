@@ -35,6 +35,8 @@ import org.bukkit.plugin.Plugin;
  */
 public class DumpCommand implements SubCommand {
 
+    private final int NUM_PAGE = 8;
+
     public boolean execute(CommandSender sender, String[] args) {
         String[] params = new String[2];
         if (args.length == 1) {
@@ -57,11 +59,62 @@ public class DumpCommand implements SubCommand {
         if (params[0].equalsIgnoreCase("-plugin")) {
             Plugin pl = Bukkit.getPluginManager().getPlugin(params[1]);
             List<Permission> perms = pl.getDescription().getPermissions();
-            //print perms to user, might use pastebin api
+            String[][] permPages = new String[perms.size() % NUM_PAGE][NUM_PAGE];
+            int index = 0;
+            for (int i = 0; i < perms.size(); i++) {
+                if (i % NUM_PAGE == 0 && i != 0) {
+                    index++;
+                }
+                permPages[index][i % NUM_PAGE] = "- " + perms.get(i).getName() + ": " + perms.get(i).getDefault().toString();
+            }
+            int page = 0;
+            if (args.length == 3) {
+                try {
+                    page = Integer.getInteger(args[2]);
+                } catch (NumberFormatException e) {
+                    page = 0;
+                }
+            }
+            if (page >= permPages.length) {
+                page = 0;
+            }
+            sender.sendMessage(ChatColor.GREEN + "Perms for plugin: " + pl.getName());
+            sender.sendMessage(ChatColor.GREEN + "Page " + (page + 1) + "/" + (permPages.length + 1));
+            for (int i = 0; i < permPages[page].length; i++) {
+                if (permPages[page][i] != null) {
+                    sender.sendMessage(permPages[page][i]);
+                }
+            }
         } else if (params[0].equalsIgnoreCase("-player")) {
             Player player = Bukkit.getPlayer(params[1]);
-            Set<PermissionAttachmentInfo> perms = player.getEffectivePermissions();
-            //print perms to user, might use pastebin api
+            Set<PermissionAttachmentInfo> tempPerms = player.getEffectivePermissions();
+            PermissionAttachmentInfo[] perms = tempPerms.toArray(new PermissionAttachmentInfo[tempPerms.size()]);
+            String[][] permPages = new String[perms.length % NUM_PAGE][NUM_PAGE];
+            int index = 0;
+            for (int i = 0; i < perms.length; i++) {
+                if (i % NUM_PAGE == 0 && i != 0) {
+                    index++;
+                }
+                permPages[index][i % NUM_PAGE] = "- " + perms[0].getPermission() + ": " + perms[0].getValue();
+            }
+            int page = 0;
+            if (args.length == 3) {
+                try {
+                    page = Integer.getInteger(args[2]);
+                } catch (NumberFormatException e) {
+                    page = 0;
+                }
+            }
+            if (page >= permPages.length) {
+                page = 0;
+            }
+            sender.sendMessage(ChatColor.GREEN + "Perms for player: " + player.getName());
+            sender.sendMessage(ChatColor.GREEN + "Page " + (page + 1) + "/" + (permPages.length + 1));
+            for (int i = 0; i < permPages[page].length; i++) {
+                if (permPages[page][i] != null) {
+                    sender.sendMessage(permPages[page][i]);
+                }
+            }
         } else if (params[0].equalsIgnoreCase("-command")) {
             Command command = Bukkit.getPluginCommand(params[0]);
             sender.sendMessage(ChatColor.GREEN + "Permission for " + command.getName() + ": " + command.getPermission());
@@ -70,14 +123,14 @@ public class DumpCommand implements SubCommand {
         }
         return true;
     }
-    
+
     public String getName() {
         return "dump";
     }
 
     public String[] getHelp() {
         return new String[]{
-            "/ttp backup [-command/-player/-plugin] [name]",
+            "/ttp backup [-command/-player/-plugin] [name] (page)",
             TotalPermissions.getPlugin().getLangFile().getString("command.dump.help")};
     }
 }
