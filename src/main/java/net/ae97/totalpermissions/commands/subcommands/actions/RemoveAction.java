@@ -16,6 +16,8 @@
  */
 package net.ae97.totalpermissions.commands.subcommands.actions;
 
+import net.ae97.totalpermissions.permission.PermissionBase;
+import net.ae97.totalpermissions.permission.PermissionType;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -26,7 +28,27 @@ import org.bukkit.command.CommandSender;
  */
 public class RemoveAction implements SubAction {
 
-    public boolean execute(CommandSender sender, String type, String target, String field, String item) {
+    public boolean execute(CommandSender sender, String aType, String target, String field, String item) {
+        PermissionType type = PermissionType.getType(aType);
+        PermissionBase tar = PermissionType.getTarget(type, target);
+        if (field.equalsIgnoreCase("permission")) {
+            // Not possible
+        }
+        else if (field.equalsIgnoreCase("inheritance")) {
+            // Not possible
+        }
+        else if (field.equalsIgnoreCase("command")) {
+            // Not possible
+        }
+        else if (field.equalsIgnoreCase("group")) {
+            // Not possible
+        }
+        else if (field.equalsIgnoreCase("prefix")) {
+            // Not possible
+        }
+        else if (field.equalsIgnoreCase("suffix")) {
+            // Not possible
+        }
         // Removes from a certain field (or deletes the prefix/suffix)
         // Don't forget to catch for last group being removed, set default
         return true;

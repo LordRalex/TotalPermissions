@@ -16,6 +16,12 @@
  */
 package net.ae97.totalpermissions.commands.subcommands.actions;
 
+import java.util.Map;
+import net.ae97.totalpermissions.TotalPermissions;
+import net.ae97.totalpermissions.permission.PermissionBase;
+import net.ae97.totalpermissions.permission.PermissionGroup;
+import net.ae97.totalpermissions.permission.PermissionType;
+import net.ae97.totalpermissions.permission.PermissionUser;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -26,7 +32,34 @@ import org.bukkit.command.CommandSender;
  */
 public class ListAction implements SubAction {
 
-    public boolean execute(CommandSender sender, String type, String target, String field, String item) {
+    public boolean execute(CommandSender sender, String aType, String target, String field, String item) {
+        PermissionType type = PermissionType.getType(aType);
+        PermissionBase tar = PermissionType.getTarget(type, target);
+        if (field.equalsIgnoreCase("permission")) {
+            sender.sendMessage("Permissions for " + target + ":");
+            sender.sendMessage(this.permMapToString(tar.getPerms()));
+        }
+        else if (field.equalsIgnoreCase("inheritance")) {
+            // Not possible
+        }
+        else if (field.equalsIgnoreCase("command")) {
+            // Not possible
+        }
+        else if (field.equalsIgnoreCase("group")) {
+            if (tar instanceof PermissionUser) {
+                PermissionUser newtar = (PermissionUser)tar;
+                // Not possible
+            }
+        }
+        else if (field.equalsIgnoreCase("default")) {
+            sender.sendMessage("Default group: " + TotalPermissions.getPlugin().getManager().getDefaultGroup());
+        }
+        else if (field.equalsIgnoreCase("prefix")) {
+            sender.sendMessage("Prefix: " + tar.getOption("prefix"));
+        }
+        else if (field.equalsIgnoreCase("suffix")) {
+            sender.sendMessage("Suffix: " + tar.getOption("suffix"));
+        }
         //Self explanatory
         return true;
     }
@@ -48,8 +81,21 @@ public class ListAction implements SubAction {
             "inheritance",
             "command",
             "group",
+            "default",
             "prefix",
             "suffix"
         };
+    }
+    
+    private String permMapToString(Map<String, Boolean> map) {
+        StringBuilder sb = new StringBuilder();
+        String[] keys = map.keySet().toArray(new String[map.size()]);
+        for (String temp : keys) {
+            if (!map.get(temp)) {
+                sb.append('-');
+            }
+            sb.append(temp).append('\n');
+        }
+        return sb.toString();
     }
 }

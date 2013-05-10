@@ -16,18 +16,34 @@
  */
 package net.ae97.totalpermissions.commands.subcommands.actions;
 
+import net.ae97.totalpermissions.permission.PermissionBase;
+import net.ae97.totalpermissions.permission.PermissionGroup;
+import net.ae97.totalpermissions.permission.PermissionType;
 import org.bukkit.command.CommandSender;
 
 /**
  *
- * @since
+ * @since 0.2
  * @author 1Rogue
- * @version
+ * @version 0.2
  */
 public class SetAction implements SubAction {
 
-    public boolean execute(CommandSender sender, String type, String target, String field, String item) {
-        //set the value
+    public boolean execute(CommandSender sender, String aType, String target, String field, String item) {
+        PermissionType type = PermissionType.getType(aType);
+        PermissionBase tar = PermissionType.getTarget(type, target);
+        if (field.equalsIgnoreCase("default")) {
+            if (tar instanceof PermissionGroup) {
+                PermissionGroup newtar = (PermissionGroup)tar;
+                // Not possible
+            }
+        }
+        else if (field.equalsIgnoreCase("prefix")) {
+            // Not possible
+        }
+        else if (field.equalsIgnoreCase("suffix")) {
+            // Not possible
+        }
         //make sure default sets the other group false
         return true;
     }

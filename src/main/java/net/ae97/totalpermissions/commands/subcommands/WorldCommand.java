@@ -33,9 +33,6 @@ public class WorldCommand implements SubCommand {
         if (args.length > 2) { // If there is an action command
             TotalPermissions.getPlugin().getCommandHandler().getActionHandler().onAction(sender, args, fields());
             return true;
-        } else if (args.length == 1) {
-            //List all users
-            return true;
         }
         return false;
     }

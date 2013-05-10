@@ -16,6 +16,9 @@
  */
 package net.ae97.totalpermissions.commands.subcommands.actions;
 
+import net.ae97.totalpermissions.permission.PermissionBase;
+import net.ae97.totalpermissions.permission.PermissionType;
+import net.ae97.totalpermissions.permission.PermissionUser;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -26,7 +29,26 @@ import org.bukkit.command.CommandSender;
  */
 public class CheckAction implements SubAction {
 
-    public boolean execute(CommandSender sender, String type, String target, String field, String item) {
+    public boolean execute(CommandSender sender, String aType, String target, String field, String item) {
+        PermissionType type = PermissionType.getType(aType);
+        PermissionBase tar = PermissionType.getTarget(type, target);
+        if (field.equalsIgnoreCase("permission")) {
+            if (tar.has(item)) {
+                sender.sendMessage(target + " has '" + item + "'!");
+            }
+        }
+        else if (field.equalsIgnoreCase("inheritance")) {
+            // Not possible
+        }
+        else if (field.equalsIgnoreCase("command")) {
+            // Not possible
+        }
+        else if (field.equalsIgnoreCase("group")) {
+            if (tar instanceof PermissionUser) {
+                PermissionUser newtar = (PermissionUser)tar;
+                // Not possible
+            }
+        }
         //Check if the provided area has the right value within it. Not for listing
         return false;
     }
@@ -48,9 +70,6 @@ public class CheckAction implements SubAction {
             "inheritance",
             "command",
             "group",
-            "default",
-            "prefix",
-            "suffix"
         };
     }
 }
