@@ -16,6 +16,8 @@
  */
 package net.ae97.totalpermissions.permission;
 
+import net.ae97.totalpermissions.TotalPermissions;
+
 /**
  * @since 0.2
  * @author Lord_Ralex
@@ -44,5 +46,29 @@ public enum PermissionType {
             }
         }
         return null;
+    }
+    
+    public static PermissionBase getTarget(PermissionType type, String name) {
+        TotalPermissions plugin = TotalPermissions.getPlugin();
+        switch (type) {
+            case GROUP:
+                return plugin.getManager().getGroup(name);
+            case USER:
+                return plugin.getManager().getUser(name);
+            case SPECIAL:
+                if (name.equalsIgnoreCase("console")) {
+                    return plugin.getManager().getConsole();
+                }
+                else if (name.equalsIgnoreCase("op")) {
+                    return plugin.getManager().getOP();
+                }
+                else if (name.equalsIgnoreCase("rcon")) {
+                    return plugin.getManager().getRcon();
+                }
+            case WORLD:
+                // need to add setting worlds for inheritance purposes.
+            default:
+                return null;
+        }
     }
 }
