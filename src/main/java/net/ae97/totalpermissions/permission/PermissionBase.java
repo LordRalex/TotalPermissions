@@ -18,13 +18,11 @@ package net.ae97.totalpermissions.permission;
 
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.util.PermissionUtility;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
@@ -50,15 +48,11 @@ public abstract class PermissionBase {
 
     public PermissionBase(String aKey, String aName) {
         name = aName;
-
         if (TotalPermissions.isDebugMode()) {
             TotalPermissions.getPlugin().getLogger().info("Adding perms for " + aKey + "." + name);
         }
-
         section = TotalPermissions.getPlugin().getPermFile().getConfigurationSection(aKey + "." + name);
-
         Map<String, Boolean> permMap = new HashMap<String, Boolean>();
-
         if (section != null) {
             if (section.isList("permissions")) {
                 List<String> permList = section.getStringList("permissions");
@@ -102,7 +96,6 @@ public abstract class PermissionBase {
                     permMap.put(key, section.getConfigurationSection("permissions").getBoolean(key, true));
                 }
             }
-
             List<String> inherList = section.getStringList("inheritance");
             if (inherList != null) {
                 for (String tempName : inherList) {
@@ -119,7 +112,6 @@ public abstract class PermissionBase {
                     }
                 }
             }
-
             List<String> groupList = section.getStringList("groups");
             if (groupList != null) {
                 for (String tempName : groupList) {
@@ -136,7 +128,6 @@ public abstract class PermissionBase {
                     }
                 }
             }
-
             List<String> groupList2 = section.getStringList("group");
             if (groupList2 != null) {
                 for (String tempName : groupList2) {
@@ -153,7 +144,6 @@ public abstract class PermissionBase {
                     }
                 }
             }
-
             ConfigurationSection optionSec = section.getConfigurationSection("options");
             if (optionSec != null) {
                 Set<String> optionsList = optionSec.getKeys(true);
@@ -161,7 +151,6 @@ public abstract class PermissionBase {
                     options.put(option, optionSec.get(option));
                 }
             }
-
             ConfigurationSection worldSec = section.getConfigurationSection("worlds");
             if (worldSec != null) {
                 Set<String> worldList = worldSec.getKeys(false);
@@ -173,9 +162,6 @@ public abstract class PermissionBase {
                     }
                 }
             }
-
-
-            //handles the loading of the commands aspect of the plugin
             List<String> commandList = section.getStringList("commands");
             if (commandList != null) {
                 for (String command : commandList) {
@@ -201,7 +187,6 @@ public abstract class PermissionBase {
                     if (!permMap.containsKey(p)) {
                         permMap.put(p, allow);
                     }
-                    //addPerm(cmd.getPermission());
                 }
             }
         }
@@ -270,9 +255,9 @@ public abstract class PermissionBase {
     }
 
     /**
-     * Get the name of this group.
+     * Get the name of this permission holder.
      *
-     * @return Name of group
+     * @return Name of permission holder
      *
      * @since 1.0
      */
@@ -280,39 +265,17 @@ public abstract class PermissionBase {
         return name;
     }
 
-    /**
-     * Compares the name of the parameter with that of the group. If they match,
-     * this will return true.
-     *
-     * @param base Name of another group
-     * @return True if names match, false otherwise
-     *
-     * @since 1.0
-     */
-    public boolean equals(PermissionBase base) {
-        if (base.getName().equalsIgnoreCase(name)) {
-            return true;
-        }
-        return false;
-    }
-
     @Override
     public boolean equals(Object val) {
         if (val instanceof PermissionBase) {
-            return equals((PermissionBase) val);
+            if (((PermissionBase) val).getName().equalsIgnoreCase(name)) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
             return super.equals(val);
         }
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 79 * hash + (this.name != null ? this.name.hashCode() : 0);
-        hash = 79 * hash + (this.options != null ? this.options.hashCode() : 0);
-        hash = 79 * hash + (this.section != null ? this.section.hashCode() : 0);
-        hash = 79 * hash + (this.perms != null ? this.perms.hashCode() : 0);
-        return hash;
     }
 
     /**
@@ -439,5 +402,9 @@ public abstract class PermissionBase {
 
     public PermissionAttachment setPerms(CommandSender cs) {
         return setPerms(cs, null, null);
+    }
+
+    public Map<String, Map<String, Boolean>> getAllPerms() {
+        return null;
     }
 }
