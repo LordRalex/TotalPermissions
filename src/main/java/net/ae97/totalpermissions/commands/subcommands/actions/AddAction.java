@@ -16,6 +16,8 @@
  */
 package net.ae97.totalpermissions.commands.subcommands.actions;
 
+import net.ae97.totalpermissions.permission.PermissionBase;
+import net.ae97.totalpermissions.permission.PermissionType;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -26,9 +28,29 @@ import org.bukkit.command.CommandSender;
  */
 public class AddAction implements SubAction {
 
-    public boolean execute(CommandSender sender, String type, String target, String field, String item) {
-        // self explanatory
-        return true;
+    public boolean execute(CommandSender sender, String aType, String target, String field, String item, String world) {
+        PermissionType type = PermissionType.getType(aType);
+        PermissionBase tar = PermissionType.getTarget(type, target);
+        if (field.equalsIgnoreCase("permission")) {
+            tar.addPerm(item, world);
+            sender.sendMessage("Permission '" + item + "' added for " + target + "!");
+        }
+        else if (field.equalsIgnoreCase("inheritance")) {
+            tar.addInheritance(item, world);
+            sender.sendMessage("Inheritance '" + item + "' added for " + target + "!");
+            return true;
+        }
+        else if (field.equalsIgnoreCase("command")) {
+            tar.addCommand(item, world);
+            sender.sendMessage("Command '" + item + "' added for " + target + "!");
+            return true;
+        }
+        else if (field.equalsIgnoreCase("group")) {
+            tar.addGroup(item, world);
+            sender.sendMessage("Group '" + item + "' added for " + target + "!");
+            return true;
+        }
+        return false;
     }
 
     public String getName() {
