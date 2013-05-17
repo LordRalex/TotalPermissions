@@ -58,6 +58,7 @@ public class SpecialCommand implements SubCommand {
             "inheritance",
             "commands",
             "options",
+            "group"
         });
     }
 }

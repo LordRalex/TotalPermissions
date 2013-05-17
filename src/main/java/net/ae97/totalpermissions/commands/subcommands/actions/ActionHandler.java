@@ -50,12 +50,17 @@ public class ActionHandler {
     public boolean onAction(CommandSender sender, String[] args, List<String> fields) {
         String type = args[0].toLowerCase();
         String target = args[1];
+        String world = null;
         String[] newArgs = ArrayShift.getEndOfStringArray(args, 2);
 
         SubAction executor = actions.get(args[2].toLowerCase());
         if (executor == null) {
             sender.sendMessage("No action found, use /ttp help actions for an action list");
             return false;
+        }
+        
+        if (newArgs.length == 4) {
+            world = newArgs[3];
         }
         
         if (newArgs.length < 3) {
@@ -72,7 +77,7 @@ public class ActionHandler {
 
         if (sender.hasPermission("totalpermissions." + type + "." + executor.getName())) {
             if (this.isSupported(newArgs[1], fields)) {
-                boolean begin = executor.execute(sender, type, target, newArgs[1], newArgs[2]);
+                boolean begin = executor.execute(sender, type, target, newArgs[1], newArgs[2], world);
                 if (!begin) {
                     sender.sendMessage(ChatColor.RED + "Invalid use of " + newArgs[0]);
                     StringBuilder sb = new StringBuilder();
