@@ -255,6 +255,17 @@ public abstract class PermissionBase {
     }
 
     /**
+     * Returns the options for this PermissionHolder.
+     *
+     * @return Map of the options for this holder
+     * @since 0.2
+     *
+     */
+    public Map<String, Object> getOptions() {
+        return options;
+    }
+
+    /**
      * Get the name of this permission holder.
      *
      * @return Name of permission holder
