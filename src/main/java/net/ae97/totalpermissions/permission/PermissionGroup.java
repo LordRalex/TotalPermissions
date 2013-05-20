@@ -57,6 +57,5 @@ public class PermissionGroup extends PermissionBase {
     }
 
     public void setAsDefaultGroup() {
-        throw new UnsupportedOperationException("Not supported yet."); //Sets the current PermissionGroup as the default | Don't forget to remove the old default
     }
 }
