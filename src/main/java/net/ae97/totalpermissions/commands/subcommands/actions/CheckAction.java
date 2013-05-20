@@ -29,27 +29,51 @@ import org.bukkit.command.CommandSender;
  */
 public class CheckAction implements SubAction {
 
-    public boolean execute(CommandSender sender, String aType, String target, String field, String item) {
+    public boolean execute(CommandSender sender, String aType, String target, String field, String item, String world) {
         PermissionType type = PermissionType.getType(aType);
         PermissionBase tar = PermissionType.getTarget(type, target);
         if (field.equalsIgnoreCase("permission")) {
-            if (tar.has(item)) {
+            if (tar.has(item, world)) {
                 sender.sendMessage(target + " has '" + item + "'!");
             }
+            else {
+                sender.sendMessage(target + " does NOT have '" + item + "'!");
+            }
+            return true;
         }
         else if (field.equalsIgnoreCase("inheritance")) {
-            // Not possible
+            if (tar.hasInheritance(item, world)) {
+                sender.sendMessage(target + " inherits '" + item + "'!");
+            }
+            else {
+                sender.sendMessage(target + " does NOT inherit '" + item + "'!");
+            }
+            return true;
         }
         else if (field.equalsIgnoreCase("command")) {
-            // Not possible
+            if (tar.hasCommand(item, world)) {
+                sender.sendMessage(target + " has '" + item + "'!");
+            }
+            else {
+                sender.sendMessage(target + " does NOT have '" + item + "'!");
+            }
+            return true;
         }
         else if (field.equalsIgnoreCase("group")) {
             if (tar instanceof PermissionUser) {
                 PermissionUser newtar = (PermissionUser)tar;
-                // Not possible
+                if (newtar.inherits(item, world)) {
+                    sender.sendMessage(target + " is in group '" + item + "'!");
+                }
+                else {
+                    sender.sendMessage(target + " is NOT in group '" + item + "'!");
+                }
+                return true;
             }
+            return false;
         }
         //Check if the provided area has the right value within it. Not for listing
+            //Wut, I don't even know what I wrote here.
         return false;
     }
 

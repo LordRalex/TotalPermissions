@@ -56,4 +56,27 @@ public final class PermissionUser extends PermissionBase {
     public void changeWorld(Player cs, String name, PermissionAttachment att) {
         setPerms((CommandSender) cs, att, name);
     }
+
+    /**
+     * Checks if the PermissionUser inherits from the specific group.
+     * 
+     * @param group The group to check
+     * @param world The world to check with, null if global
+     * 
+     * @return Whether or not the user is in the group
+     */
+    public boolean inherits(String group, String world) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    /**
+     * Gets all the groups a user is in.
+     * 
+     * @param world The world to check with, null if global
+     * 
+     * @return All the groups the user is in
+     */
+    public Iterable<String> getGroups(String world) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

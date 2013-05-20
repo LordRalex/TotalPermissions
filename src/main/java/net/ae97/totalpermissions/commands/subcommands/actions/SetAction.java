@@ -29,23 +29,24 @@ import org.bukkit.command.CommandSender;
  */
 public class SetAction implements SubAction {
 
-    public boolean execute(CommandSender sender, String aType, String target, String field, String item) {
+    public boolean execute(CommandSender sender, String aType, String target, String field, String item, String world) {
         PermissionType type = PermissionType.getType(aType);
         PermissionBase tar = PermissionType.getTarget(type, target);
         if (field.equalsIgnoreCase("default")) {
             if (tar instanceof PermissionGroup) {
                 PermissionGroup newtar = (PermissionGroup)tar;
-                // Not possible
+                newtar.setAsDefaultGroup();
             }
         }
         else if (field.equalsIgnoreCase("prefix")) {
-            // Not possible
+            tar.setOption("prefix", item, world);
+            return true;
         }
         else if (field.equalsIgnoreCase("suffix")) {
-            // Not possible
+            tar.setOption("suffix", item, world);
+            return true;
         }
-        //make sure default sets the other group false
-        return true;
+        return false;
     }
 
     public String getName() {

@@ -418,4 +418,56 @@ public abstract class PermissionBase {
     public Map<String, Map<String, Boolean>> getAllPerms() {
         return null;
     }
+    
+    public void addInheritance(String group, String world) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void addCommand(String item, String world) {
+        throw new UnsupportedOperationException("Not supported yet."); //Could probably just snatch the stuff from the loader
+    }
+    
+    public void addGroup(String item, String world) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public boolean hasInheritance(String item, String world) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public boolean hasCommand(String item, String world) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Iterable<String> getCommands(String world) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Iterable<String> getInheritances(String world) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void remPerm(String perm, String world) {
+        throw new UnsupportedOperationException("Not supported yet."); //Check if it begins with '-'
+    }
+
+    public void remInheritance(String inher, String world) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void remCommand(String cmd, String world) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void remOption(String option, String world) {
+        throw new UnsupportedOperationException("Not supported yet."); // Example: PermissionsUser.remOption("prefix"); Needs at least prefix and suffix.
+    }
+
+    public void remGroup(String item, String world) {
+        throw new UnsupportedOperationException("Not supported yet."); //If last group is removed, set default group.
+    }
+
+    public void setOption(String option, String item, String world) {
+        throw new UnsupportedOperationException("Not supported yet."); // Similar to remOption, sets it. Item is the value to set
+    }
 }

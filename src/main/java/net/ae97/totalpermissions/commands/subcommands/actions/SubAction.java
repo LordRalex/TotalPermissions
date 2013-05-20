@@ -36,8 +36,9 @@ public interface SubAction {
      * @param target The relevant item being modified
      * @param field The specific type of data being edited (e.g. permissions)
      * @param item The new data value
+     * @param world The world to edit in, null if global.
      */
-    public abstract boolean execute(CommandSender sender, String aType, String target, String field, String item);
+    public abstract boolean execute(CommandSender sender, String aType, String target, String field, String item, String world);
 
     /**
      * Returns the action's name. Used for both info and the perm node.
