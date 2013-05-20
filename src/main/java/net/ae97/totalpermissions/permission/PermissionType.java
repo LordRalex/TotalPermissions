@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Laptop
+ * Copyright (C) 2013 AE97
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ public enum PermissionType {
         }
         return null;
     }
-    
+
     public static PermissionBase getTarget(PermissionType type, String name) {
         TotalPermissions plugin = TotalPermissions.getPlugin();
         switch (type) {
@@ -58,17 +58,20 @@ public enum PermissionType {
             case SPECIAL:
                 if (name.equalsIgnoreCase("console")) {
                     return plugin.getManager().getConsole();
-                }
-                else if (name.equalsIgnoreCase("op")) {
+                } else if (name.equalsIgnoreCase("op")) {
                     return plugin.getManager().getOP();
-                }
-                else if (name.equalsIgnoreCase("rcon")) {
+                } else if (name.equalsIgnoreCase("rcon")) {
                     return plugin.getManager().getRcon();
                 }
             case WORLD:
-                // need to add setting worlds for inheritance purposes.
+            // need to add setting worlds for inheritance purposes.
             default:
                 return null;
         }
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }
