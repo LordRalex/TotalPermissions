@@ -138,6 +138,8 @@ public class FileConverter {
                     for (String key : cfg.getKeys(true)) {
                         newOptions.set(key, cfg.get(key));
                     }
+                } else if (section.equalsIgnoreCase("default")) {
+                    newGroup.set("default", oldGroup.getBoolean("default", false));
                 } else {
                     Object old = oldGroup.get(section);
                     newGroup.set("options." + section, old);
