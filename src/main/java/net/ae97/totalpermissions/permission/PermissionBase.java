@@ -392,7 +392,7 @@ public abstract class PermissionBase {
             return false;
         }
         Boolean res = result.get(perm);
-        if (res == null) {
+        if (res == null && world != null) {
             return has(perm, null);
         } else {
             return res;
