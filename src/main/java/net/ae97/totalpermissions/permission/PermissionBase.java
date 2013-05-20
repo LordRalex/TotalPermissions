@@ -391,7 +391,12 @@ public abstract class PermissionBase {
         if (result.get(perm) == null) {
             return false;
         }
-        return result.get(perm);
+        Boolean res = result.get(perm);
+        if (res == null) {
+            return has(perm, null);
+        } else {
+            return res;
+        }
     }
 
     /**
