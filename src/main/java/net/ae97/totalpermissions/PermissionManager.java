@@ -16,6 +16,8 @@
  */
 package net.ae97.totalpermissions;
 
+import java.io.File;
+import java.io.IOException;
 import net.ae97.totalpermissions.permission.PermissionConsole;
 import net.ae97.totalpermissions.permission.PermissionGroup;
 import net.ae97.totalpermissions.permission.PermissionRcon;
@@ -25,7 +27,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import net.ae97.totalpermissions.permission.PermissionBase;
 import net.ae97.totalpermissions.permission.PermissionOp;
+import net.ae97.totalpermissions.permission.PermissionType;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
@@ -253,7 +257,7 @@ public final class PermissionManager {
         return false;
     }
 
-    public void addPerm(Player player, String perm, boolean allowance) {
+    public void addPerm(Player player, String world, String perm, boolean allowance) throws IOException {
         String name = player.getName().toLowerCase();
         synchronized (users) {
             PermissionUser user = users.get(name);
@@ -264,11 +268,15 @@ public final class PermissionManager {
             if (!allowance) {
                 perm = "-" + perm;
             }
-            user.addPerm(perm);
+            if (allowance) {
+                user.addPerm(world, perm);
+            } else {
+                user.remPerm(world, perm);
+            }
         }
     }
 
-    public synchronized void addPerm(OfflinePlayer player, String perm, boolean allowance) {
+    public synchronized void addPerm(OfflinePlayer player, String world, String perm, boolean allowance) throws IOException {
         String name = player.getName().toLowerCase();
 
         synchronized (users) {
@@ -277,14 +285,15 @@ public final class PermissionManager {
                 user = new PermissionUser(name);
                 users.put(name, user);
             }
-            if (!allowance) {
-                perm = "-" + perm;
+            if (allowance) {
+                user.addPerm(world, perm);
+            } else {
+                user.remPerm(world, perm);
             }
-            user.addPerm(perm);
         }
     }
 
-    public void addPermToGroup(String group, String perm, boolean allowance) {
+    public void addPermToGroup(String group, String world, String perm, boolean allowance) throws IOException {
         String name = group.toLowerCase();
 
         synchronized (groups) {
@@ -293,14 +302,15 @@ public final class PermissionManager {
                 gr = new PermissionGroup(name);
                 groups.put(name, gr);
             }
-            if (!allowance) {
-                perm = "-" + perm;
+            if (allowance) {
+                gr.addPerm(world, perm);
+            } else {
+                gr.remPerm(world, perm);
             }
-            gr.addPerm(perm);
         }
     }
 
-    public void addPermToUser(String user, String perm, boolean allowance) {
+    public void addPermToUser(String user, String world, String perm, boolean allowance) throws IOException {
         String name = user.toLowerCase();
 
         synchronized (users) {
@@ -309,10 +319,11 @@ public final class PermissionManager {
                 gr = new PermissionUser(name);
                 users.put(name, gr);
             }
-            if (!allowance) {
-                perm = "-" + perm;
+            if (allowance) {
+                gr.addPerm(perm, world);
+            } else {
+                gr.remPerm(perm, world);
             }
-            gr.addPerm(perm);
         }
     }
 
@@ -398,5 +409,12 @@ public final class PermissionManager {
             }
             permissions.remove(org);
         }
+    }
+
+    public void save(PermissionBase base) throws IOException {
+        FileConfiguration file = plugin.getPermFile();
+        PermissionType type = base.getType();
+        file.set(type + "." + base.getName(), base.getConfigSection());
+        file.save(new File(plugin.getDataFolder(), "permissions.yml"));
     }
 }

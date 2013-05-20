@@ -24,8 +24,8 @@ package net.ae97.totalpermissions.permission;
 public class PermissionConsole extends PermissionBase {
 
     public PermissionConsole() {
-        super("special", "console");
-        this.addPerm("bukkit.command.stop");
-        this.addPerm("bukkit.command.reload");
+        super(PermissionType.SPECIAL, "console");
+        this.addPermission("bukkit.command.stop");
+        this.addPermission("bukkit.command.reload");
     }
 }

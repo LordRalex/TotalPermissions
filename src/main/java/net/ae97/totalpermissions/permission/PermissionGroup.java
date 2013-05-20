@@ -33,7 +33,7 @@ public class PermissionGroup extends PermissionBase {
      * @since 1.0
      */
     public PermissionGroup(String name) {
-        super("groups", name);
+        super(PermissionType.GROUPS, name);
         if (name.equalsIgnoreCase("default")) {
             isDefault = true;
         }

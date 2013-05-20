@@ -16,8 +16,13 @@
  */
 package net.ae97.totalpermissions.commands.subcommands.actions;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.PermissionBase;
 import net.ae97.totalpermissions.permission.PermissionType;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -32,23 +37,44 @@ public class AddAction implements SubAction {
         PermissionType type = PermissionType.getType(aType);
         PermissionBase tar = PermissionType.getTarget(type, target);
         if (field.equalsIgnoreCase("permission")) {
-            tar.addPerm(item, world);
-            sender.sendMessage("Permission '" + item + "' added for " + target + "!");
-        }
-        else if (field.equalsIgnoreCase("inheritance")) {
-            tar.addInheritance(item, world);
-            sender.sendMessage("Inheritance '" + item + "' added for " + target + "!");
-            return true;
-        }
-        else if (field.equalsIgnoreCase("command")) {
-            tar.addCommand(item, world);
-            sender.sendMessage("Command '" + item + "' added for " + target + "!");
-            return true;
-        }
-        else if (field.equalsIgnoreCase("group")) {
-            tar.addGroup(item, world);
-            sender.sendMessage("Group '" + item + "' added for " + target + "!");
-            return true;
+            try {
+                tar.addPerm(item, world);
+                sender.sendMessage("Permission '" + item + "' added for " + target + "!");
+            } catch (IOException ex) {
+                sender.sendMessage(ChatColor.RED + "An error occured while saving the changes.");
+                sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
+                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An error occured while saving " + tar.getType() + "." + tar.getName(), ex);
+            }
+        } else if (field.equalsIgnoreCase("inheritance")) {
+            try {
+                tar.addInheritance(item, world);
+                sender.sendMessage("Inheritance '" + item + "' added for " + target + "!");
+                return true;
+            } catch (IOException ex) {
+                sender.sendMessage(ChatColor.RED + "An error occured while saving the changes.");
+                sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
+                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An error occured while saving " + tar.getType() + "." + tar.getName(), ex);
+            }
+        } else if (field.equalsIgnoreCase("command")) {
+            try {
+                tar.addCommand(item, world);
+                sender.sendMessage("Command '" + item + "' added for " + target + "!");
+                return true;
+            } catch (IOException ex) {
+                sender.sendMessage(ChatColor.RED + "An error occured while saving the changes.");
+                sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
+                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An error occured while saving " + tar.getType() + "." + tar.getName(), ex);
+            }
+        } else if (field.equalsIgnoreCase("group")) {
+            try {
+                tar.addGroup(item, world);
+                sender.sendMessage("Group '" + item + "' added for " + target + "!");
+                return true;
+            } catch (IOException ex) {
+                sender.sendMessage(ChatColor.RED + "An error occured while saving the changes.");
+                sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
+                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An error occured while saving " + tar.getType() + "." + tar.getName(), ex);
+            }
         }
         return false;
     }
@@ -65,7 +91,7 @@ public class AddAction implements SubAction {
     }
 
     public String[] supportedTypes() {
-        return new String[] {
+        return new String[]{
             "permission",
             "inheritance",
             "command",

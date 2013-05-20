@@ -23,8 +23,8 @@ package net.ae97.totalpermissions.permission;
 public class PermissionRcon extends PermissionBase {
 
     public PermissionRcon() {
-        super("special", "rcon");
-        this.addPerm("bukkit.command.stop");
-        this.addPerm("bukkit.command.reload");
+        super(PermissionType.SPECIAL, "rcon");
+        this.addPermission("bukkit.command.stop");
+        this.addPermission("bukkit.command.reload");
     }
 }

@@ -16,9 +16,12 @@
  */
 package net.ae97.totalpermissions.permission;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.util.PermissionUtility;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -45,13 +48,22 @@ public abstract class PermissionBase {
     protected final Map<String, Object> options = new HashMap<String, Object>();
     protected final ConfigurationSection section;
     protected final Map<String, Permission> perms = new HashMap<String, Permission>();
+    protected final PermissionType permType;
 
-    public PermissionBase(String aKey, String aName) {
+    public PermissionBase(PermissionType type, String aName) {
         name = aName;
-        if (TotalPermissions.isDebugMode()) {
-            TotalPermissions.getPlugin().getLogger().info("Adding perms for " + aKey + "." + name);
+        if (type == null) {
+            throw new IllegalArgumentException();
         }
-        section = TotalPermissions.getPlugin().getPermFile().getConfigurationSection(aKey + "." + name);
+        permType = type;
+        if (TotalPermissions.isDebugMode()) {
+            TotalPermissions.getPlugin().getLogger().info("Adding perms for " + permType + "." + name);
+        }
+        section = TotalPermissions.getPlugin().getPermFile().getConfigurationSection(permType + "." + name);
+        load();
+    }
+
+    protected final void load() {
         Map<String, Boolean> permMap = new HashMap<String, Boolean>();
         if (section != null) {
             if (section.isList("permissions")) {
@@ -158,7 +170,7 @@ public abstract class PermissionBase {
                     ConfigurationSection tempSection = worldSec.getConfigurationSection(world);
                     List<String> tempWorldPerms = tempSection.getStringList("permissions");
                     for (String perm : tempWorldPerms) {
-                        addPerm(perm, world);
+                        addPermission(perm, world);
                     }
                 }
             }
@@ -190,12 +202,12 @@ public abstract class PermissionBase {
                 }
             }
         }
-        Permission permission = new Permission("totalpermissions.baseItem." + aKey + "." + name, permMap);
+        Permission permission = new Permission("totalpermissions.baseItem." + permType + "." + name, permMap);
         if (Bukkit.getPluginManager().getPermission(permission.getName()) != null) {
             Bukkit.getPluginManager().removePermission(permission.getName());
         }
         Bukkit.getPluginManager().addPermission(permission);
-        TotalPermissions.getPlugin().getManager().addPermissionToMap(aKey, name, permission);
+        TotalPermissions.getPlugin().getManager().addPermissionToMap(permType.toString(), name, permission);
         perms.put(null, permission);
     }
 
@@ -295,8 +307,8 @@ public abstract class PermissionBase {
      *
      * @param perm Perm to add to this group
      */
-    public final synchronized void addPerm(String perm) {
-        addPerm(perm, null);
+    protected final synchronized void addPermission(String perm) {
+        addPermission(perm, null);
     }
 
     /**
@@ -306,17 +318,17 @@ public abstract class PermissionBase {
      * @param perm Perm to add to this group
      * @param world World to have this perm affect
      */
-    public final synchronized void addPerm(String perm, String world) {
+    protected final synchronized void addPermission(String perm, String world) {
         String p = perm;
         boolean allow = true;
         if (p.startsWith("-")) {
             p = p.substring(0);
             allow = false;
         }
-        addPerm(p, world, allow);
+        addPermission(p, world, allow);
     }
 
-    public final synchronized void addPerm(String perm, String world, boolean allow) {
+    protected final synchronized void addPermission(String perm, String world, boolean allow) {
         Permission permission = perms.get(world);
         if (permission != null) {
             Map<String, Boolean> permList = permission.getChildren();
@@ -418,56 +430,167 @@ public abstract class PermissionBase {
     public Map<String, Map<String, Boolean>> getAllPerms() {
         return null;
     }
-    
-    public void addInheritance(String group, String world) {
-        throw new UnsupportedOperationException("Not supported yet.");
+
+    public void addInheritance(String group, String world) throws IOException {
+        List<String> existing = section.getStringList("inheritence");
+        if (existing == null) {
+            existing = new ArrayList<String>();
+        }
+        existing.add(group);
+        section.set("inheritence", existing);
+        TotalPermissions.getPlugin().getManager().save(this);
+        load();
     }
 
-    public void addCommand(String item, String world) {
-        throw new UnsupportedOperationException("Not supported yet."); //Could probably just snatch the stuff from the loader
+    public void addCommand(String item, String world) throws IOException {
+        List<String> existing = section.getStringList("commands");
+        if (existing == null) {
+            existing = new ArrayList<String>();
+        }
+        existing.add(item);
+        section.set("commands", existing);
+        TotalPermissions.getPlugin().getManager().save(this);
+        load();
     }
-    
-    public void addGroup(String item, String world) {
-        throw new UnsupportedOperationException("Not supported yet.");
+
+    public void addGroup(String item, String world) throws IOException {
+        List<String> existing = section.getStringList("groups");
+        if (existing == null) {
+            existing = new ArrayList<String>();
+        }
+        existing.add(item);
+        section.set("groups", existing);
+        TotalPermissions.getPlugin().getManager().save(this);
+        load();
+    }
+
+    public void addPerm(String item, String world) throws IOException {
+        List<String> existing;
+        if (world == null) {
+            existing = section.getStringList("permissions");
+        } else {
+            existing = section.getStringList(world + ".permissions");
+        }
+        if (existing == null) {
+            existing = new ArrayList<String>();
+        }
+        existing.add(item);
+        if (world == null) {
+            section.set("permissions", existing);
+        } else {
+            section.set(world + ".permissions", existing);
+        }
+        TotalPermissions.getPlugin().getManager().save(this);
+        load();
     }
 
     public boolean hasInheritance(String item, String world) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List<String> list = section.getStringList("inheritence");
+        for (String listItem : list) {
+            if (item.equalsIgnoreCase(listItem)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean hasCommand(String item, String world) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List<String> list = section.getStringList("commands");
+        for (String listItem : list) {
+            if (item.equalsIgnoreCase(listItem)) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public Iterable<String> getCommands(String world) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Set<String> getCommands(String world) {
+        List<String> list = section.getStringList("commands");
+        Set<String> returned = new HashSet<String>();
+        for (String item : list) {
+            returned.add(item);
+        }
+        return returned;
     }
 
-    public Iterable<String> getInheritances(String world) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Set<String> getInheritances(String world) {
+        List<String> list = section.getStringList("inheritence");
+        Set<String> returned = new HashSet<String>();
+        for (String item : list) {
+            returned.add(item);
+        }
+        return returned;
     }
 
-    public void remPerm(String perm, String world) {
-        throw new UnsupportedOperationException("Not supported yet."); //Check if it begins with '-'
+    public void remPerm(String item, String world) throws IOException {
+        List<String> existing;
+        if (world == null) {
+            existing = section.getStringList("permissions");
+        } else {
+            existing = section.getStringList(world + ".permissions");
+        }
+        if (existing == null) {
+            existing = new ArrayList<String>();
+        }
+        existing.remove(item);
+        existing.add("-" + item);
+        if (world == null) {
+            section.set("permissions", existing);
+        } else {
+            section.set(world + ".permissions", existing);
+        }
+        TotalPermissions.getPlugin().getManager().save(this);
+        load();
     }
 
-    public void remInheritance(String inher, String world) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void remInheritance(String item, String world) throws IOException {
+        List<String> existing = section.getStringList("inheritence");
+        if (existing == null) {
+            existing = new ArrayList<String>();
+        }
+        existing.remove(item);
+        section.set("inheritence", existing);
+        TotalPermissions.getPlugin().getManager().save(this);
+        load();
     }
 
-    public void remCommand(String cmd, String world) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void remCommand(String item, String world) throws IOException {
+        List<String> existing = section.getStringList("groups");
+        if (existing == null) {
+            existing = new ArrayList<String>();
+        }
+        existing.remove(item);
+        section.set("groups", existing);
+        TotalPermissions.getPlugin().getManager().save(this);
+        load();
     }
 
-    public void remOption(String option, String world) {
-        throw new UnsupportedOperationException("Not supported yet."); // Example: PermissionsUser.remOption("prefix"); Needs at least prefix and suffix.
+    public void remOption(String option, String world) throws IOException {
+        TotalPermissions.getPlugin().getManager().save(this);
     }
 
-    public void remGroup(String item, String world) {
-        throw new UnsupportedOperationException("Not supported yet."); //If last group is removed, set default group.
+    public void remGroup(String item, String world) throws IOException {
+        List<String> existing = section.getStringList("groups");
+        if (existing == null) {
+            existing = new ArrayList<String>();
+        }
+        existing.remove(item);
+        section.set("groups", existing);
+        TotalPermissions.getPlugin().getManager().save(this);
+        load();
     }
 
-    public void setOption(String option, String item, String world) {
-        throw new UnsupportedOperationException("Not supported yet."); // Similar to remOption, sets it. Item is the value to set
+    public void setOption(String option, String item, String world) throws IOException {
+        section.set("options." + option, item);
+        TotalPermissions.getPlugin().getManager().save(this);
+        load();
+    }
+
+    public PermissionType getType() {
+        return permType;
+    }
+
+    public ConfigurationSection getConfigSection() {
+        return section;
     }
 }

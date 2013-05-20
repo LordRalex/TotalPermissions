@@ -29,7 +29,7 @@ import org.bukkit.permissions.PermissionDefault;
 public class PermissionOp extends PermissionBase {
 
     public PermissionOp() {
-        super("special", "console");
+        super(PermissionType.SPECIAL, "op");
         Map<String, Boolean> permMap = this.getPerms();
         for (String perm : permMap.keySet()) {
             Permission p = Bukkit.getPluginManager().getPermission(perm);

@@ -16,9 +16,13 @@
  */
 package net.ae97.totalpermissions.commands.subcommands.actions;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.PermissionBase;
 import net.ae97.totalpermissions.permission.PermissionGroup;
 import net.ae97.totalpermissions.permission.PermissionType;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -34,17 +38,27 @@ public class SetAction implements SubAction {
         PermissionBase tar = PermissionType.getTarget(type, target);
         if (field.equalsIgnoreCase("default")) {
             if (tar instanceof PermissionGroup) {
-                PermissionGroup newtar = (PermissionGroup)tar;
+                PermissionGroup newtar = (PermissionGroup) tar;
                 newtar.setAsDefaultGroup();
             }
-        }
-        else if (field.equalsIgnoreCase("prefix")) {
-            tar.setOption("prefix", item, world);
-            return true;
-        }
-        else if (field.equalsIgnoreCase("suffix")) {
-            tar.setOption("suffix", item, world);
-            return true;
+        } else if (field.equalsIgnoreCase("prefix")) {
+            try {
+                tar.setOption("prefix", item, world);
+                return true;
+            } catch (IOException ex) {
+                sender.sendMessage(ChatColor.RED + "An error occured while saving the changes.");
+                sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
+                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An error occured while saving " + tar.getType() + "." + tar.getName(), ex);
+            }
+        } else if (field.equalsIgnoreCase("suffix")) {
+            try {
+                tar.setOption("suffix", item, world);
+                return true;
+            } catch (IOException ex) {
+                sender.sendMessage(ChatColor.RED + "An error occured while saving the changes.");
+                sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
+                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An error occured while saving " + tar.getType() + "." + tar.getName(), ex);
+            }
         }
         return false;
     }
@@ -54,18 +68,17 @@ public class SetAction implements SubAction {
     }
 
     public String[] getHelp() {
-        return new String[] {
+        return new String[]{
             "set <field> <value>",
             ""
         };
     }
 
     public String[] supportedTypes() {
-        return new String[] {
+        return new String[]{
             "default",
             "prefix",
             "suffix"
         };
     }
-
 }

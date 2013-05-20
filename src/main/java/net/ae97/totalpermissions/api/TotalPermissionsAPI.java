@@ -16,6 +16,7 @@
  */
 package net.ae97.totalpermissions.api;
 
+import java.io.IOException;
 import net.ae97.totalpermissions.TotalPermissions;
 
 /**
@@ -47,12 +48,12 @@ public class TotalPermissionsAPI {
         return false;
     }
 
-    public boolean playerAdd(String world, String player, String permission) {
+    public boolean playerAdd(String world, String player, String permission) throws IOException {
         if (permission.startsWith("-")) {
-            plugin.getManager().getUser(player).addPerm(permission, world, false);
+            plugin.getManager().getUser(player).remPerm(permission, world);
             return true;
         }
-        plugin.getManager().getUser(player).addPerm(permission, world, true);
+        plugin.getManager().getUser(player).addPerm(permission, world);
         return true;
     }
 
@@ -69,12 +70,12 @@ public class TotalPermissionsAPI {
         return false;
     }
 
-    public boolean groupAdd(String world, String group, String permission) {
+    public boolean groupAdd(String world, String group, String permission) throws IOException {
         if (permission.startsWith("-")) {
-            plugin.getManager().addPermToGroup(group, permission, false);
+            plugin.getManager().addPermToGroup(group, world, permission, false);
             return true;
         }
-        plugin.getManager().addPermToGroup(group, permission, true);
+        plugin.getManager().addPermToGroup(group, world, permission, true);
         return true;
     }
 
