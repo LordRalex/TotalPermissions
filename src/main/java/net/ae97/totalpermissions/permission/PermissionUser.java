@@ -16,6 +16,8 @@
  */
 package net.ae97.totalpermissions.permission;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
@@ -76,7 +78,17 @@ public final class PermissionUser extends PermissionBase {
      *
      * @return All the groups the user is in
      */
-    public Iterable<String> getGroups(String world) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public List<String> getGroups(String world) {
+        List<String> groupList = new ArrayList<String>();
+        List<String> temp;
+        temp = section.getStringList("group");
+        if (temp != null) {
+            groupList.addAll(temp);
+        }
+        temp = section.getStringList("groups");
+        if (temp != null) {
+            groupList.addAll(temp);
+        }
+        return groupList;
     }
 }
