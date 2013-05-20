@@ -127,7 +127,6 @@ public class TotalPermissions extends JavaPlugin {
             }
             apiKey = new TotalPermissionsAPI(this);
             getLogger().info("Initial preperations complete");
-            throw new org.bukkit.plugin.InvalidPluginException();
         } catch (Exception e) {
             getLogger().log(Level.SEVERE, this.getLangFile().getString("main.error", getName(), this.getDescription().getVersion()), e);
             loadingFailed = true;
