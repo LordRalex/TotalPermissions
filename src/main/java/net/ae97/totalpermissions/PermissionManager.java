@@ -415,6 +415,20 @@ public final class PermissionManager {
         FileConfiguration file = plugin.getPermFile();
         PermissionType type = base.getType();
         file.set(type + "." + base.getName(), base.getConfigSection());
-        file.save(new File(plugin.getDataFolder(), "permissions.yml"));
+        save();
+    }
+
+    private void save() throws IOException {
+        plugin.getPermFile().save(new File(plugin.getDataFolder(), "permissions.yml"));
+    }
+
+    public void changeDefaultGroup(String newDefault) throws IOException {
+        PermissionGroup old = getGroup(defaultGroup);
+        old.getConfigSection().set("default", false);
+        this.defaultGroup = newDefault;
+        PermissionGroup newDef = getGroup(defaultGroup);
+        newDef.getConfigSection().set("default", true);
+        save(old);
+        save(newDef);
     }
 }

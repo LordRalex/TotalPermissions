@@ -38,8 +38,13 @@ public class SetAction implements SubAction {
         PermissionBase tar = PermissionType.getTarget(type, target);
         if (field.equalsIgnoreCase("default")) {
             if (tar instanceof PermissionGroup) {
-                PermissionGroup newtar = (PermissionGroup) tar;
-                newtar.setAsDefaultGroup();
+                try {
+                    TotalPermissions.getPlugin().getManager().changeDefaultGroup(tar.getName());
+                } catch (IOException ex) {
+                    sender.sendMessage(ChatColor.RED + "An error occured while saving the changes.");
+                    sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
+                    TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An error occured while saving " + tar.getType() + "." + tar.getName(), ex);
+                }
             }
         } else if (field.equalsIgnoreCase("prefix")) {
             try {

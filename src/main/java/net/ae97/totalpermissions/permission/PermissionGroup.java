@@ -16,6 +16,9 @@
  */
 package net.ae97.totalpermissions.permission;
 
+import java.io.IOException;
+import net.ae97.totalpermissions.TotalPermissions;
+
 /**
  * @version 0.1
  * @author Lord_Ralex
@@ -56,6 +59,7 @@ public class PermissionGroup extends PermissionBase {
         return isDefault;
     }
 
-    public void setAsDefaultGroup() {
+    public void setAsDefaultGroup() throws IOException {
+        TotalPermissions.getPlugin().getManager().changeDefaultGroup(getName());
     }
 }
