@@ -34,13 +34,13 @@ public class PermissionOp extends PermissionBase {
         for (String perm : permMap.keySet()) {
             Permission p = Bukkit.getPluginManager().getPermission(perm);
             if (p == null) {
-                continue;
+                p = new Permission(perm);
+                Bukkit.getPluginManager().addPermission(p);
+            }
+            if (permMap.get(perm) == Boolean.TRUE) {
+                p.setDefault(PermissionDefault.OP);
             } else {
-                if (permMap.get(perm) == Boolean.TRUE) {
-                    p.setDefault(PermissionDefault.OP);
-                } else {
-                    p.setDefault(PermissionDefault.FALSE);
-                }
+                p.setDefault(PermissionDefault.FALSE);
             }
         }
     }
