@@ -93,10 +93,10 @@ public class Cipher {
         return langFile;
     }
 
-    public String getString(String path, String... vars) {
+    public String getString(String path, Object... vars) {
         String string = langFile.getString(path);
         for (int i = 0; i < vars.length; i++) {
-            string = string.replace("{" + i + "}", vars[i]);
+            string = string.replace("{" + i + "}", vars[i].toString());
         }
         return string;
     }
