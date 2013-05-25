@@ -130,7 +130,7 @@ public class DumpCommand implements SubCommand {
 
     public String[] getHelp() {
         return new String[]{
-            "/ttp backup [-command/-player/-plugin] [name] (page)",
+            "/ttp dump [-command/-player/-plugin] [name] (page)",
             TotalPermissions.getPlugin().getLangFile().getString("command.dump.help")};
     }
 }
