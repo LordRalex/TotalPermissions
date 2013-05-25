@@ -21,6 +21,7 @@ import java.lang.reflect.Field;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.PermissibleBase;
 import org.bukkit.permissions.Permission;
@@ -92,7 +93,13 @@ public class TPPermissibleBase extends PermissibleBase {
 
     @Override
     public boolean hasPermission(String perm) {
-        return hasPermission(new Permission(perm));
+        Permission permNode;
+        permNode = Bukkit.getPluginManager().getPermission(perm);
+        if (permNode == null) {
+            permNode = new Permission(perm);
+            Bukkit.getPluginManager().addPermission(permNode);
+        }
+        return hasPermission(permNode);
     }
 
     @Override
