@@ -13,6 +13,9 @@ command:
     help: 'Turns on debug mode for a user'
   dump:
     help: 'Provides the registered perms for an item'
+    page: 'Page {0}/{1}'
+    title: 'Perms for {0}: {1}'
+    listperm: ''
   help:
     command: 'help'
     cont: 'Use /ttp {0} help for help with a command'
@@ -64,8 +67,8 @@ listener:
       index: 'produced an IOoBE'
 permission:
   base:
-    adding: 'Adding perms for'
-    add: 'Adding perm'
+    adding: 'Adding perms for {0}'
+    add: 'Adding perm: {0}'
   group:
     default: 'default'
 reflection:
@@ -94,6 +97,7 @@ main:
     command: 'Creating command handler'
   metrics: 'Plugin Metrics is on, you can opt-out in the PluginMetrics config'
   error: 'Error in starting up {0} (Version {1})'
+  loadcrash: 'There were issues with loading, not enabling plugin'
 variables:
   command: '<command>'
   username: '<username>'

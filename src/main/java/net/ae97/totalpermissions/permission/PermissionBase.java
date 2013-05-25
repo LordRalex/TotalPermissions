@@ -57,7 +57,7 @@ public abstract class PermissionBase {
         }
         permType = type;
         if (TotalPermissions.isDebugMode()) {
-            TotalPermissions.getPlugin().getLogger().info("Adding perms for " + permType + "." + name);
+            TotalPermissions.getPlugin().getLogger().info(TotalPermissions.getPlugin().getLangFile().getString("permission.base.adding", permType + "." + name));
         }
         section = TotalPermissions.getPlugin().getPermFile().getConfigurationSection(permType + "." + name);
         load();
@@ -86,7 +86,7 @@ public abstract class PermissionBase {
                         }
 
                         if (TotalPermissions.isDebugMode()) {
-                            TotalPermissions.getPlugin().getLogger().info("Adding perm: " + p);
+                            TotalPermissions.getPlugin().getLogger().info(TotalPermissions.getPlugin().getLangFile().getString("permission.base.add", p));
                         }
 
                         if ((!TotalPermissions.getPlugin().getConfiguration().getBoolean("reflection.starperm"))

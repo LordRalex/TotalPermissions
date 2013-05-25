@@ -134,7 +134,7 @@ public class TotalPermissions extends JavaPlugin {
     public void onEnable() {
         try {
             if (loadingFailed) {
-                getLogger().log(Level.SEVERE, "There were issues with loading, not enabling plugin");
+                getLogger().log(Level.SEVERE, this.getLangFile().getString("main.loadcrash"));
                 Bukkit.getPluginManager().disablePlugin(this);
                 return;
             }
