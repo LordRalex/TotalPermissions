@@ -40,6 +40,9 @@ public class TPPermissibleBase extends PermissibleBase {
     protected final PermissibleBase initialParent;
     protected final CommandSender parent;
     protected final boolean debug;
+    /**
+     * @deprecated
+     */
     protected final boolean useReflectionPerm;
 
     public TPPermissibleBase(CommandSender p, boolean debugTime) {
@@ -65,6 +68,13 @@ public class TPPermissibleBase extends PermissibleBase {
             Logger.getLogger(TPPermissibleBase.class.getName()).log(Level.SEVERE, null, ex);
         }
         initialParent = (PermissibleBase) obj;
+    }
+
+    /**
+     * @deprecated
+     */
+    public boolean isUseReflectionPerm() {
+        return useReflectionPerm;
     }
 
     @Override
@@ -167,10 +177,6 @@ public class TPPermissibleBase extends PermissibleBase {
     @Override
     public boolean isOp() {
         return initialParent.isOp();
-    }
-
-    public boolean isUseReflectionPerm() {
-        return useReflectionPerm;
     }
 
     @Override
