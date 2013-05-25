@@ -25,7 +25,6 @@ import net.ae97.totalpermissions.mcstats.Metrics;
 import net.ae97.totalpermissions.permission.util.FileUpdater;
 import java.io.File;
 import java.util.logging.Level;
-import net.ae97.totalpermissions.api.TotalPermissionsAPI;
 import net.ae97.totalpermissions.permission.util.FileConverter;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -55,7 +54,6 @@ public class TotalPermissions extends JavaPlugin {
     protected Metrics metrics;
     protected CommandHandler commands;
     protected Cipher cipher;
-    protected TotalPermissionsAPI apiKey;
     protected static boolean debug = false;
     protected boolean loadingFailed = false;
 
@@ -125,7 +123,6 @@ public class TotalPermissions extends JavaPlugin {
                     throw e2;
                 }
             }
-            apiKey = new TotalPermissionsAPI(this);
             getLogger().info("Initial preperations complete");
         } catch (Exception e) {
             getLogger().log(Level.SEVERE, this.getLangFile().getString("main.error", getName(), this.getDescription().getVersion()), e);
@@ -173,6 +170,7 @@ public class TotalPermissions extends JavaPlugin {
         if (manager != null) {
             manager.unload();
         }
+        debug = false;
     }
 
     /**
@@ -323,17 +321,6 @@ public class TotalPermissions extends JavaPlugin {
      */
     public CommandHandler getCommandHandler() {
         return this.commands;
-    }
-
-    /**
-     * Returns the (@link TotalPermissionsAPI) for TotalPermissions
-     *
-     * @return (@link TotalPermissionsAPI)
-     *
-     * @since 0.2
-     */
-    public TotalPermissionsAPI getAPI() {
-        return this.apiKey;
     }
 
     /**
