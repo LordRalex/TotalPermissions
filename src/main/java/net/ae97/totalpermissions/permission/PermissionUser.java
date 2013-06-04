@@ -34,7 +34,7 @@ public final class PermissionUser extends PermissionBase {
     private boolean isDebug = false;
 
     public PermissionUser(String aName) {
-        super(PermissionType.USER, aName);
+        super(PermissionType.USERS, aName);
     }
 
     /**

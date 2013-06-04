@@ -26,12 +26,13 @@ import net.ae97.totalpermissions.TotalPermissions;
 public enum PermissionType {
 
     GROUP("group"),
+    GROUPS("groups"),
     USER("user"),
+    USERS("users"),
     SPECIAL("special"),
     WORLD("world"),
     PERMISSIONS("permissions"),
     INHERITENCE("inheritence"),
-    GROUPS("groups"),
     OPTIONS("options");
     private final String name;
 
