@@ -17,7 +17,9 @@
 package net.ae97.totalpermissions.permission;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
@@ -79,16 +81,18 @@ public final class PermissionUser extends PermissionBase {
      * @return All the groups the user is in
      */
     public List<String> getGroups(String world) {
-        List<String> groupList = new ArrayList<String>();
+        Set<String> groupList = new HashSet<String>();
         List<String> temp;
-        temp = section.getStringList("group");
+        temp = section.getStringList(((world == null) ? "" : "worlds." + world + ".") + "group");
         if (temp != null) {
             groupList.addAll(temp);
         }
-        temp = section.getStringList("groups");
+        temp = section.getStringList(((world == null) ? "" : "worlds." + world + ".") + "groups");
         if (temp != null) {
             groupList.addAll(temp);
         }
-        return groupList;
+        List<String> list = new ArrayList<String>(groupList.size());
+        list.addAll(temp);
+        return list;
     }
 }
