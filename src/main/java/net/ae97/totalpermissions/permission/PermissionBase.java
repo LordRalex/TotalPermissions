@@ -105,7 +105,7 @@ public abstract class PermissionBase {
                         }
                     }
                 }
-            } else {
+            } else if (section.isConfigurationSection("permissions")) {
                 Set<String> keys = section.getConfigurationSection("permissions").getKeys(false);
                 for (String key : keys) {
                     permMap.put(key, section.getConfigurationSection("permissions").getBoolean(key, true));
