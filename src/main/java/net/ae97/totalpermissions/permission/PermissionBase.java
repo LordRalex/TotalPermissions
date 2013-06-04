@@ -59,6 +59,9 @@ public abstract class PermissionBase {
         if (TotalPermissions.isDebugMode()) {
             TotalPermissions.getPlugin().getLogger().info(TotalPermissions.getPlugin().getLangFile().getString("permission.base.adding", permType + "." + name));
         }
+        if (!TotalPermissions.getPlugin().getPermFile().contains(permType + "." + name)) {
+            TotalPermissions.getPlugin().getPermFile().createSection(permType + "." + name);
+        }
         section = TotalPermissions.getPlugin().getPermFile().getConfigurationSection(permType + "." + name);
         load();
     }
