@@ -433,7 +433,14 @@ public abstract class PermissionBase {
     }
 
     public Map<String, Map<String, Boolean>> getAllPerms() {
-        return null;
+        Map<String, Map<String, Boolean>> permMap = new HashMap<String, Map<String, Boolean>>();
+        synchronized (perms) {
+            Set<String> keys = perms.keySet();
+            for (String key : keys) {
+                permMap.put(key, getPerms(key));
+            }
+        }
+        return permMap;
     }
 
     public void addInheritance(String group, String world) throws IOException {
