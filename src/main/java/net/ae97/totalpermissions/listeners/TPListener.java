@@ -99,7 +99,7 @@ public class TPListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+    public void onPlayerCommandPreprocessDebugCheck(PlayerCommandPreprocessEvent event) {
         PermissionUser user = plugin.getManager().getUser(event.getPlayer());
         if (!user.getDebugState() || plugin.getConfiguration().getBoolean("reflection.debug")) {
             return;
@@ -124,5 +124,17 @@ public class TPListener implements Listener {
     public void onRemoteConsoleEvent(RemoteServerCommandEvent event) {
         CommandSender sender = event.getSender();
         plugin.getManager().getRcon().setPerms(sender, plugin.getManager().getAttachment(sender.getName()), null);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerCommandPreprocessPermCheck(PlayerCommandPreprocessEvent event) {
+        String cmd = event.getMessage().split(" ")[0].substring(1);
+        Command command = Bukkit.getPluginCommand(cmd);
+        if (command == null) {
+            return;
+        }
+        if (!command.testPermissionSilent(event.getPlayer())) {
+            command.setPermissionMessage(cmd);
+        }
     }
 }
