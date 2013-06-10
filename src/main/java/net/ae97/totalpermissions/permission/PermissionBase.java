@@ -48,7 +48,9 @@ public abstract class PermissionBase {
     protected final Map<String, Object> options = new HashMap<String, Object>();
     protected final ConfigurationSection section;
     protected final Map<String, Permission> perms = new HashMap<String, Permission>();
+    protected final List<String> inherited = new ArrayList<String>();
     protected final PermissionType permType;
+    protected final Permission permission;
 
     public PermissionBase(PermissionType type, String aName) {
         name = aName;
@@ -62,11 +64,21 @@ public abstract class PermissionBase {
         if (!TotalPermissions.getPlugin().getPermFile().contains(permType + "." + name)) {
             TotalPermissions.getPlugin().getPermFile().createSection(permType + "." + name);
         }
+        permission = new Permission("totalpermissions.baseItem." + permType + "." + name);
         section = TotalPermissions.getPlugin().getPermFile().getConfigurationSection(permType + "." + name);
         load();
     }
 
     protected final void load() {
+        options.clear();
+        for (String key : perms.keySet()) {
+            Permission p = perms.get(key);
+            if (Bukkit.getPluginManager().getPermission(p.getName()) != null) {
+                Bukkit.getPluginManager().removePermission(p.getName());
+            }
+        }
+        perms.clear();
+        inherited.clear();
         Map<String, Boolean> permMap = new HashMap<String, Boolean>();
         if (section != null) {
             if (section.isList("permissions")) {
@@ -113,51 +125,15 @@ public abstract class PermissionBase {
             }
             List<String> inherList = section.getStringList("inheritance");
             if (inherList != null) {
-                for (String tempName : inherList) {
-                    Permission permtoAdd = Bukkit.getPluginManager().getPermission("totalpermissions.baseitem.groups." + tempName);
-                    if (permtoAdd != null) {
-                        Map<String, Boolean> children = permtoAdd.getChildren();
-                        if (children != null) {
-                            for (Entry<String, Boolean> p : children.entrySet()) {
-                                if (!permMap.containsKey(p.getKey())) {
-                                    permMap.put(p.getKey(), p.getValue());
-                                }
-                            }
-                        }
-                    }
-                }
+                inherited.addAll(inherList);
             }
             List<String> groupList = section.getStringList("groups");
             if (groupList != null) {
-                for (String tempName : groupList) {
-                    Permission permtoAdd = Bukkit.getPluginManager().getPermission("totalpermissions.baseitem.groups." + tempName);
-                    if (permtoAdd != null) {
-                        Map<String, Boolean> children = permtoAdd.getChildren();
-                        if (children != null) {
-                            for (Entry<String, Boolean> p : children.entrySet()) {
-                                if (!permMap.containsKey(p.getKey())) {
-                                    permMap.put(p.getKey(), p.getValue());
-                                }
-                            }
-                        }
-                    }
-                }
+                inherited.addAll(inherList);
             }
             List<String> groupList2 = section.getStringList("group");
             if (groupList2 != null) {
-                for (String tempName : groupList2) {
-                    Permission permtoAdd = Bukkit.getPluginManager().getPermission("totalpermissions.baseitem.groups." + tempName);
-                    if (permtoAdd != null) {
-                        Map<String, Boolean> children = permtoAdd.getChildren();
-                        if (children != null) {
-                            for (Entry<String, Boolean> p : children.entrySet()) {
-                                if (!permMap.containsKey(p.getKey())) {
-                                    permMap.put(p.getKey(), p.getValue());
-                                }
-                            }
-                        }
-                    }
-                }
+                inherited.addAll(inherList);
             }
             ConfigurationSection optionSec = section.getConfigurationSection("options");
             if (optionSec != null) {
@@ -205,7 +181,8 @@ public abstract class PermissionBase {
                 }
             }
         }
-        Permission permission = new Permission("totalpermissions.baseItem." + permType + "." + name, permMap);
+        permission.getChildren().clear();
+        permission.getChildren().putAll(permMap);
         if (Bukkit.getPluginManager().getPermission(permission.getName()) != null) {
             Bukkit.getPluginManager().removePermission(permission.getName());
         }
@@ -252,7 +229,6 @@ public abstract class PermissionBase {
                 }
             }
         }
-
         return permList;
     }
 
@@ -332,9 +308,9 @@ public abstract class PermissionBase {
     }
 
     protected final synchronized void addPermission(String perm, String world, boolean allow) {
-        Permission permission = perms.get(world);
-        if (permission != null) {
-            Map<String, Boolean> permList = permission.getChildren();
+        Permission pr = perms.get(world);
+        if (pr != null) {
+            Map<String, Boolean> permList = pr.getChildren();
             if (permList == null) {
                 permList = new HashMap<String, Boolean>();
             }
@@ -356,10 +332,8 @@ public abstract class PermissionBase {
                 }
             }
             permList.put(perm, allow);
-            permission.getChildren().clear();
-            permission.getChildren().putAll(permList);
-            permission.recalculatePermissibles();
-            perms.put(world, permission);
+            pr.getChildren().clear();
+            pr.getChildren().putAll(permList);
         }
     }
 
@@ -425,6 +399,20 @@ public abstract class PermissionBase {
                 Permission worldperm = perms.get(player.getWorld().getName());
                 if (worldperm != null) {
                     attachment.setPermission(worldperm, true);
+                }
+            }
+        }
+        Set<String> inher = getInheritances(null);
+        for (String in : inher) {
+            PermissionGroup group = TotalPermissions.getPlugin().getManager().getGroup(in);
+            attachment.setPermission(group.perms.get(null), true);
+            if (cs instanceof Player) {
+                Player player = (Player) cs;
+                if (player.getWorld() != null) {
+                    Permission worldperm = group.perms.get(player.getWorld().getName());
+                    if (worldperm != null) {
+                        attachment.setPermission(worldperm, true);
+                    }
                 }
             }
         }
@@ -500,8 +488,7 @@ public abstract class PermissionBase {
     }
 
     public boolean hasInheritance(String item, String world) {
-        List<String> list = section.getStringList("inheritence");
-        for (String listItem : list) {
+        for (String listItem : inherited) {
             if (item.equalsIgnoreCase(listItem)) {
                 return true;
             }
@@ -529,9 +516,8 @@ public abstract class PermissionBase {
     }
 
     public Set<String> getInheritances(String world) {
-        List<String> list = section.getStringList("inheritence");
         Set<String> returned = new HashSet<String>();
-        for (String item : list) {
+        for (String item : inherited) {
             returned.add(item);
         }
         return returned;
