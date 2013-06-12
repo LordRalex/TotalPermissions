@@ -26,7 +26,7 @@ import org.bukkit.ChatColor;
  */
 public class Formatter {
 
-    private static final String BAR = "------------------------------------------------------------";
+    private static final String BAR = "--------------------------------------------------------";
     private static final char BAR_CHAR = '-';
 
     /**

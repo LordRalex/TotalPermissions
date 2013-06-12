@@ -36,10 +36,11 @@ public class AddAction implements SubAction {
     public boolean execute(CommandSender sender, String aType, String target, String field, String item, String world) {
         PermissionType type = PermissionType.getType(aType);
         PermissionBase tar = PermissionType.getTarget(type, target);
-        if (field.equalsIgnoreCase("permission")) {
+        if (field.equalsIgnoreCase("permissions")) {
             try {
                 tar.addPerm(item, world);
                 sender.sendMessage("Permission '" + item + "' added for " + target + "!");
+                return true;
             } catch (IOException ex) {
                 sender.sendMessage(ChatColor.RED + "An error occured while saving the changes.");
                 sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
@@ -55,7 +56,7 @@ public class AddAction implements SubAction {
                 sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
                 TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An error occured while saving " + tar.getType() + "." + tar.getName(), ex);
             }
-        } else if (field.equalsIgnoreCase("command")) {
+        } else if (field.equalsIgnoreCase("commands")) {
             try {
                 tar.addCommand(item, world);
                 sender.sendMessage("Command '" + item + "' added for " + target + "!");
@@ -65,7 +66,7 @@ public class AddAction implements SubAction {
                 sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
                 TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An error occured while saving " + tar.getType() + "." + tar.getName(), ex);
             }
-        } else if (field.equalsIgnoreCase("group")) {
+        } else if (field.equalsIgnoreCase("groups")) {
             try {
                 tar.addGroup(item, world);
                 sender.sendMessage("Group '" + item + "' added for " + target + "!");
@@ -92,10 +93,10 @@ public class AddAction implements SubAction {
 
     public String[] supportedTypes() {
         return new String[]{
-            "permission",
+            "permissions",
             "inheritance",
-            "command",
-            "group"
+            "commands",
+            "groups"
         };
     }
 }

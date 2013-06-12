@@ -30,12 +30,15 @@ import org.bukkit.command.CommandSender;
 public class GroupCommand implements SubCommand {
 
     public boolean execute(CommandSender sender, String[] args) {
-        sender.sendMessage("Group command executed.");
         if (args.length > 2) { // If there is an action command
             TotalPermissions.getPlugin().getCommandHandler().getActionHandler().onAction(sender, args, fields());
             return true;
         } else if (args.length == 1) {
-            //List all groups
+            StringBuilder sb = new StringBuilder("Groups: ");
+            for (String group : TotalPermissions.getPlugin().getManager().getGroups()) {
+                sb.append(group).append(", ");
+            }
+            sender.sendMessage(sb.substring(0, sb.length() - 2));
             return true;
         }
         return false;

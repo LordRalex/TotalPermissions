@@ -95,7 +95,7 @@ public class HelpCommand implements SubCommand {
                 }
             }
         }
-        sb.append(TotalPermissions.getPlugin().getLangFile().getString("command.help.cont-plain", TotalPermissions.getPlugin().getLangFile().getString("variables.command")));
+        sb.append('\n').append(TotalPermissions.getPlugin().getLangFile().getString("command.help.cont-plain", TotalPermissions.getPlugin().getLangFile().getString("variables.command")));
         return sb.toString();
     }
 

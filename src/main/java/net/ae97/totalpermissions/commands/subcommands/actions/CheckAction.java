@@ -32,7 +32,7 @@ public class CheckAction implements SubAction {
     public boolean execute(CommandSender sender, String aType, String target, String field, String item, String world) {
         PermissionType type = PermissionType.getType(aType);
         PermissionBase tar = PermissionType.getTarget(type, target);
-        if (field.equalsIgnoreCase("permission")) {
+        if (field.equalsIgnoreCase("permissions")) {
             if (tar.has(item, world)) {
                 sender.sendMessage(target + " has '" + item + "'!");
             }
@@ -50,7 +50,7 @@ public class CheckAction implements SubAction {
             }
             return true;
         }
-        else if (field.equalsIgnoreCase("command")) {
+        else if (field.equalsIgnoreCase("commands")) {
             if (tar.hasCommand(item, world)) {
                 sender.sendMessage(target + " has '" + item + "'!");
             }
@@ -59,7 +59,7 @@ public class CheckAction implements SubAction {
             }
             return true;
         }
-        else if (field.equalsIgnoreCase("group")) {
+        else if (field.equalsIgnoreCase("groups")) {
             if (tar instanceof PermissionUser) {
                 PermissionUser newtar = (PermissionUser)tar;
                 if (newtar.inherits(item, world)) {
@@ -90,10 +90,10 @@ public class CheckAction implements SubAction {
     
     public String[] supportedTypes() {
         return new String[] {
-            "permission",
+            "permissions",
             "inheritance",
-            "command",
-            "group",
+            "commands",
+            "groups",
         };
     }
 }

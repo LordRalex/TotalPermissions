@@ -30,12 +30,8 @@ import org.bukkit.command.CommandSender;
 public class SpecialCommand implements SubCommand {
 
     public boolean execute(CommandSender sender, String[] args) {
-        sender.sendMessage("Special command executed.");
         if (args.length > 2) { // If there is an action command
             TotalPermissions.getPlugin().getCommandHandler().getActionHandler().onAction(sender, args, fields());
-            return true;
-        } else if (args.length == 1) {
-            //List all specials
             return true;
         }
         return false;
@@ -57,8 +53,9 @@ public class SpecialCommand implements SubCommand {
             "permissions",
             "inheritance",
             "commands",
-            "options",
-            "group"
+            "prefix",
+            "suffix",
+            "groups"
         });
     }
 }

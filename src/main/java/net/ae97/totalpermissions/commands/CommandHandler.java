@@ -52,6 +52,10 @@ public final class CommandHandler implements CommandExecutor {
         commands.put(user.getName().toLowerCase().trim(), user);
         GroupCommand group = new GroupCommand();
         commands.put(group.getName().toLowerCase().trim(), group);
+        SpecialCommand special = new SpecialCommand();
+        commands.put(special.getName().toLowerCase().trim(), special);
+        WorldCommand world = new WorldCommand();
+        commands.put(world.getName().toLowerCase().trim(), world);
         DumpCommand dump = new DumpCommand();
         commands.put(dump.getName().toLowerCase().trim(), dump);
 

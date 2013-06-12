@@ -36,7 +36,7 @@ public class ListAction implements SubAction {
         PermissionType type = PermissionType.getType(aType);
         PermissionBase tar = PermissionType.getTarget(type, target);
         
-        if (field.equalsIgnoreCase("permission")) {
+        if (field.equalsIgnoreCase("permissions")) {
             sender.sendMessage("Permissions for " + target + ":");
             sender.sendMessage(this.permMapToString(tar.getPerms()));
             return true;
@@ -54,7 +54,7 @@ public class ListAction implements SubAction {
             return true;
         }
         
-        else if (field.equalsIgnoreCase("command")) {
+        else if (field.equalsIgnoreCase("commands")) {
             StringBuilder sb = new StringBuilder("Commands for ");
             sb.append(target).append(": ");
             for (String cmd : tar.getCommands(world)) {
@@ -67,7 +67,7 @@ public class ListAction implements SubAction {
 
         }
         
-        else if (field.equalsIgnoreCase("group")) {
+        else if (field.equalsIgnoreCase("groups")) {
             if (tar instanceof PermissionUser) {
                 PermissionUser newtar = (PermissionUser) tar;
                 StringBuilder sb = new StringBuilder("Groups for ");
@@ -115,10 +115,10 @@ public class ListAction implements SubAction {
 
     public String[] supportedTypes() {
         return new String[]{
-            "permission",
+            "permissions",
             "inheritance",
-            "command",
-            "group",
+            "commands",
+            "groups",
             "default",
             "prefix",
             "suffix"

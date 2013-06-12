@@ -36,7 +36,7 @@ public class RemoveAction implements SubAction {
         PermissionType type = PermissionType.getType(aType);
         PermissionBase tar = PermissionType.getTarget(type, target);
 
-        if (field.equalsIgnoreCase("permission")) {
+        if (field.equalsIgnoreCase("permissions")) {
             try {
                 tar.remPerm(item, world);
                 sender.sendMessage("Permission " + item + " removed from " + target + "!");
@@ -56,7 +56,7 @@ public class RemoveAction implements SubAction {
                 sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
                 TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An error occured while saving " + tar.getType() + "." + tar.getName(), ex);
             }
-        } else if (field.equalsIgnoreCase("command")) {
+        } else if (field.equalsIgnoreCase("commands")) {
             try {
                 tar.remCommand(item, world);
                 sender.sendMessage("Command " + item + " removed from " + target + "!");
@@ -66,7 +66,7 @@ public class RemoveAction implements SubAction {
                 sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
                 TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An error occured while saving " + tar.getType() + "." + tar.getName(), ex);
             }
-        } else if (field.equalsIgnoreCase("group")) {
+        } else if (field.equalsIgnoreCase("groups")) {
             try {
                 tar.remGroup(item, world);
                 sender.sendMessage(target + " removed from group " + item + "!");
@@ -116,10 +116,10 @@ public class RemoveAction implements SubAction {
 
     public String[] supportedTypes() {
         return new String[]{
-            "permission",
+            "permissions",
             "inheritance",
-            "command",
-            "group",
+            "commands",
+            "groups",
             "prefix",
             "suffix"
         };
