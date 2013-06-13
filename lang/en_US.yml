@@ -1,5 +1,59 @@
-version: 1
+version: 2
 command:
+  action:
+    subaction:
+      saveerror1: '&cAn error occured while saving the changes.'
+      saveerror2: '&cThe changes should be applied but were not saved to the file'
+      saveerror3: 'An error occured while saving {0}.{1}'
+    handler:
+      ifnull: '&cNo action found, use /ttp help actions for an action list'
+      invalid: '&cInvalid use of {0}'
+      execfields: '&cExecutable fields for "{0}": {1}'
+      editfields: '&cExecutable fields for "{0}": {1}'
+      notsupported: '&cField "{0}" is not supported for "{1}"!'
+      denied: '&cYou cannot use that action'
+      usage: 'Usage: {0}'
+    add:
+      permissions: 'Permission "{0}" added for {1}!'
+      inheritance: '"{1}" now inherits "{0}"!'
+      commands: 'Command "{0}" added for {1}!'
+      groups: 'Group "{0}" added to {1}!'
+      help: 'Adds a value to a field'
+    check:
+      permissions:
+        has: '{0} has permission "{1}"'
+        not: '{0} does not have permission "{1}"'
+      inheritance:
+        has: '{0} inherits "{1}"'
+        not: '{0} does not inherit "{1}"'
+      commands:
+        has: '{0} has command "{1}"'
+        not: '{0} does not have command "{1}"'
+      groups:
+        has: '{0} is in group "{1}"'
+        not: '{0} is not in group "{1}"'
+      help: 'Checks if a given target''s field has the provided value'
+    remove:
+      permissions: 'Permission "{0}" removed from "{1}"'
+      inheritance: '"{1}" no longer inherits "{0}"'
+      commands: 'Command "{0}" removed from "{1}"'
+      groups: '"{1}" removed from group "{0}"'
+      prefix: 'Prefix removed from "{0}"!'
+      suffix: 'Suffix removed from "{0}"!'
+      help: 'Removes a value from a field'
+    list:
+      permissions: 'Permissions for "{0}":'
+      inheritance: '"{0}" inherits: {1}'
+      commands: 'Commands for "{0}": {1}'
+      groups: 'Groups for "{0}": {1}'
+      prefix: 'Prefix for "{0}": {1}'
+      suffix: 'Suffix for "{0}": {1}'
+      help: 'Lists the values from a given field'
+    set:
+      default: '"{0}" is now the default group'
+      prefix: 'Prefix for "{0}" is now: {1}'
+      suffix: 'Suffix for "{0}" is now: {1}'
+      help: 'Sets a specific field with a given value'
   backup:
     command: 'backup'
     help: 'Forces back up of files'
@@ -7,29 +61,48 @@ command:
     command: 'debug'
     args: 'No target specified, for help, use /ttp debug help'
     args-plain: 'No target specified, for help, use /ttp debug help'
-    null-target: 'Target user ("") was not found'
-    debug-on: 'Debug turned on for'
-    debug-off: 'Debug turned off for'
+    null-target: 'Target user ("{0}") was not found'
+    debug-on: 'Debug turned on for {0}'
+    debug-off: 'Debug turned off for {0}'
     help: 'Turns on debug mode for a user'
+  dump:
+    help: 'Provides the registered perms for an item'
+    page: 'Page {0}/{1}'
+    title: 'Perms for {0}: {1}'
+    listperm: ''
   help:
     command: 'help'
+    action-help: 'Use "help" without quotes after an action for help information'
+    page: 'Page {0} of {1}'
     cont: 'Use /ttp {0} help for help with a command'
     cont-plain: 'Use /ttp {0} help for help with a command'
     help: 'Displays help information'
   reload:
     command: 'reload'
-    reloading: 'Reloading'
+    reloading: 'Reloading {0}'
     badconfig: 'An error occured when reloading, check your server logs'
-    general: 'An error occured while reloading'
-    success: 'has reloaded'
+    general: 'An error occured while reloading {0}'
+    success: '{0} has reloaded'
     help: 'Reloads TotalPermissions'
   handler:
     ifnull: 'No command found, use /ttp help for command list'
     ifnull-plain: 'No command found, use /ttp help for command list'
+    usage: 'Usage: /{0}'
     help-check: 'help'
-    denied: 'You cannot use that command'
-  dump:
-    help: 'Provides the registered perms for an item'
+    denied: '&cYou cannot use that command'
+  user:
+    non-player: 'Error: You are not a player'
+    groups: 'Groups: {0}'
+    player: 'Player: {0}'
+    debug: 'Debug: {0}'
+    help: 'User interface'
+  group:
+    list: 'Groups: {0}'
+    help: 'Group interface'
+  special:
+    help: 'Special permissions type interface for console and others'
+  world:
+    help: 'World interface'
 configuration:
   configuration:
     strict-mode: 'strict-mode'
@@ -45,18 +118,18 @@ language:
 listener:
   tplistener:
     login:
-      hooked: 'Reflection hook established'
+      hooked: 'Reflection hook established for {0}'
       error: 'Error in reflecting in'
     preprocess:
       activate: 'Command used by'
-      allow: 'can use the command, has'
-      deny: 'cannot use the command, does not have'
+      allow: '{0} can use the command, has {1}'
+      deny: '{0} cannot use the command, does not have {1}'
       invalid: 'The command used ("{0}") is not a registered command.'
       index: 'produced an IOoBE'
 permission:
   base:
-    adding: 'Adding perms for'
-    add: 'Adding perm'
+    adding: 'Adding perms for {0}'
+    add: 'Adding perm: {0}'
   group:
     default: 'default'
 reflection:
@@ -85,9 +158,13 @@ main:
     command: 'Creating command handler'
   metrics: 'Plugin Metrics is on, you can opt-out in the PluginMetrics config'
   error: 'Error in starting up {0} (Version {1})'
+  loadcrash: 'There were issues with loading, not enabling plugin'
 variables:
   command: '<command>'
   username: '<username>'
+  username-optional: '[username]'
   group: '<group>'
+  field: '<field>'
   permission: '<permission>'
   node: '<node>'
+  value: '<value>'
