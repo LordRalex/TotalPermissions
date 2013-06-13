@@ -309,6 +309,7 @@ public abstract class PermissionBase {
 
     protected final synchronized void addPermission(String perm, String world, boolean allow) {
         Permission pr = perms.get(world);
+        //fix this to also handle null from the get
         if (pr != null) {
             Map<String, Boolean> permList = pr.getChildren();
             if (permList == null) {
@@ -476,6 +477,15 @@ public abstract class PermissionBase {
         }
         if (existing == null) {
             existing = new ArrayList<String>();
+        }
+        if (existing.contains(item)) {
+        }
+        if (existing.contains("-" + item)) {
+            existing.remove("-" + item);
+        }
+        if (item.startsWith("-")) {
+            String temp = item.substring(1);
+            existing.remove(temp);
         }
         existing.add(item);
         if (world == null) {
