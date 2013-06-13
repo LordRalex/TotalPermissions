@@ -30,7 +30,7 @@ import org.bukkit.command.CommandSender;
  * @author 1Rogue
  * @version 0.2
  */
-public class RemoveAction implements SubAction {
+public class RemoveAction extends SubAction {
 
     public boolean execute(CommandSender sender, String aType, String target, String field, String item, String world) {
         PermissionType type = PermissionType.getType(aType);
@@ -42,9 +42,7 @@ public class RemoveAction implements SubAction {
                 sender.sendMessage("Permission " + item + " removed from " + target + "!");
                 return true;
             } catch (IOException ex) {
-                sender.sendMessage(ChatColor.RED + "An error occured while saving the changes.");
-                sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
-                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An error occured while saving " + tar.getType() + "." + tar.getName(), ex);
+                saveError(tar, sender, ex);
             }
         } else if (field.equalsIgnoreCase("inheritance")) {
             try {
@@ -52,9 +50,7 @@ public class RemoveAction implements SubAction {
                 sender.sendMessage("Inheritance " + item + " removed from " + target + "!");
                 return true;
             } catch (IOException ex) {
-                sender.sendMessage(ChatColor.RED + "An error occured while saving the changes.");
-                sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
-                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An error occured while saving " + tar.getType() + "." + tar.getName(), ex);
+                saveError(tar, sender, ex);
             }
         } else if (field.equalsIgnoreCase("commands")) {
             try {
@@ -62,9 +58,7 @@ public class RemoveAction implements SubAction {
                 sender.sendMessage("Command " + item + " removed from " + target + "!");
                 return true;
             } catch (IOException ex) {
-                sender.sendMessage(ChatColor.RED + "An error occured while saving the changes.");
-                sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
-                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An error occured while saving " + tar.getType() + "." + tar.getName(), ex);
+                saveError(tar, sender, ex);
             }
         } else if (field.equalsIgnoreCase("groups")) {
             try {
@@ -72,9 +66,7 @@ public class RemoveAction implements SubAction {
                 sender.sendMessage(target + " removed from group " + item + "!");
                 return true;
             } catch (IOException ex) {
-                sender.sendMessage(ChatColor.RED + "An error occured while saving the changes.");
-                sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
-                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An error occured while saving " + tar.getType() + "." + tar.getName(), ex);
+                saveError(tar, sender, ex);
             }
         } else if (field.equalsIgnoreCase("prefix")) {
             try {
@@ -82,9 +74,7 @@ public class RemoveAction implements SubAction {
                 sender.sendMessage("Prefix removed from " + target + "!");
                 return true;
             } catch (IOException ex) {
-                sender.sendMessage(ChatColor.RED + "An error occured while saving the changes.");
-                sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
-                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An error occured while saving " + tar.getType() + "." + tar.getName(), ex);
+                saveError(tar, sender, ex);
             }
         } else if (field.equalsIgnoreCase("suffix")) {
             try {
@@ -92,14 +82,9 @@ public class RemoveAction implements SubAction {
                 sender.sendMessage("Suffix removed from " + target + "!");
                 return true;
             } catch (IOException ex) {
-                sender.sendMessage(ChatColor.RED + "An error occured while saving the changes.");
-                sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
-                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An error occured while saving " + tar.getType() + "." + tar.getName(), ex);
+                saveError(tar, sender, ex);
             }
         }
-
-        // Removes from a certain field (or deletes the prefix/suffix)
-        // Don't forget to catch for last group being removed, set default
         return false;
     }
 

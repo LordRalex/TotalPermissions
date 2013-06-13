@@ -27,7 +27,7 @@ import org.bukkit.command.CommandSender;
  * @author 1Rogue
  * @version 0.2
  */
-public class CheckAction implements SubAction {
+public class CheckAction extends SubAction {
 
     public boolean execute(CommandSender sender, String aType, String target, String field, String item, String world) {
         PermissionType type = PermissionType.getType(aType);

@@ -17,12 +17,8 @@
 package net.ae97.totalpermissions.commands.subcommands.actions;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.PermissionBase;
 import net.ae97.totalpermissions.permission.PermissionType;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -31,7 +27,7 @@ import org.bukkit.command.CommandSender;
  * @author 1Rogue
  * @version 0.2
  */
-public class AddAction implements SubAction {
+public class AddAction extends SubAction {
 
     public boolean execute(CommandSender sender, String aType, String target, String field, String item, String world) {
         PermissionType type = PermissionType.getType(aType);
@@ -42,9 +38,7 @@ public class AddAction implements SubAction {
                 sender.sendMessage("Permission '" + item + "' added for " + target + "!");
                 return true;
             } catch (IOException ex) {
-                sender.sendMessage(ChatColor.RED + "An error occured while saving the changes.");
-                sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
-                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An error occured while saving " + tar.getType() + "." + tar.getName(), ex);
+                saveError(tar, sender, ex);
             }
         } else if (field.equalsIgnoreCase("inheritance")) {
             try {
@@ -52,9 +46,7 @@ public class AddAction implements SubAction {
                 sender.sendMessage("Inheritance '" + item + "' added for " + target + "!");
                 return true;
             } catch (IOException ex) {
-                sender.sendMessage(ChatColor.RED + "An error occured while saving the changes.");
-                sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
-                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An error occured while saving " + tar.getType() + "." + tar.getName(), ex);
+                saveError(tar, sender, ex);
             }
         } else if (field.equalsIgnoreCase("commands")) {
             try {
@@ -62,9 +54,7 @@ public class AddAction implements SubAction {
                 sender.sendMessage("Command '" + item + "' added for " + target + "!");
                 return true;
             } catch (IOException ex) {
-                sender.sendMessage(ChatColor.RED + "An error occured while saving the changes.");
-                sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
-                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An error occured while saving " + tar.getType() + "." + tar.getName(), ex);
+                saveError(tar, sender, ex);
             }
         } else if (field.equalsIgnoreCase("groups")) {
             try {
@@ -72,9 +62,7 @@ public class AddAction implements SubAction {
                 sender.sendMessage("Group '" + item + "' added for " + target + "!");
                 return true;
             } catch (IOException ex) {
-                sender.sendMessage(ChatColor.RED + "An error occured while saving the changes.");
-                sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
-                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An error occured while saving " + tar.getType() + "." + tar.getName(), ex);
+                saveError(tar, sender, ex);
             }
         }
         return false;

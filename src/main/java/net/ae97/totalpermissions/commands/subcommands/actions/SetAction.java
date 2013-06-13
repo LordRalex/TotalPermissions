@@ -31,7 +31,7 @@ import org.bukkit.command.CommandSender;
  * @author 1Rogue
  * @version 0.2
  */
-public class SetAction implements SubAction {
+public class SetAction extends SubAction {
 
     public boolean execute(CommandSender sender, String aType, String target, String field, String item, String world) {
         PermissionType type = PermissionType.getType(aType);
@@ -41,9 +41,7 @@ public class SetAction implements SubAction {
                 try {
                     TotalPermissions.getPlugin().getManager().changeDefaultGroup(tar.getName());
                 } catch (IOException ex) {
-                    sender.sendMessage(ChatColor.RED + "An error occured while saving the changes.");
-                    sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
-                    TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An error occured while saving " + tar.getType() + "." + tar.getName(), ex);
+                    saveError(tar, sender, ex);
                 }
             }
         } else if (field.equalsIgnoreCase("prefix")) {
@@ -51,18 +49,14 @@ public class SetAction implements SubAction {
                 tar.setOption("prefix", item, world);
                 return true;
             } catch (IOException ex) {
-                sender.sendMessage(ChatColor.RED + "An error occured while saving the changes.");
-                sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
-                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An error occured while saving " + tar.getType() + "." + tar.getName(), ex);
+                saveError(tar, sender, ex);
             }
         } else if (field.equalsIgnoreCase("suffix")) {
             try {
                 tar.setOption("suffix", item, world);
                 return true;
             } catch (IOException ex) {
-                sender.sendMessage(ChatColor.RED + "An error occured while saving the changes.");
-                sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
-                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An error occured while saving " + tar.getType() + "." + tar.getName(), ex);
+                saveError(tar, sender, ex);
             }
         }
         return false;

@@ -19,7 +19,6 @@ package net.ae97.totalpermissions.commands.subcommands.actions;
 import java.util.Map;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.PermissionBase;
-import net.ae97.totalpermissions.permission.PermissionGroup;
 import net.ae97.totalpermissions.permission.PermissionType;
 import net.ae97.totalpermissions.permission.PermissionUser;
 import org.bukkit.command.CommandSender;
@@ -30,7 +29,7 @@ import org.bukkit.command.CommandSender;
  * @author 1Rogue
  * @version 0.2
  */
-public class ListAction implements SubAction {
+public class ListAction extends SubAction {
 
     public boolean execute(CommandSender sender, String aType, String target, String field, String item, String world) {
         PermissionType type = PermissionType.getType(aType);
