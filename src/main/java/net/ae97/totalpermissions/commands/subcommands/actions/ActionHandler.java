@@ -74,7 +74,7 @@ public class ActionHandler {
                 return false;
         }
         
-        SubAction executor = actions.get(args[2].toLowerCase());
+        SubAction executor = actions.get(ackshun.toLowerCase());
         if (executor == null) {
             sender.sendMessage("No action found, use /ttp help actions for an action list");
             return false;
@@ -87,7 +87,7 @@ public class ActionHandler {
             return true;
         }
 
-        if ((args.length >= 4) && (args[3].equalsIgnoreCase("help"))) {
+        if ((args.length >= 4) && (field.equalsIgnoreCase("help"))) {
             sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.handler.usage", executor.getHelp()[0]));
             sender.sendMessage(executor.getHelp()[1]);
             return true;
