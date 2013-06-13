@@ -309,32 +309,36 @@ public abstract class PermissionBase {
 
     protected final synchronized void addPermission(String perm, String world, boolean allow) {
         Permission pr = perms.get(world);
-        if (pr != null) {
-            Map<String, Boolean> permList = pr.getChildren();
-            if (permList == null) {
-                permList = new HashMap<String, Boolean>();
+        if (pr == null) {
+            if (world != null) {
+                pr = new Permission("totalpermissions.baseItem." + permType + "." + name + ".worlds.permissions." + world);
             }
-            if (!TotalPermissions.getPlugin().getConfiguration().getBoolean("reflection.starperm")) {
-                if (perm.equals("**")) {
-                    List<String> allPerms = PermissionUtility.handleWildcard(true);
-                    for (String perm_ : allPerms) {
-                        if (!permList.containsKey(perm_)) {
-                            permList.put(perm_, Boolean.TRUE);
-                        }
+        }
+        Map<String, Boolean> permList = pr.getChildren();
+        if (permList == null) {
+            permList = new HashMap<String, Boolean>();
+        }
+        if (!TotalPermissions.getPlugin().getConfiguration().getBoolean("reflection.starperm")) {
+            if (perm.equals("**")) {
+                List<String> allPerms = PermissionUtility.handleWildcard(true);
+                for (String perm_ : allPerms) {
+                    if (!permList.containsKey(perm_)) {
+                        permList.put(perm_, Boolean.TRUE);
                     }
-                } else if (perm.equals("*")) {
-                    List<String> allPerms = PermissionUtility.handleWildcard(false);
-                    for (String perm_ : allPerms) {
-                        if (!permList.containsKey(perm_)) {
-                            permList.put(perm_, Boolean.TRUE);
-                        }
+                }
+            } else if (perm.equals("*")) {
+                List<String> allPerms = PermissionUtility.handleWildcard(false);
+                for (String perm_ : allPerms) {
+                    if (!permList.containsKey(perm_)) {
+                        permList.put(perm_, Boolean.TRUE);
                     }
                 }
             }
-            permList.put(perm, allow);
-            pr.getChildren().clear();
-            pr.getChildren().putAll(permList);
         }
+        permList.put(perm, allow);
+        pr.getChildren().clear();
+        pr.getChildren().putAll(permList);
+        perms.put(world, pr);
     }
 
     /**
@@ -476,6 +480,15 @@ public abstract class PermissionBase {
         }
         if (existing == null) {
             existing = new ArrayList<String>();
+        }
+        if (existing.contains(item)) {
+        }
+        if (existing.contains("-" + item)) {
+            existing.remove("-" + item);
+        }
+        if (item.startsWith("-")) {
+            String temp = item.substring(1);
+            existing.remove(temp);
         }
         existing.add(item);
         if (world == null) {
