@@ -309,33 +309,36 @@ public abstract class PermissionBase {
 
     protected final synchronized void addPermission(String perm, String world, boolean allow) {
         Permission pr = perms.get(world);
-        //fix this to also handle null from the get
-        if (pr != null) {
-            Map<String, Boolean> permList = pr.getChildren();
-            if (permList == null) {
-                permList = new HashMap<String, Boolean>();
+        if (pr == null) {
+            if (world != null) {
+                pr = new Permission("totalpermissions.baseItem." + permType + "." + name + ".worlds.permissions." + world);
             }
-            if (!TotalPermissions.getPlugin().getConfiguration().getBoolean("reflection.starperm")) {
-                if (perm.equals("**")) {
-                    List<String> allPerms = PermissionUtility.handleWildcard(true);
-                    for (String perm_ : allPerms) {
-                        if (!permList.containsKey(perm_)) {
-                            permList.put(perm_, Boolean.TRUE);
-                        }
+        }
+        Map<String, Boolean> permList = pr.getChildren();
+        if (permList == null) {
+            permList = new HashMap<String, Boolean>();
+        }
+        if (!TotalPermissions.getPlugin().getConfiguration().getBoolean("reflection.starperm")) {
+            if (perm.equals("**")) {
+                List<String> allPerms = PermissionUtility.handleWildcard(true);
+                for (String perm_ : allPerms) {
+                    if (!permList.containsKey(perm_)) {
+                        permList.put(perm_, Boolean.TRUE);
                     }
-                } else if (perm.equals("*")) {
-                    List<String> allPerms = PermissionUtility.handleWildcard(false);
-                    for (String perm_ : allPerms) {
-                        if (!permList.containsKey(perm_)) {
-                            permList.put(perm_, Boolean.TRUE);
-                        }
+                }
+            } else if (perm.equals("*")) {
+                List<String> allPerms = PermissionUtility.handleWildcard(false);
+                for (String perm_ : allPerms) {
+                    if (!permList.containsKey(perm_)) {
+                        permList.put(perm_, Boolean.TRUE);
                     }
                 }
             }
-            permList.put(perm, allow);
-            pr.getChildren().clear();
-            pr.getChildren().putAll(permList);
         }
+        permList.put(perm, allow);
+        pr.getChildren().clear();
+        pr.getChildren().putAll(permList);
+        perms.put(world, pr);
     }
 
     /**
