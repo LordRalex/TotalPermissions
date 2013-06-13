@@ -23,6 +23,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -42,6 +43,13 @@ public class Cipher {
         language += ".yml";
         Plugin plugin = TotalPermissions.getPlugin();
         //load file from github in preps for future use
+        if (language.equalsIgnoreCase("custom.yml")) {
+            FileConfiguration file = this.getFromFolder(plugin, language);
+            if (file != null) {
+                setLangFile(file);
+                return;
+            }
+        }
         FileConfiguration github;
         try {
             github = getFromGithub(language);
@@ -98,7 +106,8 @@ public class Cipher {
         for (int i = 0; i < vars.length; i++) {
             string = string.replace("{" + i + "}", vars[i].toString());
         }
-        return string;
+        //TODO: If returned string is null, then get one from the english file (always up-to-date).
+        return ChatColor.translateAlternateColorCodes('&', string);
     }
 
     private FileConfiguration getFromFolder(Plugin pl, String lang) {

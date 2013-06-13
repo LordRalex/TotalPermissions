@@ -1,3 +1,28 @@
+## Explanation on the configuration:
+##
+## strict-mode:  ???. Default is false.
+##
+## update-check: Whether or not to run a check for an updated version at the
+##               server startup. Default is true;
+##
+## language: The language and locale to use. A list of usuable languages can be
+##           found here: http://bit.ly/175n1YE . You may also load your very own
+##           lang file by using the value "custom", and placing a file named
+##           "custom.yml" in the plugins/TotalPermissions/lang/ folder. Default 
+##           value is "en_US"
+##
+## reflection: ???
+##
+##   starperm: ???. Default is false.
+##
+##   debug: ???. Default is false.
+##
+## permissions: ???
+##
+##   formatter: ???. Default is true.
+##
+##   updater: ???. Default is true.
+##
 strict-mode: false
 update-check: true
 language: en_US
