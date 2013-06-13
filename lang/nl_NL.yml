@@ -1,5 +1,59 @@
-version: 1
+version: 2
 command:
+  action:
+    subaction:
+      saveerror1: '&cEr is een fout opgetreden tijdens het opslaan'
+      saveerror2: '&cDe wijzigingen zijn toegepast maar zijn niet opgeslagen'
+      saveerror3: 'Er is een fout opgetreden tijdens het opslaan van {0}.{1}'
+    handler:
+      ifnull: '&cGeen actie gevonden, probeer /ttp help actions voor een lijst van acties'
+      invalid: '&cOngeldig gebruik van {0}'
+      execfields: '&cUitvoerbare velden voor "{0}": {1}'
+      editfields: '&cUitvoerbare velden voor "{0}": {1}'
+      notsupported: '&cVeld "{0}" kan niet gebruikt worden voor "{1}"!'
+      denied: '&cJe mag deze actie niet gebruiken'
+      usage: 'Gebruik: {0}'
+    add:
+      permissions: 'Permissie "{0}" toegevoegd voor {1}!'
+      inheritance: '"{1}" erft nu van "{0}"!'
+      commands: 'Commando "{0}" toegevoegd voor {1}!'
+      groups: 'Groep "{0}" toegevoegd aan {1}!'
+      help: 'Voegt een waarde aan een veld toe'
+    check:
+      permissions:
+        has: '{0} heeft permissie "{1}"'
+        not: '{0} heeft permissie "{1}" niet'
+      inheritance:
+        has: '{0} erft over van "{1}"'
+        not: '{0} erft niet van "{1}"'
+      commands:
+        has: '{0} heeft commando "{1}"'
+        not: '{0} heeft commando "{1}" niet'
+      groups:
+        has: '{0} is in groep "{1}"'
+        not: '{0} is niet in groep "{1}"'
+      help: 'Controleert of een veld de juiste waarde bevat'
+    remove:
+      permissions: 'Permissie "{0}" verwijderd voor "{1}"'
+      inheritance: '"{1}" erft niet meer van "{0}"'
+      commands: 'Commando "{0}" verwijderd voor "{1}"'
+      groups: '"{1}" verwijderd uit groep "{0}"'
+      prefix: 'Prefix verwijderd voor "{0}"!'
+      suffix: 'Suffix verwijderd voor "{0}"!'
+      help: 'Verwijdert een waarde van een veld'
+    list:
+      permissions: 'Permissies voor "{0}":'
+      inheritance: '"{0}" erft van: {1}'
+      commands: 'Commando''s van "{0}": {1}'
+      groups: 'Groepen van "{0}": {1}'
+      prefix: 'Prefix van "{0}": {1}'
+      suffix: 'Suffix van "{0}": {1}'
+      help: 'Geeft de waarden voor een opgegeven veld'
+    set:
+      default: '"{0}" is nu de standaardgroep'
+      prefix: 'Prefix voor "{0}" is nu: {1}'
+      suffix: 'Suffix voor "{0}" is nu: {1}'
+      help: 'Stelt de waarde in van een veld'
   backup:
     command: 'backup'
     help: 'Maakt een backup van de pluginbestanden'
@@ -12,6 +66,8 @@ command:
     debug-off: 'Debugmode uitgeschakeld voor {0}'
     help: 'Schakelt debugmode in voor een gebruiker'
   help:
+    action-help: 'Gebruik "help" zonder quotes na een actie om help-informatie weer te geven'
+    page: 'Pagina {0} van {1}'
     command: 'help'
     cont: 'Gebruik /ttp {0} help om hulp te krijgen voor een commando'
     cont-plain: 'Gebruik /ttp {0} help om hulp te krijgen voor een commando'
@@ -26,13 +82,24 @@ command:
   handler:
     ifnull: 'Geen commando gevonden, gebruik /ttp help voor een lijst met commando''s'
     ifnull-plain: 'Geen commando gevonden, gebruik /ttp help voor een lijst met commando''s'
+    usage: 'Gebruik: /{0}'
+    denied: 'Je mag dit commando niet gebruiken'
     help-check: 'help'
     denied: 'Je kunt dit commando niet gebruiken'
     usage: 'gebruik'
   user:
+    non-player: 'Error: Je bent geen speler'
+    groups: 'Groepen: {0}'
+    player: 'Speler: {0}'
+    debug: 'Debug: {0}'
     help: 'Gebruikersinterface'
   group:
+    list: 'Groepen: {0}'
     help: 'Groepsinterface'
+  special:
+    help: 'Speciaal permissies type interface voor console en overige'
+  world:
+    help: 'Wereld interface'
 configuration:
   configuration:
     strict-mode: 'strikte mode'
@@ -88,9 +155,12 @@ main:
     command: 'commandhandler aan het maken'
   metrics: 'Plugin statistieken zijn ingeschakeld, dit kan uitgeschakeld worden in het PluginMetrics configuratiebestand.'
   error: 'Error tijdens het opstarten van {0} (Versie {1})'
+  loadcrash: 'Er is iets fout gegaan tijdens het laden; plugin niet ingeschakeld'
 variables:
   command: '<commando>'
   username: '<gebruikersnaam>'
   group: '<groep>'
   permission: '<permissie>'
   node: '<node>'
+  field: '<veld>'
+  value: '<waarde>'
