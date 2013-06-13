@@ -34,11 +34,11 @@ public class GroupCommand implements SubCommand {
             TotalPermissions.getPlugin().getCommandHandler().getActionHandler().onAction(sender, args, fields());
             return true;
         } else if (args.length == 1) {
-            StringBuilder sb = new StringBuilder("Groups: ");
+            StringBuilder sb = new StringBuilder();
             for (String group : TotalPermissions.getPlugin().getManager().getGroups()) {
                 sb.append(group).append(", ");
             }
-            sender.sendMessage(sb.substring(0, sb.length() - 2));
+            TotalPermissions.getPlugin().getLangFile().getString("command.group.list", sb.substring(0, sb.length() - 3));
             return true;
         }
         return false;

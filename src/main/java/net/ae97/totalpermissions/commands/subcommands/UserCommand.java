@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.PermissionUser;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -35,18 +36,27 @@ public class UserCommand implements SubCommand {
         if (args.length > 2) { // If there is an action command
             TotalPermissions.getPlugin().getCommandHandler().getActionHandler().onAction(sender, args, fields());
             return true;
-        } else if (args.length == 1) {
-            if (sender instanceof Player) {
-                Player p = (Player) sender;
-                PermissionUser user = TotalPermissions.getPlugin().getManager().getUser(p);
-                StringBuilder sb = new StringBuilder("Groups: ");
-                for (String group : user.getGroups(null)) {
-                    sb.append(group).append(", ");
+        } else if ((args.length == 1) || args.length == 2) {
+            Player p = null;
+            if (args.length == 2) {
+                p = Bukkit.getPlayer(args[1]);
+            } else if (args.length == 1) {
+                if (sender instanceof Player) {
+                    p = (Player) sender;
                 }
-                sender.sendMessage("Player: " + sender.getName());
-                sender.sendMessage("Debug: " + user.getDebugState());
-                sender.sendMessage(sb.substring(0, sb.length() - 2));
+                else {
+                    sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.user.non-player"));
+                    return false;
+                }
             }
+            PermissionUser user = TotalPermissions.getPlugin().getManager().getUser(p);
+            StringBuilder sb = new StringBuilder();
+            for (String group : user.getGroups(null)) {
+                sb.append(group).append(", ");
+            }
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.user.player", sender.getName()));
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.user.debug", user.getDebugState()));
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.user.groups", sb.substring(0, sb.length() - 3)));
             return true;
         }
         return false;

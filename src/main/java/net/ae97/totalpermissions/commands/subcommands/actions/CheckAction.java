@@ -16,6 +16,7 @@
  */
 package net.ae97.totalpermissions.commands.subcommands.actions;
 
+import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.PermissionBase;
 import net.ae97.totalpermissions.permission.PermissionType;
 import net.ae97.totalpermissions.permission.PermissionUser;
@@ -34,28 +35,28 @@ public class CheckAction extends SubAction {
         PermissionBase tar = PermissionType.getTarget(type, target);
         if (field.equalsIgnoreCase("permissions")) {
             if (tar.has(item, world)) {
-                sender.sendMessage(target + " has '" + item + "'!");
+                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.check.permissions.has", target, item));
             }
             else {
-                sender.sendMessage(target + " does NOT have '" + item + "'!");
+                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.check.permissions.not", target, item));
             }
             return true;
         }
         else if (field.equalsIgnoreCase("inheritance")) {
             if (tar.hasInheritance(item, world)) {
-                sender.sendMessage(target + " inherits '" + item + "'!");
+                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.check.inheritance.has", target, item));
             }
             else {
-                sender.sendMessage(target + " does NOT inherit '" + item + "'!");
+                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.check.inheritance.not", target, item));
             }
             return true;
         }
         else if (field.equalsIgnoreCase("commands")) {
             if (tar.hasCommand(item, world)) {
-                sender.sendMessage(target + " has '" + item + "'!");
+                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.check.commands.has", target, item));
             }
             else {
-                sender.sendMessage(target + " does NOT have '" + item + "'!");
+                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.check.commands.not", target, item));
             }
             return true;
         }
@@ -63,17 +64,15 @@ public class CheckAction extends SubAction {
             if (tar instanceof PermissionUser) {
                 PermissionUser newtar = (PermissionUser)tar;
                 if (newtar.inherits(item, world)) {
-                    sender.sendMessage(target + " is in group '" + item + "'!");
+                    sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.check.groups.has", target, item));
                 }
                 else {
-                    sender.sendMessage(target + " is NOT in group '" + item + "'!");
+                    sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.check.groups.not", target, item));
                 }
                 return true;
             }
             return false;
         }
-        //Check if the provided area has the right value within it. Not for listing
-            //Wut, I don't even know what I wrote here.
         return false;
     }
 
@@ -83,8 +82,8 @@ public class CheckAction extends SubAction {
 
     public String[] getHelp() {
         return new String[]{
-            "check <field> <value>",
-            "Checks if a given target's field has the provided value"
+            "check " + TotalPermissions.getPlugin().getLangFile().getString("variables.field") + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.value"),
+            TotalPermissions.getPlugin().getLangFile().getString("command.action.check.help")
         };
     }
     

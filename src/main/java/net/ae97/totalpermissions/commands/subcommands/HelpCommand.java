@@ -39,7 +39,7 @@ public class HelpCommand implements SubCommand {
                 int page = this.getInt(args[2]);
                 Map actions = TotalPermissions.getPlugin().getCommandHandler().getActionHandler().getActionList();
                 cs.sendMessage(getPage(page, actions));
-                cs.sendMessage("Use \"help\" without quotes after an action for help information");
+                cs.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.help.action-help"));
             }
             return true;
         }
@@ -77,7 +77,7 @@ public class HelpCommand implements SubCommand {
         }
         StringBuilder sb = new StringBuilder();
         sb.append(Formatter.formatTitle(TotalPermissions.getPlugin().getName(), ChatColor.WHITE, ChatColor.WHITE)).append("\n");
-        sb.append(ChatColor.RED).append("Page ").append(page).append(" of ").append((int) Math.ceil((double) listSize / (double) factor)).append("\n").append(ChatColor.RESET);
+        sb.append(TotalPermissions.getPlugin().getLangFile().getString("command.help.page", page, (int) Math.ceil((double) listSize / (double) factor))).append("\n").append(ChatColor.RESET);
         String[] list = map.keySet().toArray(new String[listSize]);
         Arrays.sort(list);
         for (int i = index; i < upper; i++) {

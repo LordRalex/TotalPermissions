@@ -17,11 +17,9 @@
 package net.ae97.totalpermissions.commands.subcommands.actions;
 
 import java.io.IOException;
-import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.PermissionBase;
 import net.ae97.totalpermissions.permission.PermissionType;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -39,7 +37,7 @@ public class RemoveAction extends SubAction {
         if (field.equalsIgnoreCase("permissions")) {
             try {
                 tar.remPerm(item, world);
-                sender.sendMessage("Permission " + item + " removed from " + target + "!");
+                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.remove.permissions", item, target));
                 return true;
             } catch (IOException ex) {
                 saveError(tar, sender, ex);
@@ -47,7 +45,7 @@ public class RemoveAction extends SubAction {
         } else if (field.equalsIgnoreCase("inheritance")) {
             try {
                 tar.remInheritance(item, world);
-                sender.sendMessage("Inheritance " + item + " removed from " + target + "!");
+                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.remove.inheritance", item, target));
                 return true;
             } catch (IOException ex) {
                 saveError(tar, sender, ex);
@@ -55,7 +53,7 @@ public class RemoveAction extends SubAction {
         } else if (field.equalsIgnoreCase("commands")) {
             try {
                 tar.remCommand(item, world);
-                sender.sendMessage("Command " + item + " removed from " + target + "!");
+                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.remove.commands", item, target));
                 return true;
             } catch (IOException ex) {
                 saveError(tar, sender, ex);
@@ -63,7 +61,7 @@ public class RemoveAction extends SubAction {
         } else if (field.equalsIgnoreCase("groups")) {
             try {
                 tar.remGroup(item, world);
-                sender.sendMessage(target + " removed from group " + item + "!");
+                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.remove.groups", item, target));
                 return true;
             } catch (IOException ex) {
                 saveError(tar, sender, ex);
@@ -71,7 +69,7 @@ public class RemoveAction extends SubAction {
         } else if (field.equalsIgnoreCase("prefix")) {
             try {
                 tar.remOption("prefix", world);
-                sender.sendMessage("Prefix removed from " + target + "!");
+                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.remove.prefix", target));
                 return true;
             } catch (IOException ex) {
                 saveError(tar, sender, ex);
@@ -79,7 +77,7 @@ public class RemoveAction extends SubAction {
         } else if (field.equalsIgnoreCase("suffix")) {
             try {
                 tar.remOption("suffix", world);
-                sender.sendMessage("Suffix removed from " + target + "!");
+                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.remove.suffix", target));
                 return true;
             } catch (IOException ex) {
                 saveError(tar, sender, ex);
@@ -94,8 +92,8 @@ public class RemoveAction extends SubAction {
 
     public String[] getHelp() {
         return new String[]{
-            "remove <field> <value>",
-            "Removes a value from a field"
+            "remove " + TotalPermissions.getPlugin().getLangFile().getString("variables.field") + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.value"),
+            TotalPermissions.getPlugin().getLangFile().getString("command.action.remove.help")
         };
     }
 

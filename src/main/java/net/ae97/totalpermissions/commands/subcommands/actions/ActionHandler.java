@@ -76,19 +76,19 @@ public class ActionHandler {
         
         SubAction executor = actions.get(ackshun.toLowerCase());
         if (executor == null) {
-            sender.sendMessage("No action found, use /ttp help actions for an action list");
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.handler.ifnull"));
             return false;
         }
 
         if (args.length < 5 && !((ackshun.equalsIgnoreCase("list")) || field.equalsIgnoreCase("help"))) {
             sender.sendMessage("Invalid use of actions.");
-            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.handler.usage", executor.getHelp()[0]));
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.handler.usage", executor.getHelp()[0]));
             sender.sendMessage(executor.getHelp()[1]);
             return true;
         }
 
         if ((args.length >= 4) && (field.equalsIgnoreCase("help"))) {
-            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.handler.usage", executor.getHelp()[0]));
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.handler.usage", executor.getHelp()[0]));
             sender.sendMessage(executor.getHelp()[1]);
             return true;
         }
@@ -97,26 +97,24 @@ public class ActionHandler {
             if (this.isSupported(field, fields)) {
                 boolean begin = executor.execute(sender, type, target, field, iterm, world);
                 if (!begin) {
-                    sender.sendMessage(ChatColor.RED + "Invalid use of " + ackshun);
+                    sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.handler.invalid", ackshun));
                     StringBuilder sb = new StringBuilder();
-                    sb.append("Executable fields for '").append(ackshun).append("': ");
                     for (String item : executor.supportedTypes()) {
                         sb.append(item).append(", ");
                     }
-                    sender.sendMessage(ChatColor.RED + sb.toString().substring(0, sb.length() - 3));
+                    sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.handler.execfields", ackshun, sb.toString().substring(0, sb.length() - 3)));
                 }
             } else {
-                sender.sendMessage(ChatColor.RED + "Field '" + field + "' is not supported for " + type + "!");
+                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.handler.notsupported", field, type));
                 StringBuilder sb = new StringBuilder();
-                    sb.append("Editable fields for '").append(type).append("': ");
                     for (String item : fields) {
                         sb.append(item).append(", ");
                     }
-                    sender.sendMessage(ChatColor.RED + sb.toString().substring(0, sb.length() - 3));
+                    sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.handler.editfields", type, sb.toString().substring(0, sb.length() - 3)));
             }
             return true;
         } else {
-            sender.sendMessage(ChatColor.RED + TotalPermissions.getPlugin().getLangFile().getString("command.handler.denied"));
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.handler.denied"));
         }
         return true;
     }

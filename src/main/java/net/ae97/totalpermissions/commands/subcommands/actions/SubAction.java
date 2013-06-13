@@ -19,7 +19,6 @@ package net.ae97.totalpermissions.commands.subcommands.actions;
 import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.PermissionBase;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -56,8 +55,8 @@ public abstract class SubAction {
     public abstract String[] supportedTypes();
     
     protected void saveError(PermissionBase tar, CommandSender sender, Exception ex) {
-        sender.sendMessage(ChatColor.RED + "An error occured while saving the changes.");
-        sender.sendMessage(ChatColor.RED + "The changes should be applied but were not saved to the file");
-        TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An error occured while saving " + tar.getType() + "." + tar.getName(), ex);
+        sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.subaction.saveerror1"));
+        sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.subaction.saveerror2"));
+        TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, TotalPermissions.getPlugin().getLangFile().getString("command.action.subaction.saveerror3", tar.getType(), tar.getName()), ex);
     }
 }

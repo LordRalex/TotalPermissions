@@ -40,6 +40,7 @@ public class SetAction extends SubAction {
             if (tar instanceof PermissionGroup) {
                 try {
                     TotalPermissions.getPlugin().getManager().changeDefaultGroup(tar.getName());
+                    sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.set.default", target));
                 } catch (IOException ex) {
                     saveError(tar, sender, ex);
                 }
@@ -47,6 +48,7 @@ public class SetAction extends SubAction {
         } else if (field.equalsIgnoreCase("prefix")) {
             try {
                 tar.setOption("prefix", item, world);
+                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.set.prefix", target, item));
                 return true;
             } catch (IOException ex) {
                 saveError(tar, sender, ex);
@@ -54,6 +56,7 @@ public class SetAction extends SubAction {
         } else if (field.equalsIgnoreCase("suffix")) {
             try {
                 tar.setOption("suffix", item, world);
+                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.set.suffix", target, item));
                 return true;
             } catch (IOException ex) {
                 saveError(tar, sender, ex);
@@ -68,8 +71,8 @@ public class SetAction extends SubAction {
 
     public String[] getHelp() {
         return new String[]{
-            "set <field> <value>",
-            ""
+            "set " + TotalPermissions.getPlugin().getLangFile().getString("variables.field") + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.value"),
+            TotalPermissions.getPlugin().getLangFile().getString("command.action.set.help")
         };
     }
 

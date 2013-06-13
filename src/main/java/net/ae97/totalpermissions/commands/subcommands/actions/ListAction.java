@@ -42,59 +42,43 @@ public class ListAction extends SubAction {
         }
         
         else if (field.equalsIgnoreCase("inheritance")) {
-            StringBuilder sb = new StringBuilder(target);
-            sb.append(" inherits: ");
+            StringBuilder sb = new StringBuilder();
             for (String inher : tar.getInheritances(world)) {
                 sb.append(inher).append(", ");
             }
-            sb.substring(0, sb.length() - 3);
-            sb.append('.');
-            sender.sendMessage(sb.toString());
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.list.inheritance", target, sb.substring(0, sb.length() - 3)));
             return true;
         }
         
         else if (field.equalsIgnoreCase("commands")) {
-            StringBuilder sb = new StringBuilder("Commands for ");
-            sb.append(target).append(": ");
+            StringBuilder sb = new StringBuilder();
             for (String cmd : tar.getCommands(world)) {
                 sb.append(cmd).append(", ");
             }
-            sb.substring(0, sb.length() - 3);
-            sb.append('.');
-            sender.sendMessage(sb.toString());
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.list.commands", target, sb.substring(0, sb.length() - 3)));
             return true;
-
         }
         
         else if (field.equalsIgnoreCase("groups")) {
             if (tar instanceof PermissionUser) {
                 PermissionUser newtar = (PermissionUser) tar;
-                StringBuilder sb = new StringBuilder("Groups for ");
-                sb.append(target).append(": ");
-                // Groups shouldn't be empty, should at least have the default group.
+                StringBuilder sb = new StringBuilder();
                 for (String group : newtar.getGroups(world)) {
                     sb.append(group).append(", ");
                 }
-                sb.substring(0, sb.length() - 3);
-                sb.append('.');
-                sender.sendMessage(sb.toString());
+                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.list.groups", target, sb.substring(0, sb.length() - 3)));
                 return true;
             }
             return false;
         }
         
-        else if (field.equalsIgnoreCase("default")) {
-            sender.sendMessage("Default group: " + TotalPermissions.getPlugin().getManager().getDefaultGroup());
-            return true;
-        }
-        
         else if (field.equalsIgnoreCase("prefix")) {
-            sender.sendMessage("Prefix: " + tar.getOption("prefix"));
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.list.prefix", target, tar.getOption("prefix")));
             return true;
         }
         
         else if (field.equalsIgnoreCase("suffix")) {
-            sender.sendMessage("Suffix: " + tar.getOption("suffix"));
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.list.suffix", target, tar.getOption("suffix")));
             return true;
         }
         
@@ -107,8 +91,8 @@ public class ListAction extends SubAction {
 
     public String[] getHelp() {
         return new String[]{
-            "list <field>",
-            "Lists the values from a given field"
+            "list " + TotalPermissions.getPlugin().getLangFile().getString("variables.field") + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.value"),
+            TotalPermissions.getPlugin().getLangFile().getString("command.action.list.help")
         };
     }
 
@@ -118,7 +102,6 @@ public class ListAction extends SubAction {
             "inheritance",
             "commands",
             "groups",
-            "default",
             "prefix",
             "suffix"
         };

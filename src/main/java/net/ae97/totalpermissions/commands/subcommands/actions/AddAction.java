@@ -17,6 +17,7 @@
 package net.ae97.totalpermissions.commands.subcommands.actions;
 
 import java.io.IOException;
+import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.PermissionBase;
 import net.ae97.totalpermissions.permission.PermissionType;
 import org.bukkit.command.CommandSender;
@@ -35,7 +36,7 @@ public class AddAction extends SubAction {
         if (field.equalsIgnoreCase("permissions")) {
             try {
                 tar.addPerm(item, world);
-                sender.sendMessage("Permission '" + item + "' added for " + target + "!");
+                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.add.permissions", item, target));
                 return true;
             } catch (IOException ex) {
                 saveError(tar, sender, ex);
@@ -43,7 +44,7 @@ public class AddAction extends SubAction {
         } else if (field.equalsIgnoreCase("inheritance")) {
             try {
                 tar.addInheritance(item, world);
-                sender.sendMessage("Inheritance '" + item + "' added for " + target + "!");
+                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.add.inheritance", item, target));
                 return true;
             } catch (IOException ex) {
                 saveError(tar, sender, ex);
@@ -51,7 +52,7 @@ public class AddAction extends SubAction {
         } else if (field.equalsIgnoreCase("commands")) {
             try {
                 tar.addCommand(item, world);
-                sender.sendMessage("Command '" + item + "' added for " + target + "!");
+                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.add.commands", item, target));
                 return true;
             } catch (IOException ex) {
                 saveError(tar, sender, ex);
@@ -59,7 +60,7 @@ public class AddAction extends SubAction {
         } else if (field.equalsIgnoreCase("groups")) {
             try {
                 tar.addGroup(item, world);
-                sender.sendMessage("Group '" + item + "' added for " + target + "!");
+                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.add.groups", item, target));
                 return true;
             } catch (IOException ex) {
                 saveError(tar, sender, ex);
@@ -74,8 +75,8 @@ public class AddAction extends SubAction {
 
     public String[] getHelp() {
         return new String[]{
-            "add <field> <value>",
-            "Adds a value to a field"
+            "add " + TotalPermissions.getPlugin().getLangFile().getString("variables.field") + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.value"),
+            TotalPermissions.getPlugin().getLangFile().getString("command.action.add.help")
         };
     }
 
