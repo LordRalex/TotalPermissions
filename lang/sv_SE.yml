@@ -1,5 +1,59 @@
-version: 1
+version: 2
 command:
+  action:
+    subaction:
+      saveerror1: '&cEtt fel uppstog när ändringarna sparades.'
+      saveerror2: '&cSparningarna skulle ha applicerats men blev inte sparade till filen.'
+      saveerror3: 'Ett fel uppstog under sparning av {0}.{1}'
+    handler:
+      ifnull: '&cIngen handling funnen, använd /ttp hjälp handlingen för en handlingslista'
+      invalid: '&cOtillåten användning av {0}'
+      execfields: '&cKörbara fält för "{0}": {1}'
+      editfields: '&cKörbara fält för "{0}": {1}'
+      notsupported: '&cFält "{0}" har inget stöd för "{1}"!'
+      denied: '&cDu kan inte använda den handlingen'
+      usage: 'användning: {0}'
+    add:
+      permissions: 'Tillstånd "{0}" tillagt för {1}!'
+      inheritance: '"{1}" ärver nu "{0}"!'
+      commands: 'Kommando "{0}" tillagt för {1}!'
+      groups: 'Grupp "{0}" läggs till {1}!'
+      help: 'Lägger till ett värde till ett fält'
+    check:
+      permissions:
+        has: '{0} har tillstånd "{1}"'
+        not: '{0} har inte tillstånd "{1}"'
+      inheritance:
+        has: '{0} ärver "{1}"'
+        not: '{0} ärver inte "{1}"'
+      commands:
+        has: '{0} har kommando "{1}"'
+        not: '{0} har inte kommando "{1}"'
+      groups:
+        has: '{0} är i grupp "{1}"'
+        not: '{0} ar inte i grupp "{1}"'
+      help: 'Kontrollerar om givna målet''s fält har det angivna värdet'
+    remove:
+      permissions: 'Tillstånd "{0}" borttaget från "{1}"'
+      inheritance: '"{1}" ärver inte längre "{0}"'
+      commands: 'Kommando "{0}" borttaget från "{1}"'
+      groups: '"{1}" avlägsnad från grupp "{0}"'
+      prefix: 'Prefix borttaget från "{0}"!'
+      suffix: 'Suffix borttaget från "{0}"!'
+      help: 'Avlägsnar ett värde från ett fält'
+    list:
+      permissions: 'Tillstånd för "{0}":'
+      inheritance: '"{0}" ärver: {1}'
+      commands: 'Kommando för "{0}": {1}'
+      groups: 'Grupper för "{0}": {1}'
+      prefix: 'Prefix för "{0}": {1}'
+      suffix: 'Suffix för "{0}": {1}'
+      help: 'Listar värdena får ett angivet fält'
+    set:
+      default: '"{0}" är nu standard gruppen'
+      prefix: 'Prefix för "{0}" är nu: {1}'
+      suffix: 'Suffix för "{0}" är nu: {1}'
+      help: 'Setter ett specifikt fält med det angivna värdet'
   backup:
     command: 'säkerhetskopiera'
     help: 'Tvingar säkerhetskopiering'
@@ -12,6 +66,8 @@ command:
     debug-off: 'Debugläge avslaget för {0}'
     help: 'Slår på debugläge för en användare'
   help:
+    action-help: 'Använd "hjälp" utan citattecken efter en handling för hjälpinformation'
+    page: 'Sida {0} av {1}'
     command: 'hjälp'
     cont: 'Använd /ttp {0} hjälp för hjälp med ett kommando'
     cont-plain: 'Använd /ttp {0} help för hjälp med ett kommando'
@@ -26,13 +82,22 @@ command:
   handler:
     ifnull: 'Inget kommando funnet, använd /ttp hjälp för kommandolista'
     ifnull-plain: 'Inget kommando funnet, använd /ttp help för kommandolista'
+    usage: 'Användning: /{0}'
     help-check: 'hjälp'
     denied: 'Du kan inte använda det kommandot'
-    usage: 'användning'
   user:
+    non-player: 'Fel: Du är inte en spelare'
+    groups: 'Grupper: {0}'
+    player: 'Spelare: {0}'
+    debug: 'Avbuggning: {0}'
     help: 'Användargränssnitt'
   group:
+    list: 'Grupper: {0}'
     help: 'Gruppgränssnitt'
+  special:
+    help: 'Specialtillstånds typgränssnitt för konsol och andra'
+  world:
+    help: 'Världsgränssnitt'
 configuration:
   configuration:
     strict-mode: 'strikt-läge'
@@ -88,9 +153,12 @@ main:
     command: 'Skapar kommandohanterare'
   metrics: 'Mätning av pluginstatistik är på, du kan stänga av detta i konfigurationen för PluginMetrics'
   error: 'Fel vid uppstart av {0} (version {1})'
+  loadcrash: 'Där var problem med laddningen, pluginen inte aktiverad'
 variables:
   command: '<kommando>'  
   username: '<användarnamn>'
   group: '<grupp>'
   permission: '<tillstånd>'
+  field: '<fält>'
+  value: '<värde>'
   node: '<nod>'
