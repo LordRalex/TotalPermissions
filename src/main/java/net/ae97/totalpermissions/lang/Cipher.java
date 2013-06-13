@@ -17,6 +17,7 @@
 package net.ae97.totalpermissions.lang;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -50,12 +51,13 @@ public class Cipher {
                 return;
             }
         }
-        FileConfiguration github;
+        FileConfiguration github = null;
         try {
             github = getFromGithub(language);
+        } catch (FileNotFoundException e) {
+            plugin.getLogger().log(Level.SEVERE, "Lang file not found online", e);
         } catch (IOException e) {
             plugin.getLogger().log(Level.SEVERE, "Fatal error occured while retrieving lang files", e);
-            github = null;
         }
         try {
             //first see if there is a lang file
