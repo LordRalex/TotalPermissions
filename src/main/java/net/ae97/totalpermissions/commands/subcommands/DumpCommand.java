@@ -19,8 +19,8 @@ package net.ae97.totalpermissions.commands.subcommands;
 import java.util.List;
 import java.util.Set;
 import net.ae97.totalpermissions.TotalPermissions;
+import net.ae97.totalpermissions.lang.Cipher;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -39,6 +39,7 @@ public class DumpCommand implements SubCommand {
 
     public boolean execute(CommandSender sender, String[] args) {
         String[] params = new String[2];
+        Cipher lang = TotalPermissions.getPlugin().getLangFile();
         if (args.length == 1) {
             Player possible = Bukkit.getPlayer(args[0]);
             if (possible != null && possible.isOnline()) {
@@ -78,8 +79,8 @@ public class DumpCommand implements SubCommand {
             if (page >= permPages.length) {
                 page = 0;
             }
-            sender.sendMessage(ChatColor.GREEN + "Perms for plugin: " + pl.getName());
-            sender.sendMessage(ChatColor.GREEN + "Page " + (page + 1) + "/" + (permPages.length + 1));
+            sender.sendMessage(lang.getString("command.dump.title", "plugin", pl.getName()));
+            sender.sendMessage(lang.getString("command.dump.page", page + 1, permPages.length + 1));
             for (int i = 0; i < permPages[page].length; i++) {
                 if (permPages[page][i] != null) {
                     sender.sendMessage(permPages[page][i]);
@@ -108,9 +109,8 @@ public class DumpCommand implements SubCommand {
             if (page >= permPages.length) {
                 page = 0;
             }
-            //TODO: find out what the hell .listperm was supposed to output
-            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.dump.listperm", "plugin", player.getName()));
-            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.dump.page", page + 1, permPages.length + 1));
+            sender.sendMessage(lang.getString("command.dump.title", "plugin", player.getName()));
+            sender.sendMessage(lang.getString("command.dump.page", page + 1, permPages.length + 1));
             for (int i = 0; i < permPages[page].length; i++) {
                 if (permPages[page][i] != null) {
                     sender.sendMessage(permPages[page][i]);
@@ -118,7 +118,7 @@ public class DumpCommand implements SubCommand {
             }
         } else if (params[0].equalsIgnoreCase("-command")) {
             Command command = Bukkit.getPluginCommand(params[0]);
-            sender.sendMessage(ChatColor.GREEN + "Permission for " + command.getName() + ": " + command.getPermission());
+            sender.sendMessage(lang.getString("command.dump.title", "/" + command.getName(), command.getPermission()));
         } else {
             return false;
         }
