@@ -67,9 +67,8 @@ command:
     help: 'Turns on debug mode for a user'
   dump:
     help: 'Provides the registered perms for an item'
-    page: '&aPage {0}/{1}'
-    title: 'Perms for {0}: {1}'
-    listperm: '&a'
+    page: '&2Page {0}/{1}'
+    title: '&2Permissions for {0}: {1}'
   help:
     command: 'help'
     action-help: 'Use "help" without quotes after an action for help information'
