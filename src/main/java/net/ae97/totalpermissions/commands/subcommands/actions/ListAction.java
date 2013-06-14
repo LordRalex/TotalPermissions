@@ -37,7 +37,7 @@ public class ListAction extends SubAction {
         
         if (field.equalsIgnoreCase("permissions")) {
             sender.sendMessage("Permissions for " + target + ":");
-            sender.sendMessage(this.permMapToString(tar.getPerms()));
+            sender.sendMessage(this.permMapToString(tar.getPerms(world)));
             return true;
         }
         
@@ -91,7 +91,8 @@ public class ListAction extends SubAction {
 
     public String[] getHelp() {
         return new String[]{
-            "list " + TotalPermissions.getPlugin().getLangFile().getString("variables.field") + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.value"),
+            "list " + TotalPermissions.getPlugin().getLangFile().getString("variables.field")
+                + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.world-optional"),
             TotalPermissions.getPlugin().getLangFile().getString("command.action.list.help")
         };
     }

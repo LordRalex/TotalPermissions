@@ -92,7 +92,9 @@ public class RemoveAction extends SubAction {
 
     public String[] getHelp() {
         return new String[]{
-            "remove " + TotalPermissions.getPlugin().getLangFile().getString("variables.field") + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.value"),
+            "remove " + TotalPermissions.getPlugin().getLangFile().getString("variables.field")
+                 + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.value")
+                 + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.world-optional"),
             TotalPermissions.getPlugin().getLangFile().getString("command.action.remove.help")
         };
     }

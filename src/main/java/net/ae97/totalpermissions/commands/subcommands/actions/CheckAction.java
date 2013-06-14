@@ -82,7 +82,9 @@ public class CheckAction extends SubAction {
 
     public String[] getHelp() {
         return new String[]{
-            "check " + TotalPermissions.getPlugin().getLangFile().getString("variables.field") + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.value"),
+            "check " + TotalPermissions.getPlugin().getLangFile().getString("variables.field")
+                + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.value")
+                + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.world-optional"),
             TotalPermissions.getPlugin().getLangFile().getString("command.action.check.help")
         };
     }
