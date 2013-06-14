@@ -18,7 +18,6 @@ package net.ae97.totalpermissions.commands.subcommands;
 
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.PermissionUser;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -56,9 +55,9 @@ public class DebugCommand implements SubCommand {
             }
             target.setDebug(newState);
             if (target.getDebugState()) {
-                sender.sendMessage(ChatColor.GRAY + TotalPermissions.getPlugin().getLangFile().getString("command.debug.debug-on", target.getName()));
+                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.debug.debug-on", target.getName()));
             } else {
-                sender.sendMessage(ChatColor.GRAY + TotalPermissions.getPlugin().getLangFile().getString("command.debug.debug-off", target.getName()));
+                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.debug.debug-off", target.getName()));
             }
         }
         return true;

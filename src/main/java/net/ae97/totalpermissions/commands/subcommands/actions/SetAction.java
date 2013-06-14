@@ -17,12 +17,10 @@
 package net.ae97.totalpermissions.commands.subcommands.actions;
 
 import java.io.IOException;
-import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.PermissionBase;
 import net.ae97.totalpermissions.permission.PermissionGroup;
 import net.ae97.totalpermissions.permission.PermissionType;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**

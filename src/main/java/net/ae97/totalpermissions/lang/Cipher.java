@@ -102,7 +102,7 @@ public class Cipher {
 
     /**
      * Gets the message for this key in the used language. If the key does not
-     * exist, this will default to use the en_US in the
+     * exist, this will default to use the en_US in the jarfile.
      *
      * @param path The path to the string
      * @param vars Any variables to add

@@ -108,8 +108,9 @@ public class DumpCommand implements SubCommand {
             if (page >= permPages.length) {
                 page = 0;
             }
-            sender.sendMessage(ChatColor.GREEN + TotalPermissions.getPlugin().getLangFile().getString("command.dump.listperm", "plugin", player.getName()));
-            sender.sendMessage(ChatColor.GREEN + TotalPermissions.getPlugin().getLangFile().getString("command.dump.page", page + 1, permPages.length + 1));
+            //TODO: find out what the hell .listperm was supposed to output
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.dump.listperm", "plugin", player.getName()));
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.dump.page", page + 1, permPages.length + 1));
             for (int i = 0; i < permPages[page].length; i++) {
                 if (permPages[page][i] != null) {
                     sender.sendMessage(permPages[page][i]);

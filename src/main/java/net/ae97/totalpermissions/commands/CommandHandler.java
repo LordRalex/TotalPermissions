@@ -21,7 +21,6 @@ import net.ae97.totalpermissions.commands.subcommands.actions.ActionHandler;
 import java.util.HashMap;
 import java.util.Map;
 import net.ae97.totalpermissions.TotalPermissions;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -95,7 +94,7 @@ public final class CommandHandler implements CommandExecutor {
             }
             return true;
         } else {
-            sender.sendMessage(ChatColor.RED + plugin.getLangFile().getString("command.handler.denied"));
+            sender.sendMessage(plugin.getLangFile().getString("command.handler.denied"));
         }
         return true;
     }

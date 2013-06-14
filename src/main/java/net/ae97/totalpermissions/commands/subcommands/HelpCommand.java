@@ -76,7 +76,7 @@ public class HelpCommand implements SubCommand {
             upper = listSize;
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(Formatter.formatTitle(TotalPermissions.getPlugin().getName(), ChatColor.WHITE, ChatColor.WHITE)).append("\n");
+        sb.append(Formatter.formatTitle(TotalPermissions.getPlugin().getName(), ChatColor.WHITE, ChatColor.RED)).append("\n");
         sb.append(TotalPermissions.getPlugin().getLangFile().getString("command.help.page", page, (int) Math.ceil((double) listSize / (double) factor))).append("\n").append(ChatColor.RESET);
         String[] list = map.keySet().toArray(new String[listSize]);
         Arrays.sort(list);
