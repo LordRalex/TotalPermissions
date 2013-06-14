@@ -121,7 +121,7 @@ listener:
       hooked: 'Reflection hook established for {0}'
       error: 'Error in reflecting in'
     preprocess:
-      activate: 'Command used by'
+      activate: 'Command used by "{0}": {1}'
       allow: '{0} can use the command, has {1}'
       deny: '{0} cannot use the command, does not have {1}'
       invalid: 'The command used ("{0}") is not a registered command.'

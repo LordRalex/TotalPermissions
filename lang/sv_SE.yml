@@ -116,7 +116,7 @@ listener:
       hooked: 'Reflektionskrok installerad'
       error: 'Ett reflektionsfel inträffade i {0}'
     preprocess:
-      activate: 'Kommando använt av {0}'
+      activate: 'Kommando använt av "{0}": {1}'
       allow: '{0} kan använda kommandot, har {1}'
       deny: '{0} kan inte använda kommandot, har inte {1}'
       invalid: 'Kommandot ("{0}") är inte ett registrerat kommando.'

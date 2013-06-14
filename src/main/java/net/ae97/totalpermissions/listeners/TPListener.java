@@ -104,7 +104,7 @@ public class TPListener implements Listener {
         if (!user.getDebugState() || plugin.getConfiguration().getBoolean("reflection.debug")) {
             return;
         }
-        plugin.getLogger().info(plugin.getLangFile().getString("listener.tplistener.preprocess.activite") + event.getPlayer().getName() + ": " + event.getMessage());
+        plugin.getLogger().info(plugin.getLangFile().getString("listener.tplistener.preprocess.activate", event.getPlayer().getName(), event.getMessage()));
         try {
             String command = event.getMessage().split(" ", 2)[0].substring(1);
             Command cmd = Bukkit.getPluginCommand(command);

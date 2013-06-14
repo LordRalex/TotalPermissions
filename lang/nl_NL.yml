@@ -116,7 +116,7 @@ listener:
       hooked: 'Reflection hook aangemaakt'
       error: 'Error in reflecting in'
     preprocess:
-      activate: 'Commando gebruikt door'
+      activate: 'Commando gebruikt door "{0}": {1}'
       allow: 'mag het commando gebruiken, heeft'
       deny: 'mag het commando niet gebruiken, heeft geen'
       invalid: 'Het gebruikte commando ("{0}") is niet als commando geregistreerd.'
