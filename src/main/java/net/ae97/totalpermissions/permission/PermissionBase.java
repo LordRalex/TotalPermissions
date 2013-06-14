@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -312,6 +311,8 @@ public abstract class PermissionBase {
         if (pr == null) {
             if (world != null) {
                 pr = new Permission("totalpermissions.baseItem." + permType + "." + name + ".worlds.permissions." + world);
+            } else {
+                pr = new Permission("totalpermissions.baseItem." + permType + "." + name);
             }
         }
         Map<String, Boolean> permList = pr.getChildren();
