@@ -40,6 +40,9 @@ public class Configuration {
         configPath = new File(plugin.getDataFolder(), "config.yml");
     }
 
+    /**
+     * Loads the default config, adding missing keys if needed
+     */
     public void loadDefaults() {
         if (!configPath.exists()) {
             plugin.saveDefaultConfig();
@@ -78,18 +81,45 @@ public class Configuration {
         }
     }
 
+    /**
+     * Gets the String from the config with the specified path.
+     *
+     * @param path Path to String
+     * @return The resulting String from this path, defaults to null.
+     *
+     * @since 0.1
+     */
     public String getString(String path) {
         return config.getString(path, null);
     }
 
+    /**
+     * Gets the integer from the config with the specified path.
+     *
+     * @param path Path to integer
+     * @return The resulting integer from this path, defaults to 0.
+     *
+     * @since 0.1
+     */
     public int getInt(String path) {
         return config.getInt(path, 0);
     }
 
+    /**
+     * Gets the boolean from the config with the specified path.
+     *
+     * @param path Path to boolean
+     * @return The resulting boolean from this path, defaults to false.
+     *
+     * @since 0.1
+     */
     public boolean getBoolean(String path) {
         return config.getBoolean(path, false);
     }
 
+    /**
+     * Disables reflection.
+     */
     public void disableReflection() {
         ConfigurationSection section = config.getConfigurationSection("reflection");
         if (section == null) {

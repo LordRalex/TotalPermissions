@@ -25,7 +25,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
- *
  * @since 0.2
  * @author 1Rogue
  * @version 0.2
@@ -43,8 +42,7 @@ public class UserCommand implements SubCommand {
             } else if (args.length == 1) {
                 if (sender instanceof Player) {
                     p = (Player) sender;
-                }
-                else {
+                } else {
                     sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.user.non-player"));
                     return false;
                 }

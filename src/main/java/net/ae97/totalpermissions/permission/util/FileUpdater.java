@@ -29,7 +29,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
  * @author Lord_Ralex
- * @version 1.0
+ * @version 0.1
+ * @since 0.2
  */
 public class FileUpdater {
 
@@ -48,7 +49,7 @@ public class FileUpdater {
      * Backs up the perms and config files if they have not been backed up
      * already
      *
-     * @since 1.0
+     * @since 0.2
      */
     public void backup() {
         backup(backupFiles);
@@ -60,7 +61,7 @@ public class FileUpdater {
      *
      * @param bu Whether to back up or not.
      *
-     * @since 1.0
+     * @since 0.2
      */
     public void backup(boolean bu) {
         if (bu == false) {
@@ -111,7 +112,7 @@ public class FileUpdater {
      * This will first check to see if a backup is needed to be ran first. Once
      * complete, the update files will be placed into a backup folder.
      *
-     * @since 1.0
+     * @since 0.2
      */
     public void runUpdate() {
         backup();

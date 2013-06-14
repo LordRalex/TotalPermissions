@@ -57,20 +57,17 @@ public final class PermissionUser extends PermissionBase {
         return isDebug;
     }
 
+    /**
+     * Applies changes to the permissions from a world change.
+     *
+     * @param cs The Player to attach the permissions to
+     * @param name The name of the world to apply perms with, can be null
+     * @param att The existing PermissionAttachment, can be null
+     *
+     * @since 0.1
+     */
     public void changeWorld(Player cs, String name, PermissionAttachment att) {
         setPerms((CommandSender) cs, att, name);
-    }
-
-    /**
-     * Checks if the PermissionUser inherits from the specific group.
-     *
-     * @param group The group to check
-     * @param world The world to check with, null if global
-     *
-     * @return Whether or not the user is in the group
-     */
-    public boolean inherits(String group, String world) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /**
@@ -79,6 +76,8 @@ public final class PermissionUser extends PermissionBase {
      * @param world The world to check with, null if global
      *
      * @return All the groups the user is in
+     *
+     * @since 0.1
      */
     public List<String> getGroups(String world) {
         Set<String> groupList = new HashSet<String>();

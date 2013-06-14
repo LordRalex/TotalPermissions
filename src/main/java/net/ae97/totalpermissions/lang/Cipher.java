@@ -99,10 +99,28 @@ public class Cipher {
         langFile = file;
     }
 
+    /**
+     * Gets the FileConfiguration for this language
+     *
+     * @return The FileConfiguration for this language
+     *
+     * @since 0.2
+     *
+     * @deprecated Use existing getString instead
+     */
     public FileConfiguration getLangFile() {
         return langFile;
     }
 
+    /**
+     * Gets the message for this key in the used language.
+     *
+     * @param path The path to the string
+     * @param vars Any variables to add
+     * @return The resulting String
+     *
+     * @since 0.2
+     */
     public String getString(String path, Object... vars) {
         String string = langFile.getString(path);
         for (int i = 0; i < vars.length; i++) {

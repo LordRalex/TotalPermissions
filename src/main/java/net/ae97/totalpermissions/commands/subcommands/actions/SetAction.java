@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Spencer Alderman
+ * Copyright (C) 2013 AE97
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
- *
  * @since 0.2
  * @author 1Rogue
  * @version 0.2
@@ -72,8 +71,8 @@ public class SetAction extends SubAction {
     public String[] getHelp() {
         return new String[]{
             "set " + TotalPermissions.getPlugin().getLangFile().getString("variables.field")
-                + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.value")
-                + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.world-optional"),
+            + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.value")
+            + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.world-optional"),
             TotalPermissions.getPlugin().getLangFile().getString("command.action.set.help")
         };
     }

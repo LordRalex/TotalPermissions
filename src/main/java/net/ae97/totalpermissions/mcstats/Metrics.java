@@ -43,9 +43,9 @@
  *
  *
  * This code is from the Metrics github page, with modifications prefixed with
- * //TotalPermissions where changes are made. This is still the work of the
- * Metrics developer and I do not claim this to be of my own work. Used with
- * permissions given on the Metrics page.
+ * comments starting with "TotalPermissions" where changes are made. This is 
+ * still the work of the Metrics developer and I do not claim this to be of my
+ * own work. Used with permissions given on the Metrics page.
  */
 package net.ae97.totalpermissions.mcstats;
 

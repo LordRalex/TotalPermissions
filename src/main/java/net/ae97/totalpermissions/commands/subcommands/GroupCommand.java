@@ -22,7 +22,6 @@ import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.command.CommandSender;
 
 /**
- *
  * @since 0.2
  * @author 1Rogue
  * @version 0.2
@@ -47,14 +46,14 @@ public class GroupCommand implements SubCommand {
     public String getName() {
         return "group";
     }
-    
+
     public String[] getHelp() {
         return new String[]{
             "/ttp group " + TotalPermissions.getPlugin().getLangFile().getString("variables.group") + " [actions..]",
             TotalPermissions.getPlugin().getLangFile().getString("command.group.help")
         };
     }
-    
+
     private List<String> fields() {
         return Arrays.asList(new String[]{
             "permissions",

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Spencer Alderman
+ * Copyright (C) 2013 AE97
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@ import net.ae97.totalpermissions.permission.PermissionUser;
 import org.bukkit.command.CommandSender;
 
 /**
- *
  * @since 0.2
  * @author 1Rogue
  * @version 0.2
@@ -34,32 +33,26 @@ public class ListAction extends SubAction {
     public boolean execute(CommandSender sender, String aType, String target, String field, String item, String world) {
         PermissionType type = PermissionType.getType(aType);
         PermissionBase tar = PermissionType.getTarget(type, target);
-        
+
         if (field.equalsIgnoreCase("permissions")) {
             sender.sendMessage("Permissions for " + target + ":");
             sender.sendMessage(this.permMapToString(tar.getPerms(world)));
             return true;
-        }
-        
-        else if (field.equalsIgnoreCase("inheritance")) {
+        } else if (field.equalsIgnoreCase("inheritance")) {
             StringBuilder sb = new StringBuilder();
             for (String inher : tar.getInheritances(world)) {
                 sb.append(inher).append(", ");
             }
             sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.list.inheritance", target, sb.substring(0, sb.length() - 3)));
             return true;
-        }
-        
-        else if (field.equalsIgnoreCase("commands")) {
+        } else if (field.equalsIgnoreCase("commands")) {
             StringBuilder sb = new StringBuilder();
             for (String cmd : tar.getCommands(world)) {
                 sb.append(cmd).append(", ");
             }
             sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.list.commands", target, sb.substring(0, sb.length() - 3)));
             return true;
-        }
-        
-        else if (field.equalsIgnoreCase("groups")) {
+        } else if (field.equalsIgnoreCase("groups")) {
             if (tar instanceof PermissionUser) {
                 PermissionUser newtar = (PermissionUser) tar;
                 StringBuilder sb = new StringBuilder();
@@ -70,18 +63,14 @@ public class ListAction extends SubAction {
                 return true;
             }
             return false;
-        }
-        
-        else if (field.equalsIgnoreCase("prefix")) {
+        } else if (field.equalsIgnoreCase("prefix")) {
             sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.list.prefix", target, tar.getOption("prefix")));
             return true;
-        }
-        
-        else if (field.equalsIgnoreCase("suffix")) {
+        } else if (field.equalsIgnoreCase("suffix")) {
             sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.list.suffix", target, tar.getOption("suffix")));
             return true;
         }
-        
+
         return false;
     }
 
@@ -92,7 +81,7 @@ public class ListAction extends SubAction {
     public String[] getHelp() {
         return new String[]{
             "list " + TotalPermissions.getPlugin().getLangFile().getString("variables.field")
-                + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.world-optional"),
+            + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.world-optional"),
             TotalPermissions.getPlugin().getLangFile().getString("command.action.list.help")
         };
     }

@@ -39,7 +39,6 @@ import org.bukkit.permissions.PermissionAttachment;
  *
  * @since 0.1
  * @author Lord_Ralex
- * @version 0.1
  */
 public abstract class PermissionBase {
 
@@ -196,7 +195,7 @@ public abstract class PermissionBase {
      *
      * @return List of permissions with - in front of negative nodes
      *
-     * @since 1.0
+     * @since 0.1
      */
     public synchronized Map<String, Boolean> getPerms() {
         return getPerms(null);
@@ -210,7 +209,7 @@ public abstract class PermissionBase {
      *
      * @return List of permissions with - in front of negative nodes
      *
-     * @since 1.0
+     * @since 0.1
      */
     public synchronized Map<String, Boolean> getPerms(String world) {
         Map<String, Boolean> permList = new HashMap<String, Boolean>();
@@ -238,7 +237,7 @@ public abstract class PermissionBase {
      * @param key Path to option
      * @return Value of that option, or null if no option
      *
-     * @since 1.0
+     * @since 0.1
      */
     public Object getOption(String key) {
         return options.get(key);
@@ -249,7 +248,6 @@ public abstract class PermissionBase {
      *
      * @return Map of the options for this holder
      * @since 0.2
-     *
      */
     public Map<String, Object> getOptions() {
         return options;
@@ -260,7 +258,7 @@ public abstract class PermissionBase {
      *
      * @return Name of permission holder
      *
-     * @since 1.0
+     * @since 0.1
      */
     public String getName() {
         return name;
@@ -284,6 +282,8 @@ public abstract class PermissionBase {
      * nodes too.
      *
      * @param perm Perm to add to this group
+     *
+     * @since 0.1
      */
     protected final synchronized void addPermission(String perm) {
         addPermission(perm, null);
@@ -295,6 +295,8 @@ public abstract class PermissionBase {
      *
      * @param perm Perm to add to this group
      * @param world World to have this perm affect
+     *
+     * @since 0.1
      */
     protected final synchronized void addPermission(String perm, String world) {
         String p = perm;
@@ -306,6 +308,16 @@ public abstract class PermissionBase {
         addPermission(p, world, allow);
     }
 
+    /**
+     * Adds a permission node to the permission holder with this world. This
+     * will accept null for the world
+     *
+     * @param perm Permission to add
+     * @param world World to add to, or null for global
+     * @param allow Whether to allow or deny the permission
+     *
+     * @since 0.1
+     */
     protected final synchronized void addPermission(String perm, String world, boolean allow) {
         Permission pr = perms.get(world);
         if (pr == null) {
@@ -348,6 +360,8 @@ public abstract class PermissionBase {
      *
      * @param perm Permission to check for
      * @return True if user/group has permission based on plugin
+     *
+     * @since 0.1
      */
     public synchronized boolean has(String perm) {
         return has(perm, null);
@@ -360,6 +374,8 @@ public abstract class PermissionBase {
      * @param perm Permission to check for
      * @param world The world to check in
      * @return True if user/group has permission based on plugin
+     *
+     * @since 0.1
      */
     public synchronized boolean has(String perm, String world) {
         Permission permList = perms.get(world);
@@ -383,10 +399,15 @@ public abstract class PermissionBase {
 
     /**
      * Adds the permissions for this PermissionBase to the given CommandSender.
+     * If the CommandSender is a Player, then the Player's world they are in is
+     * also added
      *
      * @param cs CommandSender to add the permissions to
+     * @param att An existing PermissionAttachment to remove
+     * @param worldName World name to apply perms for
+     * @return The resulting PermissionAttachment
      *
-     * @since 1.0
+     * @since 0.1
      */
     public PermissionAttachment setPerms(CommandSender cs, PermissionAttachment att, String worldName) {
         if (att != null) {
@@ -397,7 +418,6 @@ public abstract class PermissionBase {
         }
         PermissionAttachment attachment = cs.addAttachment(TotalPermissions.getPlugin());
         Permission mainPerm = perms.get(null);
-        attachment.setPermission(mainPerm, true);
         if (cs instanceof Player) {
             Player player = (Player) cs;
             if (player.getWorld() != null) {
@@ -424,10 +444,27 @@ public abstract class PermissionBase {
         return attachment;
     }
 
+    /**
+     * Adds the permissions for this PermissionBase to the given CommandSender.
+     * This assumes no existing PermissionAttachment exists and for the main
+     * world.
+     *
+     * @param cs CommandSender to add the permissions to
+     * @return The resulting PermissionAttachment
+     *
+     * @since 0.1
+     */
     public PermissionAttachment setPerms(CommandSender cs) {
         return setPerms(cs, null, null);
     }
 
+    /**
+     * Returns a Map of all perms registered for this permission holder.
+     *
+     * @return Map of all perms, key being world
+     *
+     * @since 0.1
+     */
     public Map<String, Map<String, Boolean>> getAllPerms() {
         Map<String, Map<String, Boolean>> permMap = new HashMap<String, Map<String, Boolean>>();
         synchronized (perms) {
@@ -439,6 +476,16 @@ public abstract class PermissionBase {
         return permMap;
     }
 
+    /**
+     * Adds a group to the inheritence list for this permission holder. Note:
+     * This only works with global, world is currently ignored in this version
+     *
+     * @param group Group to add to the inheritence
+     * @param world World to apply this to, or null for global
+     * @throws IOException If an error occurs on saving the file
+     *
+     * @since 0.2
+     */
     public void addInheritance(String group, String world) throws IOException {
         List<String> existing = section.getStringList("inheritence");
         if (existing == null) {
@@ -450,6 +497,16 @@ public abstract class PermissionBase {
         load();
     }
 
+    /**
+     * Adds a command to the inheritence list for this permission holder. Note:
+     * This only works with global, world is currently ignored in this version
+     *
+     * @param item Command to add to the permission holder
+     * @param world World to apply this to, or null for global
+     * @throws IOException If an error occurs on saving the file
+     *
+     * @since 0.2
+     */
     public void addCommand(String item, String world) throws IOException {
         List<String> existing = section.getStringList("commands");
         if (existing == null) {
@@ -461,6 +518,16 @@ public abstract class PermissionBase {
         load();
     }
 
+    /**
+     * Adds a group to the group list for this permission holder. Note: This
+     * only works with global, world is currently ignored in this version
+     *
+     * @param group Group to add to the group list
+     * @param world World to apply this to, or null for global
+     * @throws IOException If an error occurs on saving the file
+     *
+     * @since 0.2
+     */
     public void addGroup(String item, String world) throws IOException {
         List<String> existing = section.getStringList("groups");
         if (existing == null) {
@@ -472,6 +539,15 @@ public abstract class PermissionBase {
         load();
     }
 
+    /**
+     * Adds a permission to this permission holder.
+     *
+     * @param item Permission to add
+     * @param world World to apply this to, or null for global
+     * @throws IOException If an error occurs on saving the file
+     *
+     * @since 0.2
+     */
     public void addPerm(String item, String world) throws IOException {
         List<String> existing;
         if (world == null) {
@@ -501,6 +577,16 @@ public abstract class PermissionBase {
         load();
     }
 
+    /**
+     * Checks to see if the given parameter in the world is a parent. Note: This
+     * does not check multiworld in this version.
+     *
+     * @param item Item to check for
+     * @param world World to check in
+     * @return True if the holder inherits from this item, otherwise false
+     *
+     * @since 0.2
+     */
     public boolean hasInheritance(String item, String world) {
         for (String listItem : inherited) {
             if (item.equalsIgnoreCase(listItem)) {
@@ -510,6 +596,16 @@ public abstract class PermissionBase {
         return false;
     }
 
+    /**
+     * Checks to see if the given command in the world is a parent. Note: This
+     * does not check multiworld in this version.
+     *
+     * @param item Item to check for
+     * @param world World to check in
+     * @return True if the holder has access to this command, otherwise false
+     *
+     * @since 0.2
+     */
     public boolean hasCommand(String item, String world) {
         List<String> list = section.getStringList("commands");
         for (String listItem : list) {
@@ -520,6 +616,17 @@ public abstract class PermissionBase {
         return false;
     }
 
+    /**
+     * Returns a list of commands explicitedly given to this holder. This does
+     * not include commands given by permission, only the commands listed in the
+     * "commands" section of the file. Note: This does not check multiworld in
+     * this version.
+     *
+     * @param world World to get commands from
+     * @return Collection of commands specified
+     *
+     * @since 0.2
+     */
     public Set<String> getCommands(String world) {
         List<String> list = section.getStringList("commands");
         Set<String> returned = new HashSet<String>();

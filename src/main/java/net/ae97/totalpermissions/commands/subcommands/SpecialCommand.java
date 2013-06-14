@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Spencer Alderman
+ * Copyright (C) 2013 AE97
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,10 +22,9 @@ import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.command.CommandSender;
 
 /**
- *
- * @since
+ * @since 0.2
  * @author 1Rogue
- * @version
+ * @version 0.1
  */
 public class SpecialCommand implements SubCommand {
 

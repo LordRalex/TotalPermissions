@@ -33,7 +33,7 @@ public class PermissionGroup extends PermissionBase {
      *
      * @param name The name of the group
      *
-     * @since 1.0
+     * @since 0.1
      */
     public PermissionGroup(String name) {
         super(PermissionType.GROUPS, name);
@@ -54,11 +54,20 @@ public class PermissionGroup extends PermissionBase {
      * otherwise false.
      *
      * @return True if this group is the default group, otherwise false
+     *
+     * @since 0.1
      */
     public boolean isDefault() {
         return isDefault;
     }
 
+    /**
+     * Changes the default group to this group
+     *
+     * @throws IOException If an error occurs on saving
+     *
+     * @since 0.2
+     */
     public void setAsDefaultGroup() throws IOException {
         TotalPermissions.getPlugin().getManager().changeDefaultGroup(getName());
     }

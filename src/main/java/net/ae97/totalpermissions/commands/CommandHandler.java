@@ -100,10 +100,24 @@ public final class CommandHandler implements CommandExecutor {
         return true;
     }
 
-    public Map getCommandList() {
+    /**
+     * Gets the registered commands that may be used
+     *
+     * @return Map of registered sub commands
+     *
+     * @since 0.2
+     */
+    public Map<String, SubCommand> getCommandList() {
         return commands;
     }
 
+    /**
+     * Gets the ActionHandler that is registered
+     *
+     * @return The ActionHandler in use
+     *
+     * @since 0.2
+     */
     public ActionHandler getActionHandler() {
         return actions;
     }

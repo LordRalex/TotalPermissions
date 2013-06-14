@@ -153,6 +153,11 @@ public class FileConverter {
         return config;
     }
 
+    /**
+     * Saves the file to the disk
+     *
+     * @throws IOException If an error occurs on save
+     */
     public void save() throws IOException {
         config.save(path);
     }

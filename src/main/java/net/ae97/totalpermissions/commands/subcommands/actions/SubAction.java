@@ -22,7 +22,6 @@ import net.ae97.totalpermissions.permission.PermissionBase;
 import org.bukkit.command.CommandSender;
 
 /**
- *
  * @since 0.2
  * @author 1Rogue
  * @version 0.2
@@ -33,7 +32,7 @@ public abstract class SubAction {
      * Executes the command. Only the args and sender are needed.
      *
      * @return Success of the command. False if an issue
-     * 
+     *
      * @param sender The executor of the command
      * @param aType The top-level type being edited (e.g. group)
      * @param target The relevant item being modified
@@ -47,13 +46,30 @@ public abstract class SubAction {
      * Returns the action's name. Used for both info and the perm node.
      *
      * @return Name of the command
+     *
+     * @since 0.2
      */
     public abstract String getName();
 
+    /**
+     * Gets the help message for this sub action
+     *
+     * @return Help message
+     *
+     * @since 0.2
+     */
     public abstract String[] getHelp();
-    
+
+    /**
+     * Gets the supported types for this sub action. This results Strings, so
+     * only is for visual help
+     *
+     * @return The supported types for this sub action
+     *
+     * @since 0.2
+     */
     public abstract String[] supportedTypes();
-    
+
     protected void saveError(PermissionBase tar, CommandSender sender, Exception ex) {
         sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.subaction.saveerror1"));
         sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.subaction.saveerror2"));

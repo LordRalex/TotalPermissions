@@ -21,7 +21,7 @@ import org.bukkit.command.CommandSender;
 /**
  * @since 0.1
  * @author Lord_Ralex
- * @version 0.2
+ * @version 0.1
  */
 public interface SubCommand {
     

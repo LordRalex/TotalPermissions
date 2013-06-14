@@ -32,6 +32,7 @@ import net.ae97.totalpermissions.permission.PermissionOp;
 import net.ae97.totalpermissions.permission.PermissionType;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -42,7 +43,7 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 
 /**
- * @version 0.1
+ * @version 0.2
  * @author Lord_Ralex
  * @since 0.1
  */
@@ -62,6 +63,14 @@ public final class PermissionManager {
         plugin = p;
     }
 
+    /**
+     * Loads the permissions from the permissions file
+     *
+     * @throws InvalidConfigurationException If the file is not in a valid
+     * configuration layout
+     *
+     * @since 0.1
+     */
     public void load() throws InvalidConfigurationException {
         FileConfiguration perms = plugin.getPermFile();
         ConfigurationSection filegroups = perms.getConfigurationSection("groups");
@@ -85,6 +94,11 @@ public final class PermissionManager {
         permAttMap.put("console", console.setPerms(Bukkit.getConsoleSender(), null, null));
     }
 
+    /**
+     * Unloads the permissions.
+     *
+     * @since 0.1
+     */
     public void unload() {
         users.clear();
         groups.clear();
@@ -223,15 +237,27 @@ public final class PermissionManager {
     }
 
     /**
+     * Checks to see if the given CommandSender has the specified perm
      *
-     * @param player
-     * @param perm
-     * @return True if player has been given this perm, false otherwise
+     * @param player The CommandSender to check perms for
+     * @param perm The permission to check for
+     * @return True if the sender has been given this perm, false otherwise
+     *
+     * @since 0.1
      */
-    public boolean has(Player player, String perm) {
+    public boolean has(CommandSender player, String perm) {
         return has(player.getName(), perm);
     }
 
+    /**
+     * Checks to see if the given name has the specified perm
+     *
+     * @param player The name to check perms for
+     * @param perm The permission to check for
+     * @return True if they been given this perm, false otherwise
+     *
+     * @since 0.1
+     */
     public boolean has(String player, String perm) {
         String name = player.toLowerCase();
         PermissionUser user;
@@ -245,6 +271,15 @@ public final class PermissionManager {
         return user.has(perm);
     }
 
+    /**
+     * Checks to see if a given group has a certain permission.
+     *
+     * @param groupName Name of group
+     * @param perm Permission to check for
+     * @return True if group has permission, false otherwise
+     *
+     * @since 0.2
+     */
     public boolean groupHas(String groupName, String perm) {
         String name = groupName.toLowerCase();
         synchronized (groups) {
@@ -257,6 +292,17 @@ public final class PermissionManager {
         return false;
     }
 
+    /**
+     * Adds a permission to a player.
+     *
+     * @param player Player to give permission to
+     * @param world World to give it in, null is for global
+     * @param perm Permission to give
+     * @param allowance Whether to allow or deny this permission
+     * @throws IOException If an error occurs on saving
+     *
+     * @since 0.2
+     */
     public void addPerm(Player player, String world, String perm, boolean allowance) throws IOException {
         String name = player.getName().toLowerCase();
         synchronized (users) {
@@ -276,6 +322,17 @@ public final class PermissionManager {
         }
     }
 
+    /**
+     * Adds a permission to an offline player.
+     *
+     * @param player OfflinePlayer to give permission to
+     * @param world World to give it in, null is for global
+     * @param perm Permission to give
+     * @param allowance Whether to allow or deny this permission
+     * @throws IOException If an error occurs on saving
+     *
+     * @since 0.2
+     */
     public synchronized void addPerm(OfflinePlayer player, String world, String perm, boolean allowance) throws IOException {
         String name = player.getName().toLowerCase();
 
@@ -293,6 +350,17 @@ public final class PermissionManager {
         }
     }
 
+    /**
+     * Adds a permission to a group.
+     *
+     * @param group Player to give permission to
+     * @param world World to give it in, null is for global
+     * @param perm Permission to give
+     * @param allowance Whether to allow or deny this permission
+     * @throws IOException If an error occurs on saving
+     *
+     * @since 0.2
+     */
     public void addPermToGroup(String group, String world, String perm, boolean allowance) throws IOException {
         String name = group.toLowerCase();
 
@@ -310,6 +378,17 @@ public final class PermissionManager {
         }
     }
 
+    /**
+     * Adds a permission to a user.
+     *
+     * @param user User to give permission to
+     * @param world World to give it in, null is for global
+     * @param perm Permission to give
+     * @param allowance Whether to allow or deny this permission
+     * @throws IOException If an error occurs on saving
+     *
+     * @since 0.2
+     */
     public void addPermToUser(String user, String world, String perm, boolean allowance) throws IOException {
         String name = user.toLowerCase();
 
@@ -348,6 +427,9 @@ public final class PermissionManager {
         return getAttachment(player.getName());
     }
 
+    /**
+     * Clears the permissions out.
+     */
     public void clearPerms() {
         for (String name : permAttMap.keySet()) {
             Player player = Bukkit.getPlayerExact(name);
@@ -362,10 +444,24 @@ public final class PermissionManager {
         permAttMap.clear();
     }
 
+    /**
+     * Clears the permissions for the player given. The name must match exactly.
+     *
+     * @param name Name of player to clear perms from
+     *
+     * @since 0.2
+     */
     public void clearPerms(String name) {
         clearPerms(Bukkit.getPlayerExact(name));
     }
 
+    /**
+     * Clears the permissions for the player given.
+     *
+     * @param player Player to clear perms from
+     *
+     * @since 0.2
+     */
     public void clearPerms(Player player) {
         try {
             player.removeAttachment(permAttMap.remove(player.getName()));
@@ -374,6 +470,9 @@ public final class PermissionManager {
         }
     }
 
+    /**
+     * Recalculates permissions for all players on the server.
+     */
     public void recalculatePermissions() {
         clearPerms();
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -381,6 +480,13 @@ public final class PermissionManager {
         }
     }
 
+    /**
+     * Recalculates the permissions for the given player
+     *
+     * @param user Player to recalculate perms for
+     *
+     * @since 0.1
+     */
     public void recalculatePermissions(Player user) {
         clearPerms(user);
         handleLoginEvent(new PlayerLoginEvent(user, null, null, null, null));
@@ -395,6 +501,11 @@ public final class PermissionManager {
         permissions.put(org.toLowerCase(), map);
     }
 
+    /**
+     * Removes the permissions this object has made
+     *
+     * @since 0.2
+     */
     public void clearRegisteredPerms() {
         for (String org : permissions.keySet()) {
             Map<String, Permission> map = permissions.get(org);
@@ -411,6 +522,14 @@ public final class PermissionManager {
         }
     }
 
+    /**
+     * Saves this PermissionBase to the permissions file and writes changes
+     *
+     * @param base Base to change changes for
+     * @throws IOException If an error occurs on save
+     *
+     * @since 0.2
+     */
     public void save(PermissionBase base) throws IOException {
         FileConfiguration file = plugin.getPermFile();
         PermissionType type = base.getType();
@@ -418,10 +537,26 @@ public final class PermissionManager {
         save();
     }
 
+    /**
+     * Saves the entire permission file
+     *
+     * @throws IOException If an error occurs on save
+     *
+     * @since 0.2
+     */
     private void save() throws IOException {
         plugin.getPermFile().save(new File(plugin.getDataFolder(), "permissions.yml"));
     }
 
+    /**
+     * Changes the default group to another group. This will not error if the
+     * new group does not exist.
+     *
+     * @param newDefault New group to change to
+     * @throws IOException If an error occurs on save
+     *
+     * @since 0.2
+     */
     public void changeDefaultGroup(String newDefault) throws IOException {
         PermissionGroup old = getGroup(defaultGroup);
         old.getConfigSection().set("default", false);

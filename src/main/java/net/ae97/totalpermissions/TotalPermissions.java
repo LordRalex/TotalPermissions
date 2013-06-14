@@ -33,7 +33,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * @version 0.1
+ * @version 0.2
  * @author Lord_Ralex
  * @since 0.1
  */

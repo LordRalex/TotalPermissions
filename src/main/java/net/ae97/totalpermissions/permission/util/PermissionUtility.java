@@ -26,7 +26,8 @@ import org.bukkit.permissions.PermissionDefault;
 
 /**
  * @author Lord_Ralex
- * @version 1.0
+ * @version 0.1
+ * @since 0.2
  */
 public class PermissionUtility {
 
@@ -35,6 +36,8 @@ public class PermissionUtility {
      * registered permissions made by plugins.
      *
      * @return List of perms given by '*'
+     *
+     * @since 0.1
      */
     public static List<String> handleWildcard() {
         return handleWildcard(false);
@@ -47,6 +50,8 @@ public class PermissionUtility {
      * @param isAll True if '**', false for '*'
      *
      * @return List of perms given
+     *
+     * @since 0.1
      */
     public static List<String> handleWildcard(boolean isAll) {
         List<String> perms = new ArrayList<String>();
@@ -68,6 +73,8 @@ public class PermissionUtility {
      *
      * @param commands List of commands to get perms for
      * @return List of perms for those commands
+     *
+     * @since 0.1
      */
     public static List<String> getPermsForCommands(List<String> commands) {
         List<String> perms = new ArrayList<String>();

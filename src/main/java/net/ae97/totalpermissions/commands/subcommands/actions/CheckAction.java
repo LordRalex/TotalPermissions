@@ -63,7 +63,7 @@ public class CheckAction extends SubAction {
         else if (field.equalsIgnoreCase("groups")) {
             if (tar instanceof PermissionUser) {
                 PermissionUser newtar = (PermissionUser)tar;
-                if (newtar.inherits(item, world)) {
+                if (newtar.hasInheritance(item, world)) {
                     sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.check.groups.has", target, item));
                 }
                 else {

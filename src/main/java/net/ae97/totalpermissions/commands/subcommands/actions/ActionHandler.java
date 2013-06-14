@@ -24,7 +24,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
- *
  * @since 0.2
  * @author 1Rogue
  * @version 0.2
@@ -73,7 +72,7 @@ public class ActionHandler {
             default:
                 return false;
         }
-        
+
         SubAction executor = actions.get(ackshun.toLowerCase());
         if (executor == null) {
             sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.handler.ifnull"));
@@ -107,10 +106,10 @@ public class ActionHandler {
             } else {
                 sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.handler.notsupported", field, type));
                 StringBuilder sb = new StringBuilder();
-                    for (String item : fields) {
-                        sb.append(item).append(", ");
-                    }
-                    sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.handler.editfields", type, sb.toString().substring(0, sb.length() - 3)));
+                for (String item : fields) {
+                    sb.append(item).append(", ");
+                }
+                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.handler.editfields", type, sb.toString().substring(0, sb.length() - 3)));
             }
             return true;
         } else {
@@ -123,7 +122,14 @@ public class ActionHandler {
         return (allowed.contains(arg) || arg.equalsIgnoreCase("help"));
     }
 
-    public Map getActionList() {
+    /**
+     * Gets the registered SubActions
+     *
+     * @return Map of registered SubActions
+     *
+     * @since 0.2
+     */
+    public Map<String, SubAction> getActionList() {
         return actions;
     }
 }

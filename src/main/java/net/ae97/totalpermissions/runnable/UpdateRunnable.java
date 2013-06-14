@@ -29,6 +29,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 /**
  * @version 0.1
  * @author Lord_Ralex
+ * @since 0.1
  */
 public class UpdateRunnable extends BukkitRunnable {
 

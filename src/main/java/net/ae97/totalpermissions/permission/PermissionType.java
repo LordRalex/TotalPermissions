@@ -19,6 +19,8 @@ package net.ae97.totalpermissions.permission;
 import net.ae97.totalpermissions.TotalPermissions;
 
 /**
+ * The acceptable Permission Types this plugin may use.
+ *
  * @since 0.2
  * @author Lord_Ralex
  * @version 0.2
@@ -40,6 +42,13 @@ public enum PermissionType {
         name = aName;
     }
 
+    /**
+     * Gets the specific PermissionType for the name given
+     *
+     * @param aType Name of type to get
+     * @return The PermissionType for this name, or null if no PermissionType
+     * exists
+     */
     public static PermissionType getType(String aType) {
         for (PermissionType type : PermissionType.values()) {
             if (type.name.equalsIgnoreCase(aType)) {
@@ -49,6 +58,15 @@ public enum PermissionType {
         return null;
     }
 
+    /**
+     * Gets a specific PermissionBase using the provided PermissionType and
+     * name.
+     *
+     * @param type The PermissionType to get
+     * @param name Gets the PermissionBase this would result with
+     * @return The PermissionBase for this, or null if an incompatible
+     * PermissionType is used
+     */
     public static PermissionBase getTarget(PermissionType type, String name) {
         TotalPermissions plugin = TotalPermissions.getPlugin();
         switch (type) {
