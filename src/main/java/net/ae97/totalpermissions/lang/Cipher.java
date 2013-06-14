@@ -39,9 +39,10 @@ public class Cipher {
 
     private FileConfiguration langFile;
     private final String langFileLoc = "https://raw.github.com/AE97/TotalPermissions/master/lang/";
+    private final String language;
 
-    public Cipher(String language) {
-        language += ".yml";
+    public Cipher(String lang) {
+        language = lang + ".yml";
         Plugin plugin = TotalPermissions.getPlugin();
         //load file from github in preps for future use
         if (language.equalsIgnoreCase("custom.yml")) {
@@ -100,20 +101,8 @@ public class Cipher {
     }
 
     /**
-     * Gets the FileConfiguration for this language
-     *
-     * @return The FileConfiguration for this language
-     *
-     * @since 0.2
-     *
-     * @deprecated Use existing getString instead
-     */
-    public FileConfiguration getLangFile() {
-        return langFile;
-    }
-
-    /**
-     * Gets the message for this key in the used language.
+     * Gets the message for this key in the used language. If the key does not
+     * exist, this will default to use the en_US in the
      *
      * @param path The path to the string
      * @param vars Any variables to add
@@ -123,10 +112,18 @@ public class Cipher {
      */
     public String getString(String path, Object... vars) {
         String string = langFile.getString(path);
+        if (string == null) {
+            FileConfiguration fromJar = getFromJar(TotalPermissions.getPlugin(), "en_US.yml");
+            if (fromJar != null) {
+                string = fromJar.getString(path);
+            }
+        }
+        if (string == null) {
+            throw new NullPointerException("The language files are missing the path. Language: " + language + " Path: " + path);
+        }
         for (int i = 0; i < vars.length; i++) {
             string = string.replace("{" + i + "}", vars[i].toString());
         }
-        //TODO: If returned string is null, then get one from the english file (always up-to-date).
         return ChatColor.translateAlternateColorCodes('&', string);
     }
 
