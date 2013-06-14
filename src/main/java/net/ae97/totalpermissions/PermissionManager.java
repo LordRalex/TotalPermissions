@@ -107,8 +107,9 @@ public final class PermissionManager {
     }
 
     /**
+     * Get the name of the default group.
      *
-     * @return
+     * @return Gets the name of the default group
      */
     public String getDefaultGroup() {
         return defaultGroup;

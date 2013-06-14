@@ -522,7 +522,7 @@ public abstract class PermissionBase {
      * Adds a group to the group list for this permission holder. Note: This
      * only works with global, world is currently ignored in this version
      *
-     * @param group Group to add to the group list
+     * @param item Group to add to the group list
      * @param world World to apply this to, or null for global
      * @throws IOException If an error occurs on saving the file
      *

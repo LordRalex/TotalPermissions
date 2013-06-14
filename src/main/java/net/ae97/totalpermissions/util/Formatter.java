@@ -46,7 +46,7 @@ public class Formatter {
     /**
      * Formats a footer bar.
      *
-     * @param barcolor The color of the bar
+     * @param color The color of the bar
      * @return A colored bar as a String
      *
      * @since 0.1
