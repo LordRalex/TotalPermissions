@@ -63,11 +63,10 @@ public final class CommandHandler implements CommandExecutor {
 
     public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {
         String subCommand;
-        if (args.length >= 1) {
-            subCommand = args[0];
-        } else {
-            subCommand = "help";
+        if (args.length < 1) {
+            args = new String[]{"help"};
         }
+        subCommand = args[0];
         SubCommand executor = commands.get(subCommand.toLowerCase());
         if (executor == null) {
             sender.sendMessage(plugin.getLangFile().getString("command.handler.ifnull-plain"));
