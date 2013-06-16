@@ -56,6 +56,9 @@ public class DumpCommand implements SubCommand {
                 }
             }
             params[1] = args[0];
+        } else {
+            params[0] = args[0];
+            params[1] = args[1];
         }
         if (params[0].equalsIgnoreCase("-plugin")) {
             Plugin pl = Bukkit.getPluginManager().getPlugin(params[1]);
