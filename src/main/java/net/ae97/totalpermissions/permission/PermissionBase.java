@@ -48,7 +48,7 @@ public abstract class PermissionBase {
     protected final Map<String, Permission> perms = new HashMap<String, Permission>();
     protected final List<String> inherited = new ArrayList<String>();
     protected final PermissionType permType;
-    protected final Permission permission;
+    protected Permission permission;
 
     public PermissionBase(PermissionType type, String aName) {
         TotalPermissions plugin = TotalPermissions.getPlugin();
@@ -62,7 +62,7 @@ public abstract class PermissionBase {
             plugin.debugLog("Section " + permType + "." + name + " does not exist, creating");
             plugin.getPermFile().createSection(permType + "." + name);
         }
-        permission = new Permission("totalpermissions.baseItem." + permType + "." + name);
+        permission = new Permission(("totalpermissions.baseItem." + permType + "." + name).toLowerCase());
         plugin.debugLog("Created permission: " + permission.getName());
         section = plugin.getPermFile().getConfigurationSection(permType + "." + name);
         load();
@@ -154,6 +154,7 @@ public abstract class PermissionBase {
             }
             ConfigurationSection worldSec = section.getConfigurationSection("worlds");
             if (worldSec != null) {
+                plugin.debugLog("Worlds section located, handling");
                 Set<String> worldList = worldSec.getKeys(false);
                 for (String world : worldList) {
                     plugin.debugLog("Adding in world perms for world: " + world);
@@ -194,8 +195,7 @@ public abstract class PermissionBase {
                 }
             }
         }
-        permission.getChildren().clear();
-        permission.getChildren().putAll(permMap);
+        permission = new Permission(permission.getName(), permMap);
         if (Bukkit.getPluginManager().getPermission(permission.getName()) != null) {
             Bukkit.getPluginManager().removePermission(permission.getName());
         }
@@ -334,19 +334,23 @@ public abstract class PermissionBase {
      * @since 0.1
      */
     protected final synchronized void addPermission(String perm, String world, boolean allow) {
-        Permission pr = perms.get(world);
+        TotalPermissions plugin = TotalPermissions.getPlugin();
+        Permission pr = perms.remove(world);
         if (pr == null) {
             if (world != null) {
-                pr = new Permission("totalpermissions.baseItem." + permType + "." + name + ".worlds.permissions." + world);
+                pr = new Permission(("totalpermissions.baseItem." + permType + "." + name + ".worlds.permissions." + world).toLowerCase());
             } else {
-                pr = new Permission("totalpermissions.baseItem." + permType + "." + name);
+                pr = new Permission(("totalpermissions.baseItem." + permType + "." + name).toLowerCase());
             }
+        }
+        if (Bukkit.getPluginManager().getPermission(pr.getName()) != null) {
+            Bukkit.getPluginManager().removePermission(pr.getName());
         }
         Map<String, Boolean> permList = pr.getChildren();
         if (permList == null) {
             permList = new HashMap<String, Boolean>();
         }
-        if (!TotalPermissions.getPlugin().getConfiguration().getBoolean("reflection.starperm")) {
+        if (!plugin.getConfiguration().getBoolean("reflection.starperm")) {
             if (perm.equals("**")) {
                 List<String> allPerms = PermissionUtility.handleWildcard(true);
                 for (String perm_ : allPerms) {
@@ -363,10 +367,12 @@ public abstract class PermissionBase {
                 }
             }
         }
+        plugin.debugLog("Adding " + perm + ": " + allow + " to " + pr.getName());
         permList.put(perm, allow);
-        pr.getChildren().clear();
-        pr.getChildren().putAll(permList);
+        pr = new Permission(pr.getName(), permList);
         perms.put(world, pr);
+        plugin.debugLog("Child perms for " + pr.getName(), pr.getChildren());
+        Bukkit.getPluginManager().addPermission(pr);
     }
 
     /**

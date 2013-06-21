@@ -323,12 +323,12 @@ public class TotalPermissions extends JavaPlugin {
         return this.commands;
     }
 
-    public void debugLog(String... message) {
+    public void debugLog(Object... message) {
         if (!isDebugMode()) {
             return;
         }
-        for (String m : message) {
-            getLogger().config(m);
+        for (Object m : message) {
+            getLogger().config(m.toString());
         }
     }
 
