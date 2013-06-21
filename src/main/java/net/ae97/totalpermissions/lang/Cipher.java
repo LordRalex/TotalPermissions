@@ -33,7 +33,7 @@ import org.bukkit.plugin.Plugin;
 /**
  * @version 0.2
  * @author 1Rogue
- * @since 0.1
+ * @since 0.2
  */
 public class Cipher {
 
