@@ -323,6 +323,15 @@ public class TotalPermissions extends JavaPlugin {
         return this.commands;
     }
 
+    public void debugLog(String... message) {
+        if (!isDebugMode()) {
+            return;
+        }
+        for (String m : message) {
+            getLogger().info(m);
+        }
+    }
+
     /**
      * Gets the debug mode of the plugin. If this is true, the plugin is in
      * debug mode.

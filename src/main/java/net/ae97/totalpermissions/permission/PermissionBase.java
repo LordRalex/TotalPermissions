@@ -418,6 +418,7 @@ public abstract class PermissionBase {
         }
         PermissionAttachment attachment = cs.addAttachment(TotalPermissions.getPlugin());
         Permission mainPerm = perms.get(null);
+        attachment.setPermission(mainPerm, true);
         if (cs instanceof Player) {
             Player player = (Player) cs;
             if (player.getWorld() != null) {

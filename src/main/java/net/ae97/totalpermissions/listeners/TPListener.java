@@ -20,6 +20,8 @@ import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.PermissionUser;
 import net.ae97.totalpermissions.reflection.TPPermissibleBase;
 import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -34,6 +36,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.RemoteServerCommandEvent;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 
 /**
  * @version 0.1
@@ -84,6 +89,56 @@ public class TPListener implements Listener {
         Player player = event.getPlayer();
         PermissionUser user = plugin.getManager().getUser(player);
         user.changeWorld(player, player.getWorld().getName(), plugin.getManager().getAttachment(player));
+        if (TotalPermissions.isDebugMode()) {
+            plugin.debugLog(event.getPlayer().getName() + " has joined in world " + event.getPlayer().getWorld().getName());
+            Set<PermissionAttachmentInfo> set = event.getPlayer().getEffectivePermissions();
+            plugin.debugLog("Player: " + event.getPlayer().getName());
+            for (PermissionAttachmentInfo perm : set) {
+                plugin.debugLog("PermAttInfo: " + perm.getPermission());
+                PermissionAttachment att = perm.getAttachment();
+                if (att != null) {
+                    Map<String, Boolean> map = att.getPermissions();
+                    plugin.debugLog("PermAtt: " + att.toString());
+                    plugin.debugLog("PermAttMap:");
+                    for (String key : map.keySet()) {
+                        plugin.debugLog("- " + key + ": " + map.get(key));
+                        Permission pe = Bukkit.getPluginManager().getPermission(key);
+                        if (pe != null) {
+                            for (String k : pe.getChildren().keySet()) {
+                                plugin.debugLog("  - " + k + ": " + pe.getChildren().get(k));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerJoinEventMonitor(PlayerJoinEvent event) {
+        if (TotalPermissions.isDebugMode()) {
+            plugin.debugLog(event.getPlayer().getName() + " has joined in world " + event.getPlayer().getWorld().getName());
+            Set<PermissionAttachmentInfo> set = event.getPlayer().getEffectivePermissions();
+            plugin.debugLog("Player: " + event.getPlayer().getName());
+            for (PermissionAttachmentInfo perm : set) {
+                plugin.debugLog("PermAttInfo: " + perm.getPermission());
+                PermissionAttachment att = perm.getAttachment();
+                if (att != null) {
+                    Map<String, Boolean> map = att.getPermissions();
+                    plugin.debugLog("PermAtt: " + att.toString());
+                    plugin.debugLog("PermAttMap:");
+                    for (String key : map.keySet()) {
+                        plugin.debugLog("- " + key + ": " + map.get(key));
+                        Permission pe = Bukkit.getPluginManager().getPermission(key);
+                        if (pe != null) {
+                            for (String k : pe.getChildren().keySet()) {
+                                plugin.debugLog("  - " + k + ": " + pe.getChildren().get(k));
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -96,12 +151,38 @@ public class TPListener implements Listener {
         Player player = event.getPlayer();
         PermissionUser user = plugin.getManager().getUser(player);
         user.changeWorld(player, player.getWorld().getName(), plugin.getManager().getAttachment(player));
+        if (TotalPermissions.isDebugMode()) {
+            plugin.debugLog(player.getName() + " changed world to " + player.getWorld().getName());
+            Set<PermissionAttachmentInfo> set = player.getEffectivePermissions();
+            plugin.debugLog("Player: " + player.getName());
+            for (PermissionAttachmentInfo perm : set) {
+                plugin.debugLog("PermAttInfo: " + perm.getPermission());
+                PermissionAttachment att = perm.getAttachment();
+                if (att != null) {
+                    Map<String, Boolean> map = att.getPermissions();
+                    plugin.debugLog("PermAtt: " + att.toString());
+                    plugin.debugLog("PermAttMap:");
+                    for (String key : map.keySet()) {
+                        plugin.debugLog("- " + key + ": " + map.get(key));
+                        Permission pe = Bukkit.getPluginManager().getPermission(key);
+                        if (pe != null) {
+                            for (String k : pe.getChildren().keySet()) {
+                                plugin.debugLog("  - " + k + ": " + pe.getChildren().get(k));
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerCommandPreprocessDebugCheck(PlayerCommandPreprocessEvent event) {
         PermissionUser user = plugin.getManager().getUser(event.getPlayer());
-        if (!user.getDebugState() || plugin.getConfiguration().getBoolean("reflection.debug")) {
+        if (!user.getDebugState()) {
+            return;
+        }
+        if (plugin.getConfiguration().getBoolean("reflection.debug")) {
             return;
         }
         plugin.getLogger().info(plugin.getLangFile().getString("listener.tplistener.preprocess.activate", event.getPlayer().getName(), event.getMessage()));

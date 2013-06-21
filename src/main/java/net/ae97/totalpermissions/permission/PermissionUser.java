@@ -17,9 +17,12 @@
 package net.ae97.totalpermissions.permission;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
@@ -32,6 +35,7 @@ import org.bukkit.permissions.PermissionAttachment;
 public final class PermissionUser extends PermissionBase {
 
     private boolean isDebug = false;
+    private final Map<String, PermissionAttachment> attMap = new HashMap<String, PermissionAttachment>();
 
     public PermissionUser(String aName) {
         super(PermissionType.USERS, aName);
@@ -67,7 +71,24 @@ public final class PermissionUser extends PermissionBase {
      * @since 0.1
      */
     public void changeWorld(Player cs, String name, PermissionAttachment att) {
-        setPerms((CommandSender) cs, att, name);
+        for (PermissionAttachment a : attMap.values()) {
+            try {
+                cs.removeAttachment(a);
+            } catch (Exception e) {
+            }
+        }
+        attMap.clear();
+        PermissionAttachment newAtt = setPerms((CommandSender) cs, att, name);
+        attMap.put(null, newAtt);
+        List<String> groups = getGroups(name);
+        for (String g : groups) {
+            PermissionGroup group = TotalPermissions.getPlugin().getManager().getGroup(g);
+            if (group == null) {
+                continue;
+            }
+            PermissionAttachment a = group.setPerms(cs, att, name);
+            attMap.put(name, a);
+        }
     }
 
     /**
