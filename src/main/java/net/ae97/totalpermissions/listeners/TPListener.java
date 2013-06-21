@@ -197,7 +197,8 @@ public class TPListener implements Listener {
         plugin.getManager().getRcon().setPerms(sender, plugin.getManager().getAttachment(sender.getName()), null);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    //disables this event by not registering it with Bukkit
+    //@EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerCommandPreprocessPermCheck(PlayerCommandPreprocessEvent event) {
         plugin.debugLog("Handling Commandpreprocess for perm check event");
         String cmd = event.getMessage().split(" ")[0].substring(1);
@@ -206,7 +207,7 @@ public class TPListener implements Listener {
             return;
         }
         if (!command.testPermissionSilent(event.getPlayer())) {
-            command.setPermissionMessage(cmd);
+            //command.setPermissionMessage(ChatColor.RED + cmd);
         }
     }
 }
