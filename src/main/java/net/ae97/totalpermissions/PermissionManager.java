@@ -79,15 +79,18 @@ public final class PermissionManager {
         }
         Set<String> allGroups = filegroups.getKeys(false);
         for (String group : allGroups) {
+            plugin.debugLog("Adding group: " + group);
             PermissionGroup temp = new PermissionGroup(group);
-            groups.put(group.toLowerCase(), temp);
+            groups.put(group, temp);
             if (temp.isDefault()) {
+                plugin.debugLog("Setting group to be default: " + temp.getName());
                 defaultGroup = temp.getName();
             }
         }
         if (defaultGroup == null) {
             throw new InvalidConfigurationException(plugin.getLangFile().getString("manager.null-default"));
         }
+        plugin.debugLog("Adding special users");
         console = new PermissionConsole();
         remote = new PermissionRcon();
         op = new PermissionOp();
@@ -100,6 +103,7 @@ public final class PermissionManager {
      * @since 0.1
      */
     public void unload() {
+        plugin.debugLog("Unloading permission manager");
         users.clear();
         groups.clear();
         clearPerms();
@@ -161,11 +165,11 @@ public final class PermissionManager {
     public PermissionUser getUser(String player) {
         PermissionUser user;
         synchronized (users) {
-            user = users.get(player.toLowerCase());
+            user = users.get(player);
             if (user == null) {
                 user = new PermissionUser(player);
             }
-            users.put(player.toLowerCase(), user);
+            users.put(player, user);
         }
         return user;
     }
@@ -196,11 +200,11 @@ public final class PermissionManager {
     public PermissionGroup getGroup(String name) {
         PermissionGroup group;
         synchronized (groups) {
-            group = groups.get(name.toLowerCase());
+            group = groups.get(name);
             if (group == null) {
                 group = new PermissionGroup(name);
             }
-            groups.put(name.toLowerCase(), group);
+            groups.put(name, group);
         }
         return group;
     }
@@ -260,7 +264,7 @@ public final class PermissionManager {
      * @since 0.1
      */
     public boolean has(String player, String perm) {
-        String name = player.toLowerCase();
+        String name = player;
         PermissionUser user;
         synchronized (users) {
             user = users.get(name);
@@ -282,7 +286,7 @@ public final class PermissionManager {
      * @since 0.2
      */
     public boolean groupHas(String groupName, String perm) {
-        String name = groupName.toLowerCase();
+        String name = groupName;
         synchronized (groups) {
             PermissionGroup group = groups.get(name);
             if (group == null) {
@@ -305,7 +309,7 @@ public final class PermissionManager {
      * @since 0.2
      */
     public void addPerm(Player player, String world, String perm, boolean allowance) throws IOException {
-        String name = player.getName().toLowerCase();
+        String name = player.getName();
         synchronized (users) {
             PermissionUser user = users.get(name);
             if (user == null) {
@@ -335,7 +339,7 @@ public final class PermissionManager {
      * @since 0.2
      */
     public synchronized void addPerm(OfflinePlayer player, String world, String perm, boolean allowance) throws IOException {
-        String name = player.getName().toLowerCase();
+        String name = player.getName();
 
         synchronized (users) {
             PermissionUser user = users.get(name);
@@ -363,7 +367,7 @@ public final class PermissionManager {
      * @since 0.2
      */
     public void addPermToGroup(String group, String world, String perm, boolean allowance) throws IOException {
-        String name = group.toLowerCase();
+        String name = group;
 
         synchronized (groups) {
             PermissionGroup gr = groups.get(name);
@@ -391,7 +395,7 @@ public final class PermissionManager {
      * @since 0.2
      */
     public void addPermToUser(String user, String world, String perm, boolean allowance) throws IOException {
-        String name = user.toLowerCase();
+        String name = user;
 
         synchronized (users) {
             PermissionUser gr = users.get(name);
@@ -408,20 +412,22 @@ public final class PermissionManager {
     }
 
     public void handleLoginEvent(PlayerLoginEvent event) {
+        plugin.debugLog("Manager handling PlayerLoginEvent " + event.getPlayer().getName());
         PermissionUser user = getUser(event.getPlayer());
         PermissionAttachment att = user.setPerms(event.getPlayer(), getAttachment(event.getPlayer()), null);
         permAttMap.put(event.getPlayer().getName(), att);
     }
 
     public void handleLogoutEvent(PlayerQuitEvent event) {
-        PermissionAttachment att = permAttMap.remove(event.getPlayer().getName().toLowerCase());
+        plugin.debugLog("Manager handling PlayerQuitEvent " + event.getPlayer().getName());
+        PermissionAttachment att = permAttMap.remove(event.getPlayer().getName());
         if (att != null) {
             event.getPlayer().removeAttachment(att);
         }
     }
 
     public PermissionAttachment getAttachment(String player) {
-        return permAttMap.get(player.toLowerCase());
+        return permAttMap.get(player);
     }
 
     public PermissionAttachment getAttachment(Player player) {
@@ -432,6 +438,7 @@ public final class PermissionManager {
      * Clears the permissions out.
      */
     public void clearPerms() {
+        plugin.debugLog("Clearing perm attachments from manager");
         for (String name : permAttMap.keySet()) {
             Player player = Bukkit.getPlayerExact(name);
             if (player == null) {
@@ -453,6 +460,7 @@ public final class PermissionManager {
      * @since 0.2
      */
     public void clearPerms(String name) {
+        plugin.debugLog("Clearing perms for name: " + name);
         clearPerms(Bukkit.getPlayerExact(name));
     }
 
@@ -464,6 +472,7 @@ public final class PermissionManager {
      * @since 0.2
      */
     public void clearPerms(Player player) {
+        plugin.debugLog("Clearing perm attachments for player: " + player.getName());
         try {
             player.removeAttachment(permAttMap.remove(player.getName()));
         } catch (IllegalArgumentException e) {
@@ -475,6 +484,7 @@ public final class PermissionManager {
      * Recalculates permissions for all players on the server.
      */
     public void recalculatePermissions() {
+        plugin.debugLog("Recalculating permissions for all players");
         clearPerms();
         for (Player player : Bukkit.getOnlinePlayers()) {
             handleLoginEvent(new PlayerLoginEvent(player, null, null, null, null));
@@ -489,17 +499,19 @@ public final class PermissionManager {
      * @since 0.1
      */
     public void recalculatePermissions(Player user) {
+        plugin.debugLog("Recalculating permissions for player " + user.getName());
         clearPerms(user);
         handleLoginEvent(new PlayerLoginEvent(user, null, null, null, null));
     }
 
     public void addPermissionToMap(String org, String key, Permission perm) {
-        Map<String, Permission> map = permissions.get(org.toLowerCase());
+        plugin.debugLog("Adding " + org + " with key " + key + " with permission " + perm.getName() + " to the map");
+        Map<String, Permission> map = permissions.get(org);
         if (map == null) {
             map = new HashMap<String, Permission>();
         }
-        map.put(key.toLowerCase(), perm);
-        permissions.put(org.toLowerCase(), map);
+        map.put(key, perm);
+        permissions.put(org, map);
     }
 
     /**
@@ -508,6 +520,7 @@ public final class PermissionManager {
      * @since 0.2
      */
     public void clearRegisteredPerms() {
+        plugin.debugLog("Removing registered perms completely");
         for (String org : permissions.keySet()) {
             Map<String, Permission> map = permissions.get(org);
             if (map != null) {
@@ -532,6 +545,7 @@ public final class PermissionManager {
      * @since 0.2
      */
     public void save(PermissionBase base) throws IOException {
+        plugin.debugLog("Saving PermissionBase " + base.getName() + " to the perm file");
         FileConfiguration file = plugin.getPermFile();
         PermissionType type = base.getType();
         file.set(type + "." + base.getName(), base.getConfigSection());
@@ -546,6 +560,7 @@ public final class PermissionManager {
      * @since 0.2
      */
     private void save() throws IOException {
+        plugin.debugLog("Saving permissions file");
         plugin.getPermFile().save(new File(plugin.getDataFolder(), "permissions.yml"));
     }
 
@@ -559,6 +574,7 @@ public final class PermissionManager {
      * @since 0.2
      */
     public void changeDefaultGroup(String newDefault) throws IOException {
+        plugin.debugLog("Changing default group to " + newDefault);
         PermissionGroup old = getGroup(defaultGroup);
         old.getConfigSection().set("default", false);
         this.defaultGroup = newDefault;

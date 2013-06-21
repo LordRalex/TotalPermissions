@@ -51,24 +51,28 @@ public abstract class PermissionBase {
     protected final Permission permission;
 
     public PermissionBase(PermissionType type, String aName) {
+        TotalPermissions plugin = TotalPermissions.getPlugin();
+        plugin.debugLog("Creating new Base: " + type + " " + aName);
         name = aName;
         if (type == null) {
             throw new IllegalArgumentException();
         }
         permType = type;
-        if (TotalPermissions.isDebugMode()) {
-            TotalPermissions.getPlugin().getLogger().info(TotalPermissions.getPlugin().getLangFile().getString("permission.base.adding", permType + "." + name));
-        }
-        if (!TotalPermissions.getPlugin().getPermFile().contains(permType + "." + name)) {
-            TotalPermissions.getPlugin().getPermFile().createSection(permType + "." + name);
+        if (!plugin.getPermFile().contains(permType + "." + name)) {
+            plugin.debugLog("Section " + permType + "." + name + " does not exist, creating");
+            plugin.getPermFile().createSection(permType + "." + name);
         }
         permission = new Permission("totalpermissions.baseItem." + permType + "." + name);
-        section = TotalPermissions.getPlugin().getPermFile().getConfigurationSection(permType + "." + name);
+        plugin.debugLog("Created permission: " + permission.getName());
+        section = plugin.getPermFile().getConfigurationSection(permType + "." + name);
         load();
     }
 
     protected final void load() {
+        TotalPermissions plugin = TotalPermissions.getPlugin();
+        plugin.debugLog("Loading base:" + permType + " " + name);
         options.clear();
+        plugin.debugLog("Clearing out old permissions");
         for (String key : perms.keySet()) {
             Permission p = perms.get(key);
             if (Bukkit.getPluginManager().getPermission(p.getName()) != null) {
@@ -83,6 +87,7 @@ public abstract class PermissionBase {
                 List<String> permList = section.getStringList("permissions");
                 if (permList != null) {
                     for (String perm : permList) {
+                        plugin.debugLog("Permission: " + perm);
                         String p = perm;
                         boolean allow = true;
                         if (perm.startsWith("-") || perm.startsWith("^")) {
@@ -97,11 +102,6 @@ public abstract class PermissionBase {
                                 allow = false;
                             }
                         }
-
-                        if (TotalPermissions.isDebugMode()) {
-                            TotalPermissions.getPlugin().getLogger().info(TotalPermissions.getPlugin().getLangFile().getString("permission.base.add", p));
-                        }
-
                         if ((!TotalPermissions.getPlugin().getConfiguration().getBoolean("reflection.starperm"))
                                 && (p.equalsIgnoreCase("*") || p.equalsIgnoreCase("**"))) {
                             List<String> allPerms = PermissionUtility.handleWildcard(p.equalsIgnoreCase("**"));
@@ -111,6 +111,7 @@ public abstract class PermissionBase {
                                 }
                             }
                         } else if (!permMap.containsKey(p)) {
+                            plugin.debugLog("  Added to map with " + allow);
                             permMap.put(p, allow);
                         }
                     }
@@ -118,25 +119,36 @@ public abstract class PermissionBase {
             } else if (section.isConfigurationSection("permissions")) {
                 Set<String> keys = section.getConfigurationSection("permissions").getKeys(false);
                 for (String key : keys) {
+                    plugin.debugLog("Adding permission: " + key);
                     permMap.put(key, section.getConfigurationSection("permissions").getBoolean(key, true));
                 }
             }
             List<String> inherList = section.getStringList("inheritance");
             if (inherList != null) {
-                inherited.addAll(inherList);
+                for (String in : inherList) {
+                    plugin.debugLog("Adding to inheritence: " + in);
+                    inherited.add(in);
+                }
             }
             List<String> groupList = section.getStringList("groups");
             if (groupList != null) {
-                inherited.addAll(inherList);
+                for (String in : groupList) {
+                    plugin.debugLog("Adding to groups: " + in);
+                    inherited.add(in);
+                }
             }
             List<String> groupList2 = section.getStringList("group");
             if (groupList2 != null) {
-                inherited.addAll(inherList);
+                for (String in : groupList2) {
+                    plugin.debugLog("Adding to groups: " + in);
+                    inherited.add(in);
+                }
             }
             ConfigurationSection optionSec = section.getConfigurationSection("options");
             if (optionSec != null) {
                 Set<String> optionsList = optionSec.getKeys(true);
                 for (String option : optionsList) {
+                    plugin.debugLog("Adding to options: " + option + " " + optionSec.get(option));
                     options.put(option, optionSec.get(option));
                 }
             }
@@ -144,9 +156,11 @@ public abstract class PermissionBase {
             if (worldSec != null) {
                 Set<String> worldList = worldSec.getKeys(false);
                 for (String world : worldList) {
+                    plugin.debugLog("Adding in world perms for world: " + world);
                     ConfigurationSection tempSection = worldSec.getConfigurationSection(world);
                     List<String> tempWorldPerms = tempSection.getStringList("permissions");
                     for (String perm : tempWorldPerms) {
+                        plugin.debugLog("Adding: " + perm);
                         addPermission(perm, world);
                     }
                 }
@@ -154,6 +168,7 @@ public abstract class PermissionBase {
             List<String> commandList = section.getStringList("commands");
             if (commandList != null) {
                 for (String command : commandList) {
+                    plugin.debugLog("Adding command: " + command);
                     boolean allow = true;
                     if (command.startsWith("-")) {
                         command = command.substring(1).trim();
@@ -185,7 +200,7 @@ public abstract class PermissionBase {
             Bukkit.getPluginManager().removePermission(permission.getName());
         }
         Bukkit.getPluginManager().addPermission(permission);
-        TotalPermissions.getPlugin().getManager().addPermissionToMap(permType.toString(), name, permission);
+        plugin.getManager().addPermissionToMap(permType.toString(), name, permission);
         perms.put(null, permission);
     }
 

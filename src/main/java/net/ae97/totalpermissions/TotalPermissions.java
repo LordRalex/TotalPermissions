@@ -328,7 +328,7 @@ public class TotalPermissions extends JavaPlugin {
             return;
         }
         for (String m : message) {
-            getLogger().info(m);
+            getLogger().config(m);
         }
     }
 

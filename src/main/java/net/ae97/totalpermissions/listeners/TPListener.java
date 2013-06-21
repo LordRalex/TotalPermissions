@@ -55,9 +55,11 @@ public class TPListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLogin(PlayerLoginEvent event) {
+        plugin.debugLog("PlayerLoginEvent fired, handling");
         PermissionUser user = plugin.getManager().getUser(event.getPlayer());
         if (plugin.getConfiguration().getBoolean("reflection.starperm")
                 || (user.getDebugState() && plugin.getConfiguration().getBoolean("reflection.debug"))) {
+            plugin.debugLog("Reflection hook enabled, reflecting into the player");
             //forgive me for saying I did not want to do this
             //or as squid says
             //"Forgive me for my sins"
@@ -86,6 +88,15 @@ public class TPListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
+        plugin.debugLog("PlayerJoinEvent fired, handling");
+        Player player = event.getPlayer();
+        PermissionUser user = plugin.getManager().getUser(player);
+        user.changeWorld(player, player.getWorld().getName(), plugin.getManager().getAttachment(player));
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerJoinEventMonitor(PlayerJoinEvent event) {
+        plugin.debugLog("PlayerJoinEvent fired, handling");
         Player player = event.getPlayer();
         PermissionUser user = plugin.getManager().getUser(player);
         user.changeWorld(player, player.getWorld().getName(), plugin.getManager().getAttachment(player));
@@ -94,45 +105,18 @@ public class TPListener implements Listener {
             Set<PermissionAttachmentInfo> set = event.getPlayer().getEffectivePermissions();
             plugin.debugLog("Player: " + event.getPlayer().getName());
             for (PermissionAttachmentInfo perm : set) {
-                plugin.debugLog("PermAttInfo: " + perm.getPermission());
+                plugin.debugLog(" PermAttInfo: " + perm.getPermission());
                 PermissionAttachment att = perm.getAttachment();
                 if (att != null) {
                     Map<String, Boolean> map = att.getPermissions();
-                    plugin.debugLog("PermAtt: " + att.toString());
-                    plugin.debugLog("PermAttMap:");
+                    plugin.debugLog("  PermAtt: " + att.toString());
+                    plugin.debugLog("  PermAttMap:");
                     for (String key : map.keySet()) {
-                        plugin.debugLog("- " + key + ": " + map.get(key));
+                        plugin.debugLog("   - " + key + ": " + map.get(key));
                         Permission pe = Bukkit.getPluginManager().getPermission(key);
                         if (pe != null) {
                             for (String k : pe.getChildren().keySet()) {
-                                plugin.debugLog("  - " + k + ": " + pe.getChildren().get(k));
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerJoinEventMonitor(PlayerJoinEvent event) {
-        if (TotalPermissions.isDebugMode()) {
-            plugin.debugLog(event.getPlayer().getName() + " has joined in world " + event.getPlayer().getWorld().getName());
-            Set<PermissionAttachmentInfo> set = event.getPlayer().getEffectivePermissions();
-            plugin.debugLog("Player: " + event.getPlayer().getName());
-            for (PermissionAttachmentInfo perm : set) {
-                plugin.debugLog("PermAttInfo: " + perm.getPermission());
-                PermissionAttachment att = perm.getAttachment();
-                if (att != null) {
-                    Map<String, Boolean> map = att.getPermissions();
-                    plugin.debugLog("PermAtt: " + att.toString());
-                    plugin.debugLog("PermAttMap:");
-                    for (String key : map.keySet()) {
-                        plugin.debugLog("- " + key + ": " + map.get(key));
-                        Permission pe = Bukkit.getPluginManager().getPermission(key);
-                        if (pe != null) {
-                            for (String k : pe.getChildren().keySet()) {
-                                plugin.debugLog("  - " + k + ": " + pe.getChildren().get(k));
+                                plugin.debugLog("     - " + k + ": " + pe.getChildren().get(k));
                             }
                         }
                     }
@@ -143,31 +127,34 @@ public class TPListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
+        plugin.debugLog("PlayerQuitEvent fired, handling");
         plugin.getManager().handleLogoutEvent(event);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerWorldChange(PlayerChangedWorldEvent event) {
+        plugin.debugLog("PlayerChangedWorldEvent fired, handling");
         Player player = event.getPlayer();
         PermissionUser user = plugin.getManager().getUser(player);
+        plugin.debugLog("Player " + player.getName() + " changed from " + event.getFrom().getName() + " to " + player.getWorld().getName());
         user.changeWorld(player, player.getWorld().getName(), plugin.getManager().getAttachment(player));
         if (TotalPermissions.isDebugMode()) {
-            plugin.debugLog(player.getName() + " changed world to " + player.getWorld().getName());
-            Set<PermissionAttachmentInfo> set = player.getEffectivePermissions();
-            plugin.debugLog("Player: " + player.getName());
+            plugin.debugLog(event.getPlayer().getName() + " has joined in world " + event.getPlayer().getWorld().getName());
+            Set<PermissionAttachmentInfo> set = event.getPlayer().getEffectivePermissions();
+            plugin.debugLog("Player: " + event.getPlayer().getName());
             for (PermissionAttachmentInfo perm : set) {
-                plugin.debugLog("PermAttInfo: " + perm.getPermission());
+                plugin.debugLog(" PermAttInfo: " + perm.getPermission());
                 PermissionAttachment att = perm.getAttachment();
                 if (att != null) {
                     Map<String, Boolean> map = att.getPermissions();
-                    plugin.debugLog("PermAtt: " + att.toString());
-                    plugin.debugLog("PermAttMap:");
+                    plugin.debugLog("  PermAtt: " + att.toString());
+                    plugin.debugLog("  PermAttMap:");
                     for (String key : map.keySet()) {
-                        plugin.debugLog("- " + key + ": " + map.get(key));
+                        plugin.debugLog("   - " + key + ": " + map.get(key));
                         Permission pe = Bukkit.getPluginManager().getPermission(key);
                         if (pe != null) {
                             for (String k : pe.getChildren().keySet()) {
-                                plugin.debugLog("  - " + k + ": " + pe.getChildren().get(k));
+                                plugin.debugLog("     - " + k + ": " + pe.getChildren().get(k));
                             }
                         }
                     }
@@ -178,11 +165,13 @@ public class TPListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerCommandPreprocessDebugCheck(PlayerCommandPreprocessEvent event) {
+        plugin.debugLog("Handling command preprocess for debug check");
         PermissionUser user = plugin.getManager().getUser(event.getPlayer());
         if (!user.getDebugState()) {
             return;
         }
         if (plugin.getConfiguration().getBoolean("reflection.debug")) {
+            plugin.debugLog("Reflection debug is enabled");
             return;
         }
         plugin.getLogger().info(plugin.getLangFile().getString("listener.tplistener.preprocess.activate", event.getPlayer().getName(), event.getMessage()));
@@ -203,12 +192,14 @@ public class TPListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onRemoteConsoleEvent(RemoteServerCommandEvent event) {
+        plugin.debugLog("RemoteServerCommandEvent fired, handling");
         CommandSender sender = event.getSender();
         plugin.getManager().getRcon().setPerms(sender, plugin.getManager().getAttachment(sender.getName()), null);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerCommandPreprocessPermCheck(PlayerCommandPreprocessEvent event) {
+        plugin.debugLog("Handling Commandpreprocess for perm check event");
         String cmd = event.getMessage().split(" ")[0].substring(1);
         Command command = Bukkit.getPluginCommand(cmd);
         if (command == null) {
