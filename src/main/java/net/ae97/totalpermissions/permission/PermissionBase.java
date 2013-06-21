@@ -70,7 +70,7 @@ public abstract class PermissionBase {
 
     protected final void load() {
         TotalPermissions plugin = TotalPermissions.getPlugin();
-        plugin.debugLog("Loading base:" + permType + " " + name);
+        plugin.debugLog("Loading base: " + permType + " " + name);
         options.clear();
         plugin.debugLog("Clearing out old permissions");
         for (String key : perms.keySet()) {
