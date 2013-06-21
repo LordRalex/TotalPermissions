@@ -80,15 +80,6 @@ public final class PermissionUser extends PermissionBase {
         attMap.clear();
         PermissionAttachment newAtt = setPerms((CommandSender) cs, att, name);
         attMap.put(null, newAtt);
-        List<String> groups = getGroups(name);
-        for (String g : groups) {
-            PermissionGroup group = TotalPermissions.getPlugin().getManager().getGroup(g);
-            if (group == null) {
-                continue;
-            }
-            PermissionAttachment a = group.setPerms(cs, att, name);
-            attMap.put(name, a);
-        }
     }
 
     /**

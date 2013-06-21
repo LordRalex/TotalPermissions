@@ -317,7 +317,7 @@ public abstract class PermissionBase {
         String p = perm;
         boolean allow = true;
         if (p.startsWith("-")) {
-            p = p.substring(0);
+            p = p.substring(1);
             allow = false;
         }
         addPermission(p, world, allow);
@@ -431,38 +431,67 @@ public abstract class PermissionBase {
      * @since 0.1
      */
     public PermissionAttachment setPerms(CommandSender cs, PermissionAttachment att, String worldName) {
+        TotalPermissions plugin = TotalPermissions.getPlugin();
         if (att != null) {
             try {
                 cs.removeAttachment(att);
             } catch (Exception e) {
             }
         }
-        PermissionAttachment attachment = cs.addAttachment(TotalPermissions.getPlugin());
-        Permission mainPerm = perms.get(null);
-        attachment.setPermission(mainPerm, true);
+        PermissionAttachment attachment = cs.addAttachment(plugin);
+        Map<String, Boolean> childrenToAdd = new HashMap<String, Boolean>();
         if (cs instanceof Player) {
             Player player = (Player) cs;
             if (player.getWorld() != null) {
                 Permission worldperm = perms.get(player.getWorld().getName());
                 if (worldperm != null) {
-                    attachment.setPermission(worldperm, true);
+                    Map<String, Boolean> children = worldperm.getChildren();
+                    for (String p : children.keySet()) {
+                        if (!childrenToAdd.containsKey(p)) {
+                            childrenToAdd.put(p, children.get(p));
+                        }
+                    }
                 }
+            }
+        }
+        Permission mainPerm = perms.get(null);
+        Map<String, Boolean> childrenMain = mainPerm.getChildren();
+        for (String p : childrenMain.keySet()) {
+            if (!childrenToAdd.containsKey(p)) {
+                childrenToAdd.put(p, childrenMain.get(p));
             }
         }
         Set<String> inher = getInheritances(null);
         for (String in : inher) {
-            PermissionGroup group = TotalPermissions.getPlugin().getManager().getGroup(in);
-            attachment.setPermission(group.perms.get(null), true);
+            PermissionGroup group = plugin.getManager().getGroup(in);
             if (cs instanceof Player) {
                 Player player = (Player) cs;
                 if (player.getWorld() != null) {
                     Permission worldperm = group.perms.get(player.getWorld().getName());
                     if (worldperm != null) {
-                        attachment.setPermission(worldperm, true);
+                        Map<String, Boolean> children = worldperm.getChildren();
+                        for (String p : children.keySet()) {
+                            if (!childrenToAdd.containsKey(p)) {
+                                childrenToAdd.put(p, children.get(p));
+                            }
+                        }
                     }
                 }
             }
+            Map<String, Boolean> groupChild = group.perms.get(null).getChildren();
+            for (String p : groupChild.keySet()) {
+                if (!childrenToAdd.containsKey(p)) {
+                    childrenToAdd.put(p, groupChild.get(p));
+                }
+            }
         }
+        Permission master_perm = new Permission("totalpermissions.baseitem.masterperm.player." + cs.getName().toLowerCase(), childrenToAdd);
+        if (Bukkit.getPluginManager().getPermission(master_perm.getName()) != null) {
+            Bukkit.getPluginManager().removePermission(master_perm.getName());
+        }
+        Bukkit.getPluginManager().addPermission(master_perm);
+        plugin.debugLog("Setting new permission to " + cs.getName(), master_perm.getName() + " " + master_perm.getChildren());
+        attachment.setPermission(master_perm, true);
         return attachment;
     }
 
