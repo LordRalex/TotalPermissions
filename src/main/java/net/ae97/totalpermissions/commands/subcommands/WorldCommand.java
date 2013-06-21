@@ -35,22 +35,21 @@ public class WorldCommand implements SubCommand {
         }
         return false;
     }
-    
+
     public String getName() {
         return "world";
     }
 
     public String[] getHelp() {
-        return new String[] {
+        return new String[]{
             "/ttp world <worldname> [actions..]",
             TotalPermissions.getPlugin().getLangFile().getString("command.world.help")
         };
     }
-    
+
     private List<String> fields() {
         return Arrays.asList(new String[]{
             "inheritance"
         });
     }
-
 }

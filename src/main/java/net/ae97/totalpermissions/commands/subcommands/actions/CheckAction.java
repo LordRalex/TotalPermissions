@@ -23,7 +23,6 @@ import net.ae97.totalpermissions.permission.PermissionUser;
 import org.bukkit.command.CommandSender;
 
 /**
- *
  * @since 0.2
  * @author 1Rogue
  * @version 0.2
@@ -36,37 +35,30 @@ public class CheckAction extends SubAction {
         if (field.equalsIgnoreCase("permissions")) {
             if (tar.has(item, world)) {
                 sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.check.permissions.has", target, item));
-            }
-            else {
+            } else {
                 sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.check.permissions.not", target, item));
             }
             return true;
-        }
-        else if (field.equalsIgnoreCase("inheritance")) {
+        } else if (field.equalsIgnoreCase("inheritance")) {
             if (tar.hasInheritance(item, world)) {
                 sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.check.inheritance.has", target, item));
-            }
-            else {
+            } else {
                 sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.check.inheritance.not", target, item));
             }
             return true;
-        }
-        else if (field.equalsIgnoreCase("commands")) {
+        } else if (field.equalsIgnoreCase("commands")) {
             if (tar.hasCommand(item, world)) {
                 sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.check.commands.has", target, item));
-            }
-            else {
+            } else {
                 sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.check.commands.not", target, item));
             }
             return true;
-        }
-        else if (field.equalsIgnoreCase("groups")) {
+        } else if (field.equalsIgnoreCase("groups")) {
             if (tar instanceof PermissionUser) {
-                PermissionUser newtar = (PermissionUser)tar;
+                PermissionUser newtar = (PermissionUser) tar;
                 if (newtar.hasInheritance(item, world)) {
                     sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.check.groups.has", target, item));
-                }
-                else {
+                } else {
                     sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.check.groups.not", target, item));
                 }
                 return true;
@@ -83,18 +75,17 @@ public class CheckAction extends SubAction {
     public String[] getHelp() {
         return new String[]{
             "check " + TotalPermissions.getPlugin().getLangFile().getString("variables.field")
-                + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.value")
-                + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.world-optional"),
+            + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.value")
+            + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.world-optional"),
             TotalPermissions.getPlugin().getLangFile().getString("command.action.check.help")
         };
     }
-    
+
     public String[] supportedTypes() {
-        return new String[] {
+        return new String[]{
             "permissions",
             "inheritance",
             "commands",
-            "groups",
-        };
+            "groups",};
     }
 }

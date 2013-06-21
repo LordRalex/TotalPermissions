@@ -24,14 +24,14 @@ import org.bukkit.command.CommandSender;
  * @version 0.1
  */
 public interface SubCommand {
-    
+
     /**
      * Executes the command. Only the args and sender are needed.
-     * 
+     *
      * @return Success of the command
      */
     public abstract boolean execute(CommandSender sender, String[] args);
-    
+
     /**
      * Returns the command's name. When used, it is the /ttp [name].
      *

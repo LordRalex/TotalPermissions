@@ -81,9 +81,11 @@ public enum PermissionType {
                     return plugin.getManager().getOP();
                 } else if (name.equalsIgnoreCase("rcon")) {
                     return plugin.getManager().getRcon();
+                } else {
+                    return null;
                 }
             case WORLD:
-            // need to add setting worlds for inheritance purposes.
+                return null;
             default:
                 return null;
         }

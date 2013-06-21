@@ -60,8 +60,7 @@ public class TPListener implements Listener {
         if (plugin.getConfiguration().getBoolean("reflection.starperm")
                 || (user.getDebugState() && plugin.getConfiguration().getBoolean("reflection.debug"))) {
             plugin.debugLog("Reflection hook enabled, reflecting into the player");
-            //forgive me for saying I did not want to do this
-            //or as squid says
+            //forgive me for saying I did not want to do this, or as squid says
             //"Forgive me for my sins"
             Player player = event.getPlayer();
             try {

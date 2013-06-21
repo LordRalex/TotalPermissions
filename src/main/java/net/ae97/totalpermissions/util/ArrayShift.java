@@ -17,7 +17,6 @@
 package net.ae97.totalpermissions.util;
 
 /**
- *
  * @since 0.2
  * @author 1Rogue
  * @version 0.2

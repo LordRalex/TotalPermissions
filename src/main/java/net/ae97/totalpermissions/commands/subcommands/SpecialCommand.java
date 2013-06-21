@@ -41,12 +41,12 @@ public class SpecialCommand implements SubCommand {
     }
 
     public String[] getHelp() {
-        return new String[] {
+        return new String[]{
             "/ttp special [rcon|console|op] [actions..]",
             TotalPermissions.getPlugin().getLangFile().getString("command.special.help")
         };
     }
-    
+
     private List<String> fields() {
         return Arrays.asList(new String[]{
             "permissions",

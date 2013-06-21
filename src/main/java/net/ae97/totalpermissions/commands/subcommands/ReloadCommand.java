@@ -58,7 +58,7 @@ public class ReloadCommand implements SubCommand {
     public String getName() {
         return "reload";
     }
-    
+
     public String[] getHelp() {
         return new String[]{
             "/ttp reload",

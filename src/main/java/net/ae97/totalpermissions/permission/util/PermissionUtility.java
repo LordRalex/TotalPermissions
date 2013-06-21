@@ -27,7 +27,7 @@ import org.bukkit.permissions.PermissionDefault;
 /**
  * @author Lord_Ralex
  * @version 0.1
- * @since 0.2
+ * @since 0.1
  */
 public class PermissionUtility {
 
