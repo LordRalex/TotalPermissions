@@ -54,7 +54,7 @@ public class UserCommand implements SubCommand {
             }
             sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.user.player", sender.getName()));
             sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.user.debug", user.getDebugState()));
-            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.user.groups", sb.substring(0, sb.length() - 3)));
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.user.groups", sb.substring(0, sb.length() - 2)));
             return true;
         }
         return false;

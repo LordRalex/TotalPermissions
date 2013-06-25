@@ -92,6 +92,10 @@ command:
     debug: 'Debug: {0}'
     help: 'Gebruikersinterface'
   group:
+    group: 'Groep: {0}'
+    inherits: 'Erft: {0}'
+    prefix: 'Prefix: {0}'
+    suffix: 'Suffix: {0}'
     list: 'Groepen: {0}'
     help: 'Groepsinterface'
   special:

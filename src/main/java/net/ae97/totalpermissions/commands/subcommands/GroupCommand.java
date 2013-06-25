@@ -19,6 +19,7 @@ package net.ae97.totalpermissions.commands.subcommands;
 import java.util.Arrays;
 import java.util.List;
 import net.ae97.totalpermissions.TotalPermissions;
+import net.ae97.totalpermissions.permission.PermissionGroup;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -32,12 +33,23 @@ public class GroupCommand implements SubCommand {
         if (args.length > 2) { // If there is an action command
             TotalPermissions.getPlugin().getCommandHandler().getActionHandler().onAction(sender, args, fields());
             return true;
+        } else if (args.length == 2) {
+            PermissionGroup pg = TotalPermissions.getPlugin().getManager().getGroup(args[2]);
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.group.group", pg.getName()));
+            StringBuilder sb = new StringBuilder();
+            for (String name : pg.getInheritances(pg.getName())) {
+                sb.append(name).append(", ");
+            }
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.group.inherits", sb.substring(0, sb.length() - 2)));
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.group.prefix", pg.getName(), pg.getOption("prefix")));
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.group.suffix", pg.getName(), pg.getOption("suffix")));
+            
         } else if (args.length == 1) {
             StringBuilder sb = new StringBuilder();
             for (String group : TotalPermissions.getPlugin().getManager().getGroups()) {
                 sb.append(group).append(", ");
             }
-            TotalPermissions.getPlugin().getLangFile().getString("command.group.list", sb.substring(0, sb.length() - 3));
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.group.list", sb.substring(0, sb.length() - 2)));
             return true;
         }
         return false;

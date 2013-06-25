@@ -62,14 +62,13 @@ command:
     args: 'No target specified, for help, use /ttp debug help'
     args-plain: 'No target specified, for help, use /ttp debug help'
     null-target: 'Target user ("{0}") was not found'
-    debug-on: 'Debug turned on for {0}'
-    debug-off: 'Debug turned off for {0}'
+    debug-on: '&7Debug turned on for &9{0}'
+    debug-off: '&7Debug turned off for &9{0}'
     help: 'Turns on debug mode for a user'
   dump:
     help: 'Provides the registered perms for an item'
-    page: 'Page {0}/{1}'
-    title: 'Perms for {0}: {1}'
-    listperm: ''
+    page: '&2Page {0}/{1}'
+    title: '&2Permissions for {0}: {1}'
   help:
     command: 'help'
     action-help: 'Use "help" without quotes after an action for help information'
@@ -79,10 +78,10 @@ command:
     help: 'Displays help information'
   reload:
     command: 'reload'
-    reloading: 'Reloading {0}'
-    badconfig: 'An error occured when reloading, check your server logs'
-    general: 'An error occured while reloading {0}'
-    success: '{0} has reloaded'
+    reloading: '&eReloading {0}'
+    badconfig: '&cAn error occured when reloading, check your server logs'
+    general: '&cAn error occured while reloading {0}'
+    success: '&a{0} has reloaded'
     help: 'Reloads TotalPermissions'
   handler:
     ifnull: 'No command found, use /ttp help for command list'
@@ -97,6 +96,10 @@ command:
     debug: 'Debug: {0}'
     help: 'User interface'
   group:
+    group: 'Group: {0}'
+    inherits: 'Inherits: {0}'
+    prefix: 'Prefix: {0}'
+    suffix: 'Suffix: {0}'
     list: 'Groups: {0}'
     help: 'Group interface'
   special:

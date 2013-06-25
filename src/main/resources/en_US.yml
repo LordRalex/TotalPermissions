@@ -96,6 +96,10 @@ command:
     debug: 'Debug: {0}'
     help: 'User interface'
   group:
+    group: 'Group: {0}'
+    inherits: 'Inherits: {0}'
+    prefix: 'Prefix: {0}'
+    suffix: 'Suffix: {0}'
     list: 'Groups: {0}'
     help: 'Group interface'
   special:

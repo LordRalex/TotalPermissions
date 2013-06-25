@@ -92,6 +92,10 @@ command:
     debug: 'Avbuggning: {0}'
     help: 'Användargränssnitt'
   group:
+    group: 'Grupp: {0}'
+    inherits: 'Ärver: {0}'
+    prefix: 'Prefix: {0}'
+    suffix: 'Suffix: {0}'
     list: 'Grupper: {0}'
     help: 'Gruppgränssnitt'
   special:
