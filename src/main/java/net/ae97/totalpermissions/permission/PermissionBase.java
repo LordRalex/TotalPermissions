@@ -65,7 +65,6 @@ public abstract class PermissionBase {
         permission = new Permission(("totalpermissions.baseItem." + permType + "." + name).toLowerCase());
         plugin.debugLog("Created permission: " + permission.getName());
         section = plugin.getPermFile().getConfigurationSection(permType + "." + name);
-        plugin.getManager().addGroup(this);
         load();
     }
 

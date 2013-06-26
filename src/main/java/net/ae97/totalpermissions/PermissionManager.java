@@ -543,9 +543,4 @@ public final class PermissionManager {
         save(old);
         save(newDef);
     }
-
-    public synchronized void addGroup(PermissionBase item) {
-        synchronized (groups) {
-        }
-    }
 }
