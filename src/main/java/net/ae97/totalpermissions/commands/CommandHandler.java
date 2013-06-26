@@ -67,31 +67,34 @@ public final class CommandHandler implements CommandExecutor {
         if (rawargs.length < 1) {
             rawargs = new String[]{"help"};
         }
-        
-        
+
         StringBuilder sb = new StringBuilder();
         for (String temp : rawargs) {
             sb.append(temp).append(" ");
         }
-        
+
         String[] args;
-        char[] broken = sb.toString().toCharArray();
-        StringBuilder usb = new StringBuilder();
-        ArrayList<String> newargs = new ArrayList();
-        boolean inquotes = false;
-        for (int i = 0; i < broken.length; i++) {
-            if (broken[i] == '"') {
-                inquotes = !inquotes;
-            } else if (broken[i] == ' ' && inquotes == false) {
-                newargs.add(usb.toString());
-                usb = new StringBuilder();
-            } else {
-                usb.append(broken[i]);
+        if (sb.toString().contains("\"")) {
+            char[] broken = sb.toString().toCharArray();
+            StringBuilder usb = new StringBuilder();
+            ArrayList<String> newargs = new ArrayList();
+            boolean inquotes = false;
+            for (int i = 0; i < broken.length; i++) {
+                if (broken[i] == '"') {
+                    inquotes = !inquotes;
+                } else if (broken[i] == ' ' && inquotes == false) {
+                    newargs.add(usb.toString());
+                    usb = new StringBuilder();
+                } else {
+                    usb.append(broken[i]);
+                }
             }
+
+            args = newargs.toArray(new String[newargs.size()]);
+        } else {
+            args = rawargs;
         }
 
-        args = newargs.toArray(new String[newargs.size()]);
-        
         subCommand = args[0];
         SubCommand executor = commands.get(subCommand.toLowerCase());
         if (executor == null) {
