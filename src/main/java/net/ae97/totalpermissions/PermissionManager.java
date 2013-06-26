@@ -447,6 +447,7 @@ public final class PermissionManager {
         plugin.debugLog("Recalculating permissions for all players");
         clearPerms();
         for (Player player : Bukkit.getOnlinePlayers()) {
+            handleLogoutEvent(new PlayerQuitEvent(player, null));
             handleLoginEvent(new PlayerLoginEvent(player, null, null, null, null));
         }
     }

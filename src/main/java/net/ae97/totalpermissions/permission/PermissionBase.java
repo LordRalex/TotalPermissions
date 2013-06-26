@@ -546,6 +546,7 @@ public abstract class PermissionBase {
         section.set("inheritence", existing);
         TotalPermissions.getPlugin().getManager().save(this);
         load();
+        TotalPermissions.getPlugin().getManager().recalculatePermissions();
     }
 
     /**
@@ -567,6 +568,7 @@ public abstract class PermissionBase {
         section.set("commands", existing);
         TotalPermissions.getPlugin().getManager().save(this);
         load();
+        TotalPermissions.getPlugin().getManager().recalculatePermissions();
     }
 
     /**
@@ -588,6 +590,7 @@ public abstract class PermissionBase {
         section.set("groups", existing);
         TotalPermissions.getPlugin().getManager().save(this);
         load();
+        TotalPermissions.getPlugin().getManager().recalculatePermissions();
     }
 
     /**
@@ -626,6 +629,7 @@ public abstract class PermissionBase {
         }
         TotalPermissions.getPlugin().getManager().save(this);
         load();
+        TotalPermissions.getPlugin().getManager().recalculatePermissions();
     }
 
     /**
@@ -714,6 +718,7 @@ public abstract class PermissionBase {
         }
         TotalPermissions.getPlugin().getManager().save(this);
         load();
+        TotalPermissions.getPlugin().getManager().recalculatePermissions();
     }
 
     public void remInheritance(String item, String world) throws IOException {
@@ -725,6 +730,7 @@ public abstract class PermissionBase {
         section.set("inheritence", existing);
         TotalPermissions.getPlugin().getManager().save(this);
         load();
+        TotalPermissions.getPlugin().getManager().recalculatePermissions();
     }
 
     public void remCommand(String item, String world) throws IOException {
@@ -736,10 +742,12 @@ public abstract class PermissionBase {
         section.set("groups", existing);
         TotalPermissions.getPlugin().getManager().save(this);
         load();
+        TotalPermissions.getPlugin().getManager().recalculatePermissions();
     }
 
     public void remOption(String option, String world) throws IOException {
         TotalPermissions.getPlugin().getManager().save(this);
+        TotalPermissions.getPlugin().getManager().recalculatePermissions();
     }
 
     public void remGroup(String item, String world) throws IOException {
@@ -751,12 +759,14 @@ public abstract class PermissionBase {
         section.set("groups", existing);
         TotalPermissions.getPlugin().getManager().save(this);
         load();
+        TotalPermissions.getPlugin().getManager().recalculatePermissions();
     }
 
     public void setOption(String option, String item, String world) throws IOException {
         section.set("options." + option, item);
         TotalPermissions.getPlugin().getManager().save(this);
         load();
+        TotalPermissions.getPlugin().getManager().recalculatePermissions();
     }
 
     public PermissionType getType() {
