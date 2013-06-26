@@ -53,7 +53,7 @@ public abstract class PermissionBase {
     public PermissionBase(PermissionType type, String aName) {
         TotalPermissions plugin = TotalPermissions.getPlugin();
         plugin.debugLog("Creating new Base: " + type + " " + aName);
-        name = aName;
+        name = aName.toLowerCase();
         if (type == null) {
             throw new IllegalArgumentException();
         }
@@ -65,6 +65,7 @@ public abstract class PermissionBase {
         permission = new Permission(("totalpermissions.baseItem." + permType + "." + name).toLowerCase());
         plugin.debugLog("Created permission: " + permission.getName());
         section = plugin.getPermFile().getConfigurationSection(permType + "." + name);
+        plugin.getManager().addGroup(this);
         load();
     }
 

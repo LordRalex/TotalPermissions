@@ -57,7 +57,7 @@ public class FileConverter {
         for (String group : groupNames) {
             ConfigurationSection oldGroup = groupSection.getConfigurationSection(group);
 
-            ConfigurationSection newGroup = newGroupSection.createSection(group);
+            ConfigurationSection newGroup = newGroupSection.createSection(group.toLowerCase());
             ConfigurationSection newOptions = newGroup.createSection("options");
             ConfigurationSection newWorlds = newGroup.createSection("worlds");
 
