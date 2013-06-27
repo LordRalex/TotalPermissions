@@ -462,6 +462,7 @@ public final class PermissionManager {
     public synchronized void recalculatePermissions(Player user) {
         plugin.debugLog("Recalculating permissions for player " + user.getName());
         clearPerms(user);
+        handleLogoutEvent(new PlayerQuitEvent(user, null));
         handleLoginEvent(new PlayerLoginEvent(user, null, null, null, null));
     }
 
