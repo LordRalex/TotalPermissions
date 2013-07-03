@@ -38,14 +38,15 @@ import org.bukkit.plugin.Plugin;
 public class Cipher {
 
     private FileConfiguration langFile;
-    private final String langFileLoc = "https://raw.github.com/AE97/TotalPermissions/master/lang/";
+    private final String langFileLocGithub = "https://raw.github.com/AE97/TotalPermissions/master/lang/<version>/<lang>.yml";
+    private final String langFileLocJar = "<lang>.yml";
+    private final String langFileLocFolder = "<plugin>" + File.separatorChar + "lang" + File.separatorChar + "<lang>.yml";
     private final String language;
 
-    public Cipher(String lang) {
-        language = lang + ".yml";
-        Plugin plugin = TotalPermissions.getPlugin();
+    public Cipher(Plugin plugin, String lang) {
+        language = lang;
         //load file from github in preps for future use
-        if (language.equalsIgnoreCase("custom.yml")) {
+        if (language.equalsIgnoreCase("custom")) {
             FileConfiguration file = this.getFromFolder(plugin, language);
             if (file != null) {
                 setLangFile(file);
@@ -54,7 +55,7 @@ public class Cipher {
         }
         FileConfiguration github = null;
         try {
-            github = getFromGithub(language);
+            github = getFromGithub(plugin, language);
         } catch (FileNotFoundException e) {
             plugin.getLogger().log(Level.SEVERE, "Lang file not found online", e);
         } catch (IOException e) {
@@ -87,10 +88,11 @@ public class Cipher {
             //and if we just completely crash and burn, then use en_US
             plugin.getLogger().log(Level.SEVERE, "Fatal error occured while loading lang files", e);
             plugin.getLogger().log(Level.SEVERE, "Defaulting to english (en_US)");
-            setLangFile(YamlConfiguration.loadConfiguration(plugin.getResource("en_US.yml")));
+            setLangFile(getFromJar(plugin, lang));
         }
         try {
-            langFile.save(new File(new File(plugin.getDataFolder(), "lang"), language));
+            new File(langFileLocFolder.replace("<plugin>", plugin.getDataFolder().getPath())).getParentFile().mkdirs();
+            langFile.save(langFileLocFolder.replace("<plugin>", plugin.getDataFolder().getPath()).replace("<lang>", lang));
         } catch (IOException ex) {
             plugin.getLogger().log(Level.SEVERE, "Fatal error occured while saving lang files", ex);
         }
@@ -113,7 +115,7 @@ public class Cipher {
     public String getString(String path, Object... vars) {
         String string = langFile.getString(path);
         if (string == null) {
-            FileConfiguration fromJar = getFromJar(TotalPermissions.getPlugin(), "en_US.yml");
+            FileConfiguration fromJar = getFromJar(TotalPermissions.getPlugin(), this.langFileLocJar.replace("<lang>", "en_US"));
             if (fromJar != null) {
                 string = fromJar.getString(path);
             }
@@ -128,19 +130,16 @@ public class Cipher {
     }
 
     private FileConfiguration getFromFolder(Plugin pl, String lang) {
-        File langFolder = new File(pl.getDataFolder(), "lang");
-        if (!langFolder.exists()) {
-            langFolder.mkdirs();
-        }
-        if (new File(langFolder, lang).exists()) {
-            return YamlConfiguration.loadConfiguration(new File(langFolder, lang));
+        File file = new File(langFileLocFolder.replace("<plugin>", pl.getDataFolder().getPath()).replace("<lang>", lang));
+        if (file.exists()) {
+            return YamlConfiguration.loadConfiguration(file);
         } else {
             return null;
         }
     }
 
     private FileConfiguration getFromJar(Plugin plugin, String lang) {
-        InputStream jarStream = plugin.getResource(lang);
+        InputStream jarStream = plugin.getResource(langFileLocJar.replace("<lang>", lang));
         if (jarStream != null) {
             return YamlConfiguration.loadConfiguration(jarStream);
         } else {
@@ -148,8 +147,10 @@ public class Cipher {
         }
     }
 
-    private FileConfiguration getFromGithub(String lang) throws MalformedURLException, IOException {
-        URL upstr = new URL(langFileLoc + lang);
+    private FileConfiguration getFromGithub(Plugin plugin, String lang) throws MalformedURLException, IOException {
+        YamlConfiguration pluginyml = YamlConfiguration.loadConfiguration(plugin.getResource("plugin.yml"));
+
+        URL upstr = new URL(langFileLocGithub.replace("<version>", pluginyml.getString("language-version")).replace("<lang>", lang));
         InputStream langs = upstr.openStream();
         if (langs != null) {
             return YamlConfiguration.loadConfiguration(langs);

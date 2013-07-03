@@ -77,7 +77,7 @@ public class TotalPermissions extends JavaPlugin {
             configFile = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "config.yml"));
             config = new Configuration(this);
             config.loadDefaults();
-            cipher = new Cipher(config.getString("language"));
+            cipher = new Cipher(this, config.getString("language"));
 
             for (String version : ACCEPTABLE_VERSIONS) {
                 try {

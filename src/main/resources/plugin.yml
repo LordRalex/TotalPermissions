@@ -5,6 +5,7 @@ version: ${project.version}
 authors: [Lord_Ralex, 1Rogue, Icelord871]
 website: http://dev.bukkit.org/server-mods/totalpermissions/
 prefix: TotalPerms
+language-version: ${languageversion}
 permissions:
   totalpermissions.*:
     default: op

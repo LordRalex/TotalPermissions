@@ -6,6 +6,10 @@
     <version>0.2.2-DEV</version>
     <name>TotalPermissions</name>
     <url>http://dev.bukkit.org/server-mods/totalpermissions/</url>
+    <properties>
+        <languageversion>0.2</languageversion>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
     <repositories>
         <repository>
             <id>bukkit-repo</id>
@@ -62,7 +66,4 @@
             <version>1.5.2-R1.0</version>
         </dependency>
     </dependencies>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 </project>
