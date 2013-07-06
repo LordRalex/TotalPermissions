@@ -29,6 +29,7 @@ import org.bukkit.command.CommandSender;
  */
 public class GroupCommand implements SubCommand {
 
+    @Override
     public boolean execute(CommandSender sender, String[] args) {
         if (args.length > 2) { // If there is an action command
             TotalPermissions.getPlugin().getCommandHandler().getActionHandler().onAction(sender, args, fields());
@@ -43,7 +44,7 @@ public class GroupCommand implements SubCommand {
             sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.group.inherits", sb.substring(0, sb.length() - 2)));
             sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.group.prefix", pg.getName(), pg.getOption("prefix")));
             sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.group.suffix", pg.getName(), pg.getOption("suffix")));
-            
+
         } else if (args.length == 1) {
             StringBuilder sb = new StringBuilder();
             for (String group : TotalPermissions.getPlugin().getManager().getGroups()) {
@@ -55,10 +56,12 @@ public class GroupCommand implements SubCommand {
         return false;
     }
 
+    @Override
     public String getName() {
         return "group";
     }
 
+    @Override
     public String[] getHelp() {
         return new String[]{
             "/ttp group " + TotalPermissions.getPlugin().getLangFile().getString("variables.group") + " [actions..]",

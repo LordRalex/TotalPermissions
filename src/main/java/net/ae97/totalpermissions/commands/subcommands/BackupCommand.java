@@ -27,6 +27,7 @@ import org.bukkit.command.CommandSender;
  */
 public class BackupCommand implements SubCommand {
 
+    @Override
     public boolean execute(CommandSender sender, String[] args) {
         FileUpdater update = new FileUpdater(TotalPermissions.getPlugin());
         update.backup(true);
@@ -34,10 +35,12 @@ public class BackupCommand implements SubCommand {
         return true;
     }
 
+    @Override
     public String getName() {
         return "backup";
     }
 
+    @Override
     public String[] getHelp() {
         return new String[]{
             "/ttp backup",

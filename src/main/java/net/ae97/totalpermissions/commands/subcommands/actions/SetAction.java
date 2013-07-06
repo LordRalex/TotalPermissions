@@ -30,6 +30,7 @@ import org.bukkit.command.CommandSender;
  */
 public class SetAction extends SubAction {
 
+    @Override
     public boolean execute(CommandSender sender, String aType, String target, String field, String item, String world) {
         PermissionType type = PermissionType.getType(aType);
         PermissionBase tar = PermissionType.getTarget(type, target);
@@ -62,10 +63,12 @@ public class SetAction extends SubAction {
         return false;
     }
 
+    @Override
     public String getName() {
         return "set";
     }
 
+    @Override
     public String[] getHelp() {
         return new String[]{
             "set " + TotalPermissions.getPlugin().getLangFile().getString("variables.field")
@@ -75,6 +78,7 @@ public class SetAction extends SubAction {
         };
     }
 
+    @Override
     public String[] supportedTypes() {
         return new String[]{
             "default",

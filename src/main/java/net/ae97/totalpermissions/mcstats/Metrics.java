@@ -76,8 +76,10 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.zip.GZIPOutputStream;
+import net.ae97.totalpermissions.TotalPermissions;
 
-public class Metrics {
+//TotalPermissions - Made class final
+public final class Metrics {
 
     /**
      * The current revision number
@@ -217,6 +219,7 @@ public class Metrics {
             task = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
                 private boolean firstPost = true;
 
+                @Override
                 public void run() {
                     try {
                         // This has to be synchronized or it can collide with the disable method.
@@ -516,7 +519,8 @@ public class Metrics {
             gzos = new GZIPOutputStream(baos);
             gzos.write(input.getBytes("UTF-8"));
         } catch (IOException e) {
-            e.printStackTrace();
+            //TotalPermissions - Change to use Logger
+            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An Error occurred on gzipping from Metrics", e);
         } finally {
             if (gzos != null) {
                 try {
@@ -610,7 +614,8 @@ public class Metrics {
                 default:
                     if (chr < ' ') {
                         String t = "000" + Integer.toHexString(chr);
-                        builder.append("\\u" + t.substring(t.length() - 4));
+                        //TotalPermissions - String .appends together instead
+                        builder.append("\\u").append(t.substring(t.length() - 4));
                     } else {
                         builder.append(chr);
                     }

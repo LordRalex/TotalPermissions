@@ -47,20 +47,23 @@ public class ActionHandler {
     public boolean onAction(CommandSender sender, String[] args, List<String> fields) {
         String type = args[0].toLowerCase();
         String target = args[1];
-        String world = null;
-        String field = null;
-        String iterm = null;
-        String ackshun = null;
+        String world;
+        String field;
+        String iterm;
+        String ackshun;
 
         switch (args.length) {
             case 4:
                 ackshun = args[2];
                 field = args[3];
+                iterm = null;
+                world = null;
                 break;
             case 5:
                 ackshun = args[2];
                 field = args[3];
                 iterm = args[4];
+                world = null;
                 break;
             case 6:
                 ackshun = args[2];

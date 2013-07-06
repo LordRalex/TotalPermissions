@@ -322,7 +322,6 @@ public final class PermissionManager {
             user.addPerm(world, perm);
         } else {
             user.remPerm(world, perm);
-
         }
     }
 
@@ -343,7 +342,6 @@ public final class PermissionManager {
             gr.addPerm(world, perm);
         } else {
             gr.remPerm(world, perm);
-
         }
     }
 
@@ -364,7 +362,6 @@ public final class PermissionManager {
             gr.addPerm(perm, world);
         } else {
             gr.remPerm(perm, world);
-
         }
     }
 

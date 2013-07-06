@@ -37,6 +37,7 @@ public class DumpCommand implements SubCommand {
 
     private final int NUM_PAGE = 8;
 
+    @Override
     public boolean execute(CommandSender sender, String[] args) {
         String[] params = new String[2];
         Cipher lang = TotalPermissions.getPlugin().getLangFile();
@@ -128,10 +129,12 @@ public class DumpCommand implements SubCommand {
         return true;
     }
 
+    @Override
     public String getName() {
         return "dump";
     }
 
+    @Override
     public String[] getHelp() {
         return new String[]{
             "/ttp dump [-command/-player/-plugin] " + TotalPermissions.getPlugin().getLangFile().getString("variables.username-optional") + " [page]",

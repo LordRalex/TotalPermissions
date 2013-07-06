@@ -45,6 +45,7 @@ public class UpdateRunnable extends BukkitRunnable {
         version = plugin.getDescription().getVersion();
     }
 
+    @Override
     public void run() {
         if (version.endsWith("SNAPSHOT") || version.endsWith("DEV")) {
             plugin.getLogger().warning(plugin.getLangFile().getString("update.dev"));

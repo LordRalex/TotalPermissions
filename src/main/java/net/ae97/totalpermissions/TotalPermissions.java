@@ -65,19 +65,20 @@ public class TotalPermissions extends JavaPlugin {
 
             if (!getDataFolder().exists()) {
                 getDataFolder().mkdirs();
-
             }
             if (!(new File(getDataFolder(), "config.yml").exists())) {
-                this.saveResource("config.yml", true);
+                saveResource("config.yml", true);
             }
             if (!(new File(getDataFolder(), "permissions.yml").exists())) {
-                this.saveResource("permissions.yml", true);
+                saveResource("permissions.yml", true);
             }
 
-            configFile = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "config.yml"));
+            configFile = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "config.yml"));
             config = new Configuration(this);
             config.loadDefaults();
             cipher = new Cipher(this, config.getString("language"));
+
+            debug = config.getBoolean("angry-debug");
 
             for (String version : ACCEPTABLE_VERSIONS) {
                 try {
@@ -87,15 +88,14 @@ public class TotalPermissions extends JavaPlugin {
                 } catch (ClassNotFoundException e) {
                 }
             }
+            debugLog("Detected bukkit version: " + BUKKIT_VERSION);
             if (BUKKIT_VERSION.equalsIgnoreCase("NONE")) {
-                getLogger().severe(this.getLangFile().getString("main.bad-version1"));
-                getLogger().severe(this.getLangFile().getString("main.bad-version2"));
+                getLogger().severe(getLangFile().getString("main.bad-version1"));
+                getLogger().severe(getLangFile().getString("main.bad-version2"));
                 config.disableReflection();
             }
             //force kill reflection, is buggy and I don't want it running now
             config.disableReflection();
-
-            debug = config.getBoolean("angry-debug");
 
             permFile = new YamlConfiguration();
             try {
@@ -106,27 +106,27 @@ public class TotalPermissions extends JavaPlugin {
                     update.runUpdate();
                 }
                 if (config.getBoolean("permissions.formatter")) {
-                    FileConverter converter = new FileConverter(permFile, new File(this.getDataFolder(), "permissions.yml"));
+                    FileConverter converter = new FileConverter(permFile, new File(getDataFolder(), "permissions.yml"));
                     permFile = converter.convert();
                 }
             } catch (InvalidConfigurationException e) {
-                getLogger().log(Level.SEVERE, this.getLangFile().getString("main.yaml-error"));
+                getLogger().log(Level.SEVERE, getLangFile().getString("main.yaml-error"));
                 getLogger().log(Level.SEVERE, "-> " + e.getMessage());
-                getLogger().log(Level.WARNING, this.getLangFile().getString("main.load-backup"));
+                getLogger().log(Level.WARNING, getLangFile().getString("main.load-backup"));
                 try {
                     permFile = new YamlConfiguration();
-                    permFile.load(new File(this.getLastBackupFolder(), "permissions.yml"));
-                    getLogger().log(Level.WARNING, this.getLangFile().getString("main.loaded1"));
-                    getLogger().log(Level.WARNING, this.getLangFile().getString("main.loaded2"));
+                    permFile.load(new File(getLastBackupFolder(), "permissions.yml"));
+                    getLogger().log(Level.WARNING, getLangFile().getString("main.loaded1"));
+                    getLogger().log(Level.WARNING, getLangFile().getString("main.loaded2"));
                 } catch (InvalidConfigurationException e2) {
-                    getLogger().log(Level.SEVERE, this.getLangFile().getString("main.load-failed1"));
-                    getLogger().log(Level.SEVERE, this.getLangFile().getString("main.load-failed2"));
+                    getLogger().log(Level.SEVERE, getLangFile().getString("main.load-failed1"));
+                    getLogger().log(Level.SEVERE, getLangFile().getString("main.load-failed2"));
                     throw e2;
                 }
             }
             getLogger().info("Initial preperations complete");
         } catch (Exception e) {
-            getLogger().log(Level.SEVERE, this.getLangFile().getString("main.error", getName(), this.getDescription().getVersion()), e);
+            getLogger().log(Level.SEVERE, getLangFile().getString("main.error", getName(), getDescription().getVersion()), e);
             loadingFailed = true;
         }
     }
@@ -135,32 +135,40 @@ public class TotalPermissions extends JavaPlugin {
     public void onEnable() {
         try {
             if (loadingFailed) {
-                getLogger().log(Level.SEVERE, this.getLangFile().getString("main.loadcrash"));
+                getLogger().log(Level.SEVERE, getLangFile().getString("main.loadcrash"));
                 Bukkit.getPluginManager().disablePlugin(this);
                 return;
             }
             if (config.getBoolean("update-check")) {
                 Bukkit.getScheduler().runTaskLater(this, new UpdateRunnable(this), 1);
             }
-            getLogger().config(this.getLangFile().getString("main.create.perms"));
+
+            debugLog("Creating permission manager");
             manager = new PermissionManager(this);
+            debugLog("Loading permission manager");
             manager.load();
-            getLogger().config(this.getLangFile().getString("main.create.listener"));
+
+            debugLog("Creating listener");
             listener = new TPListener(this);
+            debugLog("Registering listener");
             Bukkit.getPluginManager().registerEvents(listener, this);
-            getLogger().config(this.getLangFile().getString("main.create.command"));
+
+            debugLog("Creating command handler");
             commands = new CommandHandler(this);
+            debugLog("Registering command handler");
             getCommand("totalpermissions").setExecutor(commands);
+
+            debugLog("Loading up metrics");
             metrics = new Metrics(this);
             if (metrics.start()) {
-                getLogger().info(this.getLangFile().getString("main.metrics"));
+                getLogger().info(getLangFile().getString("main.metrics"));
             }
         } catch (Exception e) {
             if (e instanceof InvalidConfigurationException) {
-                getLogger().log(Level.SEVERE, this.getLangFile().getString("main.yaml-error"));
+                getLogger().log(Level.SEVERE, getLangFile().getString("main.yaml-error"));
                 getLogger().log(Level.SEVERE, ((InvalidConfigurationException) e).getMessage());
             } else {
-                getLogger().log(Level.SEVERE, this.getLangFile().getString("main.error", getName(), this.getDescription().getVersion()), e);
+                getLogger().log(Level.SEVERE, getLangFile().getString("main.error", getName(), getDescription().getVersion()), e);
             }
             Bukkit.getPluginManager().disablePlugin(this);
         }
@@ -168,10 +176,11 @@ public class TotalPermissions extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        debugLog("Disabling manager");
         if (manager != null) {
+            debugLog("Unloading manager");
             manager.unload();
         }
-        debug = false;
     }
 
     /**
@@ -261,7 +270,7 @@ public class TotalPermissions extends JavaPlugin {
      * @since 0.1
      */
     public File getBackupFolder() {
-        return new File(this.getDataFolder(), "backups");
+        return new File(getDataFolder(), "backups");
     }
 
     /**

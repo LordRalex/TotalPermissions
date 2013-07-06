@@ -57,6 +57,7 @@ public class HelpCommand implements SubCommand {
         return "help";
     }
 
+    @Override
     public String[] getHelp() {
         return new String[]{
             "/ttp help",

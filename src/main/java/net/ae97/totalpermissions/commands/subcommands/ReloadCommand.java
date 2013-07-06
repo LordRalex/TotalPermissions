@@ -32,6 +32,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
  */
 public class ReloadCommand implements SubCommand {
 
+    @Override
     public boolean execute(CommandSender sender, String[] args) {
         sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.reload.reloading", TotalPermissions.getPlugin().getDescription().getFullName()));
         PermissionManager manager = TotalPermissions.getPlugin().getManager();
@@ -55,10 +56,12 @@ public class ReloadCommand implements SubCommand {
         return true;
     }
 
+    @Override
     public String getName() {
         return "reload";
     }
 
+    @Override
     public String[] getHelp() {
         return new String[]{
             "/ttp reload",

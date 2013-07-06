@@ -31,6 +31,7 @@ import org.bukkit.entity.Player;
  */
 public class UserCommand implements SubCommand {
 
+    @Override
     public boolean execute(CommandSender sender, String[] args) {
         if (args.length > 2) { // If there is an action command
             TotalPermissions.getPlugin().getCommandHandler().getActionHandler().onAction(sender, args, fields());
@@ -60,10 +61,12 @@ public class UserCommand implements SubCommand {
         return false;
     }
 
+    @Override
     public String getName() {
         return "user";
     }
 
+    @Override
     public String[] getHelp() {
         return new String[]{
             "/ttp user " + TotalPermissions.getPlugin().getLangFile().getString("variables.username") + " [actions..]",

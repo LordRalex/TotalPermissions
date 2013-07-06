@@ -62,6 +62,7 @@ public final class CommandHandler implements CommandExecutor {
         actions = new ActionHandler();
     }
 
+    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] rawargs) {
         String subCommand;
         if (rawargs.length < 1) {

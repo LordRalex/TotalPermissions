@@ -27,6 +27,7 @@ import org.bukkit.command.CommandSender;
  */
 public class DebugCommand implements SubCommand {
 
+    @Override
     public boolean execute(CommandSender sender, String[] args) {
         if (args.length == 1) {
             sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.debug.args-plain"));
@@ -63,10 +64,12 @@ public class DebugCommand implements SubCommand {
         return true;
     }
 
+    @Override
     public String getName() {
         return "debug";
     }
 
+    @Override
     public String[] getHelp() {
         return new String[]{
             "/ttp debug " + TotalPermissions.getPlugin().getLangFile().getString("variables.username") + " [on/off]",

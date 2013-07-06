@@ -29,6 +29,7 @@ import org.bukkit.command.CommandSender;
  */
 public class AddAction extends SubAction {
 
+    @Override
     public boolean execute(CommandSender sender, String aType, String target, String field, String item, String world) {
         PermissionType type = PermissionType.getType(aType);
         PermissionBase tar = PermissionType.getTarget(type, target);
@@ -68,10 +69,12 @@ public class AddAction extends SubAction {
         return false;
     }
 
+    @Override
     public String getName() {
         return "add";
     }
 
+    @Override
     public String[] getHelp() {
         return new String[]{
             "add " + TotalPermissions.getPlugin().getLangFile().getString("variables.field")
@@ -81,6 +84,7 @@ public class AddAction extends SubAction {
         };
     }
 
+    @Override
     public String[] supportedTypes() {
         return new String[]{
             "permissions",
