@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
@@ -93,6 +94,11 @@ public final class PermissionUser extends PermissionBase {
     public List<String> getGroups(String world) {
         Set<String> groupList = new HashSet<String>();
         List<String> temp;
+        if (!didExist) {
+            List<String> list = new ArrayList<String>();
+            list.add(TotalPermissions.getPlugin().getManager().getDefaultGroup());
+            return list;
+        }
         temp = section.getStringList(((world == null) ? "" : "worlds." + world + ".") + "group");
         if (temp != null) {
             groupList.addAll(temp);

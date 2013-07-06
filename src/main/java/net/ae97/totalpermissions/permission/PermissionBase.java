@@ -49,6 +49,7 @@ public abstract class PermissionBase {
     protected final List<String> inherited = new ArrayList<String>();
     protected final PermissionType permType;
     protected Permission permission;
+    protected boolean didExist;
 
     public PermissionBase(PermissionType type, String aName) {
         TotalPermissions plugin = TotalPermissions.getPlugin();
@@ -64,6 +65,12 @@ public abstract class PermissionBase {
         }
         permission = new Permission(("totalpermissions.baseItem." + permType + "." + name).toLowerCase());
         plugin.debugLog("Created permission: " + permission.getName());
+        if (plugin.getPermFile().getConfigurationSection(permType + "." + name) == null) {
+            didExist = false;
+            plugin.getPermFile().createSection(permType + "." + name);
+        } else {
+            didExist = true;
+        }
         section = plugin.getPermFile().getConfigurationSection(permType + "." + name);
         load();
     }
