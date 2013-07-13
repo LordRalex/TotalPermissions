@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+import net.ae97.totalpermissions.data.DataHolder;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -116,7 +117,7 @@ public class FileUpdater {
     public void runUpdate() {
         backup();
         FileConfiguration updateFile;
-        FileConfiguration perms = plugin.getPermFile();
+        DataHolder perms = plugin.getPermFile();
         File datafolder = plugin.getDataFolder();
         String[] updateFileNames = new String[]{
             "groups.yml",

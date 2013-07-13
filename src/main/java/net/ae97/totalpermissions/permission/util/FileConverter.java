@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import net.ae97.totalpermissions.data.DataHolder;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -35,16 +36,16 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public class FileConverter {
 
-    protected final FileConfiguration config;
+    protected DataHolder config;
     protected File path;
 
-    public FileConverter(FileConfiguration file, File f) {
+    public FileConverter(DataHolder file, File f) {
         config = file;
         path = f;
     }
 
-    public FileConfiguration convert() throws InvalidConfigurationException, IOException {
-        FileConfiguration newVersion = new YamlConfiguration();
+    public DataHolder convert() throws InvalidConfigurationException, IOException {
+        DataHolder newVersion = null;
 
         if (!config.isConfigurationSection("groups")) {
             config.createSection("groups");
@@ -147,8 +148,7 @@ public class FileConverter {
             }
         }
 
-        String string = newVersion.saveToString();
-        config.loadFromString(string);
+        config = newVersion;
         save();
         return config;
     }

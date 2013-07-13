@@ -25,6 +25,8 @@ import net.ae97.totalpermissions.mcstats.Metrics;
 import net.ae97.totalpermissions.permission.util.FileUpdater;
 import java.io.File;
 import java.util.logging.Level;
+import net.ae97.totalpermissions.data.DataHolder;
+import net.ae97.totalpermissions.data.YamlDataHolder;
 import net.ae97.totalpermissions.permission.util.FileConverter;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -48,7 +50,7 @@ public class TotalPermissions extends JavaPlugin {
         "v1_5_R1",
         "v1_4_R1"
     };
-    protected FileConfiguration permFile;
+    protected DataHolder permFile;
     protected FileConfiguration configFile;
     protected PermissionManager manager;
     protected Configuration config;
@@ -98,7 +100,7 @@ public class TotalPermissions extends JavaPlugin {
             //force kill reflection, is buggy and I don't want it running now
             config.disableReflection();
 
-            permFile = new YamlConfiguration();
+            permFile = new YamlDataHolder();
             try {
                 permFile.load(new File(this.getDataFolder(), "permissions.yml"));
                 FileUpdater update = new FileUpdater(this);
@@ -115,7 +117,7 @@ public class TotalPermissions extends JavaPlugin {
                 getLogger().log(Level.SEVERE, "-> " + e.getMessage());
                 getLogger().log(Level.WARNING, getLangFile().getString("main.load-backup"));
                 try {
-                    permFile = new YamlConfiguration();
+                    permFile = new YamlDataHolder();
                     permFile.load(new File(getLastBackupFolder(), "permissions.yml"));
                     getLogger().log(Level.WARNING, getLangFile().getString("main.loaded1"));
                     getLogger().log(Level.WARNING, getLangFile().getString("main.loaded2"));
@@ -199,11 +201,11 @@ public class TotalPermissions extends JavaPlugin {
      * Gets the permissions file. This does not load the file, this only
      * provides the stored object.
      *
-     * @return The perm file in the FileConfiguration form.
+     * @return The perm file in the DataHolder form.
      *
      * @since 0.1
      */
-    public FileConfiguration getPermFile() {
+    public DataHolder getPermFile() {
         return this.permFile;
     }
 

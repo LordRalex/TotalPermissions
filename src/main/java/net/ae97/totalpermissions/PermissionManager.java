@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import net.ae97.totalpermissions.data.DataHolder;
 import net.ae97.totalpermissions.permission.PermissionBase;
 import net.ae97.totalpermissions.permission.PermissionOp;
 import net.ae97.totalpermissions.permission.PermissionType;
@@ -72,7 +73,7 @@ public final class PermissionManager {
      * @since 0.1
      */
     public void load() throws InvalidConfigurationException {
-        FileConfiguration perms = plugin.getPermFile();
+        DataHolder perms = plugin.getPermFile();
         ConfigurationSection filegroups = perms.getConfigurationSection("groups");
         if (groups == null) {
             throw new InvalidConfigurationException(plugin.getLangFile().getString("manager.null-group"));
@@ -505,7 +506,7 @@ public final class PermissionManager {
      */
     public synchronized void save(PermissionBase base) throws IOException {
         plugin.debugLog("Saving PermissionBase " + base.getName() + " to the perm file");
-        FileConfiguration file = plugin.getPermFile();
+        DataHolder file = plugin.getPermFile();
         PermissionType type = base.getType();
         file.set(type + "." + base.getName(), base.getConfigSection());
         save();
