@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import net.ae97.totalpermissions.data.DataHolder;
+import net.ae97.totalpermissions.data.YamlDataHolder;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -64,6 +65,9 @@ public class FileUpdater {
      * @since 0.2
      */
     public void backup(boolean bu) {
+        if (!(plugin.getPermFile() instanceof YamlDataHolder)) {
+            return;
+        }
         if (bu == false) {
             return;
         }
@@ -115,33 +119,34 @@ public class FileUpdater {
      * @since 0.2
      */
     public void runUpdate() {
-        backup();
-        FileConfiguration updateFile;
-        DataHolder perms = plugin.getPermFile();
-        File datafolder = plugin.getDataFolder();
-        String[] updateFileNames = new String[]{
-            "groups.yml",
-            "users.yml",
-            "update.yml"
-        };
-
-        for (String name : updateFileNames) {
-            updateFile = YamlConfiguration.loadConfiguration(new File(datafolder, name));
-            if (!(new File(datafolder, name).exists())) {
-                continue;
-            }
-            for (String key : updateFile.getKeys(false)) {
-                if (updateFile.isConfigurationSection(key)) {
-                    updateSection(updateFile.getConfigurationSection(key), (perms.getConfigurationSection(key) == null) ? perms.createSection(key) : perms.getConfigurationSection(key));
+        if (plugin.getPermFile() instanceof YamlDataHolder) {
+            backup();
+            FileConfiguration updateFile;
+            DataHolder perms = plugin.getPermFile();
+            File datafolder = plugin.getDataFolder();
+            String[] updateFileNames = new String[]{
+                "groups.yml",
+                "users.yml",
+                "update.yml"
+            };
+            for (String name : updateFileNames) {
+                updateFile = YamlConfiguration.loadConfiguration(new File(datafolder, name));
+                if (!(new File(datafolder, name).exists())) {
+                    continue;
+                }
+                for (String key : updateFile.getKeys(false)) {
+                    if (updateFile.isConfigurationSection(key)) {
+                        updateSection(updateFile.getConfigurationSection(key), (perms.getConfigurationSection(key) == null) ? perms.createSection(key) : perms.getConfigurationSection(key));
+                    }
                 }
             }
+            try {
+                perms.save(new File(datafolder, "permissions.yml"));
+            } catch (IOException ex) {
+                plugin.getLogger().log(Level.SEVERE, null, ex);
+            }
+            moveFiles();
         }
-        try {
-            perms.save(new File(datafolder, "permissions.yml"));
-        } catch (IOException ex) {
-            plugin.getLogger().log(Level.SEVERE, null, ex);
-        }
-        moveFiles();
     }
 
     private void updateSection(ConfigurationSection sec, ConfigurationSection destination) {
