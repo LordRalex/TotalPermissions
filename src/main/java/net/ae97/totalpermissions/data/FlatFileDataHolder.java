@@ -19,10 +19,19 @@ package net.ae97.totalpermissions.data;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
  * @version 1.0
@@ -30,68 +39,293 @@ import org.bukkit.configuration.InvalidConfigurationException;
  */
 public class FlatFileDataHolder implements DataHolder {
 
+    private File root;
+    private final Map<String, Map<String, YamlConfiguration>> buffer = new ConcurrentHashMap<String, Map<String, YamlConfiguration>>();
+
     @Override
     public void load(InputStream in) throws InvalidConfigurationException {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        throw new UnsupportedOperationException("Loading from an InputStream is not supported by this implentation");
     }
 
     @Override
     public void load(File file) throws InvalidConfigurationException {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        root = file;
+        root.mkdirs();
+        buffer.clear();
     }
 
     @Override
     public void load(String string) throws InvalidConfigurationException {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        root = new File(string);
+        root.mkdirs();
+        buffer.clear();
     }
 
     @Override
     public String getString(String key) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        String[] split = key.split(".", 3);
+        if (split.length != 3) {
+            return null;
+        }
+        Map<String, YamlConfiguration> map = buffer.get(split[0]);
+        if (map == null) {
+            File first = new File(root, split[0]);
+            if (!first.exists()) {
+                return null;
+            }
+            map = new HashMap<String, YamlConfiguration>();
+            buffer.put(split[0], map);
+        }
+        YamlConfiguration section = map.get(split[1]);
+        if (section == null) {
+            File second = new File(new File(root, split[0]), split[1]);
+            if (!second.exists()) {
+                return null;
+            }
+            section = new YamlConfiguration();
+            try {
+                ((YamlConfiguration) section).load(second);
+            } catch (IOException ex) {
+                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Config for key " + key + "generated an error", ex);
+                return null;
+            } catch (InvalidConfigurationException ex) {
+                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Config for key " + key + "generated an error", ex);
+                return null;
+            }
+            map.put(split[1], section);
+        }
+        return section.getString(split[2]);
     }
 
     @Override
     public List<String> getStringList(String key) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        String[] split = key.split(".", 3);
+        if (split.length != 3) {
+            return null;
+        }
+        Map<String, YamlConfiguration> map = buffer.get(split[0]);
+        if (map == null) {
+            File first = new File(root, split[0]);
+            if (!first.exists()) {
+                return null;
+            }
+            map = new HashMap<String, YamlConfiguration>();
+            buffer.put(split[0], map);
+        }
+        YamlConfiguration section = map.get(split[1]);
+        if (section == null) {
+            File second = new File(new File(root, split[0]), split[1]);
+            if (!second.exists()) {
+                return null;
+            }
+            section = new YamlConfiguration();
+            try {
+                ((YamlConfiguration) section).load(second);
+            } catch (IOException ex) {
+                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Config for key " + key + "generated an error", ex);
+                return null;
+            } catch (InvalidConfigurationException ex) {
+                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Config for key " + key + "generated an error", ex);
+                return null;
+            }
+            map.put(split[1], section);
+        }
+        return section.getStringList(split[2]);
     }
 
     @Override
     public ConfigurationSection getConfigurationSection(String key) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        String[] split = key.split(".", 3);
+        if (split.length < 2) {
+            throw new UnsupportedOperationException("This implentation cannot load a list");
+        }
+        Map<String, YamlConfiguration> map = buffer.get(split[0]);
+        if (map == null) {
+            File first = new File(root, split[0]);
+            if (!first.exists()) {
+                return null;
+            }
+            map = new HashMap<String, YamlConfiguration>();
+            buffer.put(split[0], map);
+        }
+        YamlConfiguration section = map.get(split[1]);
+        if (section == null) {
+            File second = new File(new File(root, split[0]), split[1]);
+            if (!second.exists()) {
+                return null;
+            }
+            section = new YamlConfiguration();
+            try {
+                ((YamlConfiguration) section).load(second);
+            } catch (IOException ex) {
+                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Config for key " + key + "generated an error", ex);
+                return null;
+            } catch (InvalidConfigurationException ex) {
+                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Config for key " + key + "generated an error", ex);
+                return null;
+            }
+            map.put(split[1], section);
+        }
+        if (split.length == 2) {
+            return section;
+        } else {
+            return section.getConfigurationSection(split[2]);
+        }
     }
 
     @Override
     public Set<String> getKeys() {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        Set set = new HashSet<String>();
+        set.addAll(Arrays.asList(root.list()));
+        return set;
     }
 
     @Override
     public void set(String key, Object obj) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        String[] split = key.split(".", 3);
+        if (split.length < 2) {
+            throw new UnsupportedOperationException("This implentation cannot set " + key);
+        }
+        if (split.length == 2 && !(obj instanceof YamlConfiguration)) {
+            throw new UnsupportedOperationException("This implentation cannot set " + key + " to be a " + obj.getClass().getSimpleName());
+        }
+        Map<String, YamlConfiguration> map = buffer.get(split[0]);
+        if (map == null) {
+            map = new HashMap<String, YamlConfiguration>();
+        }
+        YamlConfiguration cfg;
+        if (split.length == 2) {
+            cfg = (YamlConfiguration) obj;
+        } else {
+            cfg = map.get(split[1]);
+            if (cfg == null) {
+                cfg = new YamlConfiguration();
+            }
+            cfg.set(split[2], obj);
+        }
+        map.put(split[1], cfg);
+        buffer.put(split[0], map);
     }
 
     @Override
     public ConfigurationSection createSection(String key) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        YamlConfiguration section = new YamlConfiguration();
+        String[] split = key.split(".", 3);
+        if (split.length <= 1) {
+            throw new UnsupportedOperationException("This implentation cannot create a folder section");
+        }
+        if (split.length > 2) {
+            throw new UnsupportedOperationException("This implentation cannot create sub-sections");
+        }
+        Map<String, YamlConfiguration> map = buffer.get(split[0]);
+        if (map == null) {
+            File first = new File(root, split[0]);
+            if (!first.exists()) {
+                first.mkdirs();
+            }
+            map = new HashMap<String, YamlConfiguration>();
+        }
+        map.put(split[1], section);
+        buffer.put(split[0], map);
+        return section;
     }
 
     @Override
     public boolean isConfigurationSection(String key) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        String[] split = key.split(".", 3);
+        Map<String, YamlConfiguration> map = buffer.get(split[0]);
+        if (map == null) {
+            File first = new File(root, split[0]);
+            if (!first.exists()) {
+                return false;
+            }
+            map = new HashMap<String, YamlConfiguration>();
+            buffer.put(split[0], map);
+        }
+        if (split.length == 1) {
+            return true;
+        }
+        YamlConfiguration section = map.get(split[1]);
+        if (section == null) {
+            File second = new File(new File(root, split[0]), split[1]);
+            if (!second.exists()) {
+                return false;
+            }
+            section = new YamlConfiguration();
+            try {
+                ((YamlConfiguration) section).load(second);
+            } catch (IOException ex) {
+                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Config for key " + key + "generated an error", ex);
+                return false;
+            } catch (InvalidConfigurationException ex) {
+                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Config for key " + key + "generated an error", ex);
+                return false;
+            }
+            map.put(split[1], section);
+        }
+        if (split.length == 2) {
+            return true;
+        }
+        return section.isConfigurationSection(split[2]);
     }
 
     @Override
     public void save(File file) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        root = file;
+        root.mkdirs();
+        Entry<String, Map<String, YamlConfiguration>>[] keys = buffer.entrySet().toArray(new Entry[0]);
+        for (Entry<String, Map<String, YamlConfiguration>> entry : keys) {
+            File dir = new File(root, entry.getKey());
+            dir.mkdirs();
+            Entry<String, YamlConfiguration>[] entries = entry.getValue().entrySet().toArray(new Entry[0]);
+            for (Entry<String, YamlConfiguration> e : entries) {
+                File saveFile = new File(new File(root, entry.getKey()), e.getKey());
+                e.getValue().save(saveFile);
+            }
+        }
     }
 
     @Override
     public void save(String string) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        save(new File(string));
     }
 
     @Override
     public boolean contains(String key) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        String[] split = key.split(".", 3);
+        Map<String, YamlConfiguration> map = buffer.get(split[0]);
+        if (map == null) {
+            File first = new File(root, split[0]);
+            if (!first.exists()) {
+                return false;
+            }
+            map = new HashMap<String, YamlConfiguration>();
+            buffer.put(split[0], map);
+        }
+        if (split.length == 1) {
+            return true;
+        }
+        YamlConfiguration section = map.get(split[1]);
+        if (section == null) {
+            File second = new File(new File(root, split[0]), split[1]);
+            if (!second.exists()) {
+                return false;
+            }
+            section = new YamlConfiguration();
+            try {
+                ((YamlConfiguration) section).load(second);
+            } catch (IOException ex) {
+                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Config for key " + key + "generated an error", ex);
+                return false;
+            } catch (InvalidConfigurationException ex) {
+                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Config for key " + key + "generated an error", ex);
+                return false;
+            }
+            map.put(split[1], section);
+        }
+        if (split.length == 2) {
+            return true;
+        }
+        return section.contains(split[2]);
     }
 }

@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import net.ae97.totalpermissions.data.DataHolder;
+import net.ae97.totalpermissions.data.YamlDataHolder;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -45,7 +46,10 @@ public class FileConverter {
     }
 
     public DataHolder convert() throws InvalidConfigurationException, IOException {
-        DataHolder newVersion = null;
+        if (!(config instanceof YamlDataHolder)) {
+            return config;
+        }
+        DataHolder newVersion = new YamlDataHolder();
 
         if (!config.isConfigurationSection("groups")) {
             config.createSection("groups");
