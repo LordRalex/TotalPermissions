@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
+import net.ae97.totalpermissions.sql.SQLConnection;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 
@@ -29,6 +30,8 @@ import org.bukkit.configuration.InvalidConfigurationException;
  * @author Lord_Ralex
  */
 public class SQLDataHolder implements DataHolder {
+
+    private SQLConnection connection;
 
     @Override
     public void load(InputStream in) throws InvalidConfigurationException {
