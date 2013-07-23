@@ -20,7 +20,6 @@ import net.ae97.totalpermissions.TotalPermissions;
 import java.lang.reflect.Field;
 import java.util.Set;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.PermissibleBase;
@@ -44,28 +43,30 @@ public class TPPermissibleBase extends PermissibleBase {
      * @deprecated
      */
     protected final boolean useReflectionPerm;
+    protected final TotalPermissions plugin;
 
     public TPPermissibleBase(CommandSender p, boolean debugTime) {
         super(p);
+        plugin = TotalPermissions.getPlugin();
         debug = debugTime;
         parent = p;
         useReflectionPerm = TotalPermissions.getPlugin().getConfiguration().getBoolean("reflection.starperm");
         Object obj = null;
         try {
-            Class cl = Class.forName("org.bukkit.craftbukkit." + TotalPermissions.getPlugin().getBukkitVersion() + ".entity.CraftPlayer");
+            Class cl = Class.forName("org.bukkit.craftbukkit." + plugin.getBukkitVersion() + ".entity.CraftPlayer");
             Field field = cl.getField("perm");
             field.setAccessible(true);
             obj = field.get(parent);
         } catch (NoSuchFieldException ex) {
-            Logger.getLogger(TPPermissibleBase.class.getName()).log(Level.SEVERE, null, ex);
+            plugin.getLogger().log(Level.SEVERE, "No such field: perm", ex);
         } catch (SecurityException ex) {
-            Logger.getLogger(TPPermissibleBase.class.getName()).log(Level.SEVERE, null, ex);
+            plugin.getLogger().log(Level.SEVERE, "Security exception occurred", ex);
         } catch (IllegalArgumentException ex) {
-            Logger.getLogger(TPPermissibleBase.class.getName()).log(Level.SEVERE, null, ex);
+            plugin.getLogger().log(Level.SEVERE, "Illegal argument passed to field", ex);
         } catch (IllegalAccessException ex) {
-            Logger.getLogger(TPPermissibleBase.class.getName()).log(Level.SEVERE, null, ex);
+            plugin.getLogger().log(Level.SEVERE, "Cannot access perm", ex);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(TPPermissibleBase.class.getName()).log(Level.SEVERE, null, ex);
+            plugin.getLogger().log(Level.SEVERE, "cannot find " + "org.bukkit.craftbukkit." + plugin.getBukkitVersion() + ".entity.CraftPlayer", ex);
         }
         initialParent = (PermissibleBase) obj;
     }
@@ -79,7 +80,9 @@ public class TPPermissibleBase extends PermissibleBase {
 
     @Override
     public boolean hasPermission(Permission perm) {
+        plugin.debugLog("Checking for " + perm.getName() + " in " + initialParent);
         boolean has = initialParent.hasPermission(perm);
+        plugin.debugLog("Has: " + has);
         if (useReflectionPerm) {
             if (initialParent.isPermissionSet(perm)) {
                 has = initialParent.hasPermission(perm);
@@ -96,7 +99,7 @@ public class TPPermissibleBase extends PermissibleBase {
             }
         }
         if (debug) {
-            TotalPermissions.getPlugin().getLogger().info("Checking if " + parent.getName() + " has " + perm.getName() + ": " + has);
+            plugin.getLogger().info("Checking if " + parent.getName() + " has " + perm.getName() + ": " + has);
         }
         return has;
     }
