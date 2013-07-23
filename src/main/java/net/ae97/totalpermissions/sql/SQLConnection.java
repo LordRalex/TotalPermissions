@@ -17,6 +17,7 @@ package net.ae97.totalpermissions.sql;
  */
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * @version 1.0
@@ -24,13 +25,13 @@ import java.sql.ResultSet;
  */
 public interface SQLConnection {
 
-    public void connect();
+    public void connect() throws SQLException;
 
-    public void disconnect();
+    public void disconnect() throws SQLException;
 
-    public ResultSet execute(String statement, Object... args);
+    public ResultSet execute(String statement, Object... args) throws SQLException;
 
-    public ResultSet executeQuery(String statement, Object... args);
+    public ResultSet executeQuery(String statement, Object... args) throws SQLException;
 
-    public void executeUpdate(String statement, Object... args);
+    public void executeUpdate(String statement, Object... args) throws SQLException;
 }
