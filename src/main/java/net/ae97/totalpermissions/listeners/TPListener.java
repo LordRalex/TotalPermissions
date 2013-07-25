@@ -99,7 +99,7 @@ public class TPListener implements Listener {
         Player player = event.getPlayer();
         PermissionUser user = plugin.getManager().getUser(player);
         user.changeWorld(player, player.getWorld().getName(), plugin.getManager().getAttachment(player));
-        if (TotalPermissions.isDebugMode()) {
+        if (plugin.isDebugMode()) {
             plugin.debugLog(event.getPlayer().getName() + " has joined in world " + event.getPlayer().getWorld().getName());
             Set<PermissionAttachmentInfo> set = event.getPlayer().getEffectivePermissions();
             plugin.debugLog("Player: " + event.getPlayer().getName());
@@ -137,7 +137,7 @@ public class TPListener implements Listener {
         PermissionUser user = plugin.getManager().getUser(player);
         plugin.debugLog("Player " + player.getName() + " changed from " + event.getFrom().getName() + " to " + player.getWorld().getName());
         user.changeWorld(player, player.getWorld().getName(), plugin.getManager().getAttachment(player));
-        if (TotalPermissions.isDebugMode()) {
+        if (plugin.isDebugMode()) {
             plugin.debugLog(event.getPlayer().getName() + " has joined in world " + event.getPlayer().getWorld().getName());
             Set<PermissionAttachmentInfo> set = event.getPlayer().getEffectivePermissions();
             plugin.debugLog("Player: " + event.getPlayer().getName());
