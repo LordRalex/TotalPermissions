@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
+import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -32,42 +33,55 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class YamlDataHolder implements DataHolder {
 
     private YamlConfiguration yaml;
+    private final TotalPermissions plugin;
+
+    public YamlDataHolder() {
+        plugin = TotalPermissions.getPlugin();
+    }
 
     @Override
     public void load(InputStream in) throws InvalidConfigurationException, IOException {
-        yaml = new YamlConfiguration();
-        yaml.load(in);
+        plugin.debugLog("Loading from InputStream: " + in.toString());
+        yaml = YamlConfiguration.loadConfiguration(in);
     }
 
     @Override
     public void load(File file) throws InvalidConfigurationException, IOException {
-        yaml = new YamlConfiguration();
-        yaml.load(file);
+        plugin.debugLog("Loading from File: " + file.getPath());
+        yaml = YamlConfiguration.loadConfiguration(file);
     }
 
     @Override
     public void load(String string) throws InvalidConfigurationException {
-        yaml = new YamlConfiguration();
-        yaml.loadFromString(string);
+        plugin.debugLog("Loading from String: " + string);
+        yaml = YamlConfiguration.loadConfiguration(new File(string));
     }
 
     @Override
     public String getString(String key) {
+        plugin.debugLog("Getting key: " + key);
+        plugin.debugLog("Result: " + yaml.getString(key));
         return yaml.getString(key);
     }
 
     @Override
     public List<String> getStringList(String key) {
+        plugin.debugLog("Getting key: " + key);
+        plugin.debugLog("Result: " + yaml.getStringList(key));
         return yaml.getStringList(key);
     }
 
     @Override
     public ConfigurationSection getConfigurationSection(String key) {
+        plugin.debugLog("Getting key: " + key);
+        plugin.debugLog("Result: " + yaml.getConfigurationSection(key));
         return yaml.getConfigurationSection(key);
     }
 
     @Override
     public Set<String> getKeys() {
+        plugin.debugLog("Getting key list");
+        plugin.debugLog("Result: " + yaml.getKeys(false));
         return yaml.getKeys(false);
     }
 
@@ -83,6 +97,8 @@ public class YamlDataHolder implements DataHolder {
 
     @Override
     public boolean isConfigurationSection(String key) {
+        plugin.debugLog("Checking key if section: " + key);
+        plugin.debugLog("Result: " + yaml.isConfigurationSection(key));
         return yaml.isConfigurationSection(key);
     }
 
@@ -98,6 +114,8 @@ public class YamlDataHolder implements DataHolder {
 
     @Override
     public boolean contains(String key) {
+        plugin.debugLog("Getting if key exists: " + key);
+        plugin.debugLog("Result: " + yaml.contains(key));
         return yaml.contains(key);
     }
 }
