@@ -16,6 +16,7 @@ package net.ae97.totalpermissions.sql;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -34,4 +35,6 @@ public interface SQLConnection {
     public ResultSet executeQuery(String statement, Object... args) throws SQLException;
 
     public void executeUpdate(String statement, Object... args) throws SQLException;
+
+    public ResultSet execute(PreparedStatement statement, Object... args) throws SQLException;
 }

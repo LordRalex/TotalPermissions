@@ -29,21 +29,22 @@ import java.util.Map;
  */
 public class MySQLConnection implements SQLConnection {
 
-    private final String hostname, username, password, database;
+    private final String hostname, username, password, database, table;
     private String url;
     private Connection connection;
     private final int port;
 
     public MySQLConnection(Map<String, String> params) throws SQLException {
-        this(params.get("host"), params.get("user"), params.get("pass"), params.get("db"), Integer.parseInt(params.get("port")));
+        this(params.get("host"), params.get("user"), params.get("pass"), params.get("db"), Integer.parseInt(params.get("port")), params.get("table"));
     }
 
-    public MySQLConnection(String host, String user, String pass, String db, int p) throws SQLException {
+    public MySQLConnection(String host, String user, String pass, String db, int p, String t) throws SQLException {
         hostname = host;
         username = user;
         password = pass;
         database = db;
         port = p;
+        table = t;
     }
 
     @Override
@@ -63,12 +64,7 @@ public class MySQLConnection implements SQLConnection {
         for (int i = 0; i < args.length; i++) {
             state.setObject(i + 1, args[i]);
         }
-        boolean ret = state.execute();
-        if (ret) {
-            return state.getResultSet();
-        } else {
-            return null;
-        }
+        return execute(state);
     }
 
     @Override
@@ -77,7 +73,7 @@ public class MySQLConnection implements SQLConnection {
         for (int i = 0; i < args.length; i++) {
             state.setObject(i + 1, args[i]);
         }
-        return state.executeQuery();
+        return execute(state);
     }
 
     @Override
@@ -86,6 +82,22 @@ public class MySQLConnection implements SQLConnection {
         for (int i = 0; i < args.length; i++) {
             state.setObject(i + 1, args[i]);
         }
-        state.executeUpdate();
+        execute(state);
+    }
+
+    @Override
+    public ResultSet execute(PreparedStatement statement, Object... args) throws SQLException {
+        for (int i = 0; i < args.length; i++) {
+            statement.setObject(i + 1, args[i]);
+        }
+        if (statement.execute()) {
+            return statement.getResultSet();
+        } else {
+            return null;
+        }
+    }
+
+    public String getTable() {
+        return table;
     }
 }
