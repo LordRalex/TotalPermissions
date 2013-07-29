@@ -104,7 +104,8 @@ public class FileUpdater {
             plugin.getLogger().log(Level.SEVERE, null, ex);
         }
         try {
-            plugin.getPermFile().save(new File(backupFolder, "permissions.yml"));
+            //plugin.getPermFile().save(new File(backupFolder, "permissions.yml"));
+            throw new IOException("FileUpdater is currently broken");
         } catch (IOException ex) {
             plugin.getLogger().log(Level.SEVERE, null, ex);
         }
@@ -141,9 +142,10 @@ public class FileUpdater {
                 }
             }
             try {
-                perms.save(new File(datafolder, "permissions.yml"));
+                //perms.save(new File(datafolder, "permissions.yml"));
+                throw new IOException("FileUpdater is currently broken");
             } catch (IOException ex) {
-                plugin.getLogger().log(Level.SEVERE, null, ex);
+                plugin.getLogger().log(Level.SEVERE, "Error occured on updating", ex);
             }
             moveFiles();
         }
@@ -227,7 +229,7 @@ public class FileUpdater {
             try {
                 YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), name)).save(new File(backupFolder, name));
             } catch (IOException ex) {
-                plugin.getLogger().log(Level.SEVERE, null, ex);
+                plugin.getLogger().log(Level.SEVERE, "Error occured on loading", ex);
             }
             new File(plugin.getDataFolder(), name).delete();
         }

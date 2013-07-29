@@ -51,7 +51,7 @@ public class MySQLConnection implements SQLConnection {
     public void connect() throws SQLException {
         url = "jdbc:mysql://" + hostname + ":" + port + "/" + database;
         connection = DriverManager.getConnection(url, username, password);
-    }
+   }
 
     @Override
     public void disconnect() throws SQLException {

@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
+import net.ae97.totalpermissions.permission.PermissionType;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -40,7 +42,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class FlatFileDataHolder implements DataHolder {
 
     private File root;
-    private final Map<String, Map<String, YamlConfiguration>> buffer = new ConcurrentHashMap<String, Map<String, YamlConfiguration>>();
+    private final Map<PermissionType, Map<String, YamlConfiguration>> buffer = new EnumMap<PermissionType, Map<String, YamlConfiguration>>(PermissionType.class);
 
     @Override
     public void load(InputStream in) throws InvalidConfigurationException {
@@ -67,14 +69,14 @@ public class FlatFileDataHolder implements DataHolder {
         if (split.length != 3) {
             return null;
         }
-        Map<String, YamlConfiguration> map = buffer.get(split[0]);
+        Map<String, YamlConfiguration> map = buffer.get(PermissionType.getType(split[0]));
         if (map == null) {
             File first = new File(root, split[0]);
             if (!first.exists()) {
                 return null;
             }
             map = new HashMap<String, YamlConfiguration>();
-            buffer.put(split[0], map);
+            buffer.put(PermissionType.getType(split[0]), map);
         }
         YamlConfiguration section = map.get(split[1]);
         if (section == null) {
@@ -103,14 +105,14 @@ public class FlatFileDataHolder implements DataHolder {
         if (split.length != 3) {
             return null;
         }
-        Map<String, YamlConfiguration> map = buffer.get(split[0]);
+        Map<String, YamlConfiguration> map = buffer.get(PermissionType.getType(split[0]));
         if (map == null) {
             File first = new File(root, split[0]);
             if (!first.exists()) {
                 return null;
             }
             map = new HashMap<String, YamlConfiguration>();
-            buffer.put(split[0], map);
+            buffer.put(PermissionType.getType(split[0]), map);
         }
         YamlConfiguration section = map.get(split[1]);
         if (section == null) {
@@ -139,14 +141,14 @@ public class FlatFileDataHolder implements DataHolder {
         if (split.length < 2) {
             throw new UnsupportedOperationException("This implentation cannot load a list");
         }
-        Map<String, YamlConfiguration> map = buffer.get(split[0]);
+        Map<String, YamlConfiguration> map = buffer.get(PermissionType.getType(split[0]));
         if (map == null) {
             File first = new File(root, split[0]);
             if (!first.exists()) {
                 return null;
             }
             map = new HashMap<String, YamlConfiguration>();
-            buffer.put(split[0], map);
+            buffer.put(PermissionType.getType(split[0]), map);
         }
         YamlConfiguration section = map.get(split[1]);
         if (section == null) {
@@ -189,7 +191,7 @@ public class FlatFileDataHolder implements DataHolder {
         if (split.length == 2 && !(obj instanceof YamlConfiguration)) {
             throw new UnsupportedOperationException("This implentation cannot set " + key + " to be a " + obj.getClass().getSimpleName());
         }
-        Map<String, YamlConfiguration> map = buffer.get(split[0]);
+        Map<String, YamlConfiguration> map = buffer.get(PermissionType.getType(split[0]));
         if (map == null) {
             map = new HashMap<String, YamlConfiguration>();
         }
@@ -204,7 +206,7 @@ public class FlatFileDataHolder implements DataHolder {
             cfg.set(split[2], obj);
         }
         map.put(split[1], cfg);
-        buffer.put(split[0], map);
+        buffer.put(PermissionType.getType(split[0]), map);
     }
 
     @Override
@@ -217,7 +219,7 @@ public class FlatFileDataHolder implements DataHolder {
         if (split.length > 2) {
             throw new UnsupportedOperationException("This implentation cannot create sub-sections");
         }
-        Map<String, YamlConfiguration> map = buffer.get(split[0]);
+        Map<String, YamlConfiguration> map = buffer.get(PermissionType.getType(split[0]));
         if (map == null) {
             File first = new File(root, split[0]);
             if (!first.exists()) {
@@ -226,21 +228,21 @@ public class FlatFileDataHolder implements DataHolder {
             map = new HashMap<String, YamlConfiguration>();
         }
         map.put(split[1], section);
-        buffer.put(split[0], map);
+        buffer.put(PermissionType.getType(split[0]), map);
         return section;
     }
 
     @Override
     public boolean isConfigurationSection(String key) {
         String[] split = key.split(".", 3);
-        Map<String, YamlConfiguration> map = buffer.get(split[0]);
+        Map<String, YamlConfiguration> map = buffer.get(PermissionType.getType(split[0]));
         if (map == null) {
             File first = new File(root, split[0]);
             if (!first.exists()) {
                 return false;
             }
             map = new HashMap<String, YamlConfiguration>();
-            buffer.put(split[0], map);
+            buffer.put(PermissionType.getType(split[0]), map);
         }
         if (split.length == 1) {
             return true;
@@ -270,37 +272,30 @@ public class FlatFileDataHolder implements DataHolder {
     }
 
     @Override
-    public void save(File file) throws IOException {
-        root = file;
-        root.mkdirs();
-        Entry<String, Map<String, YamlConfiguration>>[] keys = buffer.entrySet().toArray(new Entry[0]);
-        for (Entry<String, Map<String, YamlConfiguration>> entry : keys) {
-            File dir = new File(root, entry.getKey());
-            dir.mkdirs();
-            Entry<String, YamlConfiguration>[] entries = entry.getValue().entrySet().toArray(new Entry[0]);
-            for (Entry<String, YamlConfiguration> e : entries) {
-                File saveFile = new File(new File(root, entry.getKey()), e.getKey());
-                e.getValue().save(saveFile);
-            }
+    public void save(PermissionType type, String name) throws IOException {
+        new File(root, type.toString()).mkdirs();
+        Map<String, YamlConfiguration> map = buffer.get(type);
+        if (map == null) {
+            return;
         }
-    }
-
-    @Override
-    public void save(String string) throws IOException {
-        save(new File(string));
+        YamlConfiguration cfg = map.get(name);
+        if (cfg == null) {
+            return;
+        }
+        cfg.save(new File(new File(root, type.toString()), name + ".yml"));
     }
 
     @Override
     public boolean contains(String key) {
         String[] split = key.split(".", 3);
-        Map<String, YamlConfiguration> map = buffer.get(split[0]);
+        Map<String, YamlConfiguration> map = buffer.get(PermissionType.getType(split[0]));
         if (map == null) {
             File first = new File(root, split[0]);
             if (!first.exists()) {
                 return false;
             }
             map = new HashMap<String, YamlConfiguration>();
-            buffer.put(split[0], map);
+            buffer.put(PermissionType.getType(split[0]), map);
         }
         if (split.length == 1) {
             return true;

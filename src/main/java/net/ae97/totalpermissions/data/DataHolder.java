@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
+import net.ae97.totalpermissions.permission.PermissionType;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 
@@ -50,9 +51,7 @@ public interface DataHolder {
 
     boolean isConfigurationSection(String key);
 
-    void save(File file) throws IOException;
-
-    void save(String string) throws IOException;
+    void save(PermissionType type, String name) throws IOException;
 
     boolean contains(String key);
 }

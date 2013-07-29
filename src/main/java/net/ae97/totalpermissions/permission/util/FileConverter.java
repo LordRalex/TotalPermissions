@@ -163,6 +163,5 @@ public class FileConverter {
      * @throws IOException If an error occurs on save
      */
     public void save() throws IOException {
-        config.save(path);
     }
 }

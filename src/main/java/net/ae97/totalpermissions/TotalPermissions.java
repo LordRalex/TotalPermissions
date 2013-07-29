@@ -16,6 +16,7 @@
  */
 package net.ae97.totalpermissions;
 
+import com.avaje.ebean.EbeanServer;
 import net.ae97.totalpermissions.runnable.UpdateRunnable;
 import net.ae97.totalpermissions.commands.CommandHandler;
 import net.ae97.totalpermissions.configuration.Configuration;
@@ -25,9 +26,11 @@ import net.ae97.totalpermissions.mcstats.Metrics;
 import net.ae97.totalpermissions.permission.util.FileUpdater;
 import java.io.File;
 import java.util.logging.Level;
+import javax.persistence.PersistenceException;
 import net.ae97.totalpermissions.data.DataHolder;
 import net.ae97.totalpermissions.data.YamlDataHolder;
 import net.ae97.totalpermissions.permission.util.FileConverter;
+import net.ae97.totalpermissions.sql.PermissionPersistance;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -341,7 +344,7 @@ public class TotalPermissions extends JavaPlugin {
             return;
         }
         for (Object m : message) {
-            getLogger().config(m.toString());
+            getLogger().info("[Debug] " + m.toString());
         }
     }
 
@@ -353,7 +356,17 @@ public class TotalPermissions extends JavaPlugin {
      *
      * @since 0.1
      */
-    public static boolean isDebugMode() {
-        return debug;
+    public boolean isDebugMode() {
+        return true;
+    }
+
+    public void installDatabase() {
+        try {
+            getDatabase().find(PermissionPersistance.class).findRowCount();
+        } catch (PersistenceException ex) {
+            getLogger().info("Installing database for " + getName() + " due to first time usage");
+            debugLog(ex);
+            installDDL();
+        }
     }
 }

@@ -16,30 +16,25 @@
  */
 package net.ae97.totalpermissions.data;
 
+import com.avaje.ebean.EbeanServer;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.PermissionType;
-import net.ae97.totalpermissions.sql.MySQLConnection;
+import net.ae97.totalpermissions.sql.PermissionPersistance;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.MemoryConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
  * @version 1.0
  * @author Lord_Ralex
  */
-public class MySQLDataHolder implements DataHolder {
-
-    private MySQLConnection connection;
-    private final Map<String, Map<String, ConfigurationSection>> memory = new ConcurrentHashMap<String, Map<String, ConfigurationSection>>();
+public class MySQLDataHolder extends MemoryDataHolder {
 
     @Override
     public void load(InputStream in) throws InvalidConfigurationException {
@@ -53,114 +48,39 @@ public class MySQLDataHolder implements DataHolder {
 
     @Override
     public void load(String string) throws InvalidConfigurationException {
-        Map<String, String> options = new HashMap<String, String>();
-        String[] parts = string.split(" ");
-        for (String part : parts) {
-            String[] vars = part.split("=", 2);
-            if (vars.length == 0) {
-                continue;
-            } else {
-                options.put(vars[0], vars.length == 2 ? vars[1] : null);
-            }
-        }
-        load(options);
+        throw new UnsupportedOperationException("This implentation does not support loading from Strings");
     }
 
-    public void load(Map<String, String> options) throws InvalidConfigurationException {
-        try {
-            connection = new MySQLConnection(options);
-        } catch (SQLException ex) {
-            throw new InvalidConfigurationException(ex);
-        }
-    }
-
-    @Override
-    public String getString(String key) {
-        String[] split = key.split(".");
-        if (split.length < 3) {
-            throw new UnsupportedOperationException("This implentation cannot get a string for the key " + key);
-        }
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<String> getStringList(String key) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public ConfigurationSection getConfigurationSection(String key) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Set<String> getKeys() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void set(String key, Object obj) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public ConfigurationSection createSection(String key) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public boolean isConfigurationSection(String key) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void save(File file) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void save(String string) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public boolean contains(String key) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /**
-     * Only call this when you want to execute a MySQL database call!
-     */
     public void load(PermissionType type, String name) throws IOException, SQLException {
-        if (type == null || name == null) {
-            throw new IOException("Cannot retrieve a null object");
+        EbeanServer server = TotalPermissions.getPlugin().getDatabase();
+        PermissionPersistance section = server.find(PermissionPersistance.class).where().ieq("type", type.toString()).ieq("name", name).findUnique();
+        if (section == null) {
+            section = new PermissionPersistance();
+            section.setName(name);
+            section.setType(type);
+            YamlConfiguration cfg = new YamlConfiguration();
+            section.setSection(cfg);
         }
-        ResultSet set = connection.executeQuery(MYSQLSTATEMENT.LOAD_ITEM.getStatement(), connection.getTable(), type.toString(), name);
-        if (set == null) {
-            return;
-        }
-        ConfigurationSection section = new MemoryConfiguration();
-        //move data from result set into section
-        Map<String, ConfigurationSection> sec = memory.get(type.toString());
-        if(sec == null) {
-            sec = new ConcurrentHashMap<String, ConfigurationSection>();
-        }
-        sec.put(name, section);
-        memory.put(type.toString(), sec);
     }
 
-    private enum MYSQLSTATEMENT {
-
-        LOAD_ITEM("SELECT * FROM ? WHERE ?=?"),
-        SAVE_ITEM("");
-        private final String statement;
-
-        private MYSQLSTATEMENT(String s) {
-            statement = s;
+    @Override
+    public void save(PermissionType type, String name) {
+        EbeanServer server = TotalPermissions.getPlugin().getDatabase();
+        PermissionPersistance section = server.find(PermissionPersistance.class).where().ieq("type", type.toString()).ieq("name", name).findUnique();
+        if (section == null) {
+            section = new PermissionPersistance();
+            section.setName(name);
+            section.setType(type);
         }
-
-        public String getStatement() {
-            return statement;
+        Map<String, ConfigurationSection> map = memory.get(type);
+        if (map == null) {
+            map = new HashMap<String, ConfigurationSection>();
         }
+        ConfigurationSection cfg = map.get(name);
+        if (cfg == null) {
+            cfg = new YamlConfiguration();
+        }
+        section.setSection(cfg);
+        server.save(section);
     }
 }

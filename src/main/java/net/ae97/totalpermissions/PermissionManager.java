@@ -509,19 +509,7 @@ public final class PermissionManager {
         DataHolder file = plugin.getPermFile();
         PermissionType type = base.getType();
         file.set(type + "." + base.getName(), base.getConfigSection());
-        save();
-    }
-
-    /**
-     * Saves the entire permission file
-     *
-     * @throws IOException If an error occurs on save
-     *
-     * @since 0.2
-     */
-    private synchronized void save() throws IOException {
-        plugin.debugLog("Saving permissions file");
-        plugin.getPermFile().save(new File(plugin.getDataFolder(), "permissions.yml"));
+        file.save(type, base.getName());
     }
 
     /**

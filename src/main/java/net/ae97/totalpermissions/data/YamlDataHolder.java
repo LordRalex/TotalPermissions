@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 import net.ae97.totalpermissions.TotalPermissions;
+import net.ae97.totalpermissions.permission.PermissionType;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -34,6 +35,7 @@ public class YamlDataHolder implements DataHolder {
 
     private YamlConfiguration yaml;
     private final TotalPermissions plugin;
+    private File savePath;
 
     public YamlDataHolder() {
         plugin = TotalPermissions.getPlugin();
@@ -47,12 +49,14 @@ public class YamlDataHolder implements DataHolder {
 
     @Override
     public void load(File file) throws InvalidConfigurationException, IOException {
-        plugin.debugLog("Loading from File: " + file.getPath());
+        savePath = file;
+        plugin.debugLog("Loading from File: " + savePath.getPath());
         yaml = YamlConfiguration.loadConfiguration(file);
     }
 
     @Override
     public void load(String string) throws InvalidConfigurationException {
+        savePath = new File(string);
         plugin.debugLog("Loading from String: " + string);
         yaml = YamlConfiguration.loadConfiguration(new File(string));
     }
@@ -103,13 +107,8 @@ public class YamlDataHolder implements DataHolder {
     }
 
     @Override
-    public void save(File file) throws IOException {
-        yaml.save(file);
-    }
-
-    @Override
-    public void save(String string) throws IOException {
-        yaml.save(string);
+    public void save(PermissionType type, String name) throws IOException {
+        yaml.save(savePath);
     }
 
     @Override
