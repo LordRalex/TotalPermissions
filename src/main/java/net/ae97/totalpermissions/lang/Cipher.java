@@ -16,6 +16,7 @@
  */
 package net.ae97.totalpermissions.lang;
 
+import net.ae97.totalpermissions.TotalPermissions;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,7 +24,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
-import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;

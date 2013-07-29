@@ -16,9 +16,9 @@
  */
 package net.ae97.totalpermissions.commands.subcommands.actions;
 
-import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.PermissionBase;
+import java.util.logging.Level;
 import org.bukkit.command.CommandSender;
 
 /**

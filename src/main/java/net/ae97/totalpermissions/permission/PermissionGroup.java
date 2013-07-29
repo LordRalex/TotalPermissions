@@ -16,8 +16,8 @@
  */
 package net.ae97.totalpermissions.permission;
 
-import java.io.IOException;
 import net.ae97.totalpermissions.TotalPermissions;
+import java.io.IOException;
 
 /**
  * @version 0.1

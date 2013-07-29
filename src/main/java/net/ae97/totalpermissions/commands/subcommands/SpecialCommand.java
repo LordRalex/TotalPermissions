@@ -16,9 +16,9 @@
  */
 package net.ae97.totalpermissions.commands.subcommands;
 
+import net.ae97.totalpermissions.TotalPermissions;
 import java.util.Arrays;
 import java.util.List;
-import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.command.CommandSender;
 
 /**

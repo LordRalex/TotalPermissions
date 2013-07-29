@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Laptop
+ * Copyright (C) 2013 AE97
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,16 +16,16 @@
  */
 package net.ae97.totalpermissions.data;
 
+import net.ae97.totalpermissions.permission.PermissionType;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import net.ae97.totalpermissions.permission.PermissionType;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
  * @version 1.0
- * @author Laptop
+ * @author Lord_Ralex
  */
 public abstract class MemoryDataHolder implements DataHolder {
 

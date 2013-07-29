@@ -16,6 +16,8 @@
  */
 package net.ae97.totalpermissions.permission.util;
 
+import net.ae97.totalpermissions.data.DataHolder;
+import net.ae97.totalpermissions.data.YamlDataHolder;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,12 +25,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import net.ae97.totalpermissions.data.DataHolder;
-import net.ae97.totalpermissions.data.YamlDataHolder;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
  * @version 0.1

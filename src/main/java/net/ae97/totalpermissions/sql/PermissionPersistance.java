@@ -16,14 +16,15 @@
  */
 package net.ae97.totalpermissions.sql;
 
+import net.ae97.totalpermissions.configuration.SerializedConfiguration;
+import net.ae97.totalpermissions.permission.PermissionType;
 import com.avaje.ebean.validation.NotNull;
 import java.io.Serializable;
 import java.sql.SQLException;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import net.ae97.totalpermissions.configuration.SerializedConfiguration;
-import net.ae97.totalpermissions.permission.PermissionType;
+
 import org.bukkit.configuration.ConfigurationSection;
 
 /**

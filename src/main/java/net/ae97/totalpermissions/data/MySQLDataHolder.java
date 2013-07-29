@@ -16,6 +16,9 @@
  */
 package net.ae97.totalpermissions.data;
 
+import net.ae97.totalpermissions.TotalPermissions;
+import net.ae97.totalpermissions.permission.PermissionType;
+import net.ae97.totalpermissions.sql.PermissionPersistance;
 import com.avaje.ebean.EbeanServer;
 import java.io.File;
 import java.io.IOException;
@@ -23,9 +26,6 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import net.ae97.totalpermissions.TotalPermissions;
-import net.ae97.totalpermissions.permission.PermissionType;
-import net.ae97.totalpermissions.sql.PermissionPersistance;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;

@@ -16,10 +16,10 @@
  */
 package net.ae97.totalpermissions.permission;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.util.PermissionUtility;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;

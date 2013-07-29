@@ -16,12 +16,12 @@
  */
 package net.ae97.totalpermissions.commands;
 
-import java.util.ArrayList;
+import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.commands.subcommands.*;
 import net.ae97.totalpermissions.commands.subcommands.actions.ActionHandler;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

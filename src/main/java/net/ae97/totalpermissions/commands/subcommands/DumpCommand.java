@@ -16,10 +16,10 @@
  */
 package net.ae97.totalpermissions.commands.subcommands;
 
-import java.util.List;
-import java.util.Set;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.lang.Cipher;
+import java.util.List;
+import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

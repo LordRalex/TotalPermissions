@@ -16,21 +16,20 @@
  */
 package net.ae97.totalpermissions;
 
-import com.avaje.ebean.EbeanServer;
-import net.ae97.totalpermissions.runnable.UpdateRunnable;
 import net.ae97.totalpermissions.commands.CommandHandler;
 import net.ae97.totalpermissions.configuration.Configuration;
+import net.ae97.totalpermissions.data.DataHolder;
+import net.ae97.totalpermissions.data.YamlDataHolder;
 import net.ae97.totalpermissions.lang.Cipher;
 import net.ae97.totalpermissions.listeners.TPListener;
 import net.ae97.totalpermissions.mcstats.Metrics;
+import net.ae97.totalpermissions.permission.util.FileConverter;
 import net.ae97.totalpermissions.permission.util.FileUpdater;
+import net.ae97.totalpermissions.runnable.UpdateRunnable;
+import net.ae97.totalpermissions.sql.PermissionPersistance;
 import java.io.File;
 import java.util.logging.Level;
 import javax.persistence.PersistenceException;
-import net.ae97.totalpermissions.data.DataHolder;
-import net.ae97.totalpermissions.data.YamlDataHolder;
-import net.ae97.totalpermissions.permission.util.FileConverter;
-import net.ae97.totalpermissions.sql.PermissionPersistance;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;

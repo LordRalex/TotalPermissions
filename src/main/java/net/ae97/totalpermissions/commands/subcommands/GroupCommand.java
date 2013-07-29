@@ -16,10 +16,10 @@
  */
 package net.ae97.totalpermissions.commands.subcommands;
 
-import java.util.Arrays;
-import java.util.List;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.PermissionGroup;
+import java.util.Arrays;
+import java.util.List;
 import org.bukkit.command.CommandSender;
 
 /**

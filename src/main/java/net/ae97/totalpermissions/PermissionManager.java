@@ -16,27 +16,25 @@
  */
 package net.ae97.totalpermissions;
 
-import java.io.File;
-import java.io.IOException;
+import net.ae97.totalpermissions.data.DataHolder;
+import net.ae97.totalpermissions.permission.PermissionBase;
 import net.ae97.totalpermissions.permission.PermissionConsole;
 import net.ae97.totalpermissions.permission.PermissionGroup;
+import net.ae97.totalpermissions.permission.PermissionOp;
 import net.ae97.totalpermissions.permission.PermissionRcon;
+import net.ae97.totalpermissions.permission.PermissionType;
 import net.ae97.totalpermissions.permission.PermissionUser;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import net.ae97.totalpermissions.data.DataHolder;
-import net.ae97.totalpermissions.permission.PermissionBase;
-import net.ae97.totalpermissions.permission.PermissionOp;
-import net.ae97.totalpermissions.permission.PermissionType;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
