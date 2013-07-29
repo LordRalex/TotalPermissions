@@ -34,7 +34,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class UpdateRunnable extends BukkitRunnable {
 
     private static final String VERSION_URL = "https://raw.github.com/AE97/TotalPermissions/master/VERSION";
-    private Boolean isLatest = null;
     private String latest;
     private String version;
     private final TotalPermissions plugin;
@@ -49,7 +48,6 @@ public class UpdateRunnable extends BukkitRunnable {
     public void run() {
         if (version.endsWith("SNAPSHOT") || version.endsWith("DEV")) {
             plugin.getLogger().warning(plugin.getLangFile().getString("update.dev"));
-            isLatest = true;
             return;
         }
         try {
@@ -58,22 +56,13 @@ public class UpdateRunnable extends BukkitRunnable {
             BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
             latest = reader.readLine();
             reader.close();
-            if (latest.equalsIgnoreCase(version)) {
-                isLatest = true;
-            } else {
-                isLatest = false;
+            if (!latest.equalsIgnoreCase(version)) {
+                plugin.getLogger().info("[UPDATE] TotalPermissions has an update: " + latest + " (current: " + version + ")");
             }
         } catch (MalformedURLException ex) {
             plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("update.update-error"), ex);
         } catch (IOException ex) {
             plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("update.update-error"), ex);
         }
-    }
-
-    public boolean isUpdate() throws IllegalStateException {
-        if (isLatest == null) {
-            throw new IllegalStateException(plugin.getLangFile().getString("update.versioning-error"));
-        }
-        return !isLatest;
     }
 }
