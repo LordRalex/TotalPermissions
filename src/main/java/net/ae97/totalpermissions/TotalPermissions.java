@@ -28,6 +28,8 @@ import net.ae97.totalpermissions.permission.util.FileUpdater;
 import net.ae97.totalpermissions.runnable.UpdateRunnable;
 import net.ae97.totalpermissions.sql.PermissionPersistance;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import javax.persistence.PersistenceException;
 import org.bukkit.Bukkit;
@@ -367,5 +369,12 @@ public class TotalPermissions extends JavaPlugin {
             debugLog(ex);
             installDDL();
         }
+    }
+
+    @Override
+    public List<Class<?>> getDatabaseClasses() {
+        List<Class<?>> list = new ArrayList<Class<?>>();
+        list.add(PermissionPersistance.class);
+        return list;
     }
 }
