@@ -44,21 +44,13 @@ public class SetAction extends SubAction {
                 }
             }
         } else if (field.equalsIgnoreCase("prefix")) {
-            try {
-                tar.setOption("prefix", item, world);
-                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.set.prefix", target, item));
-                return true;
-            } catch (IOException ex) {
-                saveError(tar, sender, ex);
-            }
+            tar.setOption("prefix", item, world);
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.set.prefix", target, item));
+            return true;
         } else if (field.equalsIgnoreCase("suffix")) {
-            try {
-                tar.setOption("suffix", item, world);
-                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.set.suffix", target, item));
-                return true;
-            } catch (IOException ex) {
-                saveError(tar, sender, ex);
-            }
+            tar.setOption("suffix", item, world);
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.set.suffix", target, item));
+            return true;
         }
         return false;
     }

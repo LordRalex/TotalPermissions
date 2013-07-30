@@ -25,6 +25,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
@@ -769,9 +771,13 @@ public abstract class PermissionBase {
         TotalPermissions.getPlugin().getManager().recalculatePermissions();
     }
 
-    public void setOption(String option, String item, String world) throws IOException {
+    public void setOption(Object option, String item, String world) {
         section.set("options." + option, item);
-        TotalPermissions.getPlugin().getManager().save(this);
+        try {
+            TotalPermissions.getPlugin().getManager().save(this);
+        } catch (IOException ex) {
+            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "Error on saving", ex);
+        }
         load();
         TotalPermissions.getPlugin().getManager().recalculatePermissions();
     }
