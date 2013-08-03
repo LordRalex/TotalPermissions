@@ -61,6 +61,7 @@ public abstract class PermissionBase {
             throw new IllegalArgumentException();
         }
         permType = type;
+        plugin.getPermFile().load(permType, name);
         if (!plugin.getPermFile().contains(permType + "." + name)) {
             plugin.debugLog("Section " + permType + "." + name + " does not exist, creating");
             plugin.getPermFile().createSection(permType + "." + name);

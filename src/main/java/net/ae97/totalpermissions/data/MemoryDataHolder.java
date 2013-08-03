@@ -33,12 +33,28 @@ public abstract class MemoryDataHolder implements DataHolder {
 
     @Override
     public ConfigurationSection getConfigurationSection(String key) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String[] split = key.split(" ", 3);
+        if(split.length < 2) {
+            return null;
+        }
+        Map<String, ConfigurationSection> map = memory.get(PermissionType.getType(split[0]));
+        if(map == null) {
+            return null;
+        }
+        ConfigurationSection sec = map.get(split[1]);
+        if(sec == null) {
+            return null;
+        }
+        if(split.length == 2){
+            return sec;
+        } else {
+            return sec.getConfigurationSection(split[2]);
+        }
     }
 
     @Override
     public Set<String> getKeys() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
     }
 
     @Override

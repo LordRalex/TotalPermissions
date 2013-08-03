@@ -37,6 +37,8 @@ public interface DataHolder {
 
     void load(String string) throws InvalidConfigurationException, IOException;
 
+    void load(PermissionType type, String name);
+
     String getString(String key);
 
     List<String> getStringList(String key);

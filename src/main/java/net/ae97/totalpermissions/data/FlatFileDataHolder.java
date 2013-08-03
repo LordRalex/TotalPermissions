@@ -62,6 +62,11 @@ public class FlatFileDataHolder implements DataHolder {
     }
 
     @Override
+    public void load(PermissionType type, String name) {
+
+    }
+
+    @Override
     public String getString(String key) {
         String[] split = key.split(".", 3);
         if (split.length != 3) {

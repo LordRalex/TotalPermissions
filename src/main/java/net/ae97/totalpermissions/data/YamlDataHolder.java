@@ -62,6 +62,10 @@ public class YamlDataHolder implements DataHolder {
     }
 
     @Override
+    public void load(PermissionType type, String name) {
+    }
+
+    @Override
     public String getString(String key) {
         plugin.debugLog("Getting key: " + key);
         plugin.debugLog("Result: " + yaml.getString(key));

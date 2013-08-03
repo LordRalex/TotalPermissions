@@ -28,10 +28,14 @@ import net.ae97.totalpermissions.permission.util.FileUpdater;
 import net.ae97.totalpermissions.runnable.UpdateRunnable;
 import net.ae97.totalpermissions.sql.PermissionPersistance;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.PersistenceException;
+import net.ae97.totalpermissions.data.MySQLDataHolder;
+import net.ae97.totalpermissions.permission.PermissionType;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -104,18 +108,19 @@ public class TotalPermissions extends JavaPlugin {
             //force kill reflection, is buggy and I don't want it running now
             config.disableReflection();
 
+            //this.getDescription().setDatabaseEnabled(true);
             permFile = new YamlDataHolder();
             try {
-                permFile.load(new File(this.getDataFolder(), "permissions.yml"));
-                FileUpdater update = new FileUpdater(this);
-                update.backup(true);
-                if (config.getBoolean("permissions.updater")) {
-                    update.runUpdate();
-                }
-                if (config.getBoolean("permissions.formatter")) {
-                    FileConverter converter = new FileConverter(permFile, new File(getDataFolder(), "permissions.yml"));
-                    permFile = converter.convert();
-                }
+                 permFile.load(new File(this.getDataFolder(), "permissions.yml"));
+                 FileUpdater update = new FileUpdater(this);
+                 update.backup(true);
+                 if (config.getBoolean("permissions.updater")) {
+                 update.runUpdate();
+                 }
+                 if (config.getBoolean("permissions.formatter")) {
+                 FileConverter converter = new FileConverter(permFile, new File(getDataFolder(), "permissions.yml"));
+                 permFile = converter.convert();
+                 }
             } catch (InvalidConfigurationException e) {
                 getLogger().log(Level.SEVERE, getLangFile().getString("main.yaml-error"));
                 getLogger().log(Level.SEVERE, "-> " + e.getMessage());
@@ -178,6 +183,13 @@ public class TotalPermissions extends JavaPlugin {
                 getLogger().log(Level.SEVERE, getLangFile().getString("main.error", getName(), getDescription().getVersion()), e);
             }
             Bukkit.getPluginManager().disablePlugin(this);
+        }
+        permFile.load(PermissionType.USERS, "Lord_Ralex");
+        permFile.set("users.lord_ralex.test", "4");
+        try {
+            permFile.save(PermissionType.USERS, "Lord_Ralex");
+        } catch (IOException ex) {
+            Logger.getLogger(TotalPermissions.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

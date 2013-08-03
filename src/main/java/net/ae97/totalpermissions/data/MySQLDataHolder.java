@@ -51,7 +51,8 @@ public class MySQLDataHolder extends MemoryDataHolder {
         throw new UnsupportedOperationException("This implentation does not support loading from Strings");
     }
 
-    public void load(PermissionType type, String name) throws IOException, SQLException {
+    @Override
+    public void load(PermissionType type, String name) {
         EbeanServer server = TotalPermissions.getPlugin().getDatabase();
         PermissionPersistance section = server.find(PermissionPersistance.class).where().ieq("type", type.toString()).ieq("name", name).findUnique();
         if (section == null) {
