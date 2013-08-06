@@ -32,133 +32,30 @@ import org.bukkit.configuration.InvalidConfigurationException;
  * @version 0.1
  * @author Lord_Ralex
  * @since 0.1
+ * @deprecated Currently completely screwed, new ones will be made
  */
 public class FileConverter {
 
     protected DataHolder config;
     protected File path;
 
+    /**
+     * @deprecated Currently completely screwed, new ones will be made
+     */
     public FileConverter(DataHolder file, File f) {
         config = file;
         path = f;
     }
 
+    /**
+     * @deprecated Currently completely screwed, new ones will be made
+     */
     public DataHolder convert() throws InvalidConfigurationException, IOException {
-        if (!(config instanceof YamlDataHolder)) {
-            return config;
-        }
-        DataHolder newVersion = new YamlDataHolder();
-
-        if (!config.isConfigurationSection("groups")) {
-            config.createSection("groups");
-        }
-        ConfigurationSection groupSection = config.getConfigurationSection("groups");
-        Set<String> groupNames = groupSection.getKeys(false);
-
-        ConfigurationSection newGroupSection = newVersion.createSection("groups");
-
-        for (String group : groupNames) {
-            ConfigurationSection oldGroup = groupSection.getConfigurationSection(group);
-
-            ConfigurationSection newGroup = newGroupSection.createSection(group.toLowerCase());
-            ConfigurationSection newOptions = newGroup.createSection("options");
-            ConfigurationSection newWorlds = newGroup.createSection("worlds");
-
-            Set<String> parts = oldGroup.getKeys(false);
-            for (String section : parts) {
-                if (section.equalsIgnoreCase("permissions")) {
-                    List<String> newOld = newGroup.getStringList("permissions");
-                    if (newOld == null) {
-                        newOld = new ArrayList<String>();
-                    }
-                    List<String> oldPerms = oldGroup.getStringList("permissions");
-                    if (oldPerms == null) {
-                        oldPerms = new ArrayList<String>();
-                    }
-                    Set<String> combine = new HashSet<String>();
-                    combine.addAll(newOld);
-                    combine.addAll(oldPerms);
-                    boolean addOne = false;
-                    boolean addTwo = false;
-                    if (combine.contains("*")) {
-                        addOne = true;
-                        combine.remove("*");
-                    }
-                    if (combine.contains("**")) {
-                        addTwo = true;
-                        combine.remove("**");
-                    }
-                    ArrayList<String> notSet = new ArrayList<String>(combine);
-                    Collections.sort(notSet);
-                    if (addOne) {
-                        notSet.add("*");
-                    }
-                    if (addTwo) {
-                        notSet.add("**");
-                    }
-
-                    newGroup.set("permissions", notSet);
-                } else if (section.equalsIgnoreCase("groups") || section.equalsIgnoreCase("group")) {
-                    List<String> newOld = newGroup.getStringList("groups");
-                    if (newOld == null) {
-                        newOld = new ArrayList<String>();
-                    }
-                    List<String> oldGroups = oldGroup.getStringList("groups");
-                    if (oldGroups == null) {
-                        oldGroups = new ArrayList<String>();
-                    }
-                    List<String> oldGroups2 = oldGroup.getStringList("group");
-                    if (oldGroups2 == null) {
-                        oldGroups2 = new ArrayList<String>();
-                    }
-                    Set<String> combine = new HashSet<String>();
-                    combine.addAll(newOld);
-                    combine.addAll(oldGroups);
-                    combine.addAll(oldGroups2);
-                    ArrayList<String> notSet = new ArrayList<String>(combine);
-
-                    newGroup.set("groups", notSet);
-                } else if (section.equalsIgnoreCase("worlds")) {
-                    newGroup.set("worlds", oldGroup.getConfigurationSection("worlds"));
-                    //this will be added on once multiworld is more supported
-                } else if (section.equalsIgnoreCase("inheritance")) {
-                    List<String> newOld = newGroup.getStringList("inheritance");
-                    if (newOld == null) {
-                        newOld = new ArrayList<String>();
-                    }
-                    List<String> oldInherit = oldGroup.getStringList("inheritance");
-                    if (oldInherit == null) {
-                        oldInherit = new ArrayList<String>();
-                    }
-                    Set<String> combine = new HashSet<String>();
-                    combine.addAll(newOld);
-                    combine.addAll(oldInherit);
-                    ArrayList<String> notSet = new ArrayList<String>(combine);
-
-                    newGroup.set("inheritance", notSet);
-                } else if (section.equalsIgnoreCase("options")) {
-                    ConfigurationSection cfg = oldGroup.getConfigurationSection("options");
-                    for (String key : cfg.getKeys(true)) {
-                        newOptions.set(key, cfg.get(key));
-                    }
-                } else if (section.equalsIgnoreCase("default")) {
-                    newGroup.set("default", oldGroup.getBoolean("default", false));
-                } else {
-                    Object old = oldGroup.get(section);
-                    newGroup.set("options." + section, old);
-                }
-            }
-        }
-
-        config = newVersion;
-        save();
         return config;
     }
 
     /**
-     * Saves the file to the disk
-     *
-     * @throws IOException If an error occurs on save
+     * @deprecated Currently completely screwed, new ones will be made
      */
     public void save() throws IOException {
     }

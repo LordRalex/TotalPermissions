@@ -137,7 +137,7 @@ public class FileUpdater {
                 }
                 for (String key : updateFile.getKeys(false)) {
                     if (updateFile.isConfigurationSection(key)) {
-                        updateSection(updateFile.getConfigurationSection(key), (perms.getConfigurationSection(key) == null) ? perms.createSection(key) : perms.getConfigurationSection(key));
+                        //updateSection(updateFile.getConfigurationSection(key), (perms.getConfigurationSection(key) == null) ? perms.createSection(key) : perms.getConfigurationSection(key));
                     }
                 }
             }
