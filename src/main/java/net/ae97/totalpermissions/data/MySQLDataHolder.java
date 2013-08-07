@@ -24,8 +24,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -34,22 +36,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
  * @version 1.0
  * @author Lord_Ralex
  */
-public class MySQLDataHolder extends MemoryDataHolder {
+public class MySQLDataHolder implements DataHolder {
 
-    @Override
-    public void load(InputStream in) throws InvalidConfigurationException {
-        throw new UnsupportedOperationException("This implentation does not support loading from InputStreams");
-    }
-
-    @Override
-    public void load(File file) throws InvalidConfigurationException {
-        throw new UnsupportedOperationException("This implentation does not support loading from Files");
-    }
-
-    @Override
-    public void load(String string) throws InvalidConfigurationException {
-        throw new UnsupportedOperationException("This implentation does not support loading from Strings");
-    }
+    private final Map<PermissionType, Map<String, ConfigurationSection>> memory = new EnumMap<PermissionType, Map<String, ConfigurationSection>>(PermissionType.class);
 
     @Override
     public void load(PermissionType type, String name) {
@@ -83,5 +72,29 @@ public class MySQLDataHolder extends MemoryDataHolder {
         }
         section.setSection(cfg);
         server.save(section);
+    }
+
+    @Override
+    public ConfigurationSection getConfigurationSection(PermissionType type, String name) {
+        return null;
+    }
+
+    @Override
+    public Set<String> getKeys(PermissionType type) {
+        return null;
+    }
+
+    @Override
+    public void update(PermissionType type, String name, ConfigurationSection obj) {
+    }
+
+    @Override
+    public ConfigurationSection create(PermissionType type, String name) {
+        return null;
+    }
+
+    @Override
+    public boolean contains(PermissionType type, String name) {
+        return false;
     }
 }

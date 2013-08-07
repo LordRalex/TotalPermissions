@@ -17,43 +17,28 @@
 package net.ae97.totalpermissions.data;
 
 import net.ae97.totalpermissions.permission.PermissionType;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
 
 /**
- * @version 1.0
+ * @version 1.1
  * @author Lord_Ralex
  */
 public interface DataHolder {
 
-    void load(InputStream in) throws InvalidConfigurationException, IOException;
-
-    void load(File file) throws InvalidConfigurationException, IOException;
-
-    void load(String string) throws InvalidConfigurationException, IOException;
-
     void load(PermissionType type, String name);
 
-    String getString(String key);
+    ConfigurationSection getConfigurationSection(PermissionType type, String name);
 
-    List<String> getStringList(String key);
+    Set<String> getKeys(PermissionType type);
 
-    ConfigurationSection getConfigurationSection(String key);
+    void update(PermissionType type, String name, ConfigurationSection obj);
 
-    Set<String> getKeys();
-
-    void set(String key, Object obj);
-
-    ConfigurationSection createSection(String key);
-
-    boolean isConfigurationSection(String key);
+    ConfigurationSection create(PermissionType type, String name);
 
     void save(PermissionType type, String name) throws IOException;
 
-    boolean contains(String key);
+    boolean contains(PermissionType type, String name);
 }

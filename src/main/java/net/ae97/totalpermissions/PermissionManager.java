@@ -33,7 +33,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerLoginEvent;
@@ -72,11 +71,7 @@ public final class PermissionManager {
      */
     public void load() throws InvalidConfigurationException {
         DataHolder perms = plugin.getPermFile();
-        ConfigurationSection filegroups = perms.getConfigurationSection("groups");
-        if (groups == null) {
-            throw new InvalidConfigurationException(plugin.getLangFile().getString("manager.null-group"));
-        }
-        Set<String> allGroups = filegroups.getKeys(false);
+        Set<String> allGroups = perms.getKeys(PermissionType.GROUPS);
         for (String group : allGroups) {
             plugin.debugLog("Adding group: " + group);
             PermissionGroup temp = new PermissionGroup(group);
@@ -506,7 +501,7 @@ public final class PermissionManager {
         plugin.debugLog("Saving PermissionBase " + base.getName() + " to the perm file");
         DataHolder file = plugin.getPermFile();
         PermissionType type = base.getType();
-        file.set(type + "." + base.getName(), base.getConfigSection());
+        file.update(type, base.getName(), base.getConfigSection());
         file.save(type, base.getName());
     }
 

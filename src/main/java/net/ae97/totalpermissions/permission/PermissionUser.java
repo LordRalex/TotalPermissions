@@ -94,7 +94,7 @@ public final class PermissionUser extends PermissionBase {
     public List<String> getGroups(String world) {
         Set<String> groupList = new HashSet<String>();
         List<String> temp;
-        if (!didExist) {
+        if (!section.contains("groups")) {
             List<String> list = new ArrayList<String>();
             list.add(TotalPermissions.getPlugin().getManager().getDefaultGroup());
             return list;

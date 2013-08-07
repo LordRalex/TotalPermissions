@@ -16,12 +16,9 @@
  */
 package net.ae97.totalpermissions.data;
 
-import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.PermissionType;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
 import java.util.Set;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -33,81 +30,15 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public class YamlDataHolder implements DataHolder {
 
-    private YamlConfiguration yaml;
-    private final TotalPermissions plugin;
-    private File savePath;
+    private final YamlConfiguration yaml = new YamlConfiguration();
+    private final File savePath;
 
-    public YamlDataHolder() {
-        plugin = TotalPermissions.getPlugin();
+    public YamlDataHolder(File save) {
+        savePath = save;
     }
 
-    @Override
-    public void load(InputStream in) throws InvalidConfigurationException, IOException {
-        plugin.debugLog("Loading from InputStream: " + in.toString());
-        yaml = YamlConfiguration.loadConfiguration(in);
-    }
-
-    @Override
-    public void load(File file) throws InvalidConfigurationException, IOException {
-        savePath = file;
-        plugin.debugLog("Loading from File: " + savePath.getPath());
-        yaml = YamlConfiguration.loadConfiguration(file);
-    }
-
-    @Override
-    public void load(String string) throws InvalidConfigurationException {
-        savePath = new File(string);
-        plugin.debugLog("Loading from String: " + string);
-        yaml = YamlConfiguration.loadConfiguration(new File(string));
-    }
-
-    @Override
-    public void load(PermissionType type, String name) {
-    }
-
-    @Override
-    public String getString(String key) {
-        plugin.debugLog("Getting key: " + key);
-        plugin.debugLog("Result: " + yaml.getString(key));
-        return yaml.getString(key);
-    }
-
-    @Override
-    public List<String> getStringList(String key) {
-        plugin.debugLog("Getting key: " + key);
-        plugin.debugLog("Result: " + yaml.getStringList(key));
-        return yaml.getStringList(key);
-    }
-
-    @Override
-    public ConfigurationSection getConfigurationSection(String key) {
-        plugin.debugLog("Getting key: " + key);
-        plugin.debugLog("Result: " + yaml.getConfigurationSection(key));
-        return yaml.getConfigurationSection(key);
-    }
-
-    @Override
-    public Set<String> getKeys() {
-        plugin.debugLog("Getting key list");
-        plugin.debugLog("Result: " + yaml.getKeys(false));
-        return yaml.getKeys(false);
-    }
-
-    @Override
-    public void set(String key, Object obj) {
-        yaml.set(key, obj);
-    }
-
-    @Override
-    public ConfigurationSection createSection(String key) {
-        return yaml.createSection(key);
-    }
-
-    @Override
-    public boolean isConfigurationSection(String key) {
-        plugin.debugLog("Checking key if section: " + key);
-        plugin.debugLog("Result: " + yaml.isConfigurationSection(key));
-        return yaml.isConfigurationSection(key);
+    public void load() throws InvalidConfigurationException, IOException {
+        yaml.load(savePath);
     }
 
     @Override
@@ -116,9 +47,31 @@ public class YamlDataHolder implements DataHolder {
     }
 
     @Override
-    public boolean contains(String key) {
-        plugin.debugLog("Getting if key exists: " + key);
-        plugin.debugLog("Result: " + yaml.contains(key));
-        return yaml.contains(key);
+    public void load(PermissionType type, String name) {
+    }
+
+    @Override
+    public ConfigurationSection getConfigurationSection(PermissionType type, String name) {
+        return yaml.getConfigurationSection(type.toString() + "." + name);
+    }
+
+    @Override
+    public Set<String> getKeys(PermissionType type) {
+        return yaml.getConfigurationSection(type.toString()).getKeys(false);
+    }
+
+    @Override
+    public void update(PermissionType type, String name, ConfigurationSection obj) {
+        yaml.set(type.toString() + "." + name, obj);
+    }
+
+    @Override
+    public ConfigurationSection create(PermissionType type, String name) {
+        return yaml.createSection(type.toString() + "." + name);
+    }
+
+    @Override
+    public boolean contains(PermissionType type, String name) {
+        return yaml.contains(type.toString() + "." + name);
     }
 }

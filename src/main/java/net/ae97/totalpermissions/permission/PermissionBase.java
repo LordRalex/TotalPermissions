@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
@@ -51,7 +50,6 @@ public abstract class PermissionBase {
     protected final List<String> inherited = new ArrayList<String>();
     protected final PermissionType permType;
     protected Permission permission;
-    protected boolean didExist;
 
     public PermissionBase(PermissionType type, String aName) {
         TotalPermissions plugin = TotalPermissions.getPlugin();
@@ -62,19 +60,13 @@ public abstract class PermissionBase {
         }
         permType = type;
         plugin.getPermFile().load(permType, name);
-        if (!plugin.getPermFile().contains(permType + "." + name)) {
+        if (!plugin.getPermFile().contains(permType, name)) {
             plugin.debugLog("Section " + permType + "." + name + " does not exist, creating");
-            plugin.getPermFile().createSection(permType + "." + name);
+            plugin.getPermFile().create(permType, name);
         }
         permission = new Permission(("totalpermissions.baseItem." + permType + "." + name).toLowerCase());
         plugin.debugLog("Created permission: " + permission.getName());
-        if (plugin.getPermFile().getConfigurationSection(permType + "." + name) == null) {
-            didExist = false;
-            plugin.getPermFile().createSection(permType + "." + name);
-        } else {
-            didExist = true;
-        }
-        section = plugin.getPermFile().getConfigurationSection(permType + "." + name);
+        section = plugin.getPermFile().getConfigurationSection(permType, name);
         load();
     }
 
