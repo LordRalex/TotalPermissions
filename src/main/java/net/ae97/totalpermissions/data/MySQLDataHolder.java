@@ -16,20 +16,23 @@
  */
 package net.ae97.totalpermissions.data;
 
-import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.PermissionType;
 import net.ae97.totalpermissions.sql.PermissionPersistance;
 import com.avaje.ebean.EbeanServer;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.SQLException;
+import com.avaje.ebean.EbeanServerFactory;
+import com.avaje.ebean.config.DataSourceConfig;
+import com.avaje.ebean.config.ServerConfig;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.MemoryConfiguration;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
@@ -39,11 +42,32 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class MySQLDataHolder implements DataHolder {
 
     private final Map<PermissionType, Map<String, ConfigurationSection>> memory = new EnumMap<PermissionType, Map<String, ConfigurationSection>>(PermissionType.class);
+    private final EbeanServer ebeans;
+
+    public MySQLDataHolder(EbeanServer server) {
+        if (server == null) {
+            FileConfiguration cfg = TotalPermissions.getPlugin().getConfigFile();
+            ServerConfig serverConfig = new ServerConfig();
+            DataSourceConfig dataConfig = new DataSourceConfig();
+            dataConfig.setDriver("com.mysql.jdbc.Driver");
+            dataConfig.setUsername(cfg.getString("mysql.user", "root"));
+            dataConfig.setPassword(cfg.getString("mysql.pass", "password"));
+            dataConfig.setUrl("jdbc:mysql://{ip}:{port}/{db}"
+                    .replace("{ip}", cfg.getString("mysql.host", "localhost"))
+                    .replace("{port}", cfg.getString("mysql.port", "3306"))
+                    .replace("{db}", cfg.getString("mysql.db", "totalperms")));
+            serverConfig.setDataSourceConfig(dataConfig);
+            serverConfig.setDdlGenerate(true);
+            serverConfig.setDdlRun(true);
+            serverConfig.addClass(PermissionPersistance.class);
+            server = EbeanServerFactory.create(serverConfig);
+        }
+        ebeans = server;
+    }
 
     @Override
     public void load(PermissionType type, String name) {
-        EbeanServer server = TotalPermissions.getPlugin().getDatabase();
-        PermissionPersistance section = server.find(PermissionPersistance.class).where().ieq("type", type.toString()).ieq("name", name).findUnique();
+        PermissionPersistance section = ebeans.find(PermissionPersistance.class).where().ieq("type", type.toString()).ieq("name", name).findUnique();
         if (section == null) {
             section = new PermissionPersistance();
             section.setName(name);
@@ -55,8 +79,7 @@ public class MySQLDataHolder implements DataHolder {
 
     @Override
     public void save(PermissionType type, String name) {
-        EbeanServer server = TotalPermissions.getPlugin().getDatabase();
-        PermissionPersistance section = server.find(PermissionPersistance.class).where().ieq("type", type.toString()).ieq("name", name).findUnique();
+        PermissionPersistance section = ebeans.find(PermissionPersistance.class).where().ieq("type", type.toString()).ieq("name", name).findUnique();
         if (section == null) {
             section = new PermissionPersistance();
             section.setName(name);
@@ -71,30 +94,79 @@ public class MySQLDataHolder implements DataHolder {
             cfg = new YamlConfiguration();
         }
         section.setSection(cfg);
-        server.save(section);
+        ebeans.save(section);
     }
 
     @Override
     public ConfigurationSection getConfigurationSection(PermissionType type, String name) {
-        return null;
+        Map<String, ConfigurationSection> map = memory.get(type);
+        if (map == null) {
+            map = new ConcurrentHashMap<String, ConfigurationSection>();
+            memory.put(type, map);
+        }
+        ConfigurationSection cfg = map.get(name.toLowerCase());
+        if (cfg == null) {
+            load(type, name);
+            map = memory.get(type);
+            if (map == null) {
+                map = new ConcurrentHashMap<String, ConfigurationSection>();
+                memory.put(type, map);
+            }
+            cfg = map.get(name.toLowerCase());
+        }
+        return cfg;
     }
 
     @Override
     public Set<String> getKeys(PermissionType type) {
-        return null;
+        List<PermissionPersistance> set = ebeans.find(PermissionPersistance.class).where().ieq("type", type.toString()).findList();
+        Set<String> names = new HashSet<String>();
+        for (PermissionPersistance perm : set) {
+            names.add(perm.getName());
+        }
+        return names;
     }
 
     @Override
     public void update(PermissionType type, String name, ConfigurationSection obj) {
+        Map<String, ConfigurationSection> map = memory.get(type);
+        if (map == null) {
+            map = new ConcurrentHashMap<String, ConfigurationSection>();
+        }
+        map.put(name.toLowerCase(), obj);
+        memory.put(type, map);
+        save(type, name);
     }
 
     @Override
     public ConfigurationSection create(PermissionType type, String name) {
-        return null;
+        Map<String, ConfigurationSection> map = memory.get(type);
+        if (map == null) {
+            map = new ConcurrentHashMap<String, ConfigurationSection>();
+        }
+        map.put(name.toLowerCase(), new MemoryConfiguration());
+        memory.put(type, map);
+        save(type, name);
+        return getConfigurationSection(type, name);
     }
 
     @Override
     public boolean contains(PermissionType type, String name) {
+        Map<String, ConfigurationSection> map = memory.get(type);
+        if (map == null) {
+            map = new ConcurrentHashMap<String, ConfigurationSection>();
+        }
+        if (map.containsKey(name.toLowerCase())) {
+            return true;
+        }
+        load(type, name);
+        map = memory.get(type);
+        if (map == null) {
+            map = new ConcurrentHashMap<String, ConfigurationSection>();
+        }
+        if (map.containsKey(name.toLowerCase())) {
+            return true;
+        }
         return false;
     }
 }
