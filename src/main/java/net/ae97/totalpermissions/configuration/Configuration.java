@@ -44,7 +44,9 @@ public class Configuration {
      * Loads the default config, adding missing keys if needed
      */
     public void loadDefaults() {
-        if (!configPath.exists()) {
+        return;
+        /*
+         if (!configPath.exists()) {
             plugin.saveDefaultConfig();
         }
 
@@ -78,7 +80,9 @@ public class Configuration {
             config.save(configPath);
         } catch (IOException e) {
             plugin.getLogger().log(Level.SEVERE, null, e);
-        }
+
+         }
+         */
     }
 
     /**

@@ -38,10 +38,9 @@ public class PermissionPersistance implements Serializable {
     @Id
     private int id;
     @NotNull
-    private String name;
+    private String name = "";
     @NotNull
     private String type;
-    @NotNull
     private SerializedConfiguration configSection;
 
     public void setID(int i) {

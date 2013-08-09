@@ -46,20 +46,21 @@ public class MySQLDataHolder implements DataHolder {
 
     public MySQLDataHolder(EbeanServer server) {
         if (server == null) {
-            FileConfiguration cfg = TotalPermissions.getPlugin().getConfigFile();
+            FileConfiguration cfg = TotalPermissions.getPlugin().getConfig();
             ServerConfig serverConfig = new ServerConfig();
             DataSourceConfig dataConfig = new DataSourceConfig();
             dataConfig.setDriver("com.mysql.jdbc.Driver");
-            dataConfig.setUsername(cfg.getString("mysql.user", "root"));
+            dataConfig.setUsername(cfg.getString("mysql.user", "lordralex"));
             dataConfig.setPassword(cfg.getString("mysql.pass", "password"));
             dataConfig.setUrl("jdbc:mysql://{ip}:{port}/{db}"
                     .replace("{ip}", cfg.getString("mysql.host", "localhost"))
                     .replace("{port}", cfg.getString("mysql.port", "3306"))
-                    .replace("{db}", cfg.getString("mysql.db", "totalperms")));
+                    .replace("{db}", cfg.getString("mysql.db", "tp_db")));
             serverConfig.setDataSourceConfig(dataConfig);
             serverConfig.setDdlGenerate(true);
             serverConfig.setDdlRun(true);
-            serverConfig.addClass(PermissionPersistance.class);
+            serverConfig.addClass(net.ae97.totalpermissions.sql.PermissionPersistance.class);
+            serverConfig.setName("TotalPermissions");
             server = EbeanServerFactory.create(serverConfig);
         }
         ebeans = server;

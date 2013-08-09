@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import javax.persistence.PersistenceException;
+import net.ae97.totalpermissions.data.MySQLDataHolder;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -103,22 +104,25 @@ public class TotalPermissions extends JavaPlugin {
             config.disableReflection();
 
             //this.getDescription().setDatabaseEnabled(true);
-            permFile = new YamlDataHolder(new File(this.getDataFolder(), "permissions.yml"));
-            try {
-                ((YamlDataHolder) permFile).load();
-            } catch (InvalidConfigurationException e) {
-                getLogger().log(Level.SEVERE, getLangFile().getString("main.yaml-error"));
-                getLogger().log(Level.SEVERE, "-> " + e.getMessage());
-                getLogger().log(Level.WARNING, getLangFile().getString("main.load-backup"));
+            //permFile = new YamlDataHolder(new File(this.getDataFolder(), "permissions.yml"));
+            permFile = new MySQLDataHolder(null);
+            if (permFile instanceof YamlDataHolder) {
                 try {
-                    permFile = new YamlDataHolder(new File(getLastBackupFolder(), "permissions.yml"));
                     ((YamlDataHolder) permFile).load();
-                    getLogger().log(Level.WARNING, getLangFile().getString("main.loaded1"));
-                    getLogger().log(Level.WARNING, getLangFile().getString("main.loaded2"));
-                } catch (InvalidConfigurationException e2) {
-                    getLogger().log(Level.SEVERE, getLangFile().getString("main.load-failed1"));
-                    getLogger().log(Level.SEVERE, getLangFile().getString("main.load-failed2"));
-                    throw e2;
+                } catch (InvalidConfigurationException e) {
+                    getLogger().log(Level.SEVERE, getLangFile().getString("main.yaml-error"));
+                    getLogger().log(Level.SEVERE, "-> " + e.getMessage());
+                    getLogger().log(Level.WARNING, getLangFile().getString("main.load-backup"));
+                    try {
+                        permFile = new YamlDataHolder(new File(getLastBackupFolder(), "permissions.yml"));
+                        ((YamlDataHolder) permFile).load();
+                        getLogger().log(Level.WARNING, getLangFile().getString("main.loaded1"));
+                        getLogger().log(Level.WARNING, getLangFile().getString("main.loaded2"));
+                    } catch (InvalidConfigurationException e2) {
+                        getLogger().log(Level.SEVERE, getLangFile().getString("main.load-failed1"));
+                        getLogger().log(Level.SEVERE, getLangFile().getString("main.load-failed2"));
+                        throw e2;
+                    }
                 }
             }
             getLogger().info("Initial preperations complete");
