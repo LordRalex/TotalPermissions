@@ -59,7 +59,10 @@ public class MySQLDataHolder implements DataHolder {
             serverConfig.setDataSourceConfig(dataConfig);
             serverConfig.setDdlGenerate(true);
             serverConfig.setDdlRun(true);
-            serverConfig.addClass(net.ae97.totalpermissions.sql.PermissionPersistance.class);
+            //List<Class<?>> classes = new ArrayList<Class<?>>();
+            //classes.add(PermissionPersistance.class);
+            //serverConfig.setClasses(classes);
+            serverConfig.addClass(PermissionPersistance.class);
             serverConfig.setName("TotalPermissions");
             server = EbeanServerFactory.create(serverConfig);
         }
@@ -74,7 +77,7 @@ public class MySQLDataHolder implements DataHolder {
             section.setName(name);
             section.setType(type);
             YamlConfiguration cfg = new YamlConfiguration();
-            section.setSection(cfg);
+            section.setConfig(cfg);
         }
     }
 
@@ -94,7 +97,7 @@ public class MySQLDataHolder implements DataHolder {
         if (cfg == null) {
             cfg = new YamlConfiguration();
         }
-        section.setSection(cfg);
+        section.setConfig(cfg);
         ebeans.save(section);
     }
 

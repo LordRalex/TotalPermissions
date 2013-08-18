@@ -15,6 +15,12 @@
             <id>bukkit-repo</id>
             <url>http://repo.bukkit.org/content/repositories/releases/</url>
         </repository>
+        <repository>
+            <url>http://download.eclipse.org/rt/eclipselink/maven.repo/</url>
+            <id>eclipselink</id>
+            <layout>default</layout>
+            <name>Repository for library EclipseLink (JPA 2.1)</name>
+        </repository>
     </repositories>
     <licenses>
         <license>

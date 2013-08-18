@@ -16,16 +16,16 @@
  */
 package net.ae97.totalpermissions.sql;
 
-import net.ae97.totalpermissions.configuration.SerializedConfiguration;
 import net.ae97.totalpermissions.permission.PermissionType;
 import com.avaje.ebean.validation.NotNull;
 import java.io.Serializable;
-import java.sql.SQLException;
+import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
  * @version 1.0
@@ -40,14 +40,15 @@ public class PermissionPersistance implements Serializable {
     @NotNull
     private String name = "";
     @NotNull
-    private String type;
-    private SerializedConfiguration configSection;
+    private PermissionType type;
+    private String configSection;
+    //private String configSection;
 
-    public void setID(int i) {
-        id = i;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public int getID() {
+    public int getId() {
         return id;
     }
 
@@ -59,19 +60,38 @@ public class PermissionPersistance implements Serializable {
         return name;
     }
 
-    public void setSection(ConfigurationSection s) {
-        configSection = new SerializedConfiguration(s);
+    public void setConfigSection(String s) {
+        configSection = s;
     }
 
-    public ConfigurationSection getSection() throws SQLException {
+    public String getConfigSection() {
         return configSection;
     }
 
+    public void setConfig(ConfigurationSection cfg) {
+        YamlConfiguration temp = new YamlConfiguration();
+        if (cfg instanceof YamlConfiguration) {
+            temp = (YamlConfiguration) cfg;
+        } else {
+            Set<String> keys = cfg.getKeys(true);
+            for (String key : keys) {
+                temp.set(key, cfg.get(key));
+            }
+        }
+        configSection = temp.saveToString();
+    }
+
+    public ConfigurationSection getConfig() throws InvalidConfigurationException {
+        YamlConfiguration temp = new YamlConfiguration();
+        temp.loadFromString(configSection);
+        return temp;
+    }
+
     public void setType(PermissionType t) {
-        type = t.toString();
+        type = t;
     }
 
     public PermissionType getType() {
-        return PermissionType.getType(type);
+        return type;
     }
 }

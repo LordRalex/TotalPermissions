@@ -104,8 +104,14 @@ public class TotalPermissions extends JavaPlugin {
             config.disableReflection();
 
             //this.getDescription().setDatabaseEnabled(true);
-            //permFile = new YamlDataHolder(new File(this.getDataFolder(), "permissions.yml"));
-            permFile = new MySQLDataHolder(null);
+            permFile = new YamlDataHolder(new File(this.getDataFolder(), "permissions.yml"));
+            //if (getDescription().isDatabaseEnabled()) {
+            //    getLogger().info("Using builtin system");
+            //    permFile = new MySQLDataHolder(this.getDatabase());
+            //} else {
+            //    getLogger().info("Making our own");
+            //    permFile = new MySQLDataHolder(null);
+            //}
             if (permFile instanceof YamlDataHolder) {
                 try {
                     ((YamlDataHolder) permFile).load();
@@ -147,7 +153,13 @@ public class TotalPermissions extends JavaPlugin {
             debugLog("Creating permission manager");
             manager = new PermissionManager(this);
             debugLog("Loading permission manager");
-            manager.load();
+            try {
+                manager.load();
+            } catch (PersistenceException e) {
+                debugLog("Installing DDL");
+                installDDL();
+                manager.load();
+            }
 
             debugLog("Creating listener");
             listener = new TPListener(this);

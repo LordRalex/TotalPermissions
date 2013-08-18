@@ -18,8 +18,6 @@ package net.ae97.totalpermissions.configuration;
 
 import net.ae97.totalpermissions.TotalPermissions;
 import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -47,39 +45,39 @@ public class Configuration {
         return;
         /*
          if (!configPath.exists()) {
-            plugin.saveDefaultConfig();
-        }
+         plugin.saveDefaultConfig();
+         }
 
-        //whether this operates in a strict mode, ignoring perms given by default. True means use strict.
-        if (!config.contains("strict-mode")) {
-            config.set("strict-mode", false);
-        }
-        if (!config.contains("reflection.starperm")) {
-            config.set("refection.starperm", false);
-        }
-        if (!config.contains("reflection.debug")) {
-            config.set("refection.debug", false);
-        }
-        if (!config.contains("update-check")) {
-            config.set("update-check", true);
-        }
-        if (!config.contains("angry-debug")) {
-            config.set("angry-debug", false);
-        }
-        if (!config.contains("permissions.formatter")) {
-            config.set("permissions.formatter", true);
-        }
-        if (!config.contains("permissions.updater")) {
-            config.set("permissions.updater", true);
-        }
-        if (!config.contains("language")) {
-            config.set("language", "en_US");
-        }
+         //whether this operates in a strict mode, ignoring perms given by default. True means use strict.
+         if (!config.contains("strict-mode")) {
+         config.set("strict-mode", false);
+         }
+         if (!config.contains("reflection.starperm")) {
+         config.set("refection.starperm", false);
+         }
+         if (!config.contains("reflection.debug")) {
+         config.set("refection.debug", false);
+         }
+         if (!config.contains("update-check")) {
+         config.set("update-check", true);
+         }
+         if (!config.contains("angry-debug")) {
+         config.set("angry-debug", false);
+         }
+         if (!config.contains("permissions.formatter")) {
+         config.set("permissions.formatter", true);
+         }
+         if (!config.contains("permissions.updater")) {
+         config.set("permissions.updater", true);
+         }
+         if (!config.contains("language")) {
+         config.set("language", "en_US");
+         }
 
-        try {
-            config.save(configPath);
-        } catch (IOException e) {
-            plugin.getLogger().log(Level.SEVERE, null, e);
+         try {
+         config.save(configPath);
+         } catch (IOException e) {
+         plugin.getLogger().log(Level.SEVERE, null, e);
 
          }
          */
