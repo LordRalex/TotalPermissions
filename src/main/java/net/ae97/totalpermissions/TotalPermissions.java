@@ -17,7 +17,6 @@
 package net.ae97.totalpermissions;
 
 import net.ae97.totalpermissions.commands.CommandHandler;
-import net.ae97.totalpermissions.configuration.Configuration;
 import net.ae97.totalpermissions.data.DataHolder;
 import net.ae97.totalpermissions.data.YamlDataHolder;
 import net.ae97.totalpermissions.lang.Cipher;
@@ -31,10 +30,9 @@ import java.util.List;
 import java.util.logging.Level;
 import javax.persistence.PersistenceException;
 import net.ae97.totalpermissions.data.MySQLDataHolder;
+import net.ae97.totalpermissions.permission.PermissionType;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -54,9 +52,7 @@ public class TotalPermissions extends JavaPlugin {
         "v1_4_R1"
     };
     protected DataHolder permFile;
-    protected FileConfiguration configFile;
     protected PermissionManager manager;
-    protected Configuration config;
     protected TPListener listener;
     protected Metrics metrics;
     protected CommandHandler commands;
@@ -79,12 +75,9 @@ public class TotalPermissions extends JavaPlugin {
                 saveResource("permissions.yml", true);
             }
 
-            configFile = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "config.yml"));
-            config = new Configuration(this);
-            config.loadDefaults();
-            cipher = new Cipher(this, config.getString("language"));
+            cipher = new Cipher(this, getConfig().getString("language", "en_US"));
 
-            debug = config.getBoolean("angry-debug");
+            debug = getConfig().getBoolean("angry-debug", false);
 
             for (String version : ACCEPTABLE_VERSIONS) {
                 try {
@@ -98,21 +91,14 @@ public class TotalPermissions extends JavaPlugin {
             if (BUKKIT_VERSION.equalsIgnoreCase("NONE")) {
                 getLogger().severe(getLangFile().getString("main.bad-version1"));
                 getLogger().severe(getLangFile().getString("main.bad-version2"));
-                config.disableReflection();
+                getConfig().set("reflection.debug", false);
+                getConfig().set("reflection.starperm", false);
             }
-            //force kill reflection, is buggy and I don't want it running now
-            config.disableReflection();
 
-            //this.getDescription().setDatabaseEnabled(true);
-            permFile = new YamlDataHolder(new File(this.getDataFolder(), "permissions.yml"));
-            //if (getDescription().isDatabaseEnabled()) {
-            //    getLogger().info("Using builtin system");
-            //    permFile = new MySQLDataHolder(this.getDatabase());
-            //} else {
-            //    getLogger().info("Making our own");
-            //    permFile = new MySQLDataHolder(null);
-            //}
-            if (permFile instanceof YamlDataHolder) {
+            String storageType = getConfig().getString("storage", "yaml");
+            debugLog("Storage type to load: " + storageType);
+            if (storageType.equalsIgnoreCase("yaml")) {
+                permFile = new YamlDataHolder(new File(this.getDataFolder(), "permissions.yml"));
                 try {
                     ((YamlDataHolder) permFile).load();
                 } catch (InvalidConfigurationException e) {
@@ -130,6 +116,23 @@ public class TotalPermissions extends JavaPlugin {
                         throw e2;
                     }
                 }
+            } else if (storageType.equalsIgnoreCase("mysql")) {
+                if (getDescription().isDatabaseEnabled()) {
+                    getLogger().info("Using builtin system");
+                    permFile = new MySQLDataHolder(this.getDatabase());
+                } else {
+                    getLogger().info("Making our own");
+                    permFile = new MySQLDataHolder(null);
+                }
+
+                //this is just debug stuff
+                org.bukkit.configuration.file.YamlConfiguration cfg = new org.bukkit.configuration.file.YamlConfiguration();
+                cfg.set("default", true);
+                ArrayList<String> testPerms = new ArrayList<String>();
+                testPerms.add("test.permission");
+                cfg.set("permissions", testPerms);
+                permFile.update(PermissionType.GROUPS, "default", cfg);
+                permFile.save(PermissionType.GROUPS, "default");
             }
             getLogger().info("Initial preperations complete");
         } catch (Exception e) {
@@ -146,7 +149,7 @@ public class TotalPermissions extends JavaPlugin {
                 Bukkit.getPluginManager().disablePlugin(this);
                 return;
             }
-            if (config.getBoolean("update-check")) {
+            if (getConfig().getBoolean("update-check", true)) {
                 Bukkit.getScheduler().runTaskLater(this, new UpdateRunnable(this), 1);
             }
 
@@ -220,18 +223,6 @@ public class TotalPermissions extends JavaPlugin {
     }
 
     /**
-     * Gets the configuration file. This does not load the file, this only
-     * provides the stored object.
-     *
-     * @return The configuration file in the FileConfiguration form.
-     *
-     * @since 0.1
-     */
-    public FileConfiguration getConfigFile() {
-        return this.configFile;
-    }
-
-    /**
      * Gets the instance of the plugin.
      *
      * @return Instance of the plugin
@@ -251,17 +242,6 @@ public class TotalPermissions extends JavaPlugin {
      */
     public TPListener getListener() {
         return this.listener;
-    }
-
-    /**
-     * Returns the {@link Configuration} that is loaded
-     *
-     * @return The {@link Configuration} in use
-     *
-     * @since 0.1
-     */
-    public Configuration getConfiguration() {
-        return this.config;
     }
 
     /**

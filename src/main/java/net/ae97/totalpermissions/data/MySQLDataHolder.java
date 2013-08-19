@@ -22,6 +22,7 @@ import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.EbeanServerFactory;
 import com.avaje.ebean.config.DataSourceConfig;
 import com.avaje.ebean.config.ServerConfig;
+import java.lang.reflect.Field;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,7 +45,7 @@ public class MySQLDataHolder implements DataHolder {
     private final Map<PermissionType, Map<String, ConfigurationSection>> memory = new EnumMap<PermissionType, Map<String, ConfigurationSection>>(PermissionType.class);
     private final EbeanServer ebeans;
 
-    public MySQLDataHolder(EbeanServer server) {
+    public MySQLDataHolder(EbeanServer server) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException, ClassNotFoundException {
         if (server == null) {
             FileConfiguration cfg = TotalPermissions.getPlugin().getConfig();
             ServerConfig serverConfig = new ServerConfig();
@@ -59,12 +60,15 @@ public class MySQLDataHolder implements DataHolder {
             serverConfig.setDataSourceConfig(dataConfig);
             serverConfig.setDdlGenerate(true);
             serverConfig.setDdlRun(true);
-            //List<Class<?>> classes = new ArrayList<Class<?>>();
-            //classes.add(PermissionPersistance.class);
-            //serverConfig.setClasses(classes);
             serverConfig.addClass(PermissionPersistance.class);
             serverConfig.setName("TotalPermissions");
+            ClassLoader previous = Thread.currentThread().getContextClassLoader();
+            Field field = Class.forName("org.bukkit.plugin.java.JavaPlugin").getDeclaredField("classLoader");
+            field.setAccessible(true);
+            ClassLoader classLoader = (ClassLoader) field.get(TotalPermissions.getPlugin());
+            Thread.currentThread().setContextClassLoader(classLoader);
             server = EbeanServerFactory.create(serverConfig);
+            Thread.currentThread().setContextClassLoader(previous);
         }
         ebeans = server;
     }

@@ -99,13 +99,14 @@ public class FileUpdater {
         File backupFolder = new File(backup, Integer.toString(highest));
         backupFolder.mkdirs();
         try {
-            plugin.getConfigFile().save(new File(backupFolder, "config.yml"));
+            plugin.getConfig().save(new File(backupFolder, "config.yml"));
         } catch (IOException ex) {
             plugin.getLogger().log(Level.SEVERE, null, ex);
         }
         try {
-            //plugin.getPermFile().save(new File(backupFolder, "permissions.yml"));
-            throw new IOException("FileUpdater is currently broken");
+            if (plugin.getPermFile() instanceof YamlDataHolder) {
+                YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "permissions.yml")).save(new File(backupFolder, "permissions.yml"));
+            }
         } catch (IOException ex) {
             plugin.getLogger().log(Level.SEVERE, null, ex);
         }

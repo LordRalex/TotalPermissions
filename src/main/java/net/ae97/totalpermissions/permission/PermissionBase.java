@@ -104,7 +104,7 @@ public abstract class PermissionBase {
                                 allow = false;
                             }
                         }
-                        if ((!TotalPermissions.getPlugin().getConfiguration().getBoolean("reflection.starperm"))
+                        if ((!TotalPermissions.getPlugin().getConfig().getBoolean("reflection.starperm"))
                                 && (p.equalsIgnoreCase("*") || p.equalsIgnoreCase("**"))) {
                             List<String> allPerms = PermissionUtility.handleWildcard(p.equalsIgnoreCase("**"));
                             for (String perm_ : allPerms) {
@@ -352,7 +352,7 @@ public abstract class PermissionBase {
         if (permList == null) {
             permList = new HashMap<String, Boolean>();
         }
-        if (!plugin.getConfiguration().getBoolean("reflection.starperm")) {
+        if (!plugin.getConfig().getBoolean("reflection.starperm")) {
             if (perm.equals("**")) {
                 List<String> allPerms = PermissionUtility.handleWildcard(true);
                 for (String perm_ : allPerms) {

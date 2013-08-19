@@ -50,7 +50,7 @@ public class TPPermissibleBase extends PermissibleBase {
         plugin = TotalPermissions.getPlugin();
         debug = debugTime;
         parent = p;
-        useReflectionPerm = TotalPermissions.getPlugin().getConfiguration().getBoolean("reflection.starperm");
+        useReflectionPerm = TotalPermissions.getPlugin().getConfig().getBoolean("reflection.starperm", false);
         Object obj = null;
         try {
             Class cl = Class.forName("org.bukkit.craftbukkit." + plugin.getBukkitVersion() + ".entity.CraftPlayer");

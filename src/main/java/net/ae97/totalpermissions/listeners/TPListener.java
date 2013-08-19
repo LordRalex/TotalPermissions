@@ -57,8 +57,8 @@ public class TPListener implements Listener {
     public void onPlayerLogin(PlayerLoginEvent event) {
         plugin.debugLog("PlayerLoginEvent fired, handling");
         PermissionUser user = plugin.getManager().getUser(event.getPlayer());
-        if (plugin.getConfiguration().getBoolean("reflection.starperm")
-                || (user.getDebugState() && plugin.getConfiguration().getBoolean("reflection.debug"))) {
+        if (plugin.getConfig().getBoolean("reflection.starperm", false)
+                || (user.getDebugState() && plugin.getConfig().getBoolean("reflection.debug", false))) {
             plugin.debugLog("Reflection hook enabled, reflecting into the player");
             //forgive me for saying I did not want to do this, or as squid says
             //"Forgive me for my sins"
@@ -169,7 +169,7 @@ public class TPListener implements Listener {
         if (!user.getDebugState()) {
             return;
         }
-        if (plugin.getConfiguration().getBoolean("reflection.debug")) {
+        if (plugin.getConfig().getBoolean("reflection.debug", false)) {
             plugin.debugLog("Reflection debug is enabled");
             return;
         }
