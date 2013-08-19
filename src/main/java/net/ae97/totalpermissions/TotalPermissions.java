@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.logging.Level;
 import javax.persistence.PersistenceException;
 import net.ae97.totalpermissions.data.MySQLDataHolder;
-import net.ae97.totalpermissions.permission.PermissionType;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -124,15 +123,6 @@ public class TotalPermissions extends JavaPlugin {
                     getLogger().info("Making our own");
                     permFile = new MySQLDataHolder(null);
                 }
-
-                //this is just debug stuff
-                org.bukkit.configuration.file.YamlConfiguration cfg = new org.bukkit.configuration.file.YamlConfiguration();
-                cfg.set("default", true);
-                ArrayList<String> testPerms = new ArrayList<String>();
-                testPerms.add("test.permission");
-                cfg.set("permissions", testPerms);
-                permFile.update(PermissionType.GROUPS, "default", cfg);
-                permFile.save(PermissionType.GROUPS, "default");
             }
             getLogger().info("Initial preperations complete");
         } catch (Exception e) {
@@ -160,6 +150,7 @@ public class TotalPermissions extends JavaPlugin {
                 manager.load();
             } catch (PersistenceException e) {
                 debugLog("Installing DDL");
+                debugLog("Error that was result: " + e.getMessage());
                 installDDL();
                 manager.load();
             }

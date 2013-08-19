@@ -40,7 +40,7 @@ public class PermissionPersistance implements Serializable {
     @NotNull
     private String name = "";
     @NotNull
-    private PermissionType type;
+    private String type;
     private String configSection;
     //private String configSection;
 
@@ -88,10 +88,18 @@ public class PermissionPersistance implements Serializable {
     }
 
     public void setType(PermissionType t) {
+        setType(t.toString());
+    }
+
+    public void setType(String t) {
         type = t;
     }
 
-    public PermissionType getType() {
+    public String getType() {
         return type;
+    }
+
+    public PermissionType getPermissionType() {
+        return PermissionType.getType(type);
     }
 }

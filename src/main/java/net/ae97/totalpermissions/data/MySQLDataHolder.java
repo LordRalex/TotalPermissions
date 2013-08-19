@@ -58,8 +58,6 @@ public class MySQLDataHolder implements DataHolder {
                     .replace("{port}", cfg.getString("mysql.port", "3306"))
                     .replace("{db}", cfg.getString("mysql.db", "tp_db")));
             serverConfig.setDataSourceConfig(dataConfig);
-            serverConfig.setDdlGenerate(true);
-            serverConfig.setDdlRun(true);
             serverConfig.addClass(PermissionPersistance.class);
             serverConfig.setName("TotalPermissions");
             ClassLoader previous = Thread.currentThread().getContextClassLoader();
