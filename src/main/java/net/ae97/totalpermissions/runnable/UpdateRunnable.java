@@ -24,6 +24,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -32,21 +33,23 @@ import org.bukkit.scheduler.BukkitRunnable;
  * @since 0.1
  */
 public class UpdateRunnable extends BukkitRunnable {
-
+    
     private static final String VERSION_URL = "https://raw.github.com/AE97/TotalPermissions/master/VERSION";
-    private String latest;
-    private String version;
+    private final String version;
     private final TotalPermissions plugin;
-
+    private final String build;
+    
     public UpdateRunnable(TotalPermissions p) {
         super();
         plugin = p;
         version = plugin.getDescription().getVersion();
+        YamlConfiguration pluginYml = YamlConfiguration.loadConfiguration(plugin.getResource("plugin.yml"));
+        build = pluginYml.getString("build");
     }
-
+    
     @Override
     public void run() {
-        if (version.endsWith("SNAPSHOT") || version.endsWith("DEV")) {
+        if (version.endsWith("SNAPSHOT") || version.endsWith("DEV") || build.equalsIgnoreCase("${build}")) {
             plugin.getLogger().warning(plugin.getLangFile().getString("update.dev"));
             return;
         }
@@ -54,9 +57,10 @@ public class UpdateRunnable extends BukkitRunnable {
             URL call = new URL(VERSION_URL);
             InputStream stream = call.openStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-            latest = reader.readLine();
+            String latest = reader.readLine();
+            String latestBuild = reader.readLine();
             reader.close();
-            if (!latest.equalsIgnoreCase(version)) {
+            if (!latest.equalsIgnoreCase(version) || !build.equalsIgnoreCase(latestBuild)) {
                 plugin.getLogger().info("[UPDATE] TotalPermissions has an update: " + latest + " (current: " + version + ")");
             }
         } catch (MalformedURLException ex) {

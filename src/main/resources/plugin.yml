@@ -2,6 +2,7 @@ main: net.ae97.totalpermissions.TotalPermissions
 name: ${project.name}
 description: Adds configurable permissions to a bukkit server.
 version: ${project.version}
+build: ${build}
 authors: [Lord_Ralex, 1Rogue, Icelord871]
 website: http://dev.bukkit.org/server-mods/totalpermissions/
 prefix: TotalPerms
