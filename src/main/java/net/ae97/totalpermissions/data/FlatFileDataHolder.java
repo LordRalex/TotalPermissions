@@ -39,6 +39,11 @@ public class FlatFileDataHolder implements DataHolder {
     }
 
     @Override
+    public void setup() {
+        root.mkdirs();
+    }
+
+    @Override
     public void save(PermissionType type, String name) throws IOException {
         new File(root, type.toString()).mkdirs();
         Map<String, ConfigurationSection> map = buffer.get(type);

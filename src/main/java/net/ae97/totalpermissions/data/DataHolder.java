@@ -28,6 +28,8 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public interface DataHolder {
 
+    void setup();
+
     void load(PermissionType type, String name);
 
     ConfigurationSection getConfigurationSection(PermissionType type, String name);

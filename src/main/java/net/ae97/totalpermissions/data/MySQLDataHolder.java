@@ -72,6 +72,10 @@ public class MySQLDataHolder implements DataHolder {
     }
 
     @Override
+    public void setup() {
+    }
+
+    @Override
     public void load(PermissionType type, String name) {
         PermissionPersistance section = ebeans.find(PermissionPersistance.class).where().ieq("type", type.toString()).ieq("name", name).findUnique();
         if (section == null) {

@@ -37,6 +37,10 @@ public class YamlDataHolder implements DataHolder {
         savePath = save;
     }
 
+    @Override
+    public void setup() {
+    }
+
     public void load() throws InvalidConfigurationException, IOException {
         yaml.load(savePath);
     }
