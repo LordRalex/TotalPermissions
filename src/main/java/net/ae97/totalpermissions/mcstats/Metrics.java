@@ -354,8 +354,6 @@ public final class Metrics {
         String serverVersion = Bukkit.getVersion();
         int playersOnline = Bukkit.getServer().getOnlinePlayers().length;
 
-        // END server software specific section -- all code below does not use any code outside of this class / Java
-
         // Construct the post data
         StringBuilder json = new StringBuilder(1024);
         json.append('{');
@@ -366,24 +364,7 @@ public final class Metrics {
         appendJSONPair(json, "server_version", serverVersion);
         appendJSONPair(json, "players_online", Integer.toString(playersOnline));
 
-        // New data as of R6
-        String osname = System.getProperty("os.name");
-        String osarch = System.getProperty("os.arch");
-        String osversion = System.getProperty("os.version");
-        String java_version = System.getProperty("java.version");
-        int coreCount = Runtime.getRuntime().availableProcessors();
-
-        // normalize os arch .. amd64 -> x86_64
-        if (osarch.equals("amd64")) {
-            osarch = "x86_64";
-        }
-
-        appendJSONPair(json, "osname", osname);
-        appendJSONPair(json, "osarch", osarch);
-        appendJSONPair(json, "osversion", osversion);
-        appendJSONPair(json, "cores", Integer.toString(coreCount));
         appendJSONPair(json, "auth_mode", onlineMode ? "1" : "0");
-        appendJSONPair(json, "java_version", java_version);
 
         // If we're pinging, append it
         if (isPing) {
