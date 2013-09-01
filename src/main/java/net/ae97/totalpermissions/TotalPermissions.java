@@ -345,7 +345,7 @@ public class TotalPermissions extends JavaPlugin {
      * @since 0.1
      */
     public boolean isDebugMode() {
-        return true;
+        return getConfig().getBoolean("angry-debug", false);
     }
 
     public void installDatabase(EbeanServer ebeanServer) {
