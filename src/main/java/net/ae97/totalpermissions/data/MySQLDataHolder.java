@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.persistence.PersistenceException;
 import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
@@ -73,6 +74,7 @@ public class MySQLDataHolder implements DataHolder {
 
     @Override
     public void setup() {
+        TotalPermissions.getPlugin().installDatabase(ebeans);
     }
 
     @Override

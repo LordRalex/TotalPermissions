@@ -16,6 +16,9 @@
  */
 package net.ae97.totalpermissions;
 
+import com.avaje.ebean.EbeanServer;
+import com.avaje.ebeaninternal.api.SpiEbeanServer;
+import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
 import net.ae97.totalpermissions.commands.CommandHandler;
 import net.ae97.totalpermissions.data.DataHolder;
 import net.ae97.totalpermissions.data.YamlDataHolder;
@@ -160,14 +163,7 @@ public class TotalPermissions extends JavaPlugin {
             debugLog("Creating permission manager");
             manager = new PermissionManager(this);
             debugLog("Loading permission manager");
-            try {
-                manager.load();
-            } catch (PersistenceException e) {
-                debugLog("Installing DDL");
-                debugLog("Error that was result: " + e.getMessage());
-                installDDL();
-                manager.load();
-            }
+            manager.load();
 
             debugLog("Creating listener");
             listener = new TPListener(this);
@@ -352,13 +348,21 @@ public class TotalPermissions extends JavaPlugin {
         return true;
     }
 
-    public void installDatabase() {
+    public void installDatabase(EbeanServer ebeanServer) {
         try {
-            getDatabase().find(PermissionPersistance.class).findRowCount();
+            ebeanServer.find(PermissionPersistance.class).findRowCount();
         } catch (PersistenceException ex) {
             getLogger().info("Installing database for " + getName() + " due to first time usage");
             debugLog(ex);
-            installDDL();
+            if (ebeanServer == getDatabase()) {
+                debugLog("Using Bukkit integrated installer");
+                installDDL();
+            } else {
+                debugLog("Using custom installer");
+                SpiEbeanServer serv = (SpiEbeanServer) ebeanServer;
+                DdlGenerator gen = serv.getDdlGenerator();
+                gen.runScript(false, gen.generateCreateDdl());
+            }
         }
     }
 
