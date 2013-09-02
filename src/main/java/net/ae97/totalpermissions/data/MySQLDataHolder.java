@@ -92,15 +92,11 @@ public class MySQLDataHolder implements DataHolder {
                     plugin.debugLog("Importing group: " + group);
                     this.update(PermissionType.GROUPS, group, groups.getConfigurationSection(group));
                 }
-
-
                 ConfigurationSection users = test.getConfigurationSection("users");
                 for (String user : users.getKeys(false)) {
                     plugin.debugLog("Importing user: " + user);
                     this.update(PermissionType.USERS, user, users.getConfigurationSection(user));
                 }
-
-
                 ConfigurationSection specials = test.getConfigurationSection("special");
                 for (String special : specials.getKeys(false)) {
                     plugin.debugLog("Importing special: " + special);

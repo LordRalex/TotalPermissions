@@ -43,7 +43,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author Lord_Ralex
  * @since 0.1
  */
-public class TotalPermissions extends JavaPlugin {
+public final class TotalPermissions extends JavaPlugin {
 
     private String BUKKIT_VERSION = "NONE";
     private static final String[] ACCEPTABLE_VERSIONS = new String[]{
@@ -60,14 +60,12 @@ public class TotalPermissions extends JavaPlugin {
     protected Metrics metrics;
     protected CommandHandler commands;
     protected Cipher cipher;
-    protected static boolean debug = false;
-    protected boolean loadingFailed = false;
+    private boolean loadingFailed = false;
 
     @Override
     public void onLoad() {
         try {
             getLogger().info("Beginning initial preperations");
-
             if (!getDataFolder().exists()) {
                 getDataFolder().mkdirs();
             }
@@ -79,8 +77,6 @@ public class TotalPermissions extends JavaPlugin {
             }
 
             cipher = new Cipher(this, getConfig().getString("language", "en_US"));
-
-            debug = getConfig().getBoolean("angry-debug", false);
 
             for (String version : ACCEPTABLE_VERSIONS) {
                 try {
@@ -142,6 +138,7 @@ public class TotalPermissions extends JavaPlugin {
                     throw e2;
                 }
             }
+
             getLogger().info("Initial preperations complete");
         } catch (Exception e) {
             getLogger().log(Level.SEVERE, getLangFile().getString("main.error", getName(), getDescription().getVersion()), e);
@@ -350,6 +347,9 @@ public class TotalPermissions extends JavaPlugin {
     }
 
     public void installDatabase(EbeanServer ebeanServer) {
+        if (ebeanServer == null) {
+            return;
+        }
         try {
             ebeanServer.find(PermissionPersistance.class).findRowCount();
         } catch (PersistenceException ex) {
