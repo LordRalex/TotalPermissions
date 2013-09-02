@@ -87,27 +87,24 @@ public class MySQLDataHolder implements DataHolder {
             try {
                 YamlConfiguration test = new YamlConfiguration();
                 test.load(new File(plugin.getDataFolder(), "mysql.yml"));
-                plugin.debugLog(test.saveToString());
-                {
-                    ConfigurationSection groups = test.getConfigurationSection("groups");
-                    for (String group : groups.getKeys(false)) {
-                        plugin.debugLog("Importing group: " + group);
-                        this.update(PermissionType.GROUPS, group, groups.getConfigurationSection(group));
-                    }
+                ConfigurationSection groups = test.getConfigurationSection("groups");
+                for (String group : groups.getKeys(false)) {
+                    plugin.debugLog("Importing group: " + group);
+                    this.update(PermissionType.GROUPS, group, groups.getConfigurationSection(group));
                 }
-                {
-                    ConfigurationSection users = test.getConfigurationSection("users");
-                    for (String user : users.getKeys(false)) {
-                        plugin.debugLog("Importing user: " + user);
-                        this.update(PermissionType.USERS, user, users.getConfigurationSection(user));
-                    }
+
+
+                ConfigurationSection users = test.getConfigurationSection("users");
+                for (String user : users.getKeys(false)) {
+                    plugin.debugLog("Importing user: " + user);
+                    this.update(PermissionType.USERS, user, users.getConfigurationSection(user));
                 }
-                {
-                    ConfigurationSection specials = test.getConfigurationSection("special");
-                    for (String special : specials.getKeys(false)) {
-                        plugin.debugLog("Importing special: " + special);
-                        this.update(PermissionType.SPECIAL, special, specials.getConfigurationSection(special));
-                    }
+
+
+                ConfigurationSection specials = test.getConfigurationSection("special");
+                for (String special : specials.getKeys(false)) {
+                    plugin.debugLog("Importing special: " + special);
+                    this.update(PermissionType.SPECIAL, special, specials.getConfigurationSection(special));
                 }
                 File imports = new File(plugin.getDataFolder(), "imports");
                 imports.mkdirs();

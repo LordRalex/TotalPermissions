@@ -79,7 +79,6 @@ public class PermissionPersistance implements Serializable {
             }
         }
         configSection = temp.saveToString();
-        System.out.println("configSection is set to be: " + configSection);
     }
 
     public ConfigurationSection getConfig() throws InvalidConfigurationException {
