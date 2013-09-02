@@ -121,25 +121,26 @@ public class TotalPermissions extends JavaPlugin {
                 default:
                 case YAML: {
                     permFile = new YamlDataHolder(new File(this.getDataFolder(), "permissions.yml"));
-                    try {
-                        ((YamlDataHolder) permFile).load();
-                    } catch (InvalidConfigurationException e) {
-                        getLogger().log(Level.SEVERE, getLangFile().getString("main.yaml-error"));
-                        getLogger().log(Level.SEVERE, "-> " + e.getMessage());
-                        getLogger().log(Level.WARNING, getLangFile().getString("main.load-backup"));
-                        try {
-                            permFile = new YamlDataHolder(new File(getLastBackupFolder(), "permissions.yml"));
-                            ((YamlDataHolder) permFile).load();
-                            getLogger().log(Level.WARNING, getLangFile().getString("main.loaded1"));
-                            getLogger().log(Level.WARNING, getLangFile().getString("main.loaded2"));
-                        } catch (InvalidConfigurationException e2) {
-                            getLogger().log(Level.SEVERE, getLangFile().getString("main.load-failed1"));
-                            getLogger().log(Level.SEVERE, getLangFile().getString("main.load-failed2"));
-                            throw e2;
-                        }
-                    }
                 }
                 break;
+            }
+            getLogger().info("Loading permissions setup");
+            try {
+                permFile.setup();
+            } catch (InvalidConfigurationException e) {
+                getLogger().log(Level.SEVERE, getLangFile().getString("main.yaml-error"));
+                getLogger().log(Level.SEVERE, "-> " + e.getMessage());
+                getLogger().log(Level.WARNING, getLangFile().getString("main.load-backup"));
+                try {
+                    permFile = new YamlDataHolder(new File(getLastBackupFolder(), "permissions.yml"));
+                    permFile.setup();
+                    getLogger().log(Level.WARNING, getLangFile().getString("main.loaded1"));
+                    getLogger().log(Level.WARNING, getLangFile().getString("main.loaded2"));
+                } catch (InvalidConfigurationException e2) {
+                    getLogger().log(Level.SEVERE, getLangFile().getString("main.load-failed1"));
+                    getLogger().log(Level.SEVERE, getLangFile().getString("main.load-failed2"));
+                    throw e2;
+                }
             }
             getLogger().info("Initial preperations complete");
         } catch (Exception e) {

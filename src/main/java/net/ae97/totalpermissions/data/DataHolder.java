@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 
 /**
  * @version 1.1
@@ -28,7 +29,7 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public interface DataHolder {
 
-    void setup();
+    void setup() throws InvalidConfigurationException;
 
     void load(PermissionType type, String name);
 

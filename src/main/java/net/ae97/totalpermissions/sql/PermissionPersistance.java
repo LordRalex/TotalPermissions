@@ -42,7 +42,6 @@ public class PermissionPersistance implements Serializable {
     @NotNull
     private String type;
     private String configSection;
-    //private String configSection;
 
     public void setId(int id) {
         this.id = id;
@@ -75,10 +74,12 @@ public class PermissionPersistance implements Serializable {
         } else {
             Set<String> keys = cfg.getKeys(true);
             for (String key : keys) {
+                System.out.println("Adding key: " + key);
                 temp.set(key, cfg.get(key));
             }
         }
         configSection = temp.saveToString();
+        System.out.println("configSection is set to be: " + configSection);
     }
 
     public ConfigurationSection getConfig() throws InvalidConfigurationException {

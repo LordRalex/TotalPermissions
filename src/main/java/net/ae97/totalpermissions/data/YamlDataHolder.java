@@ -18,8 +18,11 @@ package net.ae97.totalpermissions.data;
 
 import net.ae97.totalpermissions.permission.PermissionType;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -38,11 +41,12 @@ public class YamlDataHolder implements DataHolder {
     }
 
     @Override
-    public void setup() {
-    }
-
-    public void load() throws InvalidConfigurationException, IOException {
-        yaml.load(savePath);
+    public void setup() throws InvalidConfigurationException {
+        try {
+            yaml.load(savePath);
+        } catch (IOException ex) {
+            Logger.getLogger(YamlDataHolder.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
