@@ -18,11 +18,11 @@ package net.ae97.totalpermissions.data;
 
 import net.ae97.totalpermissions.permission.PermissionType;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.ae97.totalpermissions.configuration.CaseInsensitiveYamlConfiguration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -33,7 +33,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public class YamlDataHolder implements DataHolder {
 
-    private final YamlConfiguration yaml = new YamlConfiguration();
+    private final YamlConfiguration yaml = new CaseInsensitiveYamlConfiguration();
     private final File savePath;
 
     public YamlDataHolder(File save) {
