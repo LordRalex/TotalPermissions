@@ -284,7 +284,8 @@ public abstract class PermissionBase {
     @Override
     public boolean equals(Object val) {
         if (val instanceof PermissionBase) {
-            if (((PermissionBase) val).getName().equalsIgnoreCase(name)) {
+            PermissionBase test = (PermissionBase) val;
+            if (test.getType() == this.getType() && test.getName().equalsIgnoreCase(this.getName())) {
                 return true;
             } else {
                 return false;
