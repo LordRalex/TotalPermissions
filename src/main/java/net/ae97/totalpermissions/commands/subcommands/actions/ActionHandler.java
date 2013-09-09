@@ -17,9 +17,9 @@
 package net.ae97.totalpermissions.commands.subcommands.actions;
 
 import net.ae97.totalpermissions.TotalPermissions;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -29,23 +29,24 @@ import org.bukkit.command.CommandSender;
  */
 public class ActionHandler {
 
-    protected final Map<String, SubAction> actions = new HashMap<String, SubAction>();
+    protected final Map<String, SubAction> actions = new ConcurrentHashMap<String, SubAction>();
     private final TotalPermissions plugin;
 
     public ActionHandler(TotalPermissions plugin) {
         
         this.plugin = plugin;
         
-        AddAction add = new AddAction();
-        actions.put(add.getName().toLowerCase().trim(), add);
-        CheckAction check = new CheckAction();
-        actions.put(check.getName().toLowerCase().trim(), check);
-        ListAction list = new ListAction();
-        actions.put(list.getName().toLowerCase().trim(), list);
-        RemoveAction remove = new RemoveAction();
-        actions.put(remove.getName().toLowerCase().trim(), remove);
-        SetAction set = new SetAction();
-        actions.put(set.getName().toLowerCase().trim(), set);
+        SubAction[] acts = new SubAction[]{
+            new AddAction(),
+            new CheckAction(),
+            new ListAction(),
+            new RemoveAction(),
+            new SetAction()
+        };
+        
+        for (SubAction act : acts) {
+            actions.put(act.getName(), act);
+        }
     }
 
     public boolean onAction(CommandSender sender, String[] args, List<String> fields) {

@@ -40,25 +40,22 @@ public final class CommandHandler implements CommandExecutor {
 
     public CommandHandler(TotalPermissions p) {
         plugin = p;
+        
+        SubCommand[] cmds = new SubCommand[]{
+            new HelpCommand(),
+            new DebugCommand(),
+            new ReloadCommand(),
+            new BackupCommand(),
+            new UserCommand(),
+            new GroupCommand(),
+            new SpecialCommand(),
+            new WorldCommand(),
+            new DumpCommand()
+        };
 
-        HelpCommand help = new HelpCommand();
-        commands.put(help.getName().toLowerCase().trim(), help);
-        DebugCommand debug = new DebugCommand();
-        commands.put(debug.getName().toLowerCase().trim(), debug);
-        ReloadCommand reload = new ReloadCommand();
-        commands.put(reload.getName().toLowerCase().trim(), reload);
-        BackupCommand backup = new BackupCommand();
-        commands.put(backup.getName().toLowerCase().trim(), backup);
-        UserCommand user = new UserCommand();
-        commands.put(user.getName().toLowerCase().trim(), user);
-        GroupCommand group = new GroupCommand();
-        commands.put(group.getName().toLowerCase().trim(), group);
-        SpecialCommand special = new SpecialCommand();
-        commands.put(special.getName().toLowerCase().trim(), special);
-        WorldCommand world = new WorldCommand();
-        commands.put(world.getName().toLowerCase().trim(), world);
-        DumpCommand dump = new DumpCommand();
-        commands.put(dump.getName().toLowerCase().trim(), dump);
+        for (SubCommand sc : cmds) {
+            commands.put(sc.getName(), sc);
+        }
 
         actions = new ActionHandler(this.plugin);
     }
