@@ -32,16 +32,23 @@ import org.bukkit.configuration.file.YamlConfiguration;
  * @author Lord_Ralex
  * @version 0.1
  * @since 0.2
+ * @deprecated Updater is not made to handle effectively, needs replacement
  */
 public class FileUpdater {
 
     private boolean backupFiles = false;
     private final TotalPermissions plugin;
 
+    /**
+     * @deprecated Updater is not made to handle effectively, needs replacement
+     */
     public FileUpdater(TotalPermissions p) {
         plugin = p;
     }
 
+    /**
+     * @deprecated Updater is not made to handle effectively, needs replacement
+     */
     public void update() {
         backupFiles = true;
     }
@@ -51,6 +58,7 @@ public class FileUpdater {
      * already
      *
      * @since 0.2
+     * @deprecated Updater is not made to handle effectively, needs replacement
      */
     public void backup() {
         backup(backupFiles);
@@ -63,6 +71,7 @@ public class FileUpdater {
      * @param bu Whether to back up or not.
      *
      * @since 0.2
+     * @deprecated Updater is not made to handle effectively, needs replacement
      */
     public void backup(boolean bu) {
         if (!(plugin.getPermFile() instanceof YamlDataHolder)) {
@@ -119,6 +128,7 @@ public class FileUpdater {
      * complete, the update files will be placed into a backup folder.
      *
      * @since 0.2
+     * @deprecated Updater is not made to handle effectively, needs replacement
      */
     public void runUpdate() {
         if (plugin.getPermFile() instanceof YamlDataHolder) {
