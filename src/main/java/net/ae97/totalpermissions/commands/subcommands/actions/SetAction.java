@@ -21,6 +21,8 @@ import net.ae97.totalpermissions.permission.PermissionBase;
 import net.ae97.totalpermissions.permission.PermissionGroup;
 import net.ae97.totalpermissions.permission.PermissionType;
 import java.io.IOException;
+import java.util.List;
+import net.ae97.totalpermissions.permission.PermissionUser;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -29,9 +31,9 @@ import org.bukkit.command.CommandSender;
  * @version 0.2
  */
 public class SetAction extends SubAction {
-    
+
     private final TotalPermissions plugin;
-    
+
     public SetAction(TotalPermissions plugin) {
         this.plugin = plugin;
     }
@@ -45,10 +47,30 @@ public class SetAction extends SubAction {
                 try {
                     this.plugin.getManager().changeDefaultGroup(tar.getName());
                     sender.sendMessage(this.plugin.getLangFile().getString("command.action.set.default", target));
+                    return true;
                 } catch (IOException ex) {
                     saveError(this.plugin, tar, sender, ex);
                 }
             }
+        } else if (field.equalsIgnoreCase("group")) {
+            if (tar instanceof PermissionUser) {
+                PermissionUser utar = (PermissionUser)tar;
+                try {
+                    List<String> groups = utar.getGroups(world);
+                    utar.addGroup(item, world);
+                    for (String group : groups) {
+                        if (!group.equalsIgnoreCase(item)) {
+                            utar.remGroup(group, world);
+                        }
+                    }
+                    //TODO: Make a lang string for setting groups
+                    sender.sendMessage(this.plugin.getLangFile().getString("command.action.add.groups", item, target));
+                    return true;
+                } catch (IOException ex) {
+                    saveError(this.plugin, tar, sender, ex);
+                }
+            }
+
         } else if (field.equalsIgnoreCase("prefix")) {
             tar.setOption("prefix", item, world);
             sender.sendMessage(this.plugin.getLangFile().getString("command.action.set.prefix", target, item));
@@ -81,7 +103,8 @@ public class SetAction extends SubAction {
         return new String[]{
             "default",
             "prefix",
-            "suffix"
+            "suffix",
+            "group"
         };
     }
 }
