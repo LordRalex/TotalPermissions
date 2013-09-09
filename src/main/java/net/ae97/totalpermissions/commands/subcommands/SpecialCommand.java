@@ -27,11 +27,17 @@ import org.bukkit.command.CommandSender;
  * @version 0.1
  */
 public class SpecialCommand implements SubCommand {
+    
+    private final TotalPermissions plugin;
+    
+    public SpecialCommand(TotalPermissions plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
         if (args.length > 2) { // If there is an action command
-            plugin.getCommandHandler().getActionHandler().onAction(sender, args, fields());
+            this.plugin.getCommandHandler().getActionHandler().onAction(sender, args, fields());
             return true;
         }
         return false;
@@ -46,7 +52,7 @@ public class SpecialCommand implements SubCommand {
     public String[] getHelp() {
         return new String[]{
             "ttp special [rcon|console|op] [actions..]",
-            plugin.getLangFile().getString("command.special.help")
+            this.plugin.getLangFile().getString("command.special.help")
         };
     }
 

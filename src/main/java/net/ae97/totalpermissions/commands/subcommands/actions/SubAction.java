@@ -16,9 +16,9 @@
  */
 package net.ae97.totalpermissions.commands.subcommands.actions;
 
-import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.PermissionBase;
 import java.util.logging.Level;
+import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -28,8 +28,6 @@ import org.bukkit.command.CommandSender;
  */
 public abstract class SubAction {
     
-    final TotalPermissions plugin = TotalPermissions.getPlugin();
-
     /**
      * Executes the command. Only the args and sender are needed.
      *
@@ -71,10 +69,11 @@ public abstract class SubAction {
      * @since 0.2
      */
     public abstract String[] supportedTypes();
-
-    protected void saveError(PermissionBase tar, CommandSender sender, Exception ex) {
-        sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.subaction.saveerror1"));
-        sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.subaction.saveerror2"));
-        TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, TotalPermissions.getPlugin().getLangFile().getString("command.action.subaction.saveerror3", tar.getType(), tar.getName()), ex);
+    
+    protected void saveError(TotalPermissions plugin, PermissionBase tar, CommandSender sender, Exception ex) {
+        sender.sendMessage(plugin.getLangFile().getString("command.action.subaction.saveerror1"));
+        sender.sendMessage(plugin.getLangFile().getString("command.action.subaction.saveerror2"));
+        plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("command.action.subaction.saveerror3", tar.getType(), tar.getName()), ex);
     }
+    
 }

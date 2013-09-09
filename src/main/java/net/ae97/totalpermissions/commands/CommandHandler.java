@@ -38,26 +38,26 @@ public final class CommandHandler implements CommandExecutor {
     protected final ActionHandler actions;
     protected final TotalPermissions plugin;
 
-    public CommandHandler(TotalPermissions p) {
-        plugin = p;
+    public CommandHandler(TotalPermissions plugin) {
+        this.plugin = plugin;
         
         SubCommand[] cmds = new SubCommand[]{
-            new HelpCommand(),
-            new DebugCommand(),
-            new ReloadCommand(),
-            new BackupCommand(),
-            new UserCommand(),
-            new GroupCommand(),
-            new SpecialCommand(),
-            new WorldCommand(),
-            new DumpCommand()
+            new HelpCommand(this.plugin),
+            new DebugCommand(this.plugin),
+            new ReloadCommand(this.plugin),
+            new BackupCommand(this.plugin),
+            new UserCommand(this.plugin),
+            new GroupCommand(this.plugin),
+            new SpecialCommand(this.plugin),
+            new WorldCommand(this.plugin),
+            new DumpCommand(this.plugin)
         };
 
         for (SubCommand sc : cmds) {
-            commands.put(sc.getName(), sc);
+            this.commands.put(sc.getName(), sc);
         }
 
-        actions = new ActionHandler(this.plugin);
+        this.actions = new ActionHandler(this.plugin);
     }
 
     @Override
@@ -97,13 +97,13 @@ public final class CommandHandler implements CommandExecutor {
         }
 
         subCommand = args[0];
-        SubCommand executor = commands.get(subCommand.toLowerCase());
+        SubCommand executor = this.commands.get(subCommand.toLowerCase());
         if (executor == null) {
-            sender.sendMessage(plugin.getLangFile().getString("command.handler.ifnull-plain"));
+            sender.sendMessage(this.plugin.getLangFile().getString("command.handler.ifnull-plain"));
             return true;
         }
         if ((args.length > 1) && (args[1].equalsIgnoreCase("help"))) {
-            sender.sendMessage(plugin.getLangFile().getString("command.handler.usage", executor.getHelp()[0]));
+            sender.sendMessage(this.plugin.getLangFile().getString("command.handler.usage", executor.getHelp()[0]));
             sender.sendMessage(executor.getHelp()[1]);
             return true;
         }
@@ -127,7 +127,7 @@ public final class CommandHandler implements CommandExecutor {
             }
             return true;
         } else {
-            sender.sendMessage(plugin.getLangFile().getString("command.handler.denied"));
+            sender.sendMessage(this.plugin.getLangFile().getString("command.handler.denied"));
         }
         return true;
     }
@@ -140,7 +140,7 @@ public final class CommandHandler implements CommandExecutor {
      * @since 0.2
      */
     public Map<String, SubCommand> getCommandList() {
-        return commands;
+        return this.commands;
     }
 
     /**
@@ -151,6 +151,6 @@ public final class CommandHandler implements CommandExecutor {
      * @since 0.2
      */
     public ActionHandler getActionHandler() {
-        return actions;
+        return this.actions;
     }
 }

@@ -30,6 +30,12 @@ import org.bukkit.command.CommandSender;
  * @version 0.2
  */
 public class HelpCommand implements SubCommand {
+    
+    private final TotalPermissions plugin;
+    
+    public HelpCommand(TotalPermissions plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public boolean execute(CommandSender cs, String[] args) {
@@ -37,9 +43,9 @@ public class HelpCommand implements SubCommand {
             if (args.length == 2) {
                 args = new String[]{"help", "actions", "1"};
                 int page = this.getInt(args[2]);
-                Map actions = plugin.getCommandHandler().getActionHandler().getActionList();
+                Map actions = this.plugin.getCommandHandler().getActionHandler().getActionList();
                 cs.sendMessage(getPage(page, actions));
-                cs.sendMessage(plugin.getLangFile().getString("command.help.action-help"));
+                cs.sendMessage(this.plugin.getLangFile().getString("command.help.action-help"));
             }
             return true;
         }
@@ -47,7 +53,7 @@ public class HelpCommand implements SubCommand {
             args = new String[]{"help", "1"};
         }
         int page = this.getInt(args[1]);
-        Map commands = plugin.getCommandHandler().getCommandList();
+        Map commands = this.plugin.getCommandHandler().getCommandList();
         cs.sendMessage(getPage(page, commands));
         return true;
     }
@@ -61,7 +67,7 @@ public class HelpCommand implements SubCommand {
     public String[] getHelp() {
         return new String[]{
             "ttp help",
-            plugin.getLangFile().getString("command.help.help")
+            this.plugin.getLangFile().getString("command.help.help")
         };
     }
 
@@ -77,8 +83,8 @@ public class HelpCommand implements SubCommand {
             upper = listSize;
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(Formatter.formatTitle(plugin.getName(), ChatColor.WHITE, ChatColor.RED)).append("\n");
-        sb.append(plugin.getLangFile().getString("command.help.page", page, (int) Math.ceil((double) listSize / (double) factor))).append("\n").append(ChatColor.RESET);
+        sb.append(Formatter.formatTitle(this.plugin.getName(), ChatColor.WHITE, ChatColor.RED)).append("\n");
+        sb.append(this.plugin.getLangFile().getString("command.help.page", page, (int) Math.ceil((double) listSize / (double) factor))).append("\n").append(ChatColor.RESET);
         String[] list = map.keySet().toArray(new String[listSize]);
         Arrays.sort(list);
         for (int i = index; i < upper; i++) {
@@ -96,7 +102,7 @@ public class HelpCommand implements SubCommand {
                 }
             }
         }
-        sb.append('\n').append(plugin.getLangFile().getString("command.help.cont-plain", plugin.getLangFile().getString("variables.command")));
+        sb.append('\n').append(this.plugin.getLangFile().getString("command.help.cont-plain", this.plugin.getLangFile().getString("variables.command")));
         return sb.toString();
     }
 

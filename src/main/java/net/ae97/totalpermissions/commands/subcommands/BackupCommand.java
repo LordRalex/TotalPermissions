@@ -26,6 +26,12 @@ import org.bukkit.command.CommandSender;
  * @version 0.2
  */
 public class BackupCommand implements SubCommand {
+    
+    private final TotalPermissions plugin;
+    
+    public BackupCommand(TotalPermissions plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
@@ -44,7 +50,7 @@ public class BackupCommand implements SubCommand {
     public String[] getHelp() {
         return new String[]{
             "ttp backup",
-            plugin.getLangFile().getString("command.backup.help")
+            this.plugin.getLangFile().getString("command.backup.help")
         };
     }
 }

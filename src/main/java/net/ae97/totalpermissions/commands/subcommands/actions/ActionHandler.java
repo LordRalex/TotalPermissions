@@ -37,15 +37,15 @@ public class ActionHandler {
         this.plugin = plugin;
         
         SubAction[] acts = new SubAction[]{
-            new AddAction(),
-            new CheckAction(),
-            new ListAction(),
-            new RemoveAction(),
-            new SetAction()
+            new AddAction(this.plugin),
+            new CheckAction(this.plugin),
+            new ListAction(this.plugin),
+            new RemoveAction(this.plugin),
+            new SetAction(this.plugin)
         };
         
         for (SubAction act : acts) {
-            actions.put(act.getName(), act);
+            this.actions.put(act.getName(), act);
         }
     }
 
@@ -80,14 +80,14 @@ public class ActionHandler {
                 return false;
         }
 
-        SubAction executor = actions.get(ackshun.toLowerCase());
+        SubAction executor = this.actions.get(ackshun.toLowerCase());
         if (executor == null) {
             sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.handler.ifnull"));
             return false;
         }
 
         if (args.length < 5 && !((ackshun.equalsIgnoreCase("list")) || field.equalsIgnoreCase("help"))) {
-            sender.sendMessage("Invalid use of actions.");
+            sender.sendMessage("Invalid use of this.actions.");
             sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.handler.usage", executor.getHelp()[0]));
             sender.sendMessage(executor.getHelp()[1]);
             return true;
@@ -137,6 +137,6 @@ public class ActionHandler {
      * @since 0.2
      */
     public Map<String, SubAction> getActionList() {
-        return actions;
+        return this.actions;
     }
 }

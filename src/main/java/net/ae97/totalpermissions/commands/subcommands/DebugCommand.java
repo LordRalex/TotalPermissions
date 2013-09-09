@@ -26,16 +26,22 @@ import org.bukkit.command.CommandSender;
  * @version 0.2
  */
 public class DebugCommand implements SubCommand {
+    
+    private final TotalPermissions plugin;
+    
+    public DebugCommand(TotalPermissions plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
         if (args.length == 1) {
-            sender.sendMessage(plugin.getLangFile().getString("command.debug.args-plain"));
+            sender.sendMessage(this.plugin.getLangFile().getString("command.debug.args-plain"));
             return true; //True because currently the message contains help info
         }
-        PermissionUser target = plugin.getManager().getUser(args[1]);
+        PermissionUser target = this.plugin.getManager().getUser(args[1]);
         if (target == null) {
-            sender.sendMessage(plugin.getLangFile().getString("command.debug.null-target", args[1]));
+            sender.sendMessage(this.plugin.getLangFile().getString("command.debug.null-target", args[1]));
             return true; //True because currently the message contains help info
         }
         if (args.length == 2 || args.length == 3) {
@@ -56,9 +62,9 @@ public class DebugCommand implements SubCommand {
             }
             target.setDebug(newState);
             if (target.getDebugState()) {
-                sender.sendMessage(plugin.getLangFile().getString("command.debug.debug-on", target.getName()));
+                sender.sendMessage(this.plugin.getLangFile().getString("command.debug.debug-on", target.getName()));
             } else {
-                sender.sendMessage(plugin.getLangFile().getString("command.debug.debug-off", target.getName()));
+                sender.sendMessage(this.plugin.getLangFile().getString("command.debug.debug-off", target.getName()));
             }
         }
         return true;
@@ -72,8 +78,8 @@ public class DebugCommand implements SubCommand {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "ttp debug " + plugin.getLangFile().getString("variables.username") + " [on/off]",
-            plugin.getLangFile().getString("command.debug.help")
+            "ttp debug " + this.plugin.getLangFile().getString("variables.username") + " [on/off]",
+            this.plugin.getLangFile().getString("command.debug.help")
         };
     }
 }
