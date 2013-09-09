@@ -32,11 +32,11 @@ public class GroupCommand implements SubCommand {
     @Override
     public boolean execute(CommandSender sender, String[] args) {
         if (args.length > 2) { // If there is an action command
-            TotalPermissions.getPlugin().getCommandHandler().getActionHandler().onAction(sender, args, fields());
+            plugin.getCommandHandler().getActionHandler().onAction(sender, args, fields());
             return true;
         } else if (args.length == 2) {
-            PermissionGroup pg = TotalPermissions.getPlugin().getManager().getGroup(args[1]);
-            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.group.group", pg.getName()));
+            PermissionGroup pg = plugin.getManager().getGroup(args[1]);
+            sender.sendMessage(plugin.getLangFile().getString("command.group.group", pg.getName()));
             StringBuilder sb = new StringBuilder();
             for (String name : pg.getInheritances(pg.getName())) {
                 sb.append(name).append(", ");
@@ -50,17 +50,17 @@ public class GroupCommand implements SubCommand {
             if (suffix == null) {
                 suffix = "";
             }
-            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.group.inherits", (sb.length() >= 2) ? sb.substring(0, sb.length() - 2) : "None!"));
-            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.group.prefix", prefix));
-            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.group.suffix", suffix));
+            sender.sendMessage(plugin.getLangFile().getString("command.group.inherits", (sb.length() >= 2) ? sb.substring(0, sb.length() - 2) : "None!"));
+            sender.sendMessage(plugin.getLangFile().getString("command.group.prefix", prefix));
+            sender.sendMessage(plugin.getLangFile().getString("command.group.suffix", suffix));
             
             return true;
         } else if (args.length == 1) {
             StringBuilder sb = new StringBuilder();
-            for (String group : TotalPermissions.getPlugin().getManager().getGroups()) {
+            for (String group : plugin.getManager().getGroups()) {
                 sb.append(group).append(", ");
             }
-            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.group.list", sb.substring(0, sb.length() - 2)));
+            sender.sendMessage(plugin.getLangFile().getString("command.group.list", sb.substring(0, sb.length() - 2)));
             return true;
         }
         return false;
@@ -74,8 +74,8 @@ public class GroupCommand implements SubCommand {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "ttp group " + TotalPermissions.getPlugin().getLangFile().getString("variables.group") + " [actions..]",
-            TotalPermissions.getPlugin().getLangFile().getString("command.group.help")
+            "ttp group " + plugin.getLangFile().getString("variables.group") + " [actions..]",
+            plugin.getLangFile().getString("command.group.help")
         };
     }
 

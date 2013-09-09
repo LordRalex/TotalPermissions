@@ -16,6 +16,7 @@
  */
 package net.ae97.totalpermissions.commands.subcommands;
 
+import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -24,6 +25,8 @@ import org.bukkit.command.CommandSender;
  * @version 0.1
  */
 public interface SubCommand {
+    
+    final TotalPermissions plugin = TotalPermissions.getPlugin();
 
     /**
      * Executes the command. Only the args and sender are needed.

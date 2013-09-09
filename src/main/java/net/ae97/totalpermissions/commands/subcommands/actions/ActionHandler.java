@@ -30,8 +30,12 @@ import org.bukkit.command.CommandSender;
 public class ActionHandler {
 
     protected final Map<String, SubAction> actions = new HashMap<String, SubAction>();
+    private final TotalPermissions plugin;
 
-    public ActionHandler() {
+    public ActionHandler(TotalPermissions plugin) {
+        
+        this.plugin = plugin;
+        
         AddAction add = new AddAction();
         actions.put(add.getName().toLowerCase().trim(), add);
         CheckAction check = new CheckAction();

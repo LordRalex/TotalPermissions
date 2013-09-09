@@ -37,19 +37,19 @@ public class SetAction extends SubAction {
         if (field.equalsIgnoreCase("default")) {
             if (tar instanceof PermissionGroup) {
                 try {
-                    TotalPermissions.getPlugin().getManager().changeDefaultGroup(tar.getName());
-                    sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.set.default", target));
+                    plugin.getManager().changeDefaultGroup(tar.getName());
+                    sender.sendMessage(plugin.getLangFile().getString("command.action.set.default", target));
                 } catch (IOException ex) {
                     saveError(tar, sender, ex);
                 }
             }
         } else if (field.equalsIgnoreCase("prefix")) {
             tar.setOption("prefix", item, world);
-            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.set.prefix", target, item));
+            sender.sendMessage(plugin.getLangFile().getString("command.action.set.prefix", target, item));
             return true;
         } else if (field.equalsIgnoreCase("suffix")) {
             tar.setOption("suffix", item, world);
-            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.set.suffix", target, item));
+            sender.sendMessage(plugin.getLangFile().getString("command.action.set.suffix", target, item));
             return true;
         }
         return false;
@@ -63,10 +63,10 @@ public class SetAction extends SubAction {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "set " + TotalPermissions.getPlugin().getLangFile().getString("variables.field")
-            + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.value")
-            + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.world-optional"),
-            TotalPermissions.getPlugin().getLangFile().getString("command.action.set.help")
+            "set " + plugin.getLangFile().getString("variables.field")
+            + " " + plugin.getLangFile().getString("variables.value")
+            + " " + plugin.getLangFile().getString("variables.world-optional"),
+            plugin.getLangFile().getString("command.action.set.help")
         };
     }
 

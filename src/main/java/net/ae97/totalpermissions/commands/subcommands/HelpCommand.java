@@ -37,9 +37,9 @@ public class HelpCommand implements SubCommand {
             if (args.length == 2) {
                 args = new String[]{"help", "actions", "1"};
                 int page = this.getInt(args[2]);
-                Map actions = TotalPermissions.getPlugin().getCommandHandler().getActionHandler().getActionList();
+                Map actions = plugin.getCommandHandler().getActionHandler().getActionList();
                 cs.sendMessage(getPage(page, actions));
-                cs.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.help.action-help"));
+                cs.sendMessage(plugin.getLangFile().getString("command.help.action-help"));
             }
             return true;
         }
@@ -47,7 +47,7 @@ public class HelpCommand implements SubCommand {
             args = new String[]{"help", "1"};
         }
         int page = this.getInt(args[1]);
-        Map commands = TotalPermissions.getPlugin().getCommandHandler().getCommandList();
+        Map commands = plugin.getCommandHandler().getCommandList();
         cs.sendMessage(getPage(page, commands));
         return true;
     }
@@ -61,7 +61,7 @@ public class HelpCommand implements SubCommand {
     public String[] getHelp() {
         return new String[]{
             "ttp help",
-            TotalPermissions.getPlugin().getLangFile().getString("command.help.help")
+            plugin.getLangFile().getString("command.help.help")
         };
     }
 
@@ -77,8 +77,8 @@ public class HelpCommand implements SubCommand {
             upper = listSize;
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(Formatter.formatTitle(TotalPermissions.getPlugin().getName(), ChatColor.WHITE, ChatColor.RED)).append("\n");
-        sb.append(TotalPermissions.getPlugin().getLangFile().getString("command.help.page", page, (int) Math.ceil((double) listSize / (double) factor))).append("\n").append(ChatColor.RESET);
+        sb.append(Formatter.formatTitle(plugin.getName(), ChatColor.WHITE, ChatColor.RED)).append("\n");
+        sb.append(plugin.getLangFile().getString("command.help.page", page, (int) Math.ceil((double) listSize / (double) factor))).append("\n").append(ChatColor.RESET);
         String[] list = map.keySet().toArray(new String[listSize]);
         Arrays.sort(list);
         for (int i = index; i < upper; i++) {
@@ -96,7 +96,7 @@ public class HelpCommand implements SubCommand {
                 }
             }
         }
-        sb.append('\n').append(TotalPermissions.getPlugin().getLangFile().getString("command.help.cont-plain", TotalPermissions.getPlugin().getLangFile().getString("variables.command")));
+        sb.append('\n').append(plugin.getLangFile().getString("command.help.cont-plain", plugin.getLangFile().getString("variables.command")));
         return sb.toString();
     }
 

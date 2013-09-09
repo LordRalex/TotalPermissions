@@ -34,25 +34,25 @@ public class ReloadCommand implements SubCommand {
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
-        sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.reload.reloading", TotalPermissions.getPlugin().getDescription().getFullName()));
-        PermissionManager manager = TotalPermissions.getPlugin().getManager();
+        sender.sendMessage(plugin.getLangFile().getString("command.reload.reloading", plugin.getDescription().getFullName()));
+        PermissionManager manager = plugin.getManager();
         manager.unload();
         try {
             manager.load();
         } catch (InvalidConfigurationException ex) {
-            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.reload.badconfig"));
-            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, null, ex);
+            sender.sendMessage(plugin.getLangFile().getString("command.reload.badconfig"));
+            plugin.getLogger().log(Level.SEVERE, null, ex);
         }
         for (Player player : Bukkit.getOnlinePlayers()) {
             PlayerLoginEvent refreshEvent = new PlayerLoginEvent(player, "", null);
             try {
-                TotalPermissions.getPlugin().getListener().onPlayerLogin(refreshEvent);
+                plugin.getListener().onPlayerLogin(refreshEvent);
             } catch (Exception e) {
-                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.reload.general", player.getName()));
-                TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, null, e);
+                sender.sendMessage(plugin.getLangFile().getString("command.reload.general", player.getName()));
+                plugin.getLogger().log(Level.SEVERE, null, e);
             }
         }
-        sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.reload.success", TotalPermissions.getPlugin().getDescription().getFullName()));
+        sender.sendMessage(plugin.getLangFile().getString("command.reload.success", plugin.getDescription().getFullName()));
         return true;
     }
 
@@ -65,7 +65,7 @@ public class ReloadCommand implements SubCommand {
     public String[] getHelp() {
         return new String[]{
             "ttp reload",
-            TotalPermissions.getPlugin().getLangFile().getString("command.reload.help")
+            plugin.getLangFile().getString("command.reload.help")
         };
     }
 }

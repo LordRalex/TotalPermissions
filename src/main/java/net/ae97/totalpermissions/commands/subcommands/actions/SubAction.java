@@ -27,6 +27,8 @@ import org.bukkit.command.CommandSender;
  * @version 0.2
  */
 public abstract class SubAction {
+    
+    final TotalPermissions plugin = TotalPermissions.getPlugin();
 
     /**
      * Executes the command. Only the args and sender are needed.

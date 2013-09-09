@@ -29,7 +29,7 @@ public class BackupCommand implements SubCommand {
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
-        FileUpdater update = new FileUpdater(TotalPermissions.getPlugin());
+        FileUpdater update = new FileUpdater(plugin);
         update.backup(true);
         update.runUpdate();
         return true;
@@ -44,7 +44,7 @@ public class BackupCommand implements SubCommand {
     public String[] getHelp() {
         return new String[]{
             "ttp backup",
-            TotalPermissions.getPlugin().getLangFile().getString("command.backup.help")
+            plugin.getLangFile().getString("command.backup.help")
         };
     }
 }

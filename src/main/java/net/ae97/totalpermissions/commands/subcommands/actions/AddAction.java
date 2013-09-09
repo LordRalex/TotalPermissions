@@ -36,7 +36,7 @@ public class AddAction extends SubAction {
         if (field.equalsIgnoreCase("permissions")) {
             try {
                 tar.addPerm(item, world);
-                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.add.permissions", item, target));
+                sender.sendMessage(plugin.getLangFile().getString("command.action.add.permissions", item, target));
                 return true;
             } catch (IOException ex) {
                 saveError(tar, sender, ex);
@@ -44,7 +44,7 @@ public class AddAction extends SubAction {
         } else if (field.equalsIgnoreCase("inheritance")) {
             try {
                 tar.addInheritance(item, world);
-                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.add.inheritance", item, target));
+                sender.sendMessage(plugin.getLangFile().getString("command.action.add.inheritance", item, target));
                 return true;
             } catch (IOException ex) {
                 saveError(tar, sender, ex);
@@ -52,7 +52,7 @@ public class AddAction extends SubAction {
         } else if (field.equalsIgnoreCase("commands")) {
             try {
                 tar.addCommand(item, world);
-                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.add.commands", item, target));
+                sender.sendMessage(plugin.getLangFile().getString("command.action.add.commands", item, target));
                 return true;
             } catch (IOException ex) {
                 saveError(tar, sender, ex);
@@ -60,7 +60,7 @@ public class AddAction extends SubAction {
         } else if (field.equalsIgnoreCase("groups")) {
             try {
                 tar.addGroup(item, world);
-                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.add.groups", item, target));
+                sender.sendMessage(plugin.getLangFile().getString("command.action.add.groups", item, target));
                 return true;
             } catch (IOException ex) {
                 saveError(tar, sender, ex);
@@ -77,10 +77,10 @@ public class AddAction extends SubAction {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "add " + TotalPermissions.getPlugin().getLangFile().getString("variables.field")
-            + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.value")
-            + " " + TotalPermissions.getPlugin().getLangFile().getString("variables.world-optional"),
-            TotalPermissions.getPlugin().getLangFile().getString("command.action.add.help")
+            "add " + plugin.getLangFile().getString("variables.field")
+            + " " + plugin.getLangFile().getString("variables.value")
+            + " " + plugin.getLangFile().getString("variables.world-optional"),
+            plugin.getLangFile().getString("command.action.add.help")
         };
     }
 

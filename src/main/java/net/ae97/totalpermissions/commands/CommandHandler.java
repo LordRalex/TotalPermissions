@@ -60,7 +60,7 @@ public final class CommandHandler implements CommandExecutor {
         DumpCommand dump = new DumpCommand();
         commands.put(dump.getName().toLowerCase().trim(), dump);
 
-        actions = new ActionHandler();
+        actions = new ActionHandler(this.plugin);
     }
 
     @Override

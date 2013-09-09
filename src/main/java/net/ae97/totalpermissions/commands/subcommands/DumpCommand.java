@@ -40,7 +40,7 @@ public class DumpCommand implements SubCommand {
     @Override
     public boolean execute(CommandSender sender, String[] args) {
         String[] params = new String[2];
-        Cipher lang = TotalPermissions.getPlugin().getLangFile();
+        Cipher lang = plugin.getLangFile();
         if (args.length == 1) {
             Player possible = Bukkit.getPlayer(args[0]);
             if (possible != null && possible.isOnline()) {
@@ -137,7 +137,7 @@ public class DumpCommand implements SubCommand {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "ttp dump [-command/-player/-plugin] " + TotalPermissions.getPlugin().getLangFile().getString("variables.username-optional") + " [page]",
-            TotalPermissions.getPlugin().getLangFile().getString("command.dump.help")};
+            "ttp dump [-command/-player/-plugin] " + plugin.getLangFile().getString("variables.username-optional") + " [page]",
+            plugin.getLangFile().getString("command.dump.help")};
     }
 }
