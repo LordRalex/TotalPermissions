@@ -764,8 +764,8 @@ public abstract class PermissionBase {
         TotalPermissions.getPlugin().getManager().recalculatePermissions();
     }
 
-    public void setOption(Object option, String item, String world) {
-        section.set("options." + option, item);
+    public void setOption(String option, Object value, String world) {
+        section.set("options." + option, value);
         try {
             TotalPermissions.getPlugin().getManager().save(this);
         } catch (IOException ex) {
