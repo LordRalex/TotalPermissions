@@ -72,7 +72,7 @@ public class DebugCommand implements SubCommand {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "/ttp debug " + TotalPermissions.getPlugin().getLangFile().getString("variables.username") + " [on/off]",
+            "ttp debug " + TotalPermissions.getPlugin().getLangFile().getString("variables.username") + " [on/off]",
             TotalPermissions.getPlugin().getLangFile().getString("command.debug.help")
         };
     }

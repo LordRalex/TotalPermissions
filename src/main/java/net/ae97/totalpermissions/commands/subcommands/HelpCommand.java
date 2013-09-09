@@ -60,7 +60,7 @@ public class HelpCommand implements SubCommand {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "/ttp help",
+            "ttp help",
             TotalPermissions.getPlugin().getLangFile().getString("command.help.help")
         };
     }

@@ -45,7 +45,7 @@ public class WorldCommand implements SubCommand {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "/ttp world <worldname> [actions..]",
+            "ttp world <worldname> [actions..]",
             TotalPermissions.getPlugin().getLangFile().getString("command.world.help")
         };
     }

@@ -20,11 +20,12 @@ import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.commands.subcommands.*;
 import net.ae97.totalpermissions.commands.subcommands.actions.ActionHandler;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 /**
  * @version 0.2
@@ -33,7 +34,7 @@ import org.bukkit.command.CommandSender;
  */
 public final class CommandHandler implements CommandExecutor {
 
-    protected final Map<String, SubCommand> commands = new HashMap<String, SubCommand>();
+    protected final Map<String, SubCommand> commands = new ConcurrentHashMap<String, SubCommand>();
     protected final ActionHandler actions;
     protected final TotalPermissions plugin;
 
@@ -65,10 +66,12 @@ public final class CommandHandler implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] rawargs) {
         String subCommand;
+        // Default to help
         if (rawargs.length < 1) {
             rawargs = new String[]{"help"};
         }
 
+        // Allow for quotes within commands
         StringBuilder sb = new StringBuilder();
         for (String temp : rawargs) {
             sb.append(temp).append(" ");
@@ -76,7 +79,7 @@ public final class CommandHandler implements CommandExecutor {
 
         String[] args;
         if (sb.toString().contains("\"")) {
-            char[] broken = sb.toString().toCharArray();
+            char[] broken = sb.toString().trim().toCharArray();
             StringBuilder usb = new StringBuilder();
             ArrayList<String> newargs = new ArrayList();
             boolean inquotes = false;
@@ -118,7 +121,11 @@ public final class CommandHandler implements CommandExecutor {
         if (sender.hasPermission("totalpermissions.cmd" + executor.getName())) {
             boolean success = executor.execute(sender, args);
             if (!success) {
-                sender.sendMessage(executor.getHelp()[0]);
+                if (sender instanceof Player) {
+                    sender.sendMessage("/" + executor.getHelp()[0]);
+                } else {
+                    sender.sendMessage(executor.getHelp()[0]);
+                }
                 sender.sendMessage(executor.getHelp()[1]);
             }
             return true;

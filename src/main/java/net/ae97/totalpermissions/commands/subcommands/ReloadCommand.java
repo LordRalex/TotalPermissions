@@ -64,7 +64,7 @@ public class ReloadCommand implements SubCommand {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "/ttp reload",
+            "ttp reload",
             TotalPermissions.getPlugin().getLangFile().getString("command.reload.help")
         };
     }

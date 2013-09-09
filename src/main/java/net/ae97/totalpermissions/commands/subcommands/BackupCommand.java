@@ -43,7 +43,7 @@ public class BackupCommand implements SubCommand {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "/ttp backup",
+            "ttp backup",
             TotalPermissions.getPlugin().getLangFile().getString("command.backup.help")
         };
     }

@@ -35,16 +35,26 @@ public class GroupCommand implements SubCommand {
             TotalPermissions.getPlugin().getCommandHandler().getActionHandler().onAction(sender, args, fields());
             return true;
         } else if (args.length == 2) {
-            PermissionGroup pg = TotalPermissions.getPlugin().getManager().getGroup(args[2]);
+            PermissionGroup pg = TotalPermissions.getPlugin().getManager().getGroup(args[1]);
             sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.group.group", pg.getName()));
             StringBuilder sb = new StringBuilder();
             for (String name : pg.getInheritances(pg.getName())) {
                 sb.append(name).append(", ");
             }
-            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.group.inherits", sb.substring(0, sb.length() - 2)));
-            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.group.prefix", pg.getName(), pg.getOption("prefix")));
-            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.group.suffix", pg.getName(), pg.getOption("suffix")));
-
+            String name = pg.getName();
+            String prefix = (String)pg.getOption("prefix");
+            if (prefix == null) {
+                prefix = "";
+            }
+            String suffix = (String)pg.getOption("suffix");
+            if (suffix == null) {
+                suffix = "";
+            }
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.group.inherits", (sb.length() >= 2) ? sb.substring(0, sb.length() - 2) : "None!"));
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.group.prefix", prefix));
+            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.group.suffix", suffix));
+            
+            return true;
         } else if (args.length == 1) {
             StringBuilder sb = new StringBuilder();
             for (String group : TotalPermissions.getPlugin().getManager().getGroups()) {
@@ -64,7 +74,7 @@ public class GroupCommand implements SubCommand {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "/ttp group " + TotalPermissions.getPlugin().getLangFile().getString("variables.group") + " [actions..]",
+            "ttp group " + TotalPermissions.getPlugin().getLangFile().getString("variables.group") + " [actions..]",
             TotalPermissions.getPlugin().getLangFile().getString("command.group.help")
         };
     }

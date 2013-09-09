@@ -137,7 +137,7 @@ public class DumpCommand implements SubCommand {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "/ttp dump [-command/-player/-plugin] " + TotalPermissions.getPlugin().getLangFile().getString("variables.username-optional") + " [page]",
+            "ttp dump [-command/-player/-plugin] " + TotalPermissions.getPlugin().getLangFile().getString("variables.username-optional") + " [page]",
             TotalPermissions.getPlugin().getLangFile().getString("command.dump.help")};
     }
 }
