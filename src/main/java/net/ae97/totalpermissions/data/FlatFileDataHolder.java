@@ -55,12 +55,14 @@ public class FlatFileDataHolder implements DataHolder {
             return;
         }
         YamlConfiguration yaml = new YamlConfiguration();
+
         //convert cfg to yaml
         yaml.save(new File(new File(root, type.toString()), name + ".yml"));
     }
 
     @Override
     public void load(PermissionType type, String name) {
+        new File(root, type.toString()).mkdirs();
     }
 
     @Override

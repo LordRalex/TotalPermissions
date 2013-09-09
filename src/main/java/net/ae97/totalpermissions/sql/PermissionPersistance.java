@@ -20,6 +20,7 @@ import net.ae97.totalpermissions.permission.PermissionType;
 import com.avaje.ebean.validation.NotNull;
 import java.io.Serializable;
 import java.util.Set;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -41,8 +42,8 @@ public class PermissionPersistance implements Serializable {
     private String name = "";
     @NotNull
     private String type;
+    @Column(columnDefinition = "TEXT")
     private String configSection;
-    //private String configSection;
 
     public void setId(int id) {
         this.id = id;
@@ -75,6 +76,7 @@ public class PermissionPersistance implements Serializable {
         } else {
             Set<String> keys = cfg.getKeys(true);
             for (String key : keys) {
+                System.out.println("Adding key: " + key);
                 temp.set(key, cfg.get(key));
             }
         }

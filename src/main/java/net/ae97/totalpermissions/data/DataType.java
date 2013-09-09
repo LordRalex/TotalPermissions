@@ -24,6 +24,8 @@ package net.ae97.totalpermissions.data;
 public enum DataType {
 
     YAML,
-    MYSQL;
+    MYSQL,
+    FLAT,
+    SQLITE;
 
 }

@@ -43,7 +43,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author Lord_Ralex
  * @since 0.1
  */
-public class TotalPermissions extends JavaPlugin {
+public final class TotalPermissions extends JavaPlugin {
 
     private String BUKKIT_VERSION = "NONE";
     private static final String[] ACCEPTABLE_VERSIONS = new String[]{
@@ -60,14 +60,12 @@ public class TotalPermissions extends JavaPlugin {
     protected Metrics metrics;
     protected CommandHandler commands;
     protected Cipher cipher;
-    protected static boolean debug = false;
-    protected boolean loadingFailed = false;
+    private boolean loadingFailed = false;
 
     @Override
     public void onLoad() {
         try {
             getLogger().info("Beginning initial preperations");
-
             if (!getDataFolder().exists()) {
                 getDataFolder().mkdirs();
             }
@@ -79,8 +77,6 @@ public class TotalPermissions extends JavaPlugin {
             }
 
             cipher = new Cipher(this, getConfig().getString("language", "en_US"));
-
-            debug = getConfig().getBoolean("angry-debug", false);
 
             for (String version : ACCEPTABLE_VERSIONS) {
                 try {
@@ -121,26 +117,28 @@ public class TotalPermissions extends JavaPlugin {
                 default:
                 case YAML: {
                     permFile = new YamlDataHolder(new File(this.getDataFolder(), "permissions.yml"));
-                    try {
-                        ((YamlDataHolder) permFile).load();
-                    } catch (InvalidConfigurationException e) {
-                        getLogger().log(Level.SEVERE, getLangFile().getString("main.yaml-error"));
-                        getLogger().log(Level.SEVERE, "-> " + e.getMessage());
-                        getLogger().log(Level.WARNING, getLangFile().getString("main.load-backup"));
-                        try {
-                            permFile = new YamlDataHolder(new File(getLastBackupFolder(), "permissions.yml"));
-                            ((YamlDataHolder) permFile).load();
-                            getLogger().log(Level.WARNING, getLangFile().getString("main.loaded1"));
-                            getLogger().log(Level.WARNING, getLangFile().getString("main.loaded2"));
-                        } catch (InvalidConfigurationException e2) {
-                            getLogger().log(Level.SEVERE, getLangFile().getString("main.load-failed1"));
-                            getLogger().log(Level.SEVERE, getLangFile().getString("main.load-failed2"));
-                            throw e2;
-                        }
-                    }
                 }
                 break;
             }
+            getLogger().info("Loading permissions setup");
+            try {
+                permFile.setup();
+            } catch (InvalidConfigurationException e) {
+                getLogger().log(Level.SEVERE, getLangFile().getString("main.yaml-error"));
+                getLogger().log(Level.SEVERE, "-> " + e.getMessage());
+                getLogger().log(Level.WARNING, getLangFile().getString("main.load-backup"));
+                try {
+                    permFile = new YamlDataHolder(new File(getLastBackupFolder(), "permissions.yml"));
+                    permFile.setup();
+                    getLogger().log(Level.WARNING, getLangFile().getString("main.loaded1"));
+                    getLogger().log(Level.WARNING, getLangFile().getString("main.loaded2"));
+                } catch (InvalidConfigurationException e2) {
+                    getLogger().log(Level.SEVERE, getLangFile().getString("main.load-failed1"));
+                    getLogger().log(Level.SEVERE, getLangFile().getString("main.load-failed2"));
+                    throw e2;
+                }
+            }
+
             getLogger().info("Initial preperations complete");
         } catch (Exception e) {
             getLogger().log(Level.SEVERE, getLangFile().getString("main.error", getName(), getDescription().getVersion()), e);
@@ -349,6 +347,9 @@ public class TotalPermissions extends JavaPlugin {
     }
 
     public void installDatabase(EbeanServer ebeanServer) {
+        if (ebeanServer == null) {
+            return;
+        }
         try {
             ebeanServer.find(PermissionPersistance.class).findRowCount();
         } catch (PersistenceException ex) {
