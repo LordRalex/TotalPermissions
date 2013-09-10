@@ -18,7 +18,6 @@ package net.ae97.totalpermissions.data;
 
 import net.ae97.totalpermissions.permission.PermissionType;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.EnumMap;
@@ -26,8 +25,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -36,10 +33,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
  * @version 1.0
  * @author Lord_Ralex
  */
-public class FlatFileDataHolder implements DataHolder {
+public class FlatFileDataHolder extends MemoryDataHolder {
 
     private final File root;
-    private final Map<PermissionType, Map<String, ConfigurationSection>> buffer = new EnumMap<PermissionType, Map<String, ConfigurationSection>>(PermissionType.class);
 
     public FlatFileDataHolder(File file) {
         root = file;
@@ -47,9 +43,7 @@ public class FlatFileDataHolder implements DataHolder {
 
     @Override
     public void setup() {
-        for (PermissionType type : PermissionType.values()) {
-            buffer.put(type, new ConcurrentHashMap<String, ConfigurationSection>());
-        }
+        super.setup();
         root.mkdirs();
     }
 
@@ -57,7 +51,7 @@ public class FlatFileDataHolder implements DataHolder {
     public void save(PermissionType type, String name) throws IOException {
         name = name.toLowerCase();
         new File(root, type.toString()).mkdirs();
-        Map<String, ConfigurationSection> map = buffer.get(type);
+        Map<String, ConfigurationSection> map = memory.get(type);
         if (map == null) {
             return;
         }
@@ -79,25 +73,11 @@ public class FlatFileDataHolder implements DataHolder {
     }
 
     @Override
-    public void load(PermissionType type, String name) {
+    public void load(PermissionType type, String name) throws IOException, InvalidConfigurationException {
         name = name.toLowerCase();
         new File(root, type.toString()).mkdirs();
         YamlConfiguration data = new YamlConfiguration();
-        try {
-            data.load(new File(new File(root, type.toString()), name + ".yml"));
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(FlatFileDataHolder.class.getName()).log(Level.SEVERE, "No " + name + ".yml file found", ex);
-        } catch (IOException ex) {
-            Logger.getLogger(FlatFileDataHolder.class.getName()).log(Level.SEVERE, "An IOException occured on reading " + name + ".yml", ex);
-        } catch (InvalidConfigurationException ex) {
-            Logger.getLogger(FlatFileDataHolder.class.getName()).log(Level.SEVERE, "The file " + name + ".yml is not in proper YAML format", ex);
-        }
-    }
-
-    @Override
-    public ConfigurationSection getConfigurationSection(PermissionType type, String name) {
-        name = name.toLowerCase();
-        return buffer.get(type).get(name);
+        data.load(new File(new File(root, type.toString()), name + ".yml"));
     }
 
     @Override
@@ -119,22 +99,5 @@ public class FlatFileDataHolder implements DataHolder {
             names.add(file.getName().substring(0, file.getName().length() - 4).toLowerCase());
         }
         return names;
-    }
-
-    @Override
-    public void update(PermissionType type, String name, ConfigurationSection obj) {
-        buffer.get(type).put(name, obj);
-    }
-
-    @Override
-    public ConfigurationSection create(PermissionType type, String name) {
-        YamlConfiguration cfg = new YamlConfiguration();
-        buffer.get(type).put(name.toLowerCase(), cfg);
-        return cfg;
-    }
-
-    @Override
-    public boolean contains(PermissionType type, String name) {
-        return buffer.get(type).containsKey(name.toLowerCase());
     }
 }

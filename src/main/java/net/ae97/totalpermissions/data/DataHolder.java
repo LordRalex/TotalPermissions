@@ -18,7 +18,6 @@ package net.ae97.totalpermissions.data;
 
 import net.ae97.totalpermissions.permission.PermissionType;
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -31,7 +30,7 @@ public interface DataHolder {
 
     void setup() throws InvalidConfigurationException;
 
-    void load(PermissionType type, String name);
+    void load(PermissionType type, String name) throws IOException, InvalidConfigurationException;
 
     ConfigurationSection getConfigurationSection(PermissionType type, String name);
 

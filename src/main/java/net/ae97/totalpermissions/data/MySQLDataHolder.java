@@ -47,10 +47,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
  * @version 1.0
  * @author Lord_Ralex
  */
-public class MySQLDataHolder implements DataHolder {
+public class MySQLDataHolder extends MemoryDataHolder {
 
-    private final Map<PermissionType, Map<String, ConfigurationSection>> memory = new EnumMap<PermissionType, Map<String, ConfigurationSection>>(PermissionType.class);
-    private final EbeanServer ebeans;
+    protected final EbeanServer ebeans;
 
     public MySQLDataHolder(EbeanServer server) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException, ClassNotFoundException {
         if (server == null) {
@@ -80,6 +79,7 @@ public class MySQLDataHolder implements DataHolder {
 
     @Override
     public void setup() {
+        super.setup();
         TotalPermissions plugin = TotalPermissions.getPlugin();
         plugin.installDatabase(ebeans);
         if (new File(plugin.getDataFolder(), "mysql.yml").exists()) {
@@ -109,6 +109,7 @@ public class MySQLDataHolder implements DataHolder {
                 plugin.getLogger().info("Import complete");
             } catch (InvalidConfigurationException ex) {
                 plugin.getLogger().log(Level.SEVERE, "Your MySQL.yml file is not set correctly. Cannot import");
+                plugin.debugLog(ex);
             } catch (IOException ex) {
                 plugin.getLogger().log(Level.SEVERE, "IO Exception occurred");
                 plugin.getLogger().log(Level.SEVERE, ex.getMessage());
@@ -150,26 +151,6 @@ public class MySQLDataHolder implements DataHolder {
     }
 
     @Override
-    public ConfigurationSection getConfigurationSection(PermissionType type, String name) {
-        Map<String, ConfigurationSection> map = memory.get(type);
-        if (map == null) {
-            map = new ConcurrentHashMap<String, ConfigurationSection>();
-            memory.put(type, map);
-        }
-        ConfigurationSection cfg = map.get(name.toLowerCase());
-        if (cfg == null) {
-            load(type, name);
-            map = memory.get(type);
-            if (map == null) {
-                map = new ConcurrentHashMap<String, ConfigurationSection>();
-                memory.put(type, map);
-            }
-            cfg = map.get(name.toLowerCase());
-        }
-        return cfg;
-    }
-
-    @Override
     public Set<String> getKeys(PermissionType type) {
         List<PermissionPersistance> set = ebeans.find(PermissionPersistance.class).where().ieq("type", type.toString()).findList();
         Set<String> names = new HashSet<String>();
@@ -177,48 +158,5 @@ public class MySQLDataHolder implements DataHolder {
             names.add(perm.getName());
         }
         return names;
-    }
-
-    @Override
-    public void update(PermissionType type, String name, ConfigurationSection obj) {
-        Map<String, ConfigurationSection> map = memory.get(type);
-        if (map == null) {
-            map = new ConcurrentHashMap<String, ConfigurationSection>();
-        }
-        map.put(name.toLowerCase(), obj);
-        memory.put(type, map);
-        save(type, name);
-    }
-
-    @Override
-    public ConfigurationSection create(PermissionType type, String name) {
-        Map<String, ConfigurationSection> map = memory.get(type);
-        if (map == null) {
-            map = new ConcurrentHashMap<String, ConfigurationSection>();
-        }
-        map.put(name.toLowerCase(), new MemoryConfiguration());
-        memory.put(type, map);
-        save(type, name);
-        return getConfigurationSection(type, name);
-    }
-
-    @Override
-    public boolean contains(PermissionType type, String name) {
-        Map<String, ConfigurationSection> map = memory.get(type);
-        if (map == null) {
-            map = new ConcurrentHashMap<String, ConfigurationSection>();
-        }
-        if (map.containsKey(name.toLowerCase())) {
-            return true;
-        }
-        load(type, name);
-        map = memory.get(type);
-        if (map == null) {
-            map = new ConcurrentHashMap<String, ConfigurationSection>();
-        }
-        if (map.containsKey(name.toLowerCase())) {
-            return true;
-        }
-        return false;
     }
 }

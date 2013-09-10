@@ -33,7 +33,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public class YamlDataHolder implements DataHolder {
 
-    private final YamlConfiguration yaml = new CaseInsensitiveYamlConfiguration();
+    protected final YamlConfiguration yaml = new CaseInsensitiveYamlConfiguration();
     private final File savePath;
 
     public YamlDataHolder(File save) {
