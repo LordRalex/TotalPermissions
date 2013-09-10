@@ -30,6 +30,7 @@ import net.ae97.totalpermissions.sql.PermissionPersistance;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import javax.persistence.PersistenceException;
 import net.ae97.totalpermissions.data.DataType;
@@ -70,6 +71,9 @@ public final class TotalPermissions extends JavaPlugin {
             if (!getDataFolder().exists()) {
                 getDataFolder().mkdirs();
             }
+
+            getLogger().addHandler(new FileHandler(new File(getDataFolder(), "totalpermissions.log").getPath(), true));
+
             if (!(new File(getDataFolder(), "config.yml").exists())) {
                 saveResource("config.yml", true);
             }
