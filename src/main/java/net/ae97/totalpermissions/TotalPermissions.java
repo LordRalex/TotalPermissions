@@ -47,8 +47,8 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public final class TotalPermissions extends JavaPlugin {
 
-    private String BUKKIT_VERSION = "NONE";
-    private final String[] ACCEPTABLE_VERSIONS = new String[]{
+    protected String BUKKIT_VERSION = "NONE";
+    protected final String[] ACCEPTABLE_VERSIONS = new String[]{
         "v1_6_R2",
         "v1_6_R1",
         "v1_5_R3",
@@ -62,7 +62,7 @@ public final class TotalPermissions extends JavaPlugin {
     protected Metrics metrics;
     protected CommandHandler commands;
     protected Cipher cipher;
-    private boolean loadingFailed = false;
+    protected boolean loadingFailed = false;
 
     @Override
     public void onLoad() {
@@ -75,9 +75,11 @@ public final class TotalPermissions extends JavaPlugin {
             getLogger().addHandler(new FileHandler(new File(getDataFolder(), "totalpermissions.log").getPath(), true));
 
             if (!(new File(getDataFolder(), "config.yml").exists())) {
+                debugLog("Saving default config");
                 saveResource("config.yml", true);
             }
             if (!(new File(getDataFolder(), "permissions.yml").exists())) {
+                debugLog("Saving default permissions.yml");
                 saveResource("permissions.yml", true);
             }
 
@@ -105,14 +107,15 @@ public final class TotalPermissions extends JavaPlugin {
                 getLogger().severe("Could not determine type of data storage from " + storageType + "! Default to YAML");
                 type = DataType.YAML;
             }
+            debugLog("Creating data holder");
             debugLog("Storage type to load: " + storageType);
             switch (type) {
                 case MYSQL: {
                     if (getDescription().isDatabaseEnabled()) {
-                        getLogger().info("Using builtin system");
+                        debugLog("Using builtin system");
                         permFile = new MySQLDataHolder(this.getDatabase());
                     } else {
-                        getLogger().info("Making our own");
+                        debugLog("Making our own");
                         permFile = new MySQLDataHolder(null);
                     }
                 }
@@ -130,12 +133,14 @@ public final class TotalPermissions extends JavaPlugin {
                 }
                 break;
             }
-            getLogger().info("Loading permissions setup");
+
+            debugLog("Loading permissions setup");
             try {
                 permFile.setup();
             } catch (InvalidConfigurationException e) {
                 getLogger().log(Level.SEVERE, getLangFile().getString("main.yaml-error"));
                 getLogger().log(Level.SEVERE, "-> " + e.getMessage());
+                debugLog(e);
                 getLogger().log(Level.WARNING, getLangFile().getString("main.load-backup"));
                 try {
                     if (permFile instanceof YamlDataHolder) {
@@ -344,7 +349,7 @@ public final class TotalPermissions extends JavaPlugin {
             return;
         }
         for (Object m : message) {
-            getLogger().info("[Debug] " + m.toString());
+            getLogger().log(Level.FINER, m.toString());
         }
     }
 
@@ -367,7 +372,7 @@ public final class TotalPermissions extends JavaPlugin {
         try {
             ebeanServer.find(PermissionPersistance.class).findRowCount();
         } catch (PersistenceException ex) {
-            getLogger().info("Installing database for " + getName() + " due to first time usage");
+            debugLog("Installing database for " + getName() + " due to first time usage (I hope)");
             debugLog(ex);
             if (ebeanServer == getDatabase()) {
                 debugLog("Using Bukkit integrated installer");

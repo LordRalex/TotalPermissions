@@ -85,6 +85,7 @@ public final class PermissionManager {
         if (defaultGroup == null) {
             throw new InvalidConfigurationException(plugin.getLangFile().getString("manager.null-default"));
         }
+        plugin.debugLog("Default group: " + defaultGroup);
         plugin.debugLog("Adding special users");
         console = new PermissionConsole();
         remote = new PermissionRcon();
@@ -159,13 +160,12 @@ public final class PermissionManager {
      */
     public PermissionUser getUser(String player) {
         PermissionUser user;
-        synchronized (users) {
-            user = users.get(player.toLowerCase());
-            if (user == null) {
-                user = new PermissionUser(player.toLowerCase());
-            }
-            users.put(player.toLowerCase(), user);
+        user = users.get(player.toLowerCase());
+        if (user == null) {
+            user = new PermissionUser(player.toLowerCase());
         }
+        users.put(player.toLowerCase(), user);
+
         return user;
     }
 
@@ -194,13 +194,12 @@ public final class PermissionManager {
      */
     public PermissionGroup getGroup(String name) {
         PermissionGroup group;
-        synchronized (groups) {
-            group = groups.get(name.toLowerCase());
-            if (group == null) {
-                group = new PermissionGroup(name.toLowerCase());
-            }
-            groups.put(name.toLowerCase(), group);
+        group = groups.get(name.toLowerCase());
+        if (group == null) {
+            group = new PermissionGroup(name.toLowerCase());
         }
+        groups.put(name.toLowerCase(), group);
+
         return group;
     }
 
@@ -214,11 +213,10 @@ public final class PermissionManager {
      */
     public String[] getGroups() {
         String[] group;
-        synchronized (groups) {
-            group = groups.keySet().toArray(new String[groups.size()]);
-            if (group == null) {
-                group = new String[]{"default"};
-            }
+        group = groups.keySet().toArray(new String[groups.size()]);
+        if (group == null) {
+            group = new String[]{"default"};
+
         }
         return group;
     }
@@ -374,6 +372,7 @@ public final class PermissionManager {
             try {
                 event.getPlayer().removeAttachment(att);
             } catch (IllegalArgumentException e) {
+                plugin.debugLog(e);
             }
         }
     }
