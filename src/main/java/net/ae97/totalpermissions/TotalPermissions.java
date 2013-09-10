@@ -134,7 +134,11 @@ public final class TotalPermissions extends JavaPlugin {
                 getLogger().log(Level.SEVERE, "-> " + e.getMessage());
                 getLogger().log(Level.WARNING, getLangFile().getString("main.load-backup"));
                 try {
-                    permFile = new YamlDataHolder(new File(getLastBackupFolder(), "permissions.yml"));
+                    if (permFile instanceof YamlDataHolder) {
+                        permFile = new YamlDataHolder(new File(getLastBackupFolder(), "permissions.yml"));
+                    } else {
+                        permFile = new YamlDataHolder(new File(getDataFolder(), "permissions.yml"));
+                    }
                     permFile.setup();
                     getLogger().log(Level.WARNING, getLangFile().getString("main.loaded1"));
                     getLogger().log(Level.WARNING, getLangFile().getString("main.loaded2"));
