@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.logging.Level;
 import javax.persistence.PersistenceException;
 import net.ae97.totalpermissions.data.DataType;
+import net.ae97.totalpermissions.data.FlatFileDataHolder;
 import net.ae97.totalpermissions.data.MySQLDataHolder;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -110,6 +111,11 @@ public final class TotalPermissions extends JavaPlugin {
                         getLogger().info("Making our own");
                         permFile = new MySQLDataHolder(null);
                     }
+                }
+                break;
+
+                case FLAT: {
+                    permFile = new FlatFileDataHolder(new File(getDataFolder(), "data"));
                 }
                 break;
 
