@@ -18,6 +18,7 @@ package net.ae97.totalpermissions.permission;
 
 import net.ae97.totalpermissions.TotalPermissions;
 import java.io.IOException;
+import org.bukkit.configuration.InvalidConfigurationException;
 
 /**
  * @version 0.1
@@ -35,7 +36,7 @@ public class PermissionGroup extends PermissionBase {
      *
      * @since 0.1
      */
-    public PermissionGroup(String name) {
+    public PermissionGroup(String name) throws IOException, InvalidConfigurationException {
         super(PermissionType.GROUPS, name);
         if (name.equalsIgnoreCase("default")) {
             isDefault = true;

@@ -30,6 +30,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
@@ -51,7 +52,7 @@ public abstract class PermissionBase {
     protected final PermissionType permType;
     protected Permission permission;
 
-    public PermissionBase(PermissionType type, String aName) {
+    public PermissionBase(PermissionType type, String aName) throws IOException, InvalidConfigurationException {
         TotalPermissions plugin = TotalPermissions.getPlugin();
         plugin.debugLog("Creating new Base: " + type + " " + aName);
         name = aName.toLowerCase();

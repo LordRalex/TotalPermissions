@@ -16,6 +16,7 @@
  */
 package net.ae97.totalpermissions.permission;
 
+import java.io.IOException;
 import net.ae97.totalpermissions.TotalPermissions;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
 
@@ -37,7 +39,7 @@ public final class PermissionUser extends PermissionBase {
     private boolean isDebug = false;
     private final Map<String, PermissionAttachment> attMap = new HashMap<String, PermissionAttachment>();
 
-    public PermissionUser(String aName) {
+    public PermissionUser(String aName) throws IOException, InvalidConfigurationException {
         super(PermissionType.USERS, aName);
     }
 
@@ -49,7 +51,7 @@ public final class PermissionUser extends PermissionBase {
      *
      * @since 1.0
      */
-    public PermissionUser(Player player) {
+    public PermissionUser(Player player) throws IOException, InvalidConfigurationException {
         this(player.getName());
     }
 

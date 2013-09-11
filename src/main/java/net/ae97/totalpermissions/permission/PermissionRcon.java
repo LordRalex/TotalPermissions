@@ -16,6 +16,9 @@
  */
 package net.ae97.totalpermissions.permission;
 
+import java.io.IOException;
+import org.bukkit.configuration.InvalidConfigurationException;
+
 /**
  * @author Lord_Ralex
  * @version 0.1
@@ -23,7 +26,7 @@ package net.ae97.totalpermissions.permission;
  */
 public class PermissionRcon extends PermissionBase {
 
-    public PermissionRcon() {
+    public PermissionRcon() throws IOException, InvalidConfigurationException {
         super(PermissionType.SPECIAL, "rcon");
         this.addPermission("bukkit.command.stop");
         this.addPermission("bukkit.command.reload");

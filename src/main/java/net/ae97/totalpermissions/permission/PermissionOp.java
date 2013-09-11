@@ -16,8 +16,10 @@
  */
 package net.ae97.totalpermissions.permission;
 
+import java.io.IOException;
 import java.util.Map;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
@@ -28,7 +30,7 @@ import org.bukkit.permissions.PermissionDefault;
  */
 public class PermissionOp extends PermissionBase {
 
-    public PermissionOp() {
+    public PermissionOp() throws IOException, InvalidConfigurationException {
         super(PermissionType.SPECIAL, "op");
         Map<String, Boolean> permMap = this.getPerms();
         for (String perm : permMap.keySet()) {

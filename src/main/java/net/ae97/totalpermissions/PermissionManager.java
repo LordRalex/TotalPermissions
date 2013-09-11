@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -75,11 +76,17 @@ public final class PermissionManager {
         Set<String> allGroups = perms.getKeys(PermissionType.GROUPS);
         for (String group : allGroups) {
             plugin.debugLog("Adding group: " + group);
-            PermissionGroup temp = new PermissionGroup(group);
-            groups.put(group, temp);
-            if (temp.isDefault()) {
-                plugin.debugLog("Setting group to be default: " + temp.getName());
-                defaultGroup = temp.getName();
+            try {
+                PermissionGroup temp = new PermissionGroup(group);
+                groups.put(group, temp);
+                if (temp.isDefault()) {
+                    plugin.debugLog("Setting group to be default: " + temp.getName());
+                    defaultGroup = temp.getName();
+                }
+            } catch (IOException e) {
+                plugin.getLogger().log(Level.SEVERE, "IOException on creation of " + group, e);
+            } catch (InvalidConfigurationException e) {
+                plugin.getLogger().log(Level.SEVERE, "Invalid config for " + group, e);
             }
         }
         if (defaultGroup == null) {
@@ -87,9 +94,28 @@ public final class PermissionManager {
         }
         plugin.debugLog("Default group: " + defaultGroup);
         plugin.debugLog("Adding special users");
-        console = new PermissionConsole();
-        remote = new PermissionRcon();
-        op = new PermissionOp();
+        try {
+            console = new PermissionConsole();
+        } catch (IOException e) {
+            plugin.getLogger().log(Level.SEVERE, "IOException on creation of console", e);
+        } catch (InvalidConfigurationException e) {
+            plugin.getLogger().log(Level.SEVERE, "Invalid config for  console", e);
+        }
+        try {
+
+            remote = new PermissionRcon();
+        } catch (IOException e) {
+            plugin.getLogger().log(Level.SEVERE, "IOException on creation of remote", e);
+        } catch (InvalidConfigurationException e) {
+            plugin.getLogger().log(Level.SEVERE, "Invalid config for remote", e);
+        }
+        try {
+            op = new PermissionOp();
+        } catch (IOException e) {
+            plugin.getLogger().log(Level.SEVERE, "IOException on creation of op", e);
+        } catch (InvalidConfigurationException e) {
+            plugin.getLogger().log(Level.SEVERE, "Invalid config for op", e);
+        }
         permAttMap.put("console", console.setPerms(Bukkit.getConsoleSender(), null, null));
     }
 
@@ -162,7 +188,13 @@ public final class PermissionManager {
         PermissionUser user;
         user = users.get(player.toLowerCase());
         if (user == null) {
-            user = new PermissionUser(player.toLowerCase());
+            try {
+                user = new PermissionUser(player.toLowerCase());
+            } catch (IOException e) {
+                plugin.getLogger().log(Level.SEVERE, "IOException on creation of op", e);
+            } catch (InvalidConfigurationException e) {
+                plugin.getLogger().log(Level.SEVERE, "Invalid config for op", e);
+            }
         }
         users.put(player.toLowerCase(), user);
 
@@ -196,7 +228,13 @@ public final class PermissionManager {
         PermissionGroup group;
         group = groups.get(name.toLowerCase());
         if (group == null) {
-            group = new PermissionGroup(name.toLowerCase());
+            try {
+                group = new PermissionGroup(name.toLowerCase());
+            } catch (IOException e) {
+                plugin.getLogger().log(Level.SEVERE, "IOException on creation of op", e);
+            } catch (InvalidConfigurationException e) {
+                plugin.getLogger().log(Level.SEVERE, "Invalid config for op", e);
+            }
         }
         groups.put(name.toLowerCase(), group);
 
