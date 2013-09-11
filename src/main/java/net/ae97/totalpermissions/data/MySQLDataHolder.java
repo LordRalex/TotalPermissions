@@ -37,6 +37,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.PersistenceException;
 import net.ae97.totalpermissions.TotalPermissions;
+import net.ae97.totalpermissions.util.DataHolderMerger;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.MemoryConfiguration;
@@ -85,27 +86,11 @@ public class MySQLDataHolder extends MemoryDataHolder {
         if (new File(plugin.getDataFolder(), "mysql.yml").exists()) {
             plugin.getLogger().info("Importing mysql.yml file into the MySQL database");
             try {
-                YamlConfiguration test = new YamlConfiguration();
-                test.load(new File(plugin.getDataFolder(), "mysql.yml"));
-                ConfigurationSection groups = test.getConfigurationSection("groups");
-                for (String group : groups.getKeys(false)) {
-                    plugin.debugLog("Importing group: " + group);
-                    this.update(PermissionType.GROUPS, group, groups.getConfigurationSection(group));
-                }
-                ConfigurationSection users = test.getConfigurationSection("users");
-                for (String user : users.getKeys(false)) {
-                    plugin.debugLog("Importing user: " + user);
-                    this.update(PermissionType.USERS, user, users.getConfigurationSection(user));
-                }
-                ConfigurationSection specials = test.getConfigurationSection("special");
-                for (String special : specials.getKeys(false)) {
-                    plugin.debugLog("Importing special: " + special);
-                    this.update(PermissionType.SPECIAL, special, specials.getConfigurationSection(special));
-                }
+                YamlDataHolder yaml = new YamlDataHolder(new File(plugin.getDataFolder(), "mysql.yml"));
+                new DataHolderMerger(plugin, this).merge(yaml);
                 File imports = new File(plugin.getDataFolder(), "imports");
                 imports.mkdirs();
-                test.save(new File(imports, "mysql.yml"));
-                new File(plugin.getDataFolder(), "mysql.yml").delete();
+                new File(plugin.getDataFolder(), "mysql.yml").renameTo(new File(imports, "mysql.yml"));
                 plugin.getLogger().info("Import complete");
             } catch (InvalidConfigurationException ex) {
                 plugin.getLogger().log(Level.SEVERE, "Your MySQL.yml file is not set correctly. Cannot import");

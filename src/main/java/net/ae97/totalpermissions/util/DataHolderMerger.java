@@ -17,6 +17,7 @@
 package net.ae97.totalpermissions.util;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Set;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.data.DataHolder;
@@ -24,6 +25,7 @@ import net.ae97.totalpermissions.data.MySQLDataHolder;
 import net.ae97.totalpermissions.data.YamlDataHolder;
 import net.ae97.totalpermissions.permission.PermissionType;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -40,12 +42,12 @@ public class DataHolderMerger {
         parent = p;
     }
 
-    public void merge(File mergeFrom) {
+    public void merge(File mergeFrom) throws IOException, InvalidConfigurationException {
         YamlDataHolder newHolder = new YamlDataHolder(mergeFrom);
         merge(newHolder);
     }
 
-    public void merge(DataHolder mergeFrom) {
+    public void merge(DataHolder mergeFrom) throws IOException, InvalidConfigurationException {
         plugin.getLogger().info("Merging data holders, this might take a second or two");
         if (mergeFrom instanceof MySQLDataHolder) {
             plugin.getLogger().warning("Merging from MySQL can take some time, so this is your warning");
@@ -56,8 +58,10 @@ public class DataHolderMerger {
         for (PermissionType type : PermissionType.values()) {
             Set<String> keys = mergeFrom.getKeys(type);
             for (String key : keys) {
+                mergeFrom.load(type, key);
                 ConfigurationSection sec = mergeFrom.getConfigurationSection(type, key);
                 parent.update(type, key, sec);
+                parent.save(type, key);
             }
         }
 
