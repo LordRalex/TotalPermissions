@@ -16,9 +16,18 @@
  */
 package net.ae97.totalpermissions.commands.subcommands;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.Callable;
+import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
-import net.ae97.totalpermissions.permission.util.FileUpdater;
+import net.ae97.totalpermissions.data.DataHolder;
+import net.ae97.totalpermissions.data.YamlDataHolder;
+import net.ae97.totalpermissions.util.DataHolderMerger;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
 
 /**
  * @since 0.1
@@ -26,18 +35,32 @@ import org.bukkit.command.CommandSender;
  * @version 0.2
  */
 public class BackupCommand implements SubCommand {
-    
-    private final TotalPermissions plugin;
-    
-    public BackupCommand(TotalPermissions plugin) {
-        this.plugin = plugin;
+
+    protected final TotalPermissions plugin;
+    protected int isRunningBackup = 0;
+
+    public BackupCommand(TotalPermissions p) {
+        plugin = p;
     }
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
-        FileUpdater update = new FileUpdater(plugin);
-        update.backup(true);
-        update.runUpdate();
+        if (isRunningBackup != 0) {
+            if (args.length != 1) {
+                sender.sendMessage(ChatColor.RED + "A backup is already being made (Task id: " + isRunningBackup);
+            } else {
+                if (args[0].equalsIgnoreCase("cancel")) {
+                    Bukkit.getScheduler().cancelTask(isRunningBackup);
+                    isRunningBackup = 0;
+                    sender.sendMessage(ChatColor.RED + "Backup cancelled");
+                }
+            }
+            return true;
+        }
+        sender.sendMessage(ChatColor.YELLOW + "Backing up the data, this may take some time");
+        File dest = plugin.getBackupFolder();
+        YamlDataHolder target = new YamlDataHolder(new File(dest, "manual"));
+        isRunningBackup = Bukkit.getScheduler().runTaskAsynchronously(plugin, new BackupRunnable(sender, plugin.getPermFile(), target)).getTaskId();
         return true;
     }
 
@@ -50,7 +73,55 @@ public class BackupCommand implements SubCommand {
     public String[] getHelp() {
         return new String[]{
             "ttp backup",
-            this.plugin.getLangFile().getString("command.backup.help")
+            plugin.getLangFile().getString("command.backup.help")
         };
+    }
+
+    private class BackupRunnable implements Runnable {
+
+        private final CommandSender sender;
+        private final DataHolder parent, child;
+
+        protected BackupRunnable(CommandSender s, DataHolder p, DataHolder c) {
+            sender = s;
+            parent = p;
+            child = c;
+        }
+
+        @Override
+        public void run() {
+            DataHolderMerger merger = new DataHolderMerger(plugin, parent);
+            try {
+                merger.merge(child);
+                Bukkit.getScheduler().callSyncMethod(plugin, new MessageSender(sender, ChatColor.GREEN + "Backup complete", ChatColor.GREEN + "Backup stored to " + null));
+            } catch (IOException ex) {
+                plugin.getLogger().log(Level.SEVERE, "IOException on merging files", ex);
+                Bukkit.getScheduler().callSyncMethod(plugin, new MessageSender(sender, ChatColor.RED + "An IOException occurred on backing up the data"));
+            } catch (InvalidConfigurationException ex) {
+                plugin.getLogger().log(Level.SEVERE, "Invalid config error", ex);
+                Bukkit.getScheduler().callSyncMethod(plugin, new MessageSender(sender, ChatColor.RED + "An InvalidConfigurationException occurred on backing up the data"));
+            } finally {
+                isRunningBackup = 0;
+            }
+        }
+    }
+
+    private class MessageSender implements Callable {
+
+        private final String[] messages;
+        private final CommandSender sender;
+
+        protected MessageSender(CommandSender target, String... message) {
+            sender = target;
+            messages = message;
+        }
+
+        @Override
+        public Object call() {
+            for (String message : messages) {
+                sender.sendMessage(message);
+            }
+            return messages;
+        }
     }
 }
