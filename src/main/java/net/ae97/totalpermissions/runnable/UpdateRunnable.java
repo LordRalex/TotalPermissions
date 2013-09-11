@@ -33,12 +33,12 @@ import org.bukkit.scheduler.BukkitRunnable;
  * @since 0.1
  */
 public class UpdateRunnable extends BukkitRunnable {
-    
-    private static final String VERSION_URL = "https://raw.github.com/AE97/TotalPermissions/master/VERSION";
-    private final String version;
-    private final TotalPermissions plugin;
-    private final String build;
-    
+
+    protected static final String VERSION_URL = "https://raw.github.com/AE97/TotalPermissions/master/VERSION";
+    protected final String version;
+    protected final TotalPermissions plugin;
+    protected final String build;
+
     public UpdateRunnable(TotalPermissions p) {
         super();
         plugin = p;
@@ -46,7 +46,7 @@ public class UpdateRunnable extends BukkitRunnable {
         YamlConfiguration pluginYml = YamlConfiguration.loadConfiguration(plugin.getResource("plugin.yml"));
         build = pluginYml.getString("build");
     }
-    
+
     @Override
     public void run() {
         if (version.endsWith("SNAPSHOT") || version.endsWith("DEV") || build.equalsIgnoreCase("${build}")) {

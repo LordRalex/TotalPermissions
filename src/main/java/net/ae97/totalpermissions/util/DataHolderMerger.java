@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Lord_Ralex
+ * Copyright (C) 2013 AE97
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@ package net.ae97.totalpermissions.util;
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
-import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.data.DataHolder;
 import net.ae97.totalpermissions.data.MySQLDataHolder;
 import net.ae97.totalpermissions.data.YamlDataHolder;
@@ -34,8 +33,8 @@ import org.bukkit.plugin.Plugin;
  */
 public class DataHolderMerger {
 
-    private final DataHolder parent;
-    private final Plugin plugin;
+    protected final DataHolder parent;
+    protected final Plugin plugin;
 
     public DataHolderMerger(Plugin pl, DataHolder p) {
         plugin = pl;

@@ -34,7 +34,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class YamlDataHolder implements DataHolder {
 
     protected final YamlConfiguration yaml = new CaseInsensitiveYamlConfiguration();
-    private final File savePath;
+    protected final File savePath;
 
     public YamlDataHolder(File save) {
         savePath = save;

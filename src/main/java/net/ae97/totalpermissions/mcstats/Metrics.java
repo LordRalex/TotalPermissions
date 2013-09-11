@@ -129,12 +129,12 @@ public final class Metrics {
      */
     private volatile BukkitTask task = null;
 
-    public Metrics(final Plugin plugin) throws IOException {
-        if (plugin == null) {
+    public Metrics(final Plugin p) throws IOException {
+        if (p == null) {
             throw new IllegalArgumentException("Plugin cannot be null");
         }
 
-        this.plugin = plugin;
+        plugin = p;
 
         // load the config
         configurationFile = getConfigFile();
@@ -632,8 +632,8 @@ public final class Metrics {
          */
         private final Set<Plotter> plotters = new LinkedHashSet<Plotter>();
 
-        private Graph(final String name) {
-            this.name = name;
+        private Graph(final String n) {
+            name = n;
         }
 
         /**
@@ -718,8 +718,8 @@ public final class Metrics {
          * @param name the name of the plotter to use, which will show up on the
          * website
          */
-        public Plotter(final String name) {
-            this.name = name;
+        public Plotter(final String n) {
+            name = n;
         }
 
         /**

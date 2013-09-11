@@ -28,11 +28,11 @@ import org.bukkit.command.CommandSender;
  * @version 0.2
  */
 public class AddAction extends SubAction {
-    
-    private final TotalPermissions plugin;
-    
-    public AddAction(TotalPermissions plugin) {
-        this.plugin = plugin;
+
+    protected final TotalPermissions plugin;
+
+    public AddAction(TotalPermissions p) {
+        plugin = p;
     }
 
     @Override
@@ -42,34 +42,34 @@ public class AddAction extends SubAction {
         if (field.equalsIgnoreCase("permissions")) {
             try {
                 tar.addPerm(item, world);
-                sender.sendMessage(this.plugin.getLangFile().getString("command.action.add.permissions", item, target));
+                sender.sendMessage(plugin.getLangFile().getString("command.action.add.permissions", item, target));
                 return true;
             } catch (IOException ex) {
-                saveError(this.plugin, tar, sender, ex);
+                saveError(plugin, tar, sender, ex);
             }
         } else if (field.equalsIgnoreCase("inheritance")) {
             try {
                 tar.addInheritance(item, world);
-                sender.sendMessage(this.plugin.getLangFile().getString("command.action.add.inheritance", item, target));
+                sender.sendMessage(plugin.getLangFile().getString("command.action.add.inheritance", item, target));
                 return true;
             } catch (IOException ex) {
-                saveError(this.plugin, tar, sender, ex);
+                saveError(plugin, tar, sender, ex);
             }
         } else if (field.equalsIgnoreCase("commands")) {
             try {
                 tar.addCommand(item, world);
-                sender.sendMessage(this.plugin.getLangFile().getString("command.action.add.commands", item, target));
+                sender.sendMessage(plugin.getLangFile().getString("command.action.add.commands", item, target));
                 return true;
             } catch (IOException ex) {
-                saveError(this.plugin, tar, sender, ex);
+                saveError(plugin, tar, sender, ex);
             }
         } else if (field.equalsIgnoreCase("groups")) {
             try {
                 tar.addGroup(item, world);
-                sender.sendMessage(this.plugin.getLangFile().getString("command.action.add.groups", item, target));
+                sender.sendMessage(plugin.getLangFile().getString("command.action.add.groups", item, target));
                 return true;
             } catch (IOException ex) {
-                saveError(this.plugin, tar, sender, ex);
+                saveError(plugin, tar, sender, ex);
             }
         }
         return false;
@@ -83,10 +83,10 @@ public class AddAction extends SubAction {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "add " + this.plugin.getLangFile().getString("variables.field")
-            + " " + this.plugin.getLangFile().getString("variables.value")
-            + " " + this.plugin.getLangFile().getString("variables.world-optional"),
-            this.plugin.getLangFile().getString("command.action.add.help")
+            "add " + plugin.getLangFile().getString("variables.field")
+            + " " + plugin.getLangFile().getString("variables.value")
+            + " " + plugin.getLangFile().getString("variables.world-optional"),
+            plugin.getLangFile().getString("command.action.add.help")
         };
     }
 

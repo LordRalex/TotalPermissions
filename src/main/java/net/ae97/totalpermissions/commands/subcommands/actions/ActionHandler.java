@@ -30,22 +30,21 @@ import org.bukkit.command.CommandSender;
 public class ActionHandler {
 
     protected final Map<String, SubAction> actions = new ConcurrentHashMap<String, SubAction>();
-    private final TotalPermissions plugin;
+    protected final TotalPermissions plugin;
 
-    public ActionHandler(TotalPermissions plugin) {
-        
-        this.plugin = plugin;
-        
+    public ActionHandler(TotalPermissions p) {
+        plugin = p;
+
         SubAction[] acts = new SubAction[]{
-            new AddAction(this.plugin),
-            new CheckAction(this.plugin),
-            new ListAction(this.plugin),
-            new RemoveAction(this.plugin),
-            new SetAction(this.plugin)
+            new AddAction(plugin),
+            new CheckAction(plugin),
+            new ListAction(plugin),
+            new RemoveAction(plugin),
+            new SetAction(plugin)
         };
-        
+
         for (SubAction act : acts) {
-            this.actions.put(act.getName(), act);
+            actions.put(act.getName(), act);
         }
     }
 
@@ -80,14 +79,14 @@ public class ActionHandler {
                 return false;
         }
 
-        SubAction executor = this.actions.get(ackshun.toLowerCase());
+        SubAction executor = actions.get(ackshun.toLowerCase());
         if (executor == null) {
             sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.handler.ifnull"));
             return false;
         }
 
         if (args.length < 5 && !((ackshun.equalsIgnoreCase("list")) || field.equalsIgnoreCase("help"))) {
-            sender.sendMessage("Invalid use of this.actions.");
+            sender.sendMessage("Invalid use of actions.");
             sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.handler.usage", executor.getHelp()[0]));
             sender.sendMessage(executor.getHelp()[1]);
             return true;
@@ -100,7 +99,7 @@ public class ActionHandler {
         }
 
         if (sender.hasPermission("totalpermissions.cmd." + type + "." + executor.getName())) {
-            if (this.isSupported(field, fields)) {
+            if (isSupported(field, fields)) {
                 boolean begin = executor.execute(sender, type, target, field, iterm, world);
                 if (!begin) {
                     sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.handler.invalid", ackshun));
@@ -137,6 +136,6 @@ public class ActionHandler {
      * @since 0.2
      */
     public Map<String, SubAction> getActionList() {
-        return this.actions;
+        return actions;
     }
 }

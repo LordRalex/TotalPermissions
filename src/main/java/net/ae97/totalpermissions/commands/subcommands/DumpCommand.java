@@ -35,17 +35,20 @@ import org.bukkit.plugin.Plugin;
  */
 public class DumpCommand implements SubCommand {
 
-    private final int NUM_PAGE = 8;
-    private final TotalPermissions plugin;
-    
-    public DumpCommand(TotalPermissions plugin) {
-        this.plugin = plugin;
+    protected final int NUM_PAGE = 8;
+    protected final TotalPermissions plugin;
+
+    public DumpCommand(TotalPermissions p) {
+        plugin = p;
     }
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
         String[] params = new String[2];
-        Cipher lang = this.plugin.getLangFile();
+        Cipher lang = plugin.getLangFile();
+        if (args.length == 0) {
+            return false;
+        }
         if (args.length == 1) {
             Player possible = Bukkit.getPlayer(args[0]);
             if (possible != null && possible.isOnline()) {
@@ -69,13 +72,13 @@ public class DumpCommand implements SubCommand {
         if (params[0].equalsIgnoreCase("-plugin")) {
             Plugin pl = Bukkit.getPluginManager().getPlugin(params[1]);
             List<Permission> perms = pl.getDescription().getPermissions();
-            String[][] permPages = new String[perms.size() % this.NUM_PAGE][this.NUM_PAGE];
+            String[][] permPages = new String[perms.size() % NUM_PAGE][NUM_PAGE];
             int index = 0;
             for (int i = 0; i < perms.size(); i++) {
-                if (i % this.NUM_PAGE == 0 && i != 0) {
+                if (i % NUM_PAGE == 0 && i != 0) {
                     index++;
                 }
-                permPages[index][i % this.NUM_PAGE] = "- " + perms.get(i).getName() + ": " + perms.get(i).getDefault().toString();
+                permPages[index][i % NUM_PAGE] = "- " + perms.get(i).getName() + ": " + perms.get(i).getDefault().toString();
             }
             int page = 0;
             if (args.length == 3) {
@@ -99,13 +102,13 @@ public class DumpCommand implements SubCommand {
             Player player = Bukkit.getPlayer(params[1]);
             Set<PermissionAttachmentInfo> tempPerms = player.getEffectivePermissions();
             PermissionAttachmentInfo[] perms = tempPerms.toArray(new PermissionAttachmentInfo[tempPerms.size()]);
-            String[][] permPages = new String[perms.length % this.NUM_PAGE][this.NUM_PAGE];
+            String[][] permPages = new String[perms.length % NUM_PAGE][NUM_PAGE];
             int index = 0;
             for (int i = 0; i < perms.length; i++) {
-                if (i % this.NUM_PAGE == 0 && i != 0) {
+                if (i % NUM_PAGE == 0 && i != 0) {
                     index++;
                 }
-                permPages[index][i % this.NUM_PAGE] = "- " + perms[0].getPermission() + ": " + perms[0].getValue();
+                permPages[index][i % NUM_PAGE] = "- " + perms[0].getPermission() + ": " + perms[0].getValue();
             }
             int page = 0;
             if (args.length == 3) {
@@ -142,7 +145,7 @@ public class DumpCommand implements SubCommand {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "ttp dump [-command/-player/-plugin] " + this.plugin.getLangFile().getString("variables.username-optional") + " [page]",
-            this.plugin.getLangFile().getString("command.dump.help")};
+            "ttp dump [-command/-player/-plugin] " + plugin.getLangFile().getString("variables.username-optional") + " [page]",
+            plugin.getLangFile().getString("command.dump.help")};
     }
 }

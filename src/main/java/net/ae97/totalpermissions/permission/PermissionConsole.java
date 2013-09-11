@@ -28,7 +28,7 @@ public class PermissionConsole extends PermissionBase {
 
     public PermissionConsole() throws IOException, InvalidConfigurationException {
         super(PermissionType.SPECIAL, "console");
-        this.addPermission("bukkit.command.stop");
-        this.addPermission("bukkit.command.reload");
+        addPermission("bukkit.command.stop");
+        addPermission("bukkit.command.reload");
     }
 }

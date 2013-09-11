@@ -35,7 +35,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public class FlatFileDataHolder extends MemoryDataHolder {
 
-    private final File root;
+    protected final File root;
 
     public FlatFileDataHolder(File file) {
         root = file;

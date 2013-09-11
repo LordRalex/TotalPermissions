@@ -37,7 +37,7 @@ import org.bukkit.plugin.Plugin;
  */
 public class Cipher {
 
-    private FileConfiguration langFile;
+    protected FileConfiguration langFile;
     private final String langFileLocGithub = "https://raw.github.com/AE97/TotalPermissions/master/lang/<version>/<lang>.yml";
     private final String langFileLocJar = "<lang>.yml";
     private final String langFileLocFolder = "<plugin>" + File.separatorChar + "lang" + File.separatorChar + "<lang>.yml";
@@ -47,7 +47,7 @@ public class Cipher {
         language = lang;
         //load file from github in preps for future use
         if (language.equalsIgnoreCase("custom")) {
-            FileConfiguration file = this.getFromFolder(plugin, language);
+            FileConfiguration file = getFromFolder(plugin, language);
             if (file != null) {
                 setLangFile(file);
                 return;
@@ -63,7 +63,7 @@ public class Cipher {
         }
         try {
             //first see if there is a lang file
-            FileConfiguration file = this.getFromFolder(plugin, language);
+            FileConfiguration file = getFromFolder(plugin, language);
             if (file != null) {
                 int version = file.getInt("version", 0);
                 int gitVersion = version;
@@ -75,7 +75,7 @@ public class Cipher {
                     file = github;
                 }
             } else {
-                file = this.getFromJar(plugin, language);
+                file = getFromJar(plugin, language);
                 if (file == null) {
                     file = github;
                     if (file == null) {
@@ -115,7 +115,7 @@ public class Cipher {
     public String getString(String path, Object... vars) {
         String string = langFile.getString(path);
         if (string == null) {
-            FileConfiguration fromJar = getFromJar(TotalPermissions.getPlugin(), this.langFileLocJar.replace("<lang>", "en_US"));
+            FileConfiguration fromJar = getFromJar(TotalPermissions.getPlugin(), langFileLocJar.replace("<lang>", "en_US"));
             if (fromJar != null) {
                 string = fromJar.getString(path);
             }

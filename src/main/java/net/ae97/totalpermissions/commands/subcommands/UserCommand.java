@@ -30,17 +30,17 @@ import org.bukkit.entity.Player;
  * @version 0.2
  */
 public class UserCommand implements SubCommand {
-    
-    private final TotalPermissions plugin;
-    
-    public UserCommand(TotalPermissions plugin) {
-        this.plugin = plugin;
+
+    protected final TotalPermissions plugin;
+
+    public UserCommand(TotalPermissions p) {
+        plugin = p;
     }
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
         if (args.length > 2) { // If there is an action command
-            this.plugin.getCommandHandler().getActionHandler().onAction(sender, args, fields());
+            plugin.getCommandHandler().getActionHandler().onAction(sender, args, fields());
             return true;
         } else if ((args.length == 1) || args.length == 2) {
             Player p = null;
@@ -50,18 +50,18 @@ public class UserCommand implements SubCommand {
                 if (sender instanceof Player) {
                     p = (Player) sender;
                 } else {
-                    sender.sendMessage(this.plugin.getLangFile().getString("command.user.non-player"));
+                    sender.sendMessage(plugin.getLangFile().getString("command.user.non-player"));
                     return false;
                 }
             }
-            PermissionUser user = this.plugin.getManager().getUser(p);
+            PermissionUser user = plugin.getManager().getUser(p);
             StringBuilder sb = new StringBuilder();
             for (String group : user.getGroups(null)) {
                 sb.append(group).append(", ");
             }
-            sender.sendMessage(this.plugin.getLangFile().getString("command.user.player", sender.getName()));
-            sender.sendMessage(this.plugin.getLangFile().getString("command.user.debug", user.getDebugState()));
-            sender.sendMessage(this.plugin.getLangFile().getString("command.user.groups", sb.substring(0, sb.length() - 2)));
+            sender.sendMessage(plugin.getLangFile().getString("command.user.player", sender.getName()));
+            sender.sendMessage(plugin.getLangFile().getString("command.user.debug", user.getDebugState()));
+            sender.sendMessage(plugin.getLangFile().getString("command.user.groups", sb.substring(0, sb.length() - 2)));
             return true;
         }
         return false;
@@ -75,8 +75,8 @@ public class UserCommand implements SubCommand {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "ttp user " + this.plugin.getLangFile().getString("variables.username") + " [actions..]",
-            this.plugin.getLangFile().getString("command.user.help")
+            "ttp user " + plugin.getLangFile().getString("variables.username") + " [actions..]",
+            plugin.getLangFile().getString("command.user.help")
         };
     }
 

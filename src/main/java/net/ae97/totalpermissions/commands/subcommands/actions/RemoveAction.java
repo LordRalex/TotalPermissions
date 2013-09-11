@@ -28,11 +28,11 @@ import org.bukkit.command.CommandSender;
  * @version 0.2
  */
 public class RemoveAction extends SubAction {
-    
-    private final TotalPermissions plugin;
-    
-    public RemoveAction(TotalPermissions plugin) {
-        this.plugin = plugin;
+
+    protected final TotalPermissions plugin;
+
+    public RemoveAction(TotalPermissions p) {
+        plugin = p;
     }
 
     @Override
@@ -43,50 +43,50 @@ public class RemoveAction extends SubAction {
         if (field.equalsIgnoreCase("permissions")) {
             try {
                 tar.remPerm(item, world);
-                sender.sendMessage(this.plugin.getLangFile().getString("command.action.remove.permissions", item, target));
+                sender.sendMessage(plugin.getLangFile().getString("command.action.remove.permissions", item, target));
                 return true;
             } catch (IOException ex) {
-                saveError(this.plugin, tar, sender, ex);
+                saveError(plugin, tar, sender, ex);
             }
         } else if (field.equalsIgnoreCase("inheritance")) {
             try {
                 tar.remInheritance(item, world);
-                sender.sendMessage(this.plugin.getLangFile().getString("command.action.remove.inheritance", item, target));
+                sender.sendMessage(plugin.getLangFile().getString("command.action.remove.inheritance", item, target));
                 return true;
             } catch (IOException ex) {
-                saveError(this.plugin, tar, sender, ex);
+                saveError(plugin, tar, sender, ex);
             }
         } else if (field.equalsIgnoreCase("commands")) {
             try {
                 tar.remCommand(item, world);
-                sender.sendMessage(this.plugin.getLangFile().getString("command.action.remove.commands", item, target));
+                sender.sendMessage(plugin.getLangFile().getString("command.action.remove.commands", item, target));
                 return true;
             } catch (IOException ex) {
-                saveError(this.plugin, tar, sender, ex);
+                saveError(plugin, tar, sender, ex);
             }
         } else if (field.equalsIgnoreCase("groups")) {
             try {
                 tar.remGroup(item, world);
-                sender.sendMessage(this.plugin.getLangFile().getString("command.action.remove.groups", item, target));
+                sender.sendMessage(plugin.getLangFile().getString("command.action.remove.groups", item, target));
                 return true;
             } catch (IOException ex) {
-                saveError(this.plugin, tar, sender, ex);
+                saveError(plugin, tar, sender, ex);
             }
         } else if (field.equalsIgnoreCase("prefix")) {
             try {
                 tar.remOption("prefix", world);
-                sender.sendMessage(this.plugin.getLangFile().getString("command.action.remove.prefix", target));
+                sender.sendMessage(plugin.getLangFile().getString("command.action.remove.prefix", target));
                 return true;
             } catch (IOException ex) {
-                saveError(this.plugin, tar, sender, ex);
+                saveError(plugin, tar, sender, ex);
             }
         } else if (field.equalsIgnoreCase("suffix")) {
             try {
                 tar.remOption("suffix", world);
-                sender.sendMessage(this.plugin.getLangFile().getString("command.action.remove.suffix", target));
+                sender.sendMessage(plugin.getLangFile().getString("command.action.remove.suffix", target));
                 return true;
             } catch (IOException ex) {
-                saveError(this.plugin, tar, sender, ex);
+                saveError(plugin, tar, sender, ex);
             }
         }
         return false;
@@ -100,10 +100,10 @@ public class RemoveAction extends SubAction {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "remove " + this.plugin.getLangFile().getString("variables.field")
-            + " " + this.plugin.getLangFile().getString("variables.value")
-            + " " + this.plugin.getLangFile().getString("variables.world-optional"),
-            this.plugin.getLangFile().getString("command.action.remove.help")
+            "remove " + plugin.getLangFile().getString("variables.field")
+            + " " + plugin.getLangFile().getString("variables.value")
+            + " " + plugin.getLangFile().getString("variables.world-optional"),
+            plugin.getLangFile().getString("command.action.remove.help")
         };
     }
 

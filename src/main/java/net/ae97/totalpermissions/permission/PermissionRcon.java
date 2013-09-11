@@ -28,7 +28,7 @@ public class PermissionRcon extends PermissionBase {
 
     public PermissionRcon() throws IOException, InvalidConfigurationException {
         super(PermissionType.SPECIAL, "rcon");
-        this.addPermission("bukkit.command.stop");
-        this.addPermission("bukkit.command.reload");
+        addPermission("bukkit.command.stop");
+        addPermission("bukkit.command.reload");
     }
 }

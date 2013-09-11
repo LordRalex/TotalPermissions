@@ -45,8 +45,8 @@ public class PermissionPersistance implements Serializable {
     @Column(columnDefinition = "TEXT")
     private String configSection;
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(int i) {
+        id = i;
     }
 
     public int getId() {

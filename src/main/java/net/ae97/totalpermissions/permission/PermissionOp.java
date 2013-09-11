@@ -32,7 +32,7 @@ public class PermissionOp extends PermissionBase {
 
     public PermissionOp() throws IOException, InvalidConfigurationException {
         super(PermissionType.SPECIAL, "op");
-        Map<String, Boolean> permMap = this.getPerms();
+        Map<String, Boolean> permMap = getPerms();
         for (String perm : permMap.keySet()) {
             Permission p = Bukkit.getPluginManager().getPermission(perm);
             if (p == null) {

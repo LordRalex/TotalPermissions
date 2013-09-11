@@ -38,26 +38,26 @@ public final class CommandHandler implements CommandExecutor {
     protected final ActionHandler actions;
     protected final TotalPermissions plugin;
 
-    public CommandHandler(TotalPermissions plugin) {
-        this.plugin = plugin;
-        
+    public CommandHandler(TotalPermissions p) {
+        plugin = p;
+
         SubCommand[] cmds = new SubCommand[]{
-            new HelpCommand(this.plugin),
-            new DebugCommand(this.plugin),
-            new ReloadCommand(this.plugin),
-            new BackupCommand(this.plugin),
-            new UserCommand(this.plugin),
-            new GroupCommand(this.plugin),
-            new SpecialCommand(this.plugin),
-            new WorldCommand(this.plugin),
-            new DumpCommand(this.plugin)
+            new HelpCommand(plugin),
+            new DebugCommand(plugin),
+            new ReloadCommand(plugin),
+            new BackupCommand(plugin),
+            new UserCommand(plugin),
+            new GroupCommand(plugin),
+            new SpecialCommand(plugin),
+            new WorldCommand(plugin),
+            new DumpCommand(plugin)
         };
 
         for (SubCommand sc : cmds) {
-            this.commands.put(sc.getName(), sc);
+            commands.put(sc.getName(), sc);
         }
 
-        this.actions = new ActionHandler(this.plugin);
+        actions = new ActionHandler(plugin);
     }
 
     @Override
@@ -97,9 +97,9 @@ public final class CommandHandler implements CommandExecutor {
         }
 
         subCommand = args[0];
-        SubCommand executor = this.commands.get(subCommand.toLowerCase());
+        SubCommand executor = commands.get(subCommand.toLowerCase());
         if (executor == null) {
-            sender.sendMessage(this.plugin.getLangFile().getString("command.handler.ifnull-plain"));
+            sender.sendMessage(plugin.getLangFile().getString("command.handler.ifnull-plain"));
             return true;
         }
         if ((args.length > 1) && (args[1].equalsIgnoreCase("help"))) {
@@ -118,6 +118,7 @@ public final class CommandHandler implements CommandExecutor {
         if (sender.hasPermission("totalpermissions.cmd" + executor.getName())) {
             boolean success = executor.execute(sender, args);
             if (!success) {
+                //This is badly handled, it should not be so easy to break
                 if (sender instanceof Player) {
                     sender.sendMessage("/" + executor.getHelp()[0]);
                 } else {
@@ -127,7 +128,7 @@ public final class CommandHandler implements CommandExecutor {
             }
             return true;
         } else {
-            sender.sendMessage(this.plugin.getLangFile().getString("command.handler.denied"));
+            sender.sendMessage(plugin.getLangFile().getString("command.handler.denied"));
         }
         return true;
     }
@@ -140,7 +141,7 @@ public final class CommandHandler implements CommandExecutor {
      * @since 0.2
      */
     public Map<String, SubCommand> getCommandList() {
-        return this.commands;
+        return commands;
     }
 
     /**
@@ -151,6 +152,6 @@ public final class CommandHandler implements CommandExecutor {
      * @since 0.2
      */
     public ActionHandler getActionHandler() {
-        return this.actions;
+        return actions;
     }
 }

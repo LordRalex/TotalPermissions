@@ -28,45 +28,45 @@ import org.bukkit.command.CommandSender;
  * @version 0.2
  */
 public class GroupCommand implements SubCommand {
-    
-    private final TotalPermissions plugin;
-    
-    public GroupCommand(TotalPermissions plugin) {
-        this.plugin = plugin;
+
+    protected final TotalPermissions plugin;
+
+    public GroupCommand(TotalPermissions p) {
+        plugin = p;
     }
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
         if (args.length > 2) { // If there is an action command
-            this.plugin.getCommandHandler().getActionHandler().onAction(sender, args, fields());
+            plugin.getCommandHandler().getActionHandler().onAction(sender, args, fields());
             return true;
         } else if (args.length == 2) {
-            PermissionGroup pg = this.plugin.getManager().getGroup(args[1]);
-            sender.sendMessage(this.plugin.getLangFile().getString("command.group.group", pg.getName()));
+            PermissionGroup pg = plugin.getManager().getGroup(args[1]);
+            sender.sendMessage(plugin.getLangFile().getString("command.group.group", pg.getName()));
             StringBuilder sb = new StringBuilder();
             for (String name : pg.getInheritances(pg.getName())) {
                 sb.append(name).append(", ");
             }
             String name = pg.getName();
-            String prefix = (String)pg.getOption("prefix");
+            String prefix = (String) pg.getOption("prefix");
             if (prefix == null) {
                 prefix = "";
             }
-            String suffix = (String)pg.getOption("suffix");
+            String suffix = (String) pg.getOption("suffix");
             if (suffix == null) {
                 suffix = "";
             }
-            sender.sendMessage(this.plugin.getLangFile().getString("command.group.inherits", (sb.length() >= 2) ? sb.substring(0, sb.length() - 2) : "None!"));
-            sender.sendMessage(this.plugin.getLangFile().getString("command.group.prefix", prefix));
-            sender.sendMessage(this.plugin.getLangFile().getString("command.group.suffix", suffix));
-            
+            sender.sendMessage(plugin.getLangFile().getString("command.group.inherits", (sb.length() >= 2) ? sb.substring(0, sb.length() - 2) : "None!"));
+            sender.sendMessage(plugin.getLangFile().getString("command.group.prefix", prefix));
+            sender.sendMessage(plugin.getLangFile().getString("command.group.suffix", suffix));
+
             return true;
         } else if (args.length == 1) {
             StringBuilder sb = new StringBuilder();
-            for (String group : this.plugin.getManager().getGroups()) {
+            for (String group : plugin.getManager().getGroups()) {
                 sb.append(group).append(", ");
             }
-            sender.sendMessage(this.plugin.getLangFile().getString("command.group.list", sb.substring(0, sb.length() - 2)));
+            sender.sendMessage(plugin.getLangFile().getString("command.group.list", sb.substring(0, sb.length() - 2)));
             return true;
         }
         return false;
@@ -80,8 +80,8 @@ public class GroupCommand implements SubCommand {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "ttp group " + this.plugin.getLangFile().getString("variables.group") + " [actions..]",
-            this.plugin.getLangFile().getString("command.group.help")
+            "ttp group " + plugin.getLangFile().getString("variables.group") + " [actions..]",
+            plugin.getLangFile().getString("command.group.help")
         };
     }
 

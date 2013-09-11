@@ -27,7 +27,7 @@ import org.bukkit.command.CommandSender;
  * @version 0.2
  */
 public abstract class SubAction {
-    
+
     /**
      * Executes the command. Only the args and sender are needed.
      *
@@ -69,11 +69,10 @@ public abstract class SubAction {
      * @since 0.2
      */
     public abstract String[] supportedTypes();
-    
+
     protected void saveError(TotalPermissions plugin, PermissionBase tar, CommandSender sender, Exception ex) {
         sender.sendMessage(plugin.getLangFile().getString("command.action.subaction.saveerror1"));
         sender.sendMessage(plugin.getLangFile().getString("command.action.subaction.saveerror2"));
         plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("command.action.subaction.saveerror3", tar.getType(), tar.getName()), ex);
     }
-    
 }

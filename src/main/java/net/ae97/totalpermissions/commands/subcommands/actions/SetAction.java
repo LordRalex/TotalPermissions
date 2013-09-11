@@ -32,10 +32,10 @@ import org.bukkit.command.CommandSender;
  */
 public class SetAction extends SubAction {
 
-    private final TotalPermissions plugin;
+    protected final TotalPermissions plugin;
 
-    public SetAction(TotalPermissions plugin) {
-        this.plugin = plugin;
+    public SetAction(TotalPermissions p) {
+        plugin = p;
     }
 
     @Override
@@ -45,16 +45,16 @@ public class SetAction extends SubAction {
         if (field.equalsIgnoreCase("default")) {
             if (tar instanceof PermissionGroup) {
                 try {
-                    this.plugin.getManager().changeDefaultGroup(tar.getName());
-                    sender.sendMessage(this.plugin.getLangFile().getString("command.action.set.default", target));
+                    plugin.getManager().changeDefaultGroup(tar.getName());
+                    sender.sendMessage(plugin.getLangFile().getString("command.action.set.default", target));
                     return true;
                 } catch (IOException ex) {
-                    saveError(this.plugin, tar, sender, ex);
+                    saveError(plugin, tar, sender, ex);
                 }
             }
         } else if (field.equalsIgnoreCase("group")) {
             if (tar instanceof PermissionUser) {
-                PermissionUser utar = (PermissionUser)tar;
+                PermissionUser utar = (PermissionUser) tar;
                 try {
                     List<String> groups = utar.getGroups(world);
                     utar.addGroup(item, world);
@@ -64,20 +64,20 @@ public class SetAction extends SubAction {
                         }
                     }
                     //TODO: Make a lang string for setting groups
-                    sender.sendMessage(this.plugin.getLangFile().getString("command.action.add.groups", item, target));
+                    sender.sendMessage(plugin.getLangFile().getString("command.action.add.groups", item, target));
                     return true;
                 } catch (IOException ex) {
-                    saveError(this.plugin, tar, sender, ex);
+                    saveError(plugin, tar, sender, ex);
                 }
             }
 
         } else if (field.equalsIgnoreCase("prefix")) {
             tar.setOption("prefix", item, world);
-            sender.sendMessage(this.plugin.getLangFile().getString("command.action.set.prefix", target, item));
+            sender.sendMessage(plugin.getLangFile().getString("command.action.set.prefix", target, item));
             return true;
         } else if (field.equalsIgnoreCase("suffix")) {
             tar.setOption("suffix", item, world);
-            sender.sendMessage(this.plugin.getLangFile().getString("command.action.set.suffix", target, item));
+            sender.sendMessage(plugin.getLangFile().getString("command.action.set.suffix", target, item));
             return true;
         }
         return false;
@@ -91,10 +91,10 @@ public class SetAction extends SubAction {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "set " + this.plugin.getLangFile().getString("variables.field")
-            + " " + this.plugin.getLangFile().getString("variables.value")
-            + " " + this.plugin.getLangFile().getString("variables.world-optional"),
-            this.plugin.getLangFile().getString("command.action.set.help")
+            "set " + plugin.getLangFile().getString("variables.field")
+            + " " + plugin.getLangFile().getString("variables.value")
+            + " " + plugin.getLangFile().getString("variables.world-optional"),
+            plugin.getLangFile().getString("command.action.set.help")
         };
     }
 

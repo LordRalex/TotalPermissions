@@ -28,11 +28,11 @@ import org.bukkit.command.CommandSender;
  * @version 0.2
  */
 public class CheckAction extends SubAction {
-    
-    private final TotalPermissions plugin;
-    
-    public CheckAction(TotalPermissions plugin) {
-        this.plugin = plugin;
+
+    protected final TotalPermissions plugin;
+
+    public CheckAction(TotalPermissions p) {
+        plugin = p;
     }
 
     @Override
@@ -41,32 +41,32 @@ public class CheckAction extends SubAction {
         PermissionBase tar = PermissionType.getTarget(type, target);
         if (field.equalsIgnoreCase("permissions")) {
             if (tar.has(item, world)) {
-                sender.sendMessage(this.plugin.getLangFile().getString("command.action.check.permissions.has", target, item));
+                sender.sendMessage(plugin.getLangFile().getString("command.action.check.permissions.has", target, item));
             } else {
-                sender.sendMessage(this.plugin.getLangFile().getString("command.action.check.permissions.not", target, item));
+                sender.sendMessage(plugin.getLangFile().getString("command.action.check.permissions.not", target, item));
             }
             return true;
         } else if (field.equalsIgnoreCase("inheritance")) {
             if (tar.hasInheritance(item, world)) {
-                sender.sendMessage(this.plugin.getLangFile().getString("command.action.check.inheritance.has", target, item));
+                sender.sendMessage(plugin.getLangFile().getString("command.action.check.inheritance.has", target, item));
             } else {
-                sender.sendMessage(this.plugin.getLangFile().getString("command.action.check.inheritance.not", target, item));
+                sender.sendMessage(plugin.getLangFile().getString("command.action.check.inheritance.not", target, item));
             }
             return true;
         } else if (field.equalsIgnoreCase("commands")) {
             if (tar.hasCommand(item, world)) {
-                sender.sendMessage(this.plugin.getLangFile().getString("command.action.check.commands.has", target, item));
+                sender.sendMessage(plugin.getLangFile().getString("command.action.check.commands.has", target, item));
             } else {
-                sender.sendMessage(this.plugin.getLangFile().getString("command.action.check.commands.not", target, item));
+                sender.sendMessage(plugin.getLangFile().getString("command.action.check.commands.not", target, item));
             }
             return true;
         } else if (field.equalsIgnoreCase("groups")) {
             if (tar instanceof PermissionUser) {
                 PermissionUser newtar = (PermissionUser) tar;
                 if (newtar.hasInheritance(item, world)) {
-                    sender.sendMessage(this.plugin.getLangFile().getString("command.action.check.groups.has", target, item));
+                    sender.sendMessage(plugin.getLangFile().getString("command.action.check.groups.has", target, item));
                 } else {
-                    sender.sendMessage(this.plugin.getLangFile().getString("command.action.check.groups.not", target, item));
+                    sender.sendMessage(plugin.getLangFile().getString("command.action.check.groups.not", target, item));
                 }
                 return true;
             }
@@ -83,10 +83,10 @@ public class CheckAction extends SubAction {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "check " + this.plugin.getLangFile().getString("variables.field")
-            + " " + this.plugin.getLangFile().getString("variables.value")
-            + " " + this.plugin.getLangFile().getString("variables.world-optional"),
-            this.plugin.getLangFile().getString("command.action.check.help")
+            "check " + plugin.getLangFile().getString("variables.field")
+            + " " + plugin.getLangFile().getString("variables.value")
+            + " " + plugin.getLangFile().getString("variables.world-optional"),
+            plugin.getLangFile().getString("command.action.check.help")
         };
     }
 
