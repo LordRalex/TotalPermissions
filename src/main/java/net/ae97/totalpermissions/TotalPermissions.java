@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
+import java.util.logging.SimpleFormatter;
 import javax.persistence.PersistenceException;
 import net.ae97.totalpermissions.data.DataType;
 import net.ae97.totalpermissions.data.FlatFileDataHolder;
@@ -72,7 +73,9 @@ public final class TotalPermissions extends JavaPlugin {
                 getDataFolder().mkdirs();
             }
 
-            getLogger().addHandler(new FileHandler(new File(getDataFolder(), "totalpermissions.log").getPath(), true));
+            FileHandler debugHandler = new FileHandler(new File(getDataFolder(), "totalpermissions.log").getPath(), true);
+            debugHandler.setFormatter(new SimpleFormatter());
+            getLogger().addHandler(debugHandler);
 
             if (!(new File(getDataFolder(), "config.yml").exists())) {
                 debugLog("Saving default config");
