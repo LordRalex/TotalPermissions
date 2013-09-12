@@ -47,6 +47,7 @@ public class DumpCommand implements SubCommand {
         String[] params = new String[2];
         Cipher lang = plugin.getLangFile();
         if (args.length == 0) {
+            sender.sendMessage("No parameters passed");
             return false;
         }
         if (args.length == 1) {
@@ -60,6 +61,7 @@ public class DumpCommand implements SubCommand {
                     if (Bukkit.getPluginManager().getPlugin(args[0]) != null) {
                         params[0] = "-plugin";
                     } else {
+                        sender.sendMessage("Could not match " + args[0] + " to a player, plugin, or command");
                         return false;
                     }
                 }
@@ -132,6 +134,7 @@ public class DumpCommand implements SubCommand {
             Command command = Bukkit.getPluginCommand(params[0]);
             sender.sendMessage(lang.getString("command.dump.title", "/" + command.getName(), command.getPermission()));
         } else {
+            sender.sendMessage("Unknown prefix: " + params[0]);
             return false;
         }
         return true;
