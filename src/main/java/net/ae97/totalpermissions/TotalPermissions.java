@@ -16,6 +16,7 @@
  */
 package net.ae97.totalpermissions;
 
+import net.ae97.totalpermissions.logger.DebugLogFormatter;
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebeaninternal.api.SpiEbeanServer;
 import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
@@ -74,7 +75,7 @@ public final class TotalPermissions extends JavaPlugin {
             }
 
             FileHandler debugHandler = new FileHandler(new File(getDataFolder(), "totalpermissions.log").getPath(), true);
-            debugHandler.setFormatter(new SimpleFormatter());
+            debugHandler.setFormatter(new DebugLogFormatter());
             getLogger().addHandler(debugHandler);
 
             if (!(new File(getDataFolder(), "config.yml").exists())) {
