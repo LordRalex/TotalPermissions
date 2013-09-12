@@ -20,6 +20,7 @@ import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.lang.Cipher;
 import java.util.List;
 import java.util.Set;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -67,6 +68,7 @@ public class DumpCommand implements SubCommand {
             params[0] = args[0];
             params[1] = args[1];
         }
+        plugin.debugLog("Parameters: " + StringUtils.join(params, ' '));
         if (params[0].equalsIgnoreCase("-plugin")) {
             Plugin pl = Bukkit.getPluginManager().getPlugin(params[1]);
             List<Permission> perms = pl.getDescription().getPermissions();
