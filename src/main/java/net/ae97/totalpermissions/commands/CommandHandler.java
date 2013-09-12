@@ -22,6 +22,7 @@ import net.ae97.totalpermissions.commands.subcommands.actions.ActionHandler;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -115,6 +116,7 @@ public final class CommandHandler implements CommandExecutor {
         for (int i = 0; i < newArgs.length; i++) {
             newArgs[i] = args[i + 1];
         }
+        plugin.debugLog(sender.getName() + " is now using: " + cmd.getName() + " " + StringUtils.join(newArgs, ' '));
         if (sender.hasPermission("totalpermissions.cmd" + executor.getName())) {
             boolean success = executor.execute(sender, args);
             if (!success) {

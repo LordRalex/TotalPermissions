@@ -54,17 +54,13 @@ public class DumpCommand implements SubCommand {
             Player possible = Bukkit.getPlayer(args[0]);
             if (possible != null && possible.isOnline()) {
                 params[0] = "-player";
+            } else if (Bukkit.getPluginCommand(args[0]) != null) {
+                params[0] = "-command";
+            } else if (Bukkit.getPluginManager().getPlugin(args[0]) != null) {
+                params[0] = "-plugin";
             } else {
-                if (Bukkit.getPluginCommand(args[0]) != null) {
-                    params[0] = "-command";
-                } else {
-                    if (Bukkit.getPluginManager().getPlugin(args[0]) != null) {
-                        params[0] = "-plugin";
-                    } else {
-                        sender.sendMessage("Could not match " + args[0] + " to a player, plugin, or command");
-                        return false;
-                    }
-                }
+                sender.sendMessage("Could not match " + args[0] + " to a player, plugin, or command");
+                return false;
             }
             params[1] = args[0];
         } else {
@@ -110,7 +106,7 @@ public class DumpCommand implements SubCommand {
                 if (i % NUM_PAGE == 0 && i != 0) {
                     index++;
                 }
-                permPages[index][i % NUM_PAGE] = "- " + perms[0].getPermission() + ": " + perms[0].getValue();
+                permPages[index][i % NUM_PAGE] = "- " + perms[i].getPermission() + ": " + perms[i].getValue();
             }
             int page = 0;
             if (args.length == 3) {
@@ -131,7 +127,7 @@ public class DumpCommand implements SubCommand {
                 }
             }
         } else if (params[0].equalsIgnoreCase("-command")) {
-            Command command = Bukkit.getPluginCommand(params[0]);
+            Command command = Bukkit.getPluginCommand(params[1]);
             sender.sendMessage(lang.getString("command.dump.title", "/" + command.getName(), command.getPermission()));
         } else {
             sender.sendMessage("Unknown prefix: " + params[0]);
