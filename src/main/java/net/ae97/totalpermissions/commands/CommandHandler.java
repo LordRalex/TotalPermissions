@@ -116,10 +116,11 @@ public final class CommandHandler implements CommandExecutor {
         for (int i = 0; i < newArgs.length; i++) {
             newArgs[i] = args[i + 1];
         }
-        plugin.debugLog(sender.getName() + " is now using: " + cmd.getName() + " " + StringUtils.join(newArgs, ' '));
+        plugin.debugLog(sender.getName() + " is now using: " + executor.getName() + " " + StringUtils.join(newArgs, ' '));
         if (sender.hasPermission("totalpermissions.cmd" + executor.getName())) {
-            boolean success = executor.execute(sender, args);
-            if (!success) {
+            plugin.debugLog(sender.getName() + " has the permission totalpermissions.cmd " + executor.getName());
+            if (!executor.execute(sender, args)) {
+                plugin.debugLog(executor.getName() + " not was executed sucessfully");
                 //This is badly handled, it should not be so easy to break
                 if (sender instanceof Player) {
                     sender.sendMessage("/" + executor.getHelp()[0]);
@@ -130,6 +131,7 @@ public final class CommandHandler implements CommandExecutor {
             }
             return true;
         } else {
+            plugin.debugLog(sender.getName() + " does not have the permission totalpermissions.cmd " + executor.getName());
             sender.sendMessage(plugin.getLangFile().getString("command.handler.denied"));
         }
         return true;
