@@ -119,7 +119,7 @@ public final class CommandHandler implements CommandExecutor {
         plugin.debugLog(sender.getName() + " is now using: " + executor.getName() + " " + StringUtils.join(newArgs, ' '));
         if (sender.hasPermission("totalpermissions.cmd" + executor.getName())) {
             plugin.debugLog(sender.getName() + " has the permission totalpermissions.cmd " + executor.getName());
-            if (!executor.execute(sender, args)) {
+            if (!executor.execute(sender, newArgs)) {
                 plugin.debugLog(executor.getName() + " not was executed sucessfully");
                 //This is badly handled, it should not be so easy to break
                 if (sender instanceof Player) {
