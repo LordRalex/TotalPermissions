@@ -19,10 +19,8 @@ package net.ae97.totalpermissions.data;
 import net.ae97.totalpermissions.permission.PermissionType;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import net.ae97.totalpermissions.configuration.CaseInsensitiveYamlConfiguration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -33,7 +31,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public class YamlDataHolder implements DataHolder {
 
-    protected final YamlConfiguration yaml = new CaseInsensitiveYamlConfiguration();
+    protected final YamlConfiguration yaml = new YamlConfiguration();
     protected final File savePath;
 
     public YamlDataHolder(File save) {
@@ -45,7 +43,7 @@ public class YamlDataHolder implements DataHolder {
         try {
             yaml.load(savePath);
         } catch (IOException ex) {
-            Logger.getLogger(YamlDataHolder.class.getName()).log(Level.SEVERE, null, ex);
+            throw new InvalidConfigurationException(ex);
         }
     }
 
@@ -60,26 +58,36 @@ public class YamlDataHolder implements DataHolder {
 
     @Override
     public ConfigurationSection getConfigurationSection(PermissionType type, String name) {
-        return yaml.getConfigurationSection(type.toString() + "." + name);
+        return yaml.getConfigurationSection(type.toString() + "." + getCorrectKey(type, name));
     }
 
     @Override
     public Set<String> getKeys(PermissionType type) {
-        return yaml.getConfigurationSection(type.toString()).getKeys(false);
+        return yaml.contains(type.toString()) ? yaml.getConfigurationSection(type.toString()).getKeys(false) : new HashSet<String>();
     }
 
     @Override
     public void update(PermissionType type, String name, ConfigurationSection obj) {
-        yaml.set(type.toString() + "." + name, obj);
+        yaml.set(type.toString() + "." + getCorrectKey(type, name), obj);
     }
 
     @Override
     public ConfigurationSection create(PermissionType type, String name) {
-        return yaml.createSection(type.toString() + "." + name);
+        return yaml.createSection(type.toString() + "." + getCorrectKey(type, name));
     }
 
     @Override
     public boolean contains(PermissionType type, String name) {
-        return yaml.contains(type.toString() + "." + name);
+        return yaml.contains(type.toString() + "." + getCorrectKey(type, name));
+    }
+
+    protected String getCorrectKey(PermissionType type, String name) {
+        Set<String> keys = getKeys(type);
+        for (String key : keys) {
+            if (key.equalsIgnoreCase(name)) {
+                return key;
+            }
+        }
+        return name;
     }
 }

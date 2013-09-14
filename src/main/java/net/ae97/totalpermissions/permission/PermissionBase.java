@@ -54,8 +54,8 @@ public abstract class PermissionBase {
 
     public PermissionBase(PermissionType type, String aName) throws IOException, InvalidConfigurationException {
         TotalPermissions plugin = TotalPermissions.getPlugin();
-        plugin.debugLog("Creating new Base: " + type + " " + aName);
         name = aName.toLowerCase();
+        plugin.debugLog("Creating new Base: " + type + "." + name);
         if (type == null) {
             throw new IllegalArgumentException();
         }

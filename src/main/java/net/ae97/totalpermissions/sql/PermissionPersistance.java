@@ -54,11 +54,11 @@ public class PermissionPersistance implements Serializable {
     }
 
     public void setName(String n) {
-        name = n;
+        name = n.toLowerCase();
     }
 
     public String getName() {
-        return name;
+        return name.toLowerCase();
     }
 
     public void setConfigSection(String s) {
@@ -76,7 +76,6 @@ public class PermissionPersistance implements Serializable {
         } else {
             Set<String> keys = cfg.getKeys(true);
             for (String key : keys) {
-                System.out.println("Adding key: " + key);
                 temp.set(key, cfg.get(key));
             }
         }

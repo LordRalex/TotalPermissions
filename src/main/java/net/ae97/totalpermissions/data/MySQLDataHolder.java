@@ -86,11 +86,14 @@ public class MySQLDataHolder extends MemoryDataHolder {
         if (new File(plugin.getDataFolder(), "mysql.yml").exists()) {
             plugin.getLogger().info("Importing mysql.yml file into the MySQL database");
             try {
-                YamlDataHolder yaml = new YamlDataHolder(new File(plugin.getDataFolder(), "mysql.yml"));
+                File yamlFile = new File(plugin.getDataFolder(), "mysql.yml");
+                YamlDataHolder yaml = new YamlDataHolder(yamlFile);
+                yaml.setup();
                 new DataHolderMerger(plugin, this).merge(yaml);
                 File imports = new File(plugin.getDataFolder(), "imports");
                 imports.mkdirs();
-                new File(plugin.getDataFolder(), "mysql.yml").renameTo(new File(imports, "mysql.yml"));
+                yamlFile.renameTo(new File(imports, "mysql.yml"));
+                yamlFile.delete();
                 plugin.getLogger().info("Import complete");
             } catch (InvalidConfigurationException ex) {
                 plugin.getLogger().log(Level.SEVERE, "Your MySQL.yml file is not set correctly. Cannot import");

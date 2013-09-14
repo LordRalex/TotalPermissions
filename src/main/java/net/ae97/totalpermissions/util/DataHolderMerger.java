@@ -19,6 +19,7 @@ package net.ae97.totalpermissions.util;
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
+import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.data.DataHolder;
 import net.ae97.totalpermissions.data.MySQLDataHolder;
 import net.ae97.totalpermissions.data.YamlDataHolder;
@@ -34,9 +35,9 @@ import org.bukkit.plugin.Plugin;
 public class DataHolderMerger {
 
     protected final DataHolder parent;
-    protected final Plugin plugin;
+    protected final TotalPermissions plugin;
 
-    public DataHolderMerger(Plugin pl, DataHolder p) {
+    public DataHolderMerger(TotalPermissions pl, DataHolder p) {
         plugin = pl;
         parent = p;
     }
@@ -55,8 +56,10 @@ public class DataHolderMerger {
             plugin.getLogger().warning("First time merging into MySQL can take some time, so be prepared");
         }
         for (PermissionType type : PermissionType.values()) {
+            plugin.debugLog("Checking for: " + type.toString());
             Set<String> keys = mergeFrom.getKeys(type);
             for (String key : keys) {
+                plugin.debugLog(" Merging in " + key);
                 mergeFrom.load(type, key);
                 ConfigurationSection sec = mergeFrom.getConfigurationSection(type, key);
                 parent.update(type, key, sec);

@@ -18,6 +18,7 @@ package net.ae97.totalpermissions.data;
 
 import java.io.IOException;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,7 +40,7 @@ public abstract class MemoryDataHolder implements DataHolder {
     @Override
     public void setup() {
         for (PermissionType type : PermissionType.values()) {
-            memory.put(type, new ConcurrentHashMap<String, ConfigurationSection>());
+            memory.put(type, new HashMap<String, ConfigurationSection>());
         }
     }
 
@@ -47,7 +48,7 @@ public abstract class MemoryDataHolder implements DataHolder {
     public ConfigurationSection getConfigurationSection(PermissionType type, String name) {
         Map<String, ConfigurationSection> map = memory.get(type);
         if (map == null) {
-            map = new ConcurrentHashMap<String, ConfigurationSection>();
+            map = new HashMap<String, ConfigurationSection>();
             memory.put(type, map);
         }
         ConfigurationSection cfg = map.get(name.toLowerCase());
@@ -56,7 +57,7 @@ public abstract class MemoryDataHolder implements DataHolder {
                 load(type, name);
                 map = memory.get(type);
                 if (map == null) {
-                    map = new ConcurrentHashMap<String, ConfigurationSection>();
+                    map = new HashMap<String, ConfigurationSection>();
                     memory.put(type, map);
                 }
                 cfg = map.get(name.toLowerCase());
@@ -75,7 +76,7 @@ public abstract class MemoryDataHolder implements DataHolder {
     public void update(PermissionType type, String name, ConfigurationSection obj) {
         Map<String, ConfigurationSection> map = memory.get(type);
         if (map == null) {
-            map = new ConcurrentHashMap<String, ConfigurationSection>();
+            map = new HashMap<String, ConfigurationSection>();
         }
         map.put(name.toLowerCase(), obj);
         memory.put(type, map);
@@ -91,7 +92,7 @@ public abstract class MemoryDataHolder implements DataHolder {
     public ConfigurationSection create(PermissionType type, String name) {
         Map<String, ConfigurationSection> map = memory.get(type);
         if (map == null) {
-            map = new ConcurrentHashMap<String, ConfigurationSection>();
+            map = new HashMap<String, ConfigurationSection>();
         }
         map.put(name.toLowerCase(), new MemoryConfiguration());
         memory.put(type, map);
@@ -108,7 +109,7 @@ public abstract class MemoryDataHolder implements DataHolder {
     public boolean contains(PermissionType type, String name) {
         Map<String, ConfigurationSection> map = memory.get(type);
         if (map == null) {
-            map = new ConcurrentHashMap<String, ConfigurationSection>();
+            map = new HashMap<String, ConfigurationSection>();
         }
         if (map.containsKey(name.toLowerCase())) {
             return true;
@@ -124,7 +125,7 @@ public abstract class MemoryDataHolder implements DataHolder {
         }
         map = memory.get(type);
         if (map == null) {
-            map = new ConcurrentHashMap<String, ConfigurationSection>();
+            map = new HashMap<String, ConfigurationSection>();
         }
         if (map.containsKey(name.toLowerCase())) {
             return true;
