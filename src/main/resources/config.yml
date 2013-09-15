@@ -25,6 +25,9 @@
 ##
 strict-mode: false
 update-check: true
+update:
+  check: true
+  download: true
 language: en_US
 reflection:
   starperm: false
