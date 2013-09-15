@@ -175,7 +175,7 @@ public class TPListener implements Listener {
         }
         plugin.getLogger().info(plugin.getLangFile().getString("listener.tplistener.preprocess.activate", event.getPlayer().getName(), event.getMessage()));
         try {
-            String command = event.getMessage().split(" ", 2)[0].substring(1);
+            String command = event.getMessage().split(" ")[0].substring(1);
             Command cmd = Bukkit.getPluginCommand(command);
             if (cmd.testPermissionSilent(event.getPlayer())) {
                 plugin.getLogger().info(plugin.getLangFile().getString("listener.tplistener.preprocess.allow", event.getPlayer().getName(), cmd.getPermission()));
