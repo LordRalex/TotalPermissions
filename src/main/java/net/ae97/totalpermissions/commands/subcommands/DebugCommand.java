@@ -35,30 +35,23 @@ public class DebugCommand implements SubCommand {
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
-        if (args.length == 1) {
-            sender.sendMessage(plugin.getLangFile().getString("command.debug.args-plain"));
-            return true; //True because currently the message contains help info
+        if (args.length < 1) {
+            return false;
         }
-        PermissionUser target = plugin.getManager().getUser(args[1]);
+        PermissionUser target = plugin.getManager().getUser(args[0]);
         if (target == null) {
             sender.sendMessage(plugin.getLangFile().getString("command.debug.null-target", args[1]));
-            return true; //True because currently the message contains help info
+            return true;
         }
-        if (args.length == 2 || args.length == 3) {
-            if (args.length == 2) {
-                String[] newArgs = new String[3];
-                newArgs[0] = args[0];
-                newArgs[1] = args[1];
-                newArgs[2] = "toggle";
-                args = newArgs;
-            }
+        if (args.length == 2 && !args[1].equalsIgnoreCase("status")) {
             boolean newState;
-            if ((args[2].equalsIgnoreCase("on")) || (args[2].equalsIgnoreCase("enable")) || (args[2].equalsIgnoreCase("true"))) {
+            if ((args[1].equalsIgnoreCase("on")) || (args[1].equalsIgnoreCase("enable")) || (args[1].equalsIgnoreCase("true"))) {
                 newState = true;
-            } else if (args[2].equalsIgnoreCase("toggle")) {
+            } else if (args[1].equalsIgnoreCase("toggle")) {
                 newState = !target.getDebugState();
             } else {
-                newState = false;
+                sender.sendMessage(args[1] + " is an invalid argument");
+                return false;
             }
             target.setDebug(newState);
             if (target.getDebugState()) {
@@ -66,6 +59,8 @@ public class DebugCommand implements SubCommand {
             } else {
                 sender.sendMessage(plugin.getLangFile().getString("command.debug.debug-off", target.getName()));
             }
+        } else {
+            sender.sendMessage(target.getName() + "'s debug status: " + (target.getDebugState() ? "on" : "off"));
         }
         return true;
     }
