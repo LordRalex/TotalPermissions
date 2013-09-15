@@ -177,7 +177,7 @@ public final class TotalPermissions extends JavaPlugin {
                 Bukkit.getPluginManager().disablePlugin(this);
                 return;
             }
-            if (getConfig().getBoolean("update-check", true)) {
+            if (getConfig().getBoolean("update.check", true)) {
                 Bukkit.getScheduler().runTaskLater(this, new UpdateRunnable(this), 1);
             }
 
@@ -395,5 +395,10 @@ public final class TotalPermissions extends JavaPlugin {
         List<Class<?>> list = new ArrayList<Class<?>>();
         list.add(PermissionPersistance.class);
         return list;
+    }
+
+    @Override
+    public File getFile() {
+        return super.getFile();
     }
 }
