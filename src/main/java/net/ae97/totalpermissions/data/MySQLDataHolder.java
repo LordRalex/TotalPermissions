@@ -104,10 +104,24 @@ public class MySQLDataHolder extends MemoryDataHolder {
                 plugin.debugLog(ex);
             }
         }
+
+        Set<PermissionPersistance> groups = ebeans.find(PermissionPersistance.class).where().ieq("type", PermissionType.GROUPS.toString()).findSet();
+        Map<String, ConfigurationSection> map = memory.get(PermissionType.GROUPS);
+        for (PermissionPersistance group : groups) {
+            if (map == null) {
+                map = new HashMap<String, ConfigurationSection>();
+            }
+            try {
+                map.put(group.getName().toLowerCase(), group.getConfig());
+            } catch (InvalidConfigurationException ex) {
+                plugin.getLogger().log(Level.SEVERE, "The group " + group.getName() + " has an invalid config", ex);
+            }
+        }
+        memory.put(PermissionType.GROUPS, map);
     }
 
     @Override
-    public void load(PermissionType type, String name) {
+    public void load(PermissionType type, String name) throws InvalidConfigurationException {
         PermissionPersistance section = ebeans.find(PermissionPersistance.class).where().ieq("type", type.toString()).ieq("name", name).findUnique();
         if (section == null) {
             section = new PermissionPersistance();
@@ -116,6 +130,12 @@ public class MySQLDataHolder extends MemoryDataHolder {
             YamlConfiguration cfg = new YamlConfiguration();
             section.setConfig(cfg);
         }
+        Map<String, ConfigurationSection> map = memory.get(type);
+        if (map == null) {
+            map = new HashMap<String, ConfigurationSection>();
+        }
+        map.put(name.toLowerCase(), section.getConfig());
+        memory.put(type, map);
     }
 
     @Override
