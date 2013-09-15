@@ -97,6 +97,8 @@ public class UpdateRunnable extends BukkitRunnable {
             File destination = new File(Bukkit.getUpdateFolderFile(), "TotalPermissions.jar");
             if (!plugin.getFile().getName().equalsIgnoreCase("TotalPermissions.jar")) {
                 plugin.getLogger().warning("The plugin jar is not named in a safe way, please name it TotalPermissions.jar");
+                plugin.getLogger().warning("We will rename the jar ourselves, but you should fix it");
+                destination = new File(Bukkit.getUpdateFolderFile(), plugin.getFile().getName());
             }
             destination.mkdirs();
             if (destination.exists()) {
