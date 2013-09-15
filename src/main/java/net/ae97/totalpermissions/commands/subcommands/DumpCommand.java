@@ -45,7 +45,7 @@ public class DumpCommand implements SubCommand {
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
-        String[] params = new String[2];
+        String[] params = new String[3];
         Cipher lang = plugin.getLangFile();
         if (args.length == 0) {
             sender.sendMessage("No parameters passed");
@@ -64,15 +64,17 @@ public class DumpCommand implements SubCommand {
                 return false;
             }
             params[1] = args[0];
+            params[2] = "0";
         } else {
             params[0] = args[0];
             params[1] = args[1];
+            params[2] = args.length == 2 ? "0" : args[2];
         }
         plugin.debugLog("Parameters: " + StringUtils.join(params, ' '));
         if (params[0].equalsIgnoreCase("-plugin")) {
             Plugin pl = Bukkit.getPluginManager().getPlugin(params[1]);
             List<Permission> perms = pl.getDescription().getPermissions();
-            String[][] permPages = new String[perms.size() % NUM_PAGE][NUM_PAGE];
+            String[][] permPages = new String[(perms.size() / NUM_PAGE) + 1][NUM_PAGE];
             int index = 0;
             for (int i = 0; i < perms.size(); i++) {
                 if (i % NUM_PAGE == 0 && i != 0) {
@@ -80,19 +82,21 @@ public class DumpCommand implements SubCommand {
                 }
                 permPages[index][i % NUM_PAGE] = "- " + perms.get(i).getName() + ": " + perms.get(i).getDefault().toString();
             }
-            int page = 0;
-            if (args.length == 3) {
-                try {
-                    page = Integer.getInteger(args[2]);
-                } catch (NumberFormatException e) {
-                    page = 0;
-                }
+            int page = 1;
+            try {
+                page = Integer.parseInt(params[2]);
+            } catch (NumberFormatException e) {
+                page = 1;
             }
-            if (page >= permPages.length) {
-                page = 0;
+            if (page > permPages.length) {
+                page = permPages.length;
             }
+            if (page < 1) {
+                page = 1;
+            }
+            page--;
             sender.sendMessage(lang.getString("command.dump.title", "plugin", pl.getName()));
-            sender.sendMessage(lang.getString("command.dump.page", page + 1, permPages.length + 1));
+            sender.sendMessage(lang.getString("command.dump.page", page + 1, permPages.length));
             for (int i = 0; i < permPages[page].length; i++) {
                 if (permPages[page][i] != null) {
                     sender.sendMessage(permPages[page][i]);
@@ -102,7 +106,7 @@ public class DumpCommand implements SubCommand {
             Player player = Bukkit.getPlayer(params[1]);
             Set<PermissionAttachmentInfo> tempPerms = player.getEffectivePermissions();
             PermissionAttachmentInfo[] perms = tempPerms.toArray(new PermissionAttachmentInfo[tempPerms.size()]);
-            String[][] permPages = new String[perms.length % NUM_PAGE][NUM_PAGE];
+            String[][] permPages = new String[(perms.length / NUM_PAGE) + 1][NUM_PAGE];
             int index = 0;
             for (int i = 0; i < perms.length; i++) {
                 if (i % NUM_PAGE == 0 && i != 0) {
@@ -110,19 +114,21 @@ public class DumpCommand implements SubCommand {
                 }
                 permPages[index][i % NUM_PAGE] = "- " + perms[i].getPermission() + ": " + perms[i].getValue();
             }
-            int page = 0;
-            if (args.length == 3) {
-                try {
-                    page = Integer.getInteger(args[2]);
-                } catch (NumberFormatException e) {
-                    page = 0;
-                }
+            int page = 1;
+            try {
+                page = Integer.parseInt(params[2]);
+            } catch (NumberFormatException e) {
+                page = 1;
             }
-            if (page >= permPages.length) {
-                page = 0;
+            if (page > permPages.length) {
+                page = permPages.length;
             }
-            sender.sendMessage(lang.getString("command.dump.title", "plugin", player.getName()));
-            sender.sendMessage(lang.getString("command.dump.page", page + 1, permPages.length + 1));
+            if (page < 1) {
+                page = 1;
+            }
+            page--;
+            sender.sendMessage(lang.getString("command.dump.title", "player", player.getName()));
+            sender.sendMessage(lang.getString("command.dump.page", page + 1, permPages.length));
             for (int i = 0; i < permPages[page].length; i++) {
                 if (permPages[page][i] != null) {
                     sender.sendMessage(permPages[page][i]);
