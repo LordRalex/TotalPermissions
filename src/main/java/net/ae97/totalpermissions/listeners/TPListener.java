@@ -16,6 +16,7 @@
  */
 package net.ae97.totalpermissions.listeners;
 
+import java.io.IOException;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.PermissionUser;
 import net.ae97.totalpermissions.reflection.TPPermissibleBase;
@@ -23,13 +24,17 @@ import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.ae97.totalpermissions.permission.PermissionType;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -51,6 +56,17 @@ public class TPListener implements Listener {
 
     public TPListener(TotalPermissions p) {
         plugin = p;
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onPlayerLogin(AsyncPlayerPreLoginEvent event) {
+        try {
+            plugin.getPermFile().load(PermissionType.USER, event.getName());
+        } catch (IOException ex) {
+            plugin.getLogger().log(Level.SEVERE, null, ex);
+        } catch (InvalidConfigurationException ex) {
+            plugin.getLogger().log(Level.SEVERE, null, ex);
+        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

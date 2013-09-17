@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
-import java.util.logging.SimpleFormatter;
 import javax.persistence.PersistenceException;
 import net.ae97.totalpermissions.data.DataType;
 import net.ae97.totalpermissions.data.FlatFileDataHolder;
