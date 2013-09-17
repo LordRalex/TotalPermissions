@@ -57,7 +57,7 @@ public final class TotalPermissions extends JavaPlugin {
         "v1_5_R1",
         "v1_4_R1"
     };
-    protected DataHolder permFile;
+    protected DataHolder dataHolder;
     protected PermissionManager manager;
     protected TPListener listener;
     protected Metrics metrics;
@@ -116,42 +116,42 @@ public final class TotalPermissions extends JavaPlugin {
                 case MYSQL: {
                     if (getDescription().isDatabaseEnabled()) {
                         debugLog("Using builtin system");
-                        permFile = new MySQLDataHolder(this.getDatabase());
+                        dataHolder = new MySQLDataHolder(getDatabase());
                     } else {
                         debugLog("Making our own");
-                        permFile = new MySQLDataHolder(null);
+                        dataHolder = new MySQLDataHolder(null);
                     }
                 }
                 break;
 
                 case FLAT: {
-                    permFile = new FlatFileDataHolder(new File(getDataFolder(), "data"));
+                    dataHolder = new FlatFileDataHolder(new File(getDataFolder(), "data"));
                 }
                 break;
 
                 //default to use YAML if nothing is set up
                 default:
                 case YAML: {
-                    permFile = new YamlDataHolder(new File(this.getDataFolder(), "permissions.yml"));
+                    dataHolder = new YamlDataHolder(new File(getDataFolder(), "permissions.yml"));
                 }
                 break;
             }
 
             debugLog("Loading permissions setup");
             try {
-                permFile.setup();
+                dataHolder.setup();
             } catch (InvalidConfigurationException e) {
                 getLogger().log(Level.SEVERE, getLangFile().getString("main.yaml-error"));
                 getLogger().log(Level.SEVERE, "-> " + e.getMessage());
                 debugLog(e);
                 getLogger().log(Level.WARNING, getLangFile().getString("main.load-backup"));
                 try {
-                    if (permFile instanceof YamlDataHolder) {
-                        permFile = new YamlDataHolder(new File(getLastBackupFolder(), "permissions.yml"));
+                    if (dataHolder instanceof YamlDataHolder) {
+                        dataHolder = new YamlDataHolder(new File(getLastBackupFolder(), "permissions.yml"));
                     } else {
-                        permFile = new YamlDataHolder(new File(getDataFolder(), "permissions.yml"));
+                        dataHolder = new YamlDataHolder(new File(getDataFolder(), "permissions.yml"));
                     }
-                    permFile.setup();
+                    dataHolder.setup();
                     getLogger().log(Level.WARNING, getLangFile().getString("main.loaded1"));
                     getLogger().log(Level.WARNING, getLangFile().getString("main.loaded2"));
                 } catch (InvalidConfigurationException e2) {
@@ -228,7 +228,7 @@ public final class TotalPermissions extends JavaPlugin {
      * @since 0.1
      */
     public PermissionManager getManager() {
-        return this.manager;
+        return manager;
     }
 
     /**
@@ -238,9 +238,20 @@ public final class TotalPermissions extends JavaPlugin {
      * @return The perm file in the DataHolder form.
      *
      * @since 0.1
+     * @deprecated Use getDataHolder() instead
      */
     public DataHolder getPermFile() {
-        return this.permFile;
+        return dataHolder;
+    }
+
+    /**
+     * Gets the currently active DataHolder
+     *
+     * @since 0.3
+     * @return The DataHolder currently loaded
+     */
+    public DataHolder getDataHolder() {
+        return dataHolder;
     }
 
     /**
@@ -262,7 +273,7 @@ public final class TotalPermissions extends JavaPlugin {
      * @since 0.1
      */
     public TPListener getListener() {
-        return this.listener;
+        return listener;
     }
 
     /**
@@ -273,7 +284,7 @@ public final class TotalPermissions extends JavaPlugin {
      * @since 0.2
      */
     public Cipher getLangFile() {
-        return this.cipher;
+        return cipher;
     }
 
     /**
@@ -344,7 +355,7 @@ public final class TotalPermissions extends JavaPlugin {
      * @since 0.1
      */
     public CommandHandler getCommandHandler() {
-        return this.commands;
+        return commands;
     }
 
     public void debugLog(Object... message) {

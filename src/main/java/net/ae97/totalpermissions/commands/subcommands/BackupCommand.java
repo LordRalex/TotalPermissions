@@ -60,7 +60,7 @@ public class BackupCommand implements SubCommand {
         sender.sendMessage(ChatColor.YELLOW + "Backing up the data, this may take some time");
         File dest = plugin.getBackupFolder();
         YamlDataHolder target = new YamlDataHolder(new File(new File(dest, "manual"), "backup.yml"));
-        isRunningBackup = Bukkit.getScheduler().runTaskAsynchronously(plugin, new BackupRunnable(sender, plugin.getPermFile(), target)).getTaskId();
+        isRunningBackup = Bukkit.getScheduler().runTaskAsynchronously(plugin, new BackupRunnable(sender, plugin.getDataHolder(), target)).getTaskId();
         return true;
     }
 

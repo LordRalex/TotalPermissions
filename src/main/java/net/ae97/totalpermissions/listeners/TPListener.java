@@ -61,7 +61,7 @@ public class TPListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLogin(AsyncPlayerPreLoginEvent event) {
         try {
-            plugin.getPermFile().load(PermissionType.USER, event.getName());
+            plugin.getDataHolder().load(PermissionType.USER, event.getName());
         } catch (IOException ex) {
             plugin.getLogger().log(Level.SEVERE, null, ex);
         } catch (InvalidConfigurationException ex) {

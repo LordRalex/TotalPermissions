@@ -71,7 +71,7 @@ public final class PermissionManager {
      * @since 0.1
      */
     public void load() throws InvalidConfigurationException {
-        DataHolder perms = plugin.getPermFile();
+        DataHolder perms = plugin.getDataHolder();
         plugin.debugLog("Permission type detected: " + perms.getClass().getSimpleName());
         Set<String> allGroups = perms.getKeys(PermissionType.GROUPS);
         for (String group : allGroups) {
@@ -539,7 +539,7 @@ public final class PermissionManager {
      */
     public void save(PermissionBase base) throws IOException {
         plugin.debugLog("Saving PermissionBase " + base.getName());
-        DataHolder file = plugin.getPermFile();
+        DataHolder file = plugin.getDataHolder();
         PermissionType type = base.getType();
         file.update(type, base.getName(), base.getConfigSection());
         file.save(type, base.getName());

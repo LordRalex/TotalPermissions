@@ -74,7 +74,7 @@ public class FileUpdater {
      * @deprecated Updater is not made to handle effectively, needs replacement
      */
     public void backup(boolean bu) {
-        if (!(plugin.getPermFile() instanceof YamlDataHolder)) {
+        if (!(plugin.getDataHolder() instanceof YamlDataHolder)) {
             return;
         }
         if (bu == false) {
@@ -113,7 +113,7 @@ public class FileUpdater {
             plugin.getLogger().log(Level.SEVERE, null, ex);
         }
         try {
-            if (plugin.getPermFile() instanceof YamlDataHolder) {
+            if (plugin.getDataHolder() instanceof YamlDataHolder) {
                 YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "permissions.yml")).save(new File(backupFolder, "permissions.yml"));
             }
         } catch (IOException ex) {
@@ -131,10 +131,10 @@ public class FileUpdater {
      * @deprecated Updater is not made to handle effectively, needs replacement
      */
     public void runUpdate() {
-        if (plugin.getPermFile() instanceof YamlDataHolder) {
+        if (plugin.getDataHolder() instanceof YamlDataHolder) {
             backup();
             FileConfiguration updateFile;
-            DataHolder perms = plugin.getPermFile();
+            DataHolder perms = plugin.getDataHolder();
             File datafolder = plugin.getDataFolder();
             String[] updateFileNames = new String[]{
                 "groups.yml",

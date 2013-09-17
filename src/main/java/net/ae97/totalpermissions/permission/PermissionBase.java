@@ -61,13 +61,13 @@ public abstract class PermissionBase {
         }
         permType = type;
         //this actually will cause a load if the type and name are not loaded
-        if (!plugin.getPermFile().contains(permType, name)) {
+        if (!plugin.getDataHolder().contains(permType, name)) {
             plugin.debugLog("Section " + permType + "." + name + " does not exist, creating");
-            plugin.getPermFile().create(permType, name);
+            plugin.getDataHolder().create(permType, name);
         }
         permission = new Permission(("totalpermissions.baseItem." + permType + "." + name).toLowerCase());
         plugin.debugLog("Created permission: " + permission.getName());
-        section = plugin.getPermFile().getConfigurationSection(permType, name);
+        section = plugin.getDataHolder().getConfigurationSection(permType, name);
         load();
     }
 
