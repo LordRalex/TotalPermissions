@@ -16,15 +16,15 @@
  */
 package net.ae97.totalpermissions;
 
-import net.ae97.totalpermissions.logger.DebugLogFormatter;
-import com.avaje.ebean.EbeanServer;
-import com.avaje.ebeaninternal.api.SpiEbeanServer;
-import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
 import net.ae97.totalpermissions.commands.CommandHandler;
+import net.ae97.totalpermissions.data.DataType;
+import net.ae97.totalpermissions.data.FlatFileDataHolder;
+import net.ae97.totalpermissions.data.MySQLDataHolder;
 import net.ae97.totalpermissions.data.DataHolder;
 import net.ae97.totalpermissions.data.YamlDataHolder;
 import net.ae97.totalpermissions.lang.Cipher;
 import net.ae97.totalpermissions.listeners.TPListener;
+import net.ae97.totalpermissions.logger.DebugLogFormatter;
 import net.ae97.totalpermissions.mcstats.Metrics;
 import net.ae97.totalpermissions.runnable.UpdateRunnable;
 import net.ae97.totalpermissions.sql.PermissionPersistance;
@@ -34,9 +34,9 @@ import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import javax.persistence.PersistenceException;
-import net.ae97.totalpermissions.data.DataType;
-import net.ae97.totalpermissions.data.FlatFileDataHolder;
-import net.ae97.totalpermissions.data.MySQLDataHolder;
+import com.avaje.ebean.EbeanServer;
+import com.avaje.ebeaninternal.api.SpiEbeanServer;
+import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -50,6 +50,7 @@ public final class TotalPermissions extends JavaPlugin {
 
     protected String BUKKIT_VERSION = "NONE";
     protected final String[] ACCEPTABLE_VERSIONS = new String[]{
+        "v1_6_R3",
         "v1_6_R2",
         "v1_6_R1",
         "v1_5_R3",
@@ -195,11 +196,12 @@ public final class TotalPermissions extends JavaPlugin {
             debugLog("Registering command handler");
             getCommand("totalpermissions").setExecutor(commands);
 
-            debugLog("Loading up metrics");
-            metrics = new Metrics(this);
-            if (metrics.start()) {
-                getLogger().info(getLangFile().getString("main.metrics"));
-            }
+            //As MCStats is down, no point in sending data
+            //debugLog("Loading up metrics");
+            //metrics = new Metrics(this);
+            //if (metrics.start()) {
+            //    getLogger().info(getLangFile().getString("main.metrics"));
+            //}
         } catch (Exception e) {
             if (e instanceof InvalidConfigurationException) {
                 getLogger().log(Level.SEVERE, getLangFile().getString("main.yaml-error"));
