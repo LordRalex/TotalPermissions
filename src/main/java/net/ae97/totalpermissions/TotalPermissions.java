@@ -32,6 +32,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.FileHandler;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import javax.persistence.PersistenceException;
 import net.ae97.totalpermissions.data.DataType;
@@ -74,9 +75,11 @@ public final class TotalPermissions extends JavaPlugin {
                 getDataFolder().mkdirs();
             }
 
-            FileHandler debugHandler = new FileHandler(new File(getDataFolder(), "totalpermissions.log").getPath(), true);
+            new File(getDataFolder(), "logs").mkdirs();
+            FileHandler debugHandler = new FileHandler(new File(new File(getDataFolder(), "logs"), "totalpermissions.log").getPath(), 0, 1, true);
             debugHandler.setFormatter(new DebugLogFormatter());
             getLogger().addHandler(debugHandler);
+            debugLog("---------");
 
             if (!(new File(getDataFolder(), "config.yml").exists())) {
                 debugLog("Saving default config");
@@ -218,6 +221,18 @@ public final class TotalPermissions extends JavaPlugin {
         if (manager != null) {
             debugLog("Unloading manager");
             manager.unload();
+        }
+        Handler[] handlers = getLogger().getHandlers();
+        for (Handler handle : handlers) {
+            if (handle.getFormatter() instanceof DebugLogFormatter) {
+                getLogger().removeHandler(handle);
+            }
+        }
+        File[] fileList = new File(getDataFolder(), "logs").listFiles();
+        for (File file : fileList) {
+            if (file.getName().endsWith("lck")) {
+                file.delete();
+            }
         }
     }
 
