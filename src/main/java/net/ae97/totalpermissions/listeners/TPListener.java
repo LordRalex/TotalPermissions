@@ -103,7 +103,7 @@ public class TPListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
-        plugin.debugLog("PlayerJoinEvent fired, handling");
+        plugin.debugLog("PlayerJoinEvent-Lowest fired, handling");
         Player player = event.getPlayer();
         PermissionUser user = plugin.getManager().getUser(player);
         user.changeWorld(player, player.getWorld().getName(), plugin.getManager().getAttachment(player));
@@ -111,7 +111,7 @@ public class TPListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoinEventMonitor(PlayerJoinEvent event) {
-        plugin.debugLog("PlayerJoinEvent fired, handling");
+        plugin.debugLog("PlayerJoinEvent-Monitor fired, handling");
         Player player = event.getPlayer();
         PermissionUser user = plugin.getManager().getUser(player);
         user.changeWorld(player, player.getWorld().getName(), plugin.getManager().getAttachment(player));

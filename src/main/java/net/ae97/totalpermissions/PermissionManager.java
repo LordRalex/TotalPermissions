@@ -99,7 +99,7 @@ public final class PermissionManager {
         } catch (IOException e) {
             plugin.getLogger().log(Level.SEVERE, "IOException on creation of console", e);
         } catch (InvalidConfigurationException e) {
-            plugin.getLogger().log(Level.SEVERE, "Invalid config for  console", e);
+            plugin.getLogger().log(Level.SEVERE, "Invalid config for console", e);
         }
         try {
 
@@ -190,13 +190,13 @@ public final class PermissionManager {
         if (user == null) {
             try {
                 user = new PermissionUser(player.toLowerCase());
+                users.put(player.toLowerCase(), user);
             } catch (IOException e) {
                 plugin.getLogger().log(Level.SEVERE, "IOException on creation of op", e);
             } catch (InvalidConfigurationException e) {
                 plugin.getLogger().log(Level.SEVERE, "Invalid config for op", e);
             }
         }
-        users.put(player.toLowerCase(), user);
 
         return user;
     }
@@ -410,9 +410,11 @@ public final class PermissionManager {
             try {
                 event.getPlayer().removeAttachment(att);
             } catch (IllegalArgumentException e) {
+                plugin.debugLog("Could not remove " + att.toString() + " from " + event.getPlayer().getName());
                 plugin.debugLog(e);
             }
         }
+        users.remove(event.getPlayer().getName().toLowerCase());
     }
 
     public PermissionAttachment getAttachment(String player) {

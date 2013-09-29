@@ -73,7 +73,7 @@ public abstract class PermissionBase {
 
     protected final void load() {
         TotalPermissions plugin = TotalPermissions.getPlugin();
-        plugin.debugLog("Loading base: " + permType + " " + name);
+        plugin.debugLog("Loading base: " + permType + "." + name);
         options.clear();
         plugin.debugLog("Clearing out old permissions");
         for (String key : perms.keySet()) {
@@ -86,6 +86,10 @@ public abstract class PermissionBase {
         inherited.clear();
         Map<String, Boolean> permMap = new HashMap<String, Boolean>();
         if (section != null) {
+            if (section.getKeys(false).isEmpty()) {
+                plugin.debugLog("Adding default group " + plugin.getManager().getDefaultGroup());
+                inherited.add(plugin.getManager().getDefaultGroup());
+            }
             if (section.isList("permissions")) {
                 List<String> permList = section.getStringList("permissions");
                 if (permList != null) {
@@ -197,6 +201,8 @@ public abstract class PermissionBase {
                     }
                 }
             }
+        } else {
+            inherited.add(plugin.getManager().getDefaultGroup());
         }
         permission = new Permission(permission.getName(), permMap);
         if (Bukkit.getPluginManager().getPermission(permission.getName()) != null) {
