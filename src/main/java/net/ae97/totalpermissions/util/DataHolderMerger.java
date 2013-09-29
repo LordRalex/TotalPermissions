@@ -50,10 +50,10 @@ public class DataHolderMerger {
     public void merge(DataHolder mergeFrom) throws IOException, InvalidConfigurationException {
         plugin.getLogger().info("Merging data holders, this might take a second or two");
         if (mergeFrom instanceof MySQLDataHolder) {
-            plugin.getLogger().warning("Merging from MySQL can take some time, so this is your warning");
+            plugin.getLogger().warning(plugin.getLangFile().getString("merge.mysql-from"));
         }
         if (parent instanceof MySQLDataHolder) {
-            plugin.getLogger().warning("First time merging into MySQL can take some time, so be prepared");
+            plugin.getLogger().warning(plugin.getLangFile().getString("merge.mysql-to"));
         }
         for (PermissionType type : PermissionType.values()) {
             plugin.debugLog("Checking for: " + type.toString());
@@ -67,6 +67,6 @@ public class DataHolderMerger {
             }
         }
 
-        plugin.getLogger().info("Merge complete");
+        plugin.getLogger().info(plugin.getLangFile().getString("merge.complete"));
     }
 }

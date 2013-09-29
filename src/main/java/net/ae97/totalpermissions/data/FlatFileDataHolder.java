@@ -20,11 +20,9 @@ import net.ae97.totalpermissions.permission.PermissionType;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -65,7 +63,6 @@ public class FlatFileDataHolder extends MemoryDataHolder {
         } else {
             Set<String> keys = cfg.getKeys(true);
             for (String key : keys) {
-                System.out.println("Adding key: " + key);
                 yaml.set(key, cfg.get(key));
             }
         }

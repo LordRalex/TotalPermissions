@@ -63,10 +63,12 @@ public abstract class MemoryDataHolder implements DataHolder {
                 cfg = map.get(name.toLowerCase());
             } catch (IOException ex) {
                 TotalPermissions plugin = TotalPermissions.getPlugin();
-                plugin.getLogger().log(Level.SEVERE, "IOException on loading " + type + ":" + name, ex);
+                plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.generic"), ex);
             } catch (InvalidConfigurationException ex) {
                 TotalPermissions plugin = TotalPermissions.getPlugin();
-                plugin.getLogger().log(Level.SEVERE, "The data for " + type + ":" + name + " is corrupted", ex);
+                plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.config", type + "." + name));
+                plugin.getLogger().severe(ex.getMessage());
+                plugin.debugLog(ex);
             }
         }
         return cfg;
@@ -84,7 +86,7 @@ public abstract class MemoryDataHolder implements DataHolder {
             save(type, name);
         } catch (IOException ex) {
             TotalPermissions plugin = TotalPermissions.getPlugin();
-            plugin.getLogger().log(Level.SEVERE, "IOException on saving " + type + ":" + name, ex);
+            plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.generic"), ex);
         }
     }
 
@@ -100,7 +102,7 @@ public abstract class MemoryDataHolder implements DataHolder {
             save(type, name);
         } catch (IOException ex) {
             TotalPermissions plugin = TotalPermissions.getPlugin();
-            plugin.getLogger().log(Level.SEVERE, "IOException on saving " + type + ":" + name, ex);
+            plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.generic"), ex);
         }
         return getConfigurationSection(type, name);
     }
@@ -118,10 +120,12 @@ public abstract class MemoryDataHolder implements DataHolder {
             load(type, name);
         } catch (IOException ex) {
             TotalPermissions plugin = TotalPermissions.getPlugin();
-            plugin.getLogger().log(Level.SEVERE, "IOException on loading " + type + ":" + name, ex);
+            plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.generic"), ex);
         } catch (InvalidConfigurationException ex) {
             TotalPermissions plugin = TotalPermissions.getPlugin();
-            plugin.getLogger().log(Level.SEVERE, "The data for " + type + ":" + name + " is corrupted", ex);
+            plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.config", type + "." + name));
+            plugin.getLogger().severe(ex.getMessage());
+            plugin.debugLog(ex);
         }
         map = memory.get(type);
         if (map == null) {

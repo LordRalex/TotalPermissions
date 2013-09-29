@@ -84,9 +84,9 @@ public final class PermissionManager {
                     defaultGroup = temp.getName();
                 }
             } catch (IOException e) {
-                plugin.getLogger().log(Level.SEVERE, "IOException on creation of " + group, e);
+                plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.creation", group), e);
             } catch (InvalidConfigurationException e) {
-                plugin.getLogger().log(Level.SEVERE, "Invalid config for " + group, e);
+                plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.config", group), e);
             }
         }
         if (defaultGroup == null) {
@@ -97,24 +97,24 @@ public final class PermissionManager {
         try {
             console = new PermissionConsole();
         } catch (IOException e) {
-            plugin.getLogger().log(Level.SEVERE, "IOException on creation of console", e);
+            plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.creation", "console"), e);
         } catch (InvalidConfigurationException e) {
-            plugin.getLogger().log(Level.SEVERE, "Invalid config for console", e);
+            plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.config", "console"), e);
         }
         try {
 
             remote = new PermissionRcon();
         } catch (IOException e) {
-            plugin.getLogger().log(Level.SEVERE, "IOException on creation of remote", e);
+            plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.creation", "remote"), e);
         } catch (InvalidConfigurationException e) {
-            plugin.getLogger().log(Level.SEVERE, "Invalid config for remote", e);
+            plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.config", "remote"), e);
         }
         try {
             op = new PermissionOp();
         } catch (IOException e) {
-            plugin.getLogger().log(Level.SEVERE, "IOException on creation of op", e);
+            plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.creation", "op"), e);
         } catch (InvalidConfigurationException e) {
-            plugin.getLogger().log(Level.SEVERE, "Invalid config for op", e);
+            plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.config", "op"), e);
         }
         permAttMap.put("console", console.setPerms(Bukkit.getConsoleSender(), null, null));
     }
@@ -192,9 +192,9 @@ public final class PermissionManager {
                 user = new PermissionUser(player.toLowerCase());
                 users.put(player.toLowerCase(), user);
             } catch (IOException e) {
-                plugin.getLogger().log(Level.SEVERE, "IOException on creation of op", e);
+                plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.creation", player.toLowerCase()), e);
             } catch (InvalidConfigurationException e) {
-                plugin.getLogger().log(Level.SEVERE, "Invalid config for op", e);
+                plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.config", player.toLowerCase()), e);
             }
         }
 
@@ -231,9 +231,9 @@ public final class PermissionManager {
             try {
                 group = new PermissionGroup(name.toLowerCase());
             } catch (IOException e) {
-                plugin.getLogger().log(Level.SEVERE, "IOException on creation of op", e);
+                plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.creation", name.toLowerCase()), e);
             } catch (InvalidConfigurationException e) {
-                plugin.getLogger().log(Level.SEVERE, "Invalid config for op", e);
+                plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.config", name.toLowerCase()), e);
             }
         }
         groups.put(name.toLowerCase(), group);

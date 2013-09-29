@@ -84,7 +84,7 @@ public class MySQLDataHolder extends MemoryDataHolder {
         TotalPermissions plugin = TotalPermissions.getPlugin();
         plugin.installDatabase(ebeans);
         if (new File(plugin.getDataFolder(), "mysql.yml").exists()) {
-            plugin.getLogger().info("Importing mysql.yml file into the MySQL database");
+            plugin.getLogger().info(plugin.getLangFile().getString("dataholder.mysql.import"));
             try {
                 File yamlFile = new File(plugin.getDataFolder(), "mysql.yml");
                 YamlDataHolder yaml = new YamlDataHolder(yamlFile);
@@ -94,14 +94,13 @@ public class MySQLDataHolder extends MemoryDataHolder {
                 imports.mkdirs();
                 yamlFile.renameTo(new File(imports, "mysql.yml"));
                 yamlFile.delete();
-                plugin.getLogger().info("Import complete");
+                plugin.getLogger().info(plugin.getLangFile().getString("dataholder.mysql.import-complete"));
             } catch (InvalidConfigurationException ex) {
-                plugin.getLogger().log(Level.SEVERE, "Your MySQL.yml file is not set correctly. Cannot import");
+                plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("dataholder.mysql.import-invalid"));
+                plugin.getLogger().severe(ex.getMessage());
                 plugin.debugLog(ex);
             } catch (IOException ex) {
-                plugin.getLogger().log(Level.SEVERE, "IO Exception occurred");
-                plugin.getLogger().log(Level.SEVERE, ex.getMessage());
-                plugin.debugLog(ex);
+                plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.generic"), ex);
             }
         }
 
@@ -114,7 +113,9 @@ public class MySQLDataHolder extends MemoryDataHolder {
             try {
                 map.put(group.getName().toLowerCase(), group.getConfig());
             } catch (InvalidConfigurationException ex) {
-                plugin.getLogger().log(Level.SEVERE, "The group " + group.getName() + " has an invalid config", ex);
+                plugin.getLogger().severe(plugin.getLangFile().getString("error.config"));
+                plugin.getLogger().severe(ex.getMessage());
+                plugin.debugLog(ex);
             }
         }
         memory.put(PermissionType.GROUPS, map);

@@ -280,51 +280,6 @@ public final class Metrics {
     }
 
     /**
-     * Enables metrics for the server by setting "opt-out" to false in the
-     * config file and starting the metrics task.
-     *
-     * @throws java.io.IOException
-     */
-    public void enable() throws IOException {
-        // This has to be synchronized or it can collide with the check in the task.
-        synchronized (optOutLock) {
-            // Check if the server owner has already set opt-out, if not, set it.
-            if (isOptOut()) {
-                configuration.set("opt-out", false);
-                configuration.save(configurationFile);
-            }
-
-            // Enable Task, if it is not running
-            if (task == null) {
-                start();
-            }
-        }
-    }
-
-    /**
-     * Disables metrics for the server by setting "opt-out" to true in the
-     * config file and canceling the metrics task.
-     *
-     * @throws java.io.IOException
-     */
-    public void disable() throws IOException {
-        // This has to be synchronized or it can collide with the check in the task.
-        synchronized (optOutLock) {
-            // Check if the server owner has already set opt-out, if not, set it.
-            if (!isOptOut()) {
-                configuration.set("opt-out", true);
-                configuration.save(configurationFile);
-            }
-
-            // Disable Task, if it is running
-            if (task != null) {
-                task.cancel();
-                task = null;
-            }
-        }
-    }
-
-    /**
      * Gets the File object of the config file that should be used to store data
      * such as the GUID and opt-out status
      *

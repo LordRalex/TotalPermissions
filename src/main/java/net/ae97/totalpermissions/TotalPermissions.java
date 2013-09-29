@@ -111,7 +111,7 @@ public final class TotalPermissions extends JavaPlugin {
             String storageType = getConfig().getString("storage", "yaml");
             DataType type = DataType.valueOf(storageType.toUpperCase());
             if (type == null) {
-                getLogger().severe("Could not determine type of data storage from " + storageType + "! Default to YAML");
+                getLogger().severe(getLangFile().getString("main.storage-error", storageType));
                 type = DataType.YAML;
             }
             debugLog("Creating data holder");

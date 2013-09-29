@@ -67,7 +67,7 @@ public class UpdateRunnable extends BukkitRunnable {
             String latestBuild = reader.readLine();
             String[] dlParts = reader.readLine().split(" ");
             if (!latest.equalsIgnoreCase(version) || !build.equalsIgnoreCase(latestBuild)) {
-                plugin.getLogger().info("[UPDATE] TotalPermissions has an update: " + latest + " (current: " + version + ")");
+                plugin.getLogger().info(plugin.getLangFile().getString("update.isupdate", latest, version));
             }
             if (plugin.getConfig().getBoolean("update.download", true)) {
                 downloadUpdate(dlParts);
@@ -88,15 +88,14 @@ public class UpdateRunnable extends BukkitRunnable {
     }
 
     private void downloadUpdate(String[] params) {
-        plugin.getLogger().info("[UPDATE] Downloading is enabled, downloading new update");
+        plugin.getLogger().info(plugin.getLangFile().getString("update.download-enabled"));
         BufferedInputStream in = null;
         FileOutputStream out = null;
         try {
             URL dlURL = new URL(DOWNLOAD_URL.replace("{id1}", params[0]).replace("{id2}", params[1]).replace("{filename}", params[2]));
             File destination = new File(Bukkit.getUpdateFolderFile(), "TotalPermissions.jar");
             if (!plugin.getFile().getName().equalsIgnoreCase("TotalPermissions.jar")) {
-                plugin.getLogger().warning("The plugin jar is not named in a safe way, please name it TotalPermissions.jar");
-                plugin.getLogger().warning("We will rename the jar ourselves, but you should fix it");
+                plugin.getLogger().warning(plugin.getLangFile().getString("update.bad-name"));
                 destination = new File(Bukkit.getUpdateFolderFile(), plugin.getFile().getName());
             }
             destination.mkdirs();
@@ -114,10 +113,10 @@ public class UpdateRunnable extends BukkitRunnable {
                 out.write(data, 0, count);
                 int percent = (int) (downloaded * 100 / fileLength);
                 if (percent % 10 == 0) {
-                    plugin.getLogger().info("Downloading update: " + percent + "% of " + fileLength + " bytes.");
+                    plugin.getLogger().info(plugin.getLangFile().getString("update.downloading", percent));
                 }
             }
-            plugin.getLogger().info("Download complete. Please restart your server to install");
+            plugin.getLogger().info(plugin.getLangFile().getString("update.download-complete"));
         } catch (IOException ex) {
             plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("update.download-error"), ex);
         } finally {

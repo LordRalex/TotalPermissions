@@ -1,4 +1,4 @@
-version: 2
+version: 3
 command:
   action:
     subaction:
@@ -144,6 +144,11 @@ update:
   dev: 'You are using a dev build, update checks are disabled'
   update-error: 'Error occured while checking for an update'
   versioning-error: 'Version check was not completed'
+  download-enabled: '[UPDATE] Downloading update'
+  downloading: 'Downloading: {0}%'
+  download-complete: 'Download complete. Restart your server to uopdate'
+  bad-name: 'Your plugin name is not safe. The jar should be called TotalPermissions.jar'
+  isupdate: '{0} is now available (you have {1})'
 main:
   init: 'Beginning initial preperations'
   init-done: 'Initial preperations complete'
@@ -162,6 +167,7 @@ main:
   metrics: 'Plugin Metrics is on, you can opt-out in the PluginMetrics config'
   error: 'Error in starting up {0} (Version {1})'
   loadcrash: 'There were issues with loading, not enabling plugin'
+  storage-error: 'Could not determine type of storage to load ({0}), defaulting to YAML'
 variables:
   command: '<command>'
   username: '<username>'
@@ -179,3 +185,18 @@ variables:
   node-optional: '[node]'
   value-optional: '[value]'
   world-optional: '[world]'
+error:
+  generic: 'Error'
+  creation: 'Error creating {0}'
+  config: 'Invalid config: {0}'
+merge:
+  start: 'Merging data holders, this might take some time'
+  mysql-to: 'Merging into MySQL can take some time, this is your warning'
+  mysql-from: 'Merging from MySQL can take some time, this is your warning'
+  complete: 'Merge complete'
+dataholder:
+  mysql:
+    import: 'Importing mysql.yml into the database'
+    import-invalid: 'The mysql.yml file is invalid, cannot import'
+    import-complete: 'Import complete'
+    
