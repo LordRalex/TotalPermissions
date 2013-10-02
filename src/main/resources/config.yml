@@ -24,7 +24,6 @@
 ##   updater: ???. Default is true.
 ##
 strict-mode: false
-update-check: true
 update:
   check: true
   download: true
@@ -35,3 +34,10 @@ reflection:
 permissions:
   formatter: true
   updater: true
+storage: yaml
+mysql:
+  host: localhost
+  port: 3306
+  database: tp_db
+  user: username
+  pass: password
