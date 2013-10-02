@@ -26,7 +26,6 @@ import net.ae97.totalpermissions.data.YamlDataHolder;
 import net.ae97.totalpermissions.lang.Cipher;
 import net.ae97.totalpermissions.listeners.TPListener;
 import net.ae97.totalpermissions.mcstats.Metrics;
-import net.ae97.totalpermissions.runnable.UpdateRunnable;
 import net.ae97.totalpermissions.sql.PermissionPersistance;
 import java.io.File;
 import java.util.ArrayList;
@@ -38,6 +37,9 @@ import javax.persistence.PersistenceException;
 import net.ae97.totalpermissions.data.DataType;
 import net.ae97.totalpermissions.data.FlatFileDataHolder;
 import net.ae97.totalpermissions.data.MySQLDataHolder;
+import net.ae97.totalpermissions.updater.Updater;
+import net.ae97.totalpermissions.updater.Updater.UpdateResult;
+import net.ae97.totalpermissions.updater.Updater.UpdateType;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -181,7 +183,13 @@ public final class TotalPermissions extends JavaPlugin {
                 return;
             }
             if (getConfig().getBoolean("update.check", true)) {
-                Bukkit.getScheduler().runTaskLater(this, new UpdateRunnable(this), 1);
+                UpdateType updatetype = UpdateType.NO_DOWNLOAD;
+                if (getConfig().getBoolean("update.download", true)) {
+                    updatetype = UpdateType.DEFAULT;
+                }
+
+                Updater updater = new Updater(this, "http://dev.bukkit.org/bukkit-plugins/totalpermissions", this.getFile(), updatetype, true);
+                updater.checkForUpdate();
             }
 
             debugLog("Creating permission manager");
