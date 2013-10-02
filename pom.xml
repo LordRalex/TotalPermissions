@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.ae97</groupId>
     <artifactId>TotalPermissions</artifactId>
-    <version>0.3.0-DEV</version>
+    <version>0.3.0</version>
     <name>TotalPermissions</name>
     <url>http://dev.bukkit.org/server-mods/totalpermissions/</url>
     <properties>
-        <languageversion>0.2</languageversion>
+        <languageversion>0.3</languageversion>
         <build>${buildNumber}</build>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
