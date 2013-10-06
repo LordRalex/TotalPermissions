@@ -49,7 +49,8 @@ public class HelpCommand implements SubCommand {
             }
             return true;
         }
-        if (args.length == 1) {
+        //don't quite understand what this point of the help arg in this, but to fix a bug, will keep it
+        if (args.length == 1 || args.lenth == 0) {
             args = new String[]{"help", "1"};
         }
         int page = getInt(args[1]);
