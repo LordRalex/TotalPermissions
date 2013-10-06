@@ -188,7 +188,7 @@ public final class TotalPermissions extends JavaPlugin {
                     updatetype = UpdateType.DEFAULT;
                 }
 
-                Updater updater = new Updater(this, "http://dev.bukkit.org/bukkit-plugins/totalpermissions", this.getFile(), updatetype, true);
+                Updater updater = new Updater(this, "totalpermissions", this.getFile(), updatetype, true);
                 updater.checkForUpdate();
             }
 
