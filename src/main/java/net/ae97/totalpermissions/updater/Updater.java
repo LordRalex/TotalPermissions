@@ -385,7 +385,7 @@ public class Updater {
                                 String[] split = fileLink.split("/");
                                 name = split[split.length - 1];
                             }
-                            saveFile(new File("plugins/" + updateFolder), name, fileLink);
+                            saveFile(updateFolder, name, fileLink);
                         } else {
                             result = UpdateResult.UPDATE_AVAILABLE;
                         }

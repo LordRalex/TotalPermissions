@@ -24,7 +24,6 @@ import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.ae97.totalpermissions.permission.PermissionType;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -71,71 +70,128 @@ public class TPListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLogin(PlayerLoginEvent event) {
-        plugin.debugLog("PlayerLoginEvent fired, handling");
-        PermissionUser user = plugin.getManager().getUser(event.getPlayer());
-        if (plugin.getConfig().getBoolean("reflection.starperm", false)
-                || (user.getDebugState() && plugin.getConfig().getBoolean("reflection.debug", false))) {
-            plugin.debugLog("Reflection hook enabled, reflecting into the player");
-            //forgive me for saying I did not want to do this, or as squid says
-            //"Forgive me for my sins"
-            Player player = event.getPlayer();
-            try {
-                Class cl = Class.forName("org.bukkit.craftbukkit." + plugin.getBukkitVersion() + ".entity.CraftPlayer");
-                Field field = cl.getField("perm");
-                field.setAccessible(true);
-                TPPermissibleBase base = new TPPermissibleBase(event.getPlayer(), user.getDebugState());
-                field.set(player, base);
-                plugin.getLogger().info(plugin.getLangFile().getString("listener.tplistener.login.hooked", event.getPlayer().getName()));
-            } catch (NoSuchFieldException ex) {
-                plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("listener.tplistener.login.error"), ex);
-            } catch (SecurityException ex) {
-                plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("listener.tplistener.login.error"), ex);
-            } catch (IllegalArgumentException ex) {
-                plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("listener.tplistener.login.error"), ex);
-            } catch (IllegalAccessException ex) {
-                plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("listener.tplistener.login.error"), ex);
-            } catch (ClassNotFoundException ex) {
-                plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("listener.tplistener.login.error"), ex);
+        try {
+            plugin.debugLog("PlayerLoginEvent fired, handling");
+            PermissionUser user = plugin.getManager().getUser(event.getPlayer());
+            if (plugin.getConfig().getBoolean("reflection.starperm", false)
+                    || (user.getDebugState() && plugin.getConfig().getBoolean("reflection.debug", false))) {
+                plugin.debugLog("Reflection hook enabled, reflecting into the player");
+                //forgive me for saying I did not want to do this, or as squid says
+                //"Forgive me for my sins"
+                Player player = event.getPlayer();
+                try {
+                    Class cl = Class.forName("org.bukkit.craftbukkit." + plugin.getBukkitVersion() + ".entity.CraftPlayer");
+                    Field field = cl.getField("perm");
+                    field.setAccessible(true);
+                    TPPermissibleBase base = new TPPermissibleBase(event.getPlayer(), user.getDebugState());
+                    field.set(player, base);
+                    plugin.getLogger().info(plugin.getLangFile().getString("listener.tplistener.login.hooked", event.getPlayer().getName()));
+                } catch (NoSuchFieldException ex) {
+                    plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("listener.tplistener.login.error"), ex);
+                } catch (SecurityException ex) {
+                    plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("listener.tplistener.login.error"), ex);
+                } catch (IllegalArgumentException ex) {
+                    plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("listener.tplistener.login.error"), ex);
+                } catch (IllegalAccessException ex) {
+                    plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("listener.tplistener.login.error"), ex);
+                } catch (ClassNotFoundException ex) {
+                    plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("listener.tplistener.login.error"), ex);
+                }
+            }
+            plugin.getManager().handleLoginEvent(event);
+        } catch (StackOverflowError e) {
+            plugin.getLogger().severe("Huge error on logging in player " + event.getPlayer().getName() + " during PlayerLoginEvent");
+            StackTraceElement[] elementsInit = e.getStackTrace();
+            plugin.getLogger().severe(e.getMessage());
+            plugin.getLogger().severe("The debug file will contain the full stacktrace");
+            for (StackTraceElement elementsInit1 : elementsInit) {
+                plugin.debugLog(elementsInit1.toString());
+            }
+            Throwable cause = e.getCause();
+            while (cause != null) {
+                plugin.debugLog("Caused by: " + cause.getMessage());
+                StackTraceElement[] elementsOrig = cause.getStackTrace();
+                for (StackTraceElement elementsOrig1 : elementsOrig) {
+                    plugin.debugLog(elementsOrig1.toString());
+                }
+                cause = cause.getCause();
             }
         }
-        plugin.getManager().handleLoginEvent(event);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
-        plugin.debugLog("PlayerJoinEvent-Lowest fired, handling");
-        Player player = event.getPlayer();
-        PermissionUser user = plugin.getManager().getUser(player);
-        user.changeWorld(player, player.getWorld().getName(), plugin.getManager().getAttachment(player));
+        try {
+            plugin.debugLog("PlayerJoinEvent-Lowest fired, handling");
+            Player player = event.getPlayer();
+            PermissionUser user = plugin.getManager().getUser(player);
+            user.changeWorld(player, player.getWorld().getName(), plugin.getManager().getAttachment(player));
+        } catch (StackOverflowError e) {
+            plugin.getLogger().severe("Huge error on logging in player " + event.getPlayer().getName() + " during PlayerJoinEvent");
+            StackTraceElement[] elementsInit = e.getStackTrace();
+            plugin.getLogger().severe(e.getMessage());
+            plugin.getLogger().severe("The debug file will contain the full stacktrace");
+            for (StackTraceElement elementsInit1 : elementsInit) {
+                plugin.debugLog(elementsInit1.toString());
+            }
+            Throwable cause = e.getCause();
+            while (cause != null) {
+                plugin.debugLog("Caused by: " + cause.getMessage());
+                StackTraceElement[] elementsOrig = cause.getStackTrace();
+                for (StackTraceElement elementsOrig1 : elementsOrig) {
+                    plugin.debugLog(elementsOrig1.toString());
+                }
+                cause = cause.getCause();
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoinEventMonitor(PlayerJoinEvent event) {
-        plugin.debugLog("PlayerJoinEvent-Monitor fired, handling");
-        Player player = event.getPlayer();
-        PermissionUser user = plugin.getManager().getUser(player);
-        user.changeWorld(player, player.getWorld().getName(), plugin.getManager().getAttachment(player));
-        if (plugin.isDebugMode()) {
-            plugin.debugLog(event.getPlayer().getName() + " has joined in world " + event.getPlayer().getWorld().getName());
-            Set<PermissionAttachmentInfo> set = event.getPlayer().getEffectivePermissions();
-            plugin.debugLog("Player: " + event.getPlayer().getName());
-            for (PermissionAttachmentInfo perm : set) {
-                plugin.debugLog(" PermAttInfo: " + perm.getPermission());
-                PermissionAttachment att = perm.getAttachment();
-                if (att != null) {
-                    Map<String, Boolean> map = att.getPermissions();
-                    plugin.debugLog("  PermAtt: " + att.toString());
-                    plugin.debugLog("  PermAttMap:");
-                    for (String key : map.keySet()) {
-                        plugin.debugLog("   - " + key + ": " + map.get(key));
-                        Permission pe = Bukkit.getPluginManager().getPermission(key);
-                        if (pe != null) {
-                            for (String k : pe.getChildren().keySet()) {
-                                plugin.debugLog("     - " + k + ": " + pe.getChildren().get(k));
+        try {
+            plugin.debugLog("PlayerJoinEvent-Monitor fired, handling");
+            Player player = event.getPlayer();
+            PermissionUser user = plugin.getManager().getUser(player);
+            user.changeWorld(player, player.getWorld().getName(), plugin.getManager().getAttachment(player));
+            if (plugin.isDebugMode()) {
+                plugin.debugLog(event.getPlayer().getName() + " has joined in world " + event.getPlayer().getWorld().getName());
+                Set<PermissionAttachmentInfo> set = event.getPlayer().getEffectivePermissions();
+                plugin.debugLog("Player: " + event.getPlayer().getName());
+                for (PermissionAttachmentInfo perm : set) {
+                    plugin.debugLog(" PermAttInfo: " + perm.getPermission());
+                    PermissionAttachment att = perm.getAttachment();
+                    if (att != null) {
+                        Map<String, Boolean> map = att.getPermissions();
+                        plugin.debugLog("  PermAtt: " + att.toString());
+                        plugin.debugLog("  PermAttMap:");
+                        for (String key : map.keySet()) {
+                            plugin.debugLog("   - " + key + ": " + map.get(key));
+                            Permission pe = Bukkit.getPluginManager().getPermission(key);
+                            if (pe != null) {
+                                for (String k : pe.getChildren().keySet()) {
+                                    plugin.debugLog("     - " + k + ": " + pe.getChildren().get(k));
+                                }
                             }
                         }
                     }
                 }
+            }
+        } catch (StackOverflowError e) {
+            plugin.getLogger().severe("Huge error on logging in player " + event.getPlayer().getName() + " during PlayerJoinEvent");
+            StackTraceElement[] elementsInit = e.getStackTrace();
+            plugin.getLogger().severe(e.getMessage());
+            plugin.getLogger().severe("The debug file will contain the full stacktrace");
+            for (StackTraceElement elementsInit1 : elementsInit) {
+                plugin.debugLog(elementsInit1.toString());
+            }
+            Throwable cause = e.getCause();
+            while (cause != null) {
+                plugin.debugLog("Caused by: " + cause.getMessage());
+                StackTraceElement[] elementsOrig = cause.getStackTrace();
+                for (StackTraceElement elementsOrig1 : elementsOrig) {
+                    plugin.debugLog(elementsOrig1.toString());
+                }
+                cause = cause.getCause();
             }
         }
     }

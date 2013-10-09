@@ -383,9 +383,6 @@ public final class TotalPermissions extends JavaPlugin {
     }
 
     public void debugLog(Object... message) {
-        if (!isDebugMode()) {
-            return;
-        }
         for (Object m : message) {
             getLogger().log(Level.FINER, m.toString());
         }
