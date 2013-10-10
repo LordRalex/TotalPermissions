@@ -23,7 +23,6 @@
 ##
 ##   updater: ???. Default is true.
 ##
-strict-mode: false
 update:
   check: true
   download: true

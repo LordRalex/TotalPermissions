@@ -2,7 +2,6 @@ main: net.ae97.totalpermissions.TotalPermissions
 name: ${project.name}
 description: Permissions plugin for Bukkit. Still heavily under development
 version: ${project.version}
-build: ${build}
 authors: [Lord_Ralex, 1Rogue]
 website: http://dev.bukkit.org/bukkit-plugins/totalpermissions/
 prefix: TotalPerms

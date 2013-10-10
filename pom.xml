@@ -8,7 +8,6 @@
     <url>http://dev.bukkit.org/server-mods/totalpermissions/</url>
     <properties>
         <languageversion>0.3</languageversion>
-        <build>${buildNumber}</build>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <repositories>
