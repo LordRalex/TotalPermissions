@@ -57,7 +57,9 @@ public class PermissionUtility {
         List<String> perms = new ArrayList<String>();
         Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
         for (Permission permTest : permT) {
-            if (permTest.getDefault() != PermissionDefault.FALSE) {
+            if (permTest.getName().startsWith("totalpermissions")) {
+                continue;
+            } else if (permTest.getDefault() != PermissionDefault.FALSE) {
                 perms.add(permTest.getName());
             } else if (isAll) {
                 perms.add(permTest.getName());
