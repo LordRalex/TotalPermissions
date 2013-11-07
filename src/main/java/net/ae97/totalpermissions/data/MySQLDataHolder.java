@@ -63,7 +63,7 @@ public class MySQLDataHolder extends MemoryDataHolder {
             dataConfig.setUrl("jdbc:mysql://{ip}:{port}/{db}"
                     .replace("{ip}", cfg.getString("mysql.host", "localhost"))
                     .replace("{port}", cfg.getString("mysql.port", "3306"))
-                    .replace("{db}", cfg.getString("mysql.db", "tp_db")));
+                    .replace("{db}", cfg.getString("mysql.database", "tp_db")));
             serverConfig.setDataSourceConfig(dataConfig);
             serverConfig.addClass(PermissionPersistance.class);
             serverConfig.setName("TotalPermissions");
