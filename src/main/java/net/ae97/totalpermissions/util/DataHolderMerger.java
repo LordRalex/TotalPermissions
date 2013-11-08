@@ -26,7 +26,6 @@ import net.ae97.totalpermissions.data.YamlDataHolder;
 import net.ae97.totalpermissions.permission.PermissionType;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.plugin.Plugin;
 
 /**
  * @version 1.0

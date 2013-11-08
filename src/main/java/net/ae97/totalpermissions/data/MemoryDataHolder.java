@@ -21,7 +21,6 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.PermissionType;
@@ -131,10 +130,7 @@ public abstract class MemoryDataHolder implements DataHolder {
         if (map == null) {
             map = new HashMap<String, ConfigurationSection>();
         }
-        if (map.containsKey(name.toLowerCase())) {
-            return true;
-        }
-        return false;
+        return map.containsKey(name.toLowerCase());
     }
 
     @Override

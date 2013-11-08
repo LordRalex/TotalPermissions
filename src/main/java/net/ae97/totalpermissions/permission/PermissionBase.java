@@ -292,11 +292,7 @@ public abstract class PermissionBase {
     public boolean equals(Object val) {
         if (val instanceof PermissionBase) {
             PermissionBase test = (PermissionBase) val;
-            if (test.getType() == this.getType() && test.getName().equalsIgnoreCase(this.getName())) {
-                return true;
-            } else {
-                return false;
-            }
+            return test.getType() == this.getType() && test.getName().equalsIgnoreCase(this.getName());
         } else {
             return super.equals(val);
         }

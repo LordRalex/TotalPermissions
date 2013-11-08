@@ -383,7 +383,6 @@ public final class Metrics {
             connection = url.openConnection();
         }
 
-
         byte[] uncompressed = json.toString().getBytes();
         byte[] compressed = gzip(json.toString());
 
@@ -478,7 +477,7 @@ public final class Metrics {
         try {
             Class.forName("mineshafter.MineServer");
             return true;
-        } catch (Exception e) {
+        } catch (ClassNotFoundException e) {
             return false;
         }
     }
@@ -670,7 +669,7 @@ public final class Metrics {
         /**
          * Construct a plotter with a specific plot name
          *
-         * @param name the name of the plotter to use, which will show up on the
+         * @param n the name of the plotter to use, which will show up on the
          * website
          */
         public Plotter(final String n) {

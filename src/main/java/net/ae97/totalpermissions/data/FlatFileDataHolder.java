@@ -85,11 +85,7 @@ public class FlatFileDataHolder extends MemoryDataHolder {
             @Override
             public boolean accept(File dir, String name) {
                 String lowercaseName = name.toLowerCase();
-                if (lowercaseName.endsWith(".yml")) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return lowercaseName.endsWith(".yml");
             }
         });
         for (File file : files) {
