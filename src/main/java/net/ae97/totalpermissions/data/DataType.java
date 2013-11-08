@@ -25,5 +25,6 @@ public enum DataType {
     YAML,
     MYSQL,
     FLAT,
-    SQLITE;
+    SQLITE,
+    SHARED;
 }

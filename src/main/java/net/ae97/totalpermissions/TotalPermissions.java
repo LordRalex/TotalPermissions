@@ -37,6 +37,7 @@ import javax.persistence.PersistenceException;
 import net.ae97.totalpermissions.data.DataType;
 import net.ae97.totalpermissions.data.FlatFileDataHolder;
 import net.ae97.totalpermissions.data.MySQLDataHolder;
+import net.ae97.totalpermissions.data.SharedDataHolder;
 import net.ae97.totalpermissions.updater.Updater;
 import net.ae97.totalpermissions.updater.Updater.UpdateResult;
 import net.ae97.totalpermissions.updater.Updater.UpdateType;
@@ -132,6 +133,11 @@ public final class TotalPermissions extends JavaPlugin {
 
                 case FLAT: {
                     dataHolder = new FlatFileDataHolder(new File(getDataFolder(), "data"));
+                }
+                break;
+
+                case SHARED: {
+                    dataHolder = new SharedDataHolder(this);
                 }
                 break;
 
