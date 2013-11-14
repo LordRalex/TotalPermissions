@@ -38,10 +38,12 @@ import net.ae97.totalpermissions.data.DataType;
 import net.ae97.totalpermissions.data.FlatFileDataHolder;
 import net.ae97.totalpermissions.data.MySQLDataHolder;
 import net.ae97.totalpermissions.data.SharedDataHolder;
+import net.ae97.totalpermissions.lang.Lang;
 import net.ae97.totalpermissions.updater.Updater;
 import net.ae97.totalpermissions.updater.Updater.UpdateType;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -92,6 +94,7 @@ public final class TotalPermissions extends JavaPlugin {
                 saveResource("permissions.yml", true);
             }
 
+            Lang.setLanguageConfig(YamlConfiguration.loadConfiguration(this.getResource("lang/" + getConfig().getString("language", "en_US") + ".yml")));
             cipher = new Cipher(this, getConfig().getString("language", "en_US"));
 
             for (String version : ACCEPTABLE_VERSIONS) {

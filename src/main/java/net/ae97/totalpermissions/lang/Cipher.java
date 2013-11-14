@@ -27,6 +27,7 @@ import org.bukkit.plugin.Plugin;
  * @version 0.2
  * @author 1Rogue
  * @since 0.2
+ * @deprecated Use Lang class instead
  */
 public class Cipher {
 
@@ -36,7 +37,7 @@ public class Cipher {
     public Cipher(Plugin plugin, String lang) throws InvalidConfigurationException, IOException {
         language = lang;
         langFile = new YamlConfiguration();
-        langFile.load("lang/" + plugin.getResource(lang + ".yml"));
+        langFile.load(plugin.getResource("lang/" + lang + ".yml"));
     }
 
     /**
