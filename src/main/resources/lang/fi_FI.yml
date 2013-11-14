@@ -1,0 +1,96 @@
+version: 1
+command:
+  backup:
+    command: 'varmista'
+    help: 'Pakottaa tiedostojen varmuuskopioinnin'
+  debug:
+    command: 'debug'
+    args: 'Ei kohdetta. (/ttp debug help saadaksesi ohjeet)'
+    args-plain: 'Ei kohdetta. (/ttp debug help saadaksesi ohjeet)'
+    null-target: 'Kohdekäyttäjää ("{0}") ei löydy'
+    debug-on: 'Debug kytketty päälle kohteelle {0}'
+    debug-off: 'Debug kytketty pois kohteelle {0}'
+    help: 'Kytkee debug-tilan päälle annetulle käyttäjälle'
+  help:
+    command: 'help'
+    cont: 'Käytä /ttp {0} help saadaksesi tietyn komennon ohjeet'
+    cont-plain: 'Käytä /ttp {0} help saadaksesi tietyn komennon ohjeet'
+    help: 'Näyttää aputietoja'
+  reload:
+    command: 'uudelleenlataa'
+    reloading: 'Ladataan uudelleen {0}'
+    badconfig: 'Virhe uudelleenladatessa, tarkista palvelinloki'
+    general: 'Virhe uudelleenladatessa {0}'
+    success: '{0} uudelleenlatautui'
+    help: 'Uudelleenlataa TotalPermissionsin'
+  handler:
+    ifnull: 'Ei komentoa, /ttp help saadaksesi komentolistan'
+    ifnull-plain: 'Ei komentoa, /ttp help saadaksesi komentolistan'
+    help-check: 'help'
+    denied: 'Et voi käyttää annettua komentoa'
+    usage: 'käyttö'
+  user:
+    help: 'Käyttäjäkäyttöliittymä'
+  group:
+    help: 'Ryhmäkäyttöliittymä'
+configuration:
+  configuration:
+    strict-mode: 'tarkka-tila'
+    reflection:
+      star: 'tähti'
+      debug: 'debug'
+    update-check: 'päivitystarkistus'
+    angry-debug: 'vihainen-debug'
+language:
+  lang:
+    nullresc: 'Kieliresurssitiedosto on NULL!'
+    default: 'Käytetään oletusta '
+listener:
+  tplistener:
+    login:
+      hooked: 'Reflektio-hook hankittu'
+      error: 'Virhe reflektoidessa'
+    preprocess:
+      activate: 'Komento käytössä:'
+      allow: 'voi käyttää komentoa, on'
+      deny: 'ei voi käyttää komentoa, ei ole'
+      invalid: 'Komento {0} ei ole rekisteröity.'
+      index: 'tuotti IOoBEn'
+permission:
+  base:
+    adding: 'Lisätään luvat kohteelle'
+    add: 'Lisätään lupa'
+  group:
+    default: 'oletus'
+reflection:
+  checking: 'Tarkistetaan onko {0}:lla {1}'
+manager:
+  null-group: 'Sinun tulee määritellä vähintään yksi ryhmä'
+  null-default: 'Sinun tulee määritellä vähintään yksi oletusryhmä'
+update:
+  dev: 'Käytät kehitysversiota, päivitystarkistukset pois päältä'
+  update-error: 'Päivitystä tarkastaessa sattui virhe'
+  versioning-error: 'Versiotarkistus ei valmistunut'
+main:
+  init: 'Aloitetaan valmistelut'
+  init-done: 'Valmistelut tehty'
+  bad-version1: 'Käytät testaamatonta Craftbukkit-versiota. Ole hyvä ja päivitä.'
+  bad-version2: 'Vaikka ohjelma toimiikin, kehittyneet ominaisuudet kuten debug ja reflektio eivät ole saatavilla'
+  yaml-error: 'YAML-virhe tiedostossa permissions.yml'
+  load-backup: 'Yritetään ladata varmuuskopioversio lupatiedostosta'
+  loaded1: 'Vanha lupatiedosto ladattu. Korjaa luvat ennen kuin teet mitään muuta.'
+  loaded2: 'Ajastetut varmuuskopiot ovat myös pois päältä jotta voit korjata tiedoston'
+  load-failed1: 'Virheitä viimeisimmässä varmuuskopiossa, ei voi ladata'
+  load-failed2: 'Lupaplugin sulkeutuu koska ei ole mitään tehtävissä ;~;'
+  create:
+    perms: 'Luodaan lupamanageri'
+    listener: 'Luodaan pelaajakuuntelija'
+    command: 'Luodaan komentokäsittelijä'
+  metrics: 'Plugin-metriikat ovat päällä -- voit kytkeä ne pois PluginMetricsin konfiguraatiossa'
+  error: 'Virhe käynnistäessä {0} (Versio {1})'
+variables:
+  command: '<komento>'
+  username: '<käyttäjä>'
+  group: '<ryhmä>'
+  permission: '<lupa>'
+  node: '<solmu>'

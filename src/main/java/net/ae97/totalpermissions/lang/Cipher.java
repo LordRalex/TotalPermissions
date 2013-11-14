@@ -16,14 +16,7 @@
  */
 package net.ae97.totalpermissions.lang;
 
-import net.ae97.totalpermissions.TotalPermissions;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.logging.Level;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -37,69 +30,13 @@ import org.bukkit.plugin.Plugin;
  */
 public class Cipher {
 
-    protected FileConfiguration langFile;
-    private final String langFileLocGithub = "https://raw.github.com/AE97/TotalPermissions/master/lang/<version>/<lang>.yml";
-    private final String langFileLocJar = "<lang>.yml";
-    private final String langFileLocFolder = "<plugin>" + File.separatorChar + "lang" + File.separatorChar + "<lang>.yml";
+    private final FileConfiguration langFile;
     private final String language;
 
-    public Cipher(Plugin plugin, String lang) {
+    public Cipher(Plugin plugin, String lang) throws InvalidConfigurationException, IOException {
         language = lang;
-        //load file from github in preps for future use
-        if (language.equalsIgnoreCase("custom")) {
-            FileConfiguration file = getFromFolder(plugin, language);
-            if (file != null) {
-                setLangFile(file);
-                return;
-            }
-        }
-        FileConfiguration github = null;
-        try {
-            github = getFromGithub(plugin, language);
-        } catch (FileNotFoundException e) {
-            plugin.getLogger().log(Level.SEVERE, "Lang file not found online", e);
-        } catch (IOException e) {
-            plugin.getLogger().log(Level.SEVERE, "Fatal error occured while retrieving lang files", e);
-        }
-        try {
-            //first see if there is a lang file
-            FileConfiguration file = getFromFolder(plugin, language);
-            if (file != null) {
-                int version = file.getInt("version", 0);
-                int gitVersion = version;
-                if (github != null) {
-                    gitVersion = github.getInt("version", version);
-                }
-                if (gitVersion > version) {
-                    plugin.getLogger().warning("Your language file is outdated, getting new file");
-                    file = github;
-                }
-            } else {
-                file = getFromJar(plugin, language);
-                if (file == null) {
-                    file = github;
-                    if (file == null) {
-                        throw new InvalidConfigurationException("The langauage " + language + " is unsupported");
-                    }
-                }
-            }
-            setLangFile(file);
-        } catch (Exception e) {
-            //and if we just completely crash and burn, then use en_US
-            plugin.getLogger().log(Level.SEVERE, "Fatal error occured while loading lang files", e);
-            plugin.getLogger().log(Level.SEVERE, "Defaulting to english (en_US)");
-            setLangFile(getFromJar(plugin, lang));
-        }
-        try {
-            new File(langFileLocFolder.replace("<plugin>", plugin.getDataFolder().getPath())).getParentFile().mkdirs();
-            langFile.save(langFileLocFolder.replace("<plugin>", plugin.getDataFolder().getPath()).replace("<lang>", lang));
-        } catch (IOException ex) {
-            plugin.getLogger().log(Level.SEVERE, "Fatal error occured while saving lang files", ex);
-        }
-    }
-
-    private void setLangFile(FileConfiguration file) {
-        langFile = file;
+        langFile = new YamlConfiguration();
+        langFile.load("lang/" + plugin.getResource(lang + ".yml"));
     }
 
     /**
@@ -111,15 +48,11 @@ public class Cipher {
      * @return The resulting String
      *
      * @since 0.2
+     *
+     * @deprecated Fully deprecated, replacing with new system
      */
     public String getString(String path, Object... vars) {
         String string = langFile.getString(path);
-        if (string == null) {
-            FileConfiguration fromJar = getFromJar(TotalPermissions.getPlugin(), langFileLocJar.replace("<lang>", "en_US"));
-            if (fromJar != null) {
-                string = fromJar.getString(path);
-            }
-        }
         if (string == null) {
             throw new NullPointerException("The language files are missing the path. Language: " + language + " Path: " + path);
         }
@@ -127,35 +60,5 @@ public class Cipher {
             string = string.replace("{" + i + "}", vars[i].toString());
         }
         return ChatColor.translateAlternateColorCodes('&', string);
-    }
-
-    private FileConfiguration getFromFolder(Plugin pl, String lang) {
-        File file = new File(langFileLocFolder.replace("<plugin>", pl.getDataFolder().getPath()).replace("<lang>", lang));
-        if (file.exists()) {
-            return YamlConfiguration.loadConfiguration(file);
-        } else {
-            return null;
-        }
-    }
-
-    private FileConfiguration getFromJar(Plugin plugin, String lang) {
-        InputStream jarStream = plugin.getResource(langFileLocJar.replace("<lang>", lang));
-        if (jarStream != null) {
-            return YamlConfiguration.loadConfiguration(jarStream);
-        } else {
-            return null;
-        }
-    }
-
-    private FileConfiguration getFromGithub(Plugin plugin, String lang) throws MalformedURLException, IOException {
-        YamlConfiguration pluginyml = YamlConfiguration.loadConfiguration(plugin.getResource("plugin.yml"));
-
-        URL upstr = new URL(langFileLocGithub.replace("<version>", pluginyml.getString("language-version")).replace("<lang>", lang));
-        InputStream langs = upstr.openStream();
-        if (langs != null) {
-            return YamlConfiguration.loadConfiguration(langs);
-        } else {
-            return null;
-        }
     }
 }
