@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.ae97</groupId>
     <artifactId>TotalPermissions</artifactId>
-    <version>0.3.1</version>
+    <version>0.4.0-SNAPSHOT</version>
     <name>TotalPermissions</name>
     <url>http://dev.bukkit.org/server-mods/totalpermissions/</url>
     <properties>
@@ -39,6 +39,7 @@
                     <include>config.yml</include>
                     <include>en_US.yml</include>
                     <include>permissions.yml</include>
+                    <include>lang/*</include>
                 </includes>
             </resource>
         </resources>
