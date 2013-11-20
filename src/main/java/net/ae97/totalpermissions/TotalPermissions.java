@@ -28,11 +28,13 @@ import net.ae97.totalpermissions.listeners.TPListener;
 import net.ae97.totalpermissions.mcstats.Metrics;
 import net.ae97.totalpermissions.sql.PermissionPersistance;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.PersistenceException;
 import net.ae97.totalpermissions.data.DataType;
 import net.ae97.totalpermissions.data.FlatFileDataHolder;
@@ -308,16 +310,21 @@ public final class TotalPermissions extends JavaPlugin {
 
     /**
      * Returns the (@link Cipher) that is loaded
-     * <strong>AS OF 0.4, THIS RETURNS NULL</strong>
      *
      * @return NULL
      *
      * @since 0.2
      *
-     * @deprecated Use {@link Lang} class instead. This <strong>will</strong>
-     * return null.
+     * @deprecated Use {@link Lang} class instead
      */
     public Cipher getLangFile() {
+        try {
+            return new Cipher(this, getConfig().getString("language", "en_US"));
+        } catch (InvalidConfigurationException ex) {
+            getLogger().log(Level.SEVERE, "ERROR", ex);
+        } catch (IOException ex) {
+            getLogger().log(Level.SEVERE, "ERROR", ex);
+        }
         return null;
     }
 

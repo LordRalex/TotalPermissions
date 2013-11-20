@@ -17,6 +17,7 @@
 package net.ae97.totalpermissions.lang;
 
 import java.io.IOException;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -53,13 +54,11 @@ public class Cipher {
      * @deprecated Fully deprecated, replacing with new system
      */
     public String getString(String path, Object... vars) {
-        String string = langFile.getString(path);
-        if (string == null) {
-            throw new NullPointerException("The language files are missing the path. Language: " + language + " Path: " + path);
+        Lang lang = Lang.getLang(path);
+        if (lang == null) {
+            return path + ": " + StringUtils.join(vars, " ");
+        } else {
+            return lang.getMessage(vars);
         }
-        for (int i = 0; i < vars.length; i++) {
-            string = string.replace("{" + i + "}", vars[i].toString());
-        }
-        return ChatColor.translateAlternateColorCodes('&', string);
     }
 }

@@ -209,4 +209,13 @@ public enum Lang {
         return message;
     }
 
+    public static Lang getLang(String p) {
+        for (Lang lang : Lang.values()) {
+            if (lang.path.equalsIgnoreCase(p)) {
+                return lang;
+            }
+        }
+        return null;
+    }
+
 }
