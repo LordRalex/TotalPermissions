@@ -22,6 +22,7 @@ import net.ae97.totalpermissions.permission.PermissionGroup;
 import net.ae97.totalpermissions.permission.PermissionType;
 import java.io.IOException;
 import java.util.List;
+import net.ae97.totalpermissions.lang.Lang;
 import net.ae97.totalpermissions.permission.PermissionUser;
 import org.bukkit.command.CommandSender;
 
@@ -46,7 +47,7 @@ public class SetAction extends SubAction {
             if (tar instanceof PermissionGroup) {
                 try {
                     plugin.getManager().changeDefaultGroup(tar.getName());
-                    sender.sendMessage(plugin.getLangFile().getString("command.action.set.default", target));
+                    sender.sendMessage(Lang.COMMAND_ACTION_SET_DEFAULT.getMessage(target));
                     return true;
                 } catch (IOException ex) {
                     saveError(plugin, tar, sender, ex);
@@ -64,7 +65,7 @@ public class SetAction extends SubAction {
                         }
                     }
                     //TODO: Make a lang string for setting groups
-                    sender.sendMessage(plugin.getLangFile().getString("command.action.add.groups", item, target));
+                    sender.sendMessage(Lang.COMMAND_ACTION_ADD_GROUPS.getMessage(item, target));
                     return true;
                 } catch (IOException ex) {
                     saveError(plugin, tar, sender, ex);
@@ -73,11 +74,11 @@ public class SetAction extends SubAction {
 
         } else if (field.equalsIgnoreCase("prefix")) {
             tar.setOption("prefix", item, world);
-            sender.sendMessage(plugin.getLangFile().getString("command.action.set.prefix", target, item));
+            sender.sendMessage(Lang.COMMAND_ACTION_SET_PREFIX.getMessage(target, item));
             return true;
         } else if (field.equalsIgnoreCase("suffix")) {
             tar.setOption("suffix", item, world);
-            sender.sendMessage(plugin.getLangFile().getString("command.action.set.suffix", target, item));
+            sender.sendMessage(Lang.COMMAND_ACTION_SET_SUFFIX.getMessage(target, item));
             return true;
         }
         return false;
@@ -91,10 +92,10 @@ public class SetAction extends SubAction {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "set " + plugin.getLangFile().getString("variables.field")
-            + " " + plugin.getLangFile().getString("variables.value")
-            + " " + plugin.getLangFile().getString("variables.world-optional"),
-            plugin.getLangFile().getString("command.action.set.help")
+            "set " + Lang.VARIABLES_FIELD.getMessage()
+            + " " + Lang.VARIABLES_VALUE.getMessage()
+            + " " + Lang.VARIABLES_WORLDOPTIONAL.getMessage(),
+            Lang.COMMAND_ACTION_SET_HELP.getMessage()
         };
     }
 

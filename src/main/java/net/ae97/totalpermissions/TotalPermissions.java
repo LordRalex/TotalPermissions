@@ -68,7 +68,6 @@ public final class TotalPermissions extends JavaPlugin {
     protected TPListener listener;
     protected Metrics metrics;
     protected CommandHandler commands;
-    protected Cipher cipher;
     protected boolean loadingFailed = false;
 
     @Override
@@ -95,7 +94,6 @@ public final class TotalPermissions extends JavaPlugin {
             }
 
             Lang.setLanguageConfig(YamlConfiguration.loadConfiguration(this.getResource("lang/" + getConfig().getString("language", "en_US") + ".yml")));
-            cipher = new Cipher(this, getConfig().getString("language", "en_US"));
 
             for (String version : ACCEPTABLE_VERSIONS) {
                 try {
@@ -107,8 +105,8 @@ public final class TotalPermissions extends JavaPlugin {
             }
             debugLog("Detected bukkit version: " + BUKKIT_VERSION);
             if (BUKKIT_VERSION.equalsIgnoreCase("NONE")) {
-                getLogger().severe(getLangFile().getString("main.bad-version1"));
-                getLogger().severe(getLangFile().getString("main.bad-version2"));
+                log(Level.SEVERE, Lang.MAIN_BADVERSION1);
+                log(Level.SEVERE, Lang.MAIN_BADVERSION2);
                 getConfig().set("reflection.debug", false);
                 getConfig().set("reflection.starperm", false);
             }
@@ -116,7 +114,7 @@ public final class TotalPermissions extends JavaPlugin {
             String storageType = getConfig().getString("storage", "yaml");
             DataType type = DataType.valueOf(storageType.toUpperCase());
             if (type == null) {
-                getLogger().severe(getLangFile().getString("main.storage-error", storageType));
+                log(Level.SEVERE, Lang.MAIN_STORAGEERROR, storageType);
                 type = DataType.YAML;
             }
             debugLog("Creating data holder");
@@ -155,10 +153,10 @@ public final class TotalPermissions extends JavaPlugin {
             try {
                 dataHolder.setup();
             } catch (InvalidConfigurationException e) {
-                getLogger().log(Level.SEVERE, getLangFile().getString("main.yaml-error"));
+                log(Level.SEVERE, Lang.MAIN_YAMLERROR);
                 getLogger().log(Level.SEVERE, "-> " + e.getMessage());
                 debugLog(e);
-                getLogger().log(Level.WARNING, getLangFile().getString("main.load-backup"));
+                getLogger().log(Level.WARNING, Lang.MAIN_LOADBACKUP.getMessage());
                 try {
                     if (dataHolder instanceof YamlDataHolder) {
                         dataHolder = new YamlDataHolder(new File(getLastBackupFolder(), "permissions.yml"));
@@ -166,18 +164,18 @@ public final class TotalPermissions extends JavaPlugin {
                         dataHolder = new YamlDataHolder(new File(getDataFolder(), "permissions.yml"));
                     }
                     dataHolder.setup();
-                    getLogger().log(Level.WARNING, getLangFile().getString("main.loaded1"));
-                    getLogger().log(Level.WARNING, getLangFile().getString("main.loaded2"));
+                    log(Level.WARNING, Lang.MAIN_LOADED1);
+                    log(Level.WARNING, Lang.MAIN_LOADED2);
                 } catch (InvalidConfigurationException e2) {
-                    getLogger().log(Level.SEVERE, getLangFile().getString("main.load-failed1"));
-                    getLogger().log(Level.SEVERE, getLangFile().getString("main.load-failed2"));
+                    log(Level.SEVERE, Lang.MAIN_LOADFAILED1);
+                    log(Level.SEVERE, Lang.MAIN_LOADFAILED2);
                     throw e2;
                 }
             }
 
             getLogger().info("Initial preperations complete");
         } catch (Exception e) {
-            getLogger().log(Level.SEVERE, getLangFile().getString("main.error", getName(), getDescription().getVersion()), e);
+            getLogger().log(Level.SEVERE, Lang.MAIN_ERROR.getMessage(getName(), getDescription().getVersion()), e);
             loadingFailed = true;
         }
     }
@@ -186,7 +184,7 @@ public final class TotalPermissions extends JavaPlugin {
     public void onEnable() {
         try {
             if (loadingFailed) {
-                getLogger().log(Level.SEVERE, getLangFile().getString("main.loadcrash"));
+                log(Level.SEVERE, Lang.MAIN_LOADCRASH);
                 Bukkit.getPluginManager().disablePlugin(this);
                 return;
             }
@@ -218,14 +216,14 @@ public final class TotalPermissions extends JavaPlugin {
             debugLog("Loading up metrics");
             metrics = new Metrics(this);
             if (metrics.start()) {
-                getLogger().info(getLangFile().getString("main.metrics"));
+                log(Level.INFO, Lang.MAIN_METRICS);
             }
         } catch (Exception e) {
             if (e instanceof InvalidConfigurationException) {
-                getLogger().log(Level.SEVERE, getLangFile().getString("main.yaml-error"));
+                log(Level.SEVERE, Lang.MAIN_YAMLERROR);
                 getLogger().log(Level.SEVERE, ((InvalidConfigurationException) e).getMessage());
             } else {
-                getLogger().log(Level.SEVERE, getLangFile().getString("main.error", getName(), getDescription().getVersion()), e);
+                getLogger().log(Level.SEVERE, Lang.MAIN_ERROR.getMessage(getName(), getDescription().getVersion()), e);
             }
             Bukkit.getPluginManager().disablePlugin(this);
         }
@@ -310,13 +308,17 @@ public final class TotalPermissions extends JavaPlugin {
 
     /**
      * Returns the (@link Cipher) that is loaded
+     * <strong>AS OF 0.4, THIS RETURNS NULL</strong>
      *
-     * @return the (@link Cipher) in use
+     * @return NULL
      *
      * @since 0.2
+     *
+     * @deprecated Use {@link Lang} class instead. This <strong>will</strong>
+     * return null.
      */
     public Cipher getLangFile() {
-        return cipher;
+        return null;
     }
 
     /**
@@ -439,5 +441,9 @@ public final class TotalPermissions extends JavaPlugin {
     @Override
     public File getFile() {
         return super.getFile();
+    }
+
+    public void log(Level level, Lang message, Object... args) {
+        getLogger().log(level, message.getMessage(args));
     }
 }

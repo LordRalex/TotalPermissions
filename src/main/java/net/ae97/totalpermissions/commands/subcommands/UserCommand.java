@@ -20,6 +20,7 @@ import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.PermissionUser;
 import java.util.Arrays;
 import java.util.List;
+import net.ae97.totalpermissions.lang.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -50,7 +51,7 @@ public class UserCommand implements SubCommand {
                 if (sender instanceof Player) {
                     p = (Player) sender;
                 } else {
-                    sender.sendMessage(plugin.getLangFile().getString("command.user.non-player"));
+                    sender.sendMessage(Lang.COMMAND_USER_NONPLAYER.getMessage());
                     return false;
                 }
             }
@@ -59,9 +60,9 @@ public class UserCommand implements SubCommand {
             for (String group : user.getGroups(null)) {
                 sb.append(group).append(", ");
             }
-            sender.sendMessage(plugin.getLangFile().getString("command.user.player", sender.getName()));
-            sender.sendMessage(plugin.getLangFile().getString("command.user.debug", user.getDebugState()));
-            sender.sendMessage(plugin.getLangFile().getString("command.user.groups", sb.substring(0, sb.length() - 2)));
+            sender.sendMessage(Lang.COMMAND_USER_PLAYER.getMessage(sender.getName()));
+            sender.sendMessage(Lang.COMMAND_USER_DEBUG.getMessage(user.getDebugState()));
+            sender.sendMessage(Lang.COMMAND_USER_GROUPS.getMessage(sb.substring(0, sb.length() - 2)));
             return true;
         }
         return false;
@@ -75,8 +76,8 @@ public class UserCommand implements SubCommand {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "ttp user " + plugin.getLangFile().getString("variables.username") + " [actions..]",
-            plugin.getLangFile().getString("command.user.help")
+            "ttp user " + Lang.VARIABLES_USERNAME.getMessage() + " [actions..]",
+            Lang.COMMAND_USER_HELP.getMessage()
         };
     }
 

@@ -19,6 +19,7 @@ package net.ae97.totalpermissions.commands.subcommands;
 import net.ae97.totalpermissions.TotalPermissions;
 import java.util.Arrays;
 import java.util.List;
+import net.ae97.totalpermissions.lang.Lang;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -52,7 +53,7 @@ public class SpecialCommand implements SubCommand {
     public String[] getHelp() {
         return new String[]{
             "ttp special [rcon|console|op] [actions..]",
-            plugin.getLangFile().getString("command.special.help")
+            Lang.COMMAND_SPECIAL_HELP.getMessage()
         };
     }
 

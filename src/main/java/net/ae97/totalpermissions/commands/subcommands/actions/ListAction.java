@@ -21,6 +21,7 @@ import net.ae97.totalpermissions.permission.PermissionBase;
 import net.ae97.totalpermissions.permission.PermissionType;
 import net.ae97.totalpermissions.permission.PermissionUser;
 import java.util.Map;
+import net.ae97.totalpermissions.lang.Lang;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -50,14 +51,14 @@ public class ListAction extends SubAction {
             for (String inher : tar.getInheritances(world)) {
                 sb.append(inher).append(", ");
             }
-            sender.sendMessage(plugin.getLangFile().getString("command.action.list.inheritance", target, sb.substring(0, sb.length() - 3)));
+            sender.sendMessage(Lang.COMMAND_ACTION_LIST_INHERITANCE.getMessage(target, sb.substring(0, sb.length() - 3)));
             return true;
         } else if (field.equalsIgnoreCase("commands")) {
             StringBuilder sb = new StringBuilder();
             for (String cmd : tar.getCommands(world)) {
                 sb.append(cmd).append(", ");
             }
-            sender.sendMessage(plugin.getLangFile().getString("command.action.list.commands", target, sb.substring(0, sb.length() - 3)));
+            sender.sendMessage(Lang.COMMAND_ACTION_LIST_COMMANDS.getMessage(target, sb.substring(0, sb.length() - 3)));
             return true;
         } else if (field.equalsIgnoreCase("groups")) {
             if (tar instanceof PermissionUser) {
@@ -66,15 +67,15 @@ public class ListAction extends SubAction {
                 for (String group : newtar.getGroups(world)) {
                     sb.append(group).append(", ");
                 }
-                sender.sendMessage(plugin.getLangFile().getString("command.action.list.groups", target, sb.substring(0, sb.length() - 3)));
+                sender.sendMessage(Lang.COMMAND_ACTION_LIST_GROUPS.getMessage(target, sb.substring(0, sb.length() - 3)));
                 return true;
             }
             return false;
         } else if (field.equalsIgnoreCase("prefix")) {
-            sender.sendMessage(plugin.getLangFile().getString("command.action.list.prefix", target, tar.getOption("prefix")));
+            sender.sendMessage(Lang.COMMAND_ACTION_LIST_PREFIX.getMessage(target, tar.getOption("prefix")));
             return true;
         } else if (field.equalsIgnoreCase("suffix")) {
-            sender.sendMessage(plugin.getLangFile().getString("command.action.list.suffix", target, tar.getOption("suffix")));
+            sender.sendMessage(Lang.COMMAND_ACTION_LIST_SUFFIX.getMessage(target, tar.getOption("suffix")));
             return true;
         }
 
@@ -89,9 +90,9 @@ public class ListAction extends SubAction {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "list " + plugin.getLangFile().getString("variables.field")
-            + " " + plugin.getLangFile().getString("variables.world-optional"),
-            plugin.getLangFile().getString("command.action.list.help")
+            "list " + Lang.VARIABLES_FIELD.getMessage()
+            + " " + Lang.VARIABLES_WORLDOPTIONAL.getMessage(),
+            Lang.COMMAND_ACTION_LIST_HELP.getMessage()
         };
     }
 

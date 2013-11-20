@@ -198,7 +198,15 @@ public enum Lang {
 
     @Override
     public String toString() {
-        return ChatColor.translateAlternateColorCodes('&', file.getString(path, path));
+        return path + ": " + getMessage();
+    }
+
+    public String getMessage(Object... args) {
+        String message = ChatColor.translateAlternateColorCodes('&', file.getString(path, path));
+        for (int i = 0; i < args.length; i++) {
+            message = message.replace("{" + i + "}", args[i].toString());
+        }
+        return message;
     }
 
 }

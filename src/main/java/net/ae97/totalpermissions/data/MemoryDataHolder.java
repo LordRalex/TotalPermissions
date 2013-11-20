@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
+import net.ae97.totalpermissions.lang.Lang;
 import net.ae97.totalpermissions.permission.PermissionType;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -62,10 +63,10 @@ public abstract class MemoryDataHolder implements DataHolder {
                 cfg = map.get(name.toLowerCase());
             } catch (IOException ex) {
                 TotalPermissions plugin = TotalPermissions.getPlugin();
-                plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.generic"), ex);
+                plugin.getLogger().log(Level.SEVERE, Lang.ERROR_GENERIC.getMessage(), ex);
             } catch (InvalidConfigurationException ex) {
                 TotalPermissions plugin = TotalPermissions.getPlugin();
-                plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.config", type + "." + name));
+                plugin.log(Level.SEVERE, Lang.ERROR_CONFIG, type + "." + name);
                 plugin.getLogger().severe(ex.getMessage());
                 plugin.debugLog(ex);
             }
@@ -85,7 +86,7 @@ public abstract class MemoryDataHolder implements DataHolder {
             save(type, name);
         } catch (IOException ex) {
             TotalPermissions plugin = TotalPermissions.getPlugin();
-            plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.generic"), ex);
+            plugin.getLogger().log(Level.SEVERE, Lang.ERROR_GENERIC.getMessage(), ex);
         }
     }
 
@@ -101,7 +102,7 @@ public abstract class MemoryDataHolder implements DataHolder {
             save(type, name);
         } catch (IOException ex) {
             TotalPermissions plugin = TotalPermissions.getPlugin();
-            plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.generic"), ex);
+            plugin.getLogger().log(Level.SEVERE, Lang.ERROR_GENERIC.getMessage(), ex);
         }
         return getConfigurationSection(type, name);
     }
@@ -119,10 +120,10 @@ public abstract class MemoryDataHolder implements DataHolder {
             load(type, name);
         } catch (IOException ex) {
             TotalPermissions plugin = TotalPermissions.getPlugin();
-            plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.generic"), ex);
+            plugin.getLogger().log(Level.SEVERE, Lang.ERROR_GENERIC.getMessage(), ex);
         } catch (InvalidConfigurationException ex) {
             TotalPermissions plugin = TotalPermissions.getPlugin();
-            plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.config", type + "." + name));
+            plugin.log(Level.SEVERE, Lang.ERROR_CONFIG, type + "." + name);
             plugin.getLogger().severe(ex.getMessage());
             plugin.debugLog(ex);
         }

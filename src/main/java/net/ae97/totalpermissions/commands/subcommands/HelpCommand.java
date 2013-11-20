@@ -21,6 +21,7 @@ import net.ae97.totalpermissions.commands.subcommands.actions.SubAction;
 import net.ae97.totalpermissions.util.Formatter;
 import java.util.Arrays;
 import java.util.Map;
+import net.ae97.totalpermissions.lang.Lang;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -45,7 +46,7 @@ public class HelpCommand implements SubCommand {
                 int page = getInt(args[2]);
                 Map actions = plugin.getCommandHandler().getActionHandler().getActionList();
                 cs.sendMessage(getPage(page, actions));
-                cs.sendMessage(plugin.getLangFile().getString("command.help.action-help"));
+                cs.sendMessage(Lang.COMMAND_HELP_ACTIONHELP.getMessage());
             }
             return true;
         }
@@ -68,7 +69,7 @@ public class HelpCommand implements SubCommand {
     public String[] getHelp() {
         return new String[]{
             "ttp help",
-            plugin.getLangFile().getString("command.help.help")
+            Lang.COMMAND_HELP_HELP.getMessage()
         };
     }
 
@@ -85,7 +86,7 @@ public class HelpCommand implements SubCommand {
         }
         StringBuilder sb = new StringBuilder();
         sb.append(Formatter.formatTitle(plugin.getName(), ChatColor.WHITE, ChatColor.RED)).append("\n");
-        sb.append(plugin.getLangFile().getString("command.help.page", page, (int) Math.ceil((double) listSize / (double) factor))).append("\n").append(ChatColor.RESET);
+        sb.append(Lang.COMMAND_HELP_PAGE.getMessage(page, (int) Math.ceil((double) listSize / (double) factor))).append("\n").append(ChatColor.RESET);
         String[] list = map.keySet().toArray(new String[listSize]);
         Arrays.sort(list);
         for (int i = index; i < upper; i++) {
@@ -103,7 +104,7 @@ public class HelpCommand implements SubCommand {
                 }
             }
         }
-        sb.append('\n').append(plugin.getLangFile().getString("command.help.cont-plain", plugin.getLangFile().getString("variables.command")));
+        sb.append('\n').append(Lang.COMMAND_HELP_CONTPLAIN.getMessage(Lang.VARIABLES_COMMAND.getMessage()));
         return sb.toString();
     }
 

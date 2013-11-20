@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
+import net.ae97.totalpermissions.lang.Lang;
 import net.ae97.totalpermissions.util.DataHolderMerger;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -78,7 +79,7 @@ public class MySQLDataHolder extends MemoryDataHolder {
         TotalPermissions plugin = TotalPermissions.getPlugin();
         plugin.installDatabase(ebeans);
         if (new File(plugin.getDataFolder(), "mysql.yml").exists()) {
-            plugin.getLogger().info(plugin.getLangFile().getString("dataholder.mysql.import"));
+            plugin.log(Level.INFO, Lang.DATAHOLDER_MYSQL_IMPORT);
             try {
                 File yamlFile = new File(plugin.getDataFolder(), "mysql.yml");
                 YamlDataHolder yaml = new YamlDataHolder(yamlFile);
@@ -88,13 +89,13 @@ public class MySQLDataHolder extends MemoryDataHolder {
                 imports.mkdirs();
                 yamlFile.renameTo(new File(imports, "mysql.yml"));
                 yamlFile.delete();
-                plugin.getLogger().info(plugin.getLangFile().getString("dataholder.mysql.import-complete"));
+                plugin.log(Level.INFO, Lang.DATAHOLDER_MYSQL_IMPORTCOMPLETE);
             } catch (InvalidConfigurationException ex) {
-                plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("dataholder.mysql.import-invalid"));
+                plugin.log(Level.SEVERE, Lang.DATAHOLDER_MYSQL_IMPORTINVALID);
                 plugin.getLogger().severe(ex.getMessage());
                 plugin.debugLog(ex);
             } catch (IOException ex) {
-                plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("error.generic"), ex);
+                plugin.getLogger().log(Level.SEVERE, Lang.ERROR_GENERIC.getMessage(), ex);
             }
         }
 
@@ -107,7 +108,7 @@ public class MySQLDataHolder extends MemoryDataHolder {
             try {
                 map.put(group.getName().toLowerCase(), group.getConfig());
             } catch (InvalidConfigurationException ex) {
-                plugin.getLogger().severe(plugin.getLangFile().getString("error.config"));
+                plugin.log(Level.SEVERE, Lang.ERROR_CONFIG, "group." + group.getName());
                 plugin.getLogger().severe(ex.getMessage());
                 plugin.debugLog(ex);
             }

@@ -20,6 +20,7 @@ import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.lang.Cipher;
 import java.util.List;
 import java.util.Set;
+import net.ae97.totalpermissions.lang.Lang;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -46,7 +47,6 @@ public class DumpCommand implements SubCommand {
     @Override
     public boolean execute(CommandSender sender, String[] args) {
         String[] params = new String[3];
-        Cipher lang = plugin.getLangFile();
         if (args.length == 0) {
             sender.sendMessage("No parameters passed");
             return false;
@@ -95,8 +95,8 @@ public class DumpCommand implements SubCommand {
                 page = 1;
             }
             page--;
-            sender.sendMessage(lang.getString("command.dump.title", "plugin", pl.getName()));
-            sender.sendMessage(lang.getString("command.dump.page", page + 1, permPages.length));
+            sender.sendMessage(Lang.COMMAND_DUMP_TITLE.getMessage("plugin", pl.getName()));
+            sender.sendMessage(Lang.COMMAND_DUMP_PAGE.getMessage(page + 1, permPages.length));
             for (int i = 0; i < permPages[page].length; i++) {
                 if (permPages[page][i] != null) {
                     sender.sendMessage(permPages[page][i]);
@@ -127,8 +127,8 @@ public class DumpCommand implements SubCommand {
                 page = 1;
             }
             page--;
-            sender.sendMessage(lang.getString("command.dump.title", "player", player.getName()));
-            sender.sendMessage(lang.getString("command.dump.page", page + 1, permPages.length));
+            sender.sendMessage(Lang.COMMAND_DUMP_TITLE.getMessage("player", player.getName()));
+            sender.sendMessage(Lang.COMMAND_DUMP_PAGE.getMessage(page + 1, permPages.length));
             for (int i = 0; i < permPages[page].length; i++) {
                 if (permPages[page][i] != null) {
                     sender.sendMessage(permPages[page][i]);
@@ -136,7 +136,7 @@ public class DumpCommand implements SubCommand {
             }
         } else if (params[0].equalsIgnoreCase("-command")) {
             Command command = Bukkit.getPluginCommand(params[1]);
-            sender.sendMessage(lang.getString("command.dump.title", "/" + command.getName(), command.getPermission()));
+            sender.sendMessage(Lang.COMMAND_DUMP_TITLE.getMessage(command.getName(), command.getPermission()));
         } else {
             sender.sendMessage("Unknown prefix: " + params[0]);
             return false;
@@ -152,7 +152,8 @@ public class DumpCommand implements SubCommand {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "ttp dump [-command/-player/-plugin] " + plugin.getLangFile().getString("variables.username-optional") + " [page]",
-            plugin.getLangFile().getString("command.dump.help")};
+            "ttp dump [-command/-player/-plugin] " + Lang.VARIABLES_USERNAMEOPTIONAL.getMessage() + " [page]",
+            Lang.COMMAND_DUMP_HELP.getMessage()
+        };
     }
 }

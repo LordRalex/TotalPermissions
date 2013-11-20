@@ -17,6 +17,7 @@
 package net.ae97.totalpermissions.commands.subcommands;
 
 import net.ae97.totalpermissions.TotalPermissions;
+import net.ae97.totalpermissions.lang.Lang;
 import net.ae97.totalpermissions.permission.PermissionUser;
 import org.bukkit.command.CommandSender;
 
@@ -40,7 +41,7 @@ public class DebugCommand implements SubCommand {
         }
         PermissionUser target = plugin.getManager().getUser(args[0]);
         if (target == null) {
-            sender.sendMessage(plugin.getLangFile().getString("command.debug.null-target", args[1]));
+            sender.sendMessage(Lang.COMMAND_DEBUG_NULLTARGET.getMessage(args[1]));
             return true;
         }
         if (args.length == 2 && !args[1].equalsIgnoreCase("status")) {
@@ -55,9 +56,9 @@ public class DebugCommand implements SubCommand {
             }
             target.setDebug(newState);
             if (target.getDebugState()) {
-                sender.sendMessage(plugin.getLangFile().getString("command.debug.debug-on", target.getName()));
+                sender.sendMessage(Lang.COMMAND_DEBUG_DEBUGON.getMessage(target.getName()));
             } else {
-                sender.sendMessage(plugin.getLangFile().getString("command.debug.debug-off", target.getName()));
+                sender.sendMessage(Lang.COMMAND_DEBUG_DEBUGOFF.getMessage(target.getName()));
             }
         } else {
             sender.sendMessage(target.getName() + "'s debug status: " + (target.getDebugState() ? "on" : "off"));
@@ -73,8 +74,8 @@ public class DebugCommand implements SubCommand {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "ttp debug " + plugin.getLangFile().getString("variables.username") + " [on/off]",
-            plugin.getLangFile().getString("command.debug.help")
+            "ttp debug " + Lang.VARIABLES_USERNAME.getMessage() + " [on/off]",
+            Lang.COMMAND_DEBUG_HELP.getMessage()
         };
     }
 }

@@ -20,6 +20,7 @@ import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.PermissionBase;
 import net.ae97.totalpermissions.permission.PermissionType;
 import java.io.IOException;
+import net.ae97.totalpermissions.lang.Lang;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -43,7 +44,7 @@ public class RemoveAction extends SubAction {
         if (field.equalsIgnoreCase("permissions")) {
             try {
                 tar.remPerm(item, world);
-                sender.sendMessage(plugin.getLangFile().getString("command.action.remove.permissions", item, target));
+                sender.sendMessage(Lang.COMMAND_ACTION_REMOVE_PERMISSIONS.getMessage(item, target));
                 return true;
             } catch (IOException ex) {
                 saveError(plugin, tar, sender, ex);
@@ -51,7 +52,7 @@ public class RemoveAction extends SubAction {
         } else if (field.equalsIgnoreCase("inheritance")) {
             try {
                 tar.remInheritance(item, world);
-                sender.sendMessage(plugin.getLangFile().getString("command.action.remove.inheritance", item, target));
+                sender.sendMessage(Lang.COMMAND_ACTION_REMOVE_INHERITANCE.getMessage(item, target));
                 return true;
             } catch (IOException ex) {
                 saveError(plugin, tar, sender, ex);
@@ -59,7 +60,7 @@ public class RemoveAction extends SubAction {
         } else if (field.equalsIgnoreCase("commands")) {
             try {
                 tar.remCommand(item, world);
-                sender.sendMessage(plugin.getLangFile().getString("command.action.remove.commands", item, target));
+                sender.sendMessage(Lang.COMMAND_ACTION_REMOVE_COMMANDS.getMessage(item, target));
                 return true;
             } catch (IOException ex) {
                 saveError(plugin, tar, sender, ex);
@@ -67,7 +68,7 @@ public class RemoveAction extends SubAction {
         } else if (field.equalsIgnoreCase("groups")) {
             try {
                 tar.remGroup(item, world);
-                sender.sendMessage(plugin.getLangFile().getString("command.action.remove.groups", item, target));
+                sender.sendMessage(Lang.COMMAND_ACTION_REMOVE_GROUPS.getMessage(item, target));
                 return true;
             } catch (IOException ex) {
                 saveError(plugin, tar, sender, ex);
@@ -75,7 +76,7 @@ public class RemoveAction extends SubAction {
         } else if (field.equalsIgnoreCase("prefix")) {
             try {
                 tar.remOption("prefix", world);
-                sender.sendMessage(plugin.getLangFile().getString("command.action.remove.prefix", target));
+                sender.sendMessage(Lang.COMMAND_ACTION_REMOVE_PREFIX.getMessage(target));
                 return true;
             } catch (IOException ex) {
                 saveError(plugin, tar, sender, ex);
@@ -83,7 +84,7 @@ public class RemoveAction extends SubAction {
         } else if (field.equalsIgnoreCase("suffix")) {
             try {
                 tar.remOption("suffix", world);
-                sender.sendMessage(plugin.getLangFile().getString("command.action.remove.suffix", target));
+                sender.sendMessage(Lang.COMMAND_ACTION_REMOVE_SUFFIX.getMessage(target));
                 return true;
             } catch (IOException ex) {
                 saveError(plugin, tar, sender, ex);
@@ -100,10 +101,10 @@ public class RemoveAction extends SubAction {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "remove " + plugin.getLangFile().getString("variables.field")
-            + " " + plugin.getLangFile().getString("variables.value")
-            + " " + plugin.getLangFile().getString("variables.world-optional"),
-            plugin.getLangFile().getString("command.action.remove.help")
+            "remove " + Lang.VARIABLES_FIELD.getMessage()
+            + " " + Lang.VARIABLES_VALUE.getMessage()
+            + " " + Lang.VARIABLES_WORLDOPTIONAL.getMessage(),
+            Lang.COMMAND_ACTION_REMOVE_HELP.getMessage()
         };
     }
 

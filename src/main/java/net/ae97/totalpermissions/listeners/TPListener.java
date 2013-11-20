@@ -24,6 +24,7 @@ import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
+import net.ae97.totalpermissions.lang.Lang;
 import net.ae97.totalpermissions.permission.PermissionType;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -85,17 +86,17 @@ public class TPListener implements Listener {
                     field.setAccessible(true);
                     TPPermissibleBase base = new TPPermissibleBase(event.getPlayer(), user.getDebugState());
                     field.set(player, base);
-                    plugin.getLogger().info(plugin.getLangFile().getString("listener.tplistener.login.hooked", event.getPlayer().getName()));
-                } catch (NoSuchFieldException ex) {
-                    plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("listener.tplistener.login.error"), ex);
-                } catch (SecurityException ex) {
-                    plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("listener.tplistener.login.error"), ex);
-                } catch (IllegalArgumentException ex) {
-                    plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("listener.tplistener.login.error"), ex);
-                } catch (IllegalAccessException ex) {
-                    plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("listener.tplistener.login.error"), ex);
+                    plugin.log(Level.INFO, Lang.LISTENER_TPLISTENER_LOGIN_HOOKED, event.getPlayer().getName());
                 } catch (ClassNotFoundException ex) {
-                    plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("listener.tplistener.login.error"), ex);
+                    plugin.getLogger().log(Level.SEVERE, Lang.LISTENER_TPLISTENER_LOGIN_ERROR.getMessage(), ex);
+                } catch (NoSuchFieldException ex) {
+                    plugin.getLogger().log(Level.SEVERE, Lang.LISTENER_TPLISTENER_LOGIN_ERROR.getMessage(), ex);
+                } catch (SecurityException ex) {
+                    plugin.getLogger().log(Level.SEVERE, Lang.LISTENER_TPLISTENER_LOGIN_ERROR.getMessage(), ex);
+                } catch (IllegalArgumentException ex) {
+                    plugin.getLogger().log(Level.SEVERE, Lang.LISTENER_TPLISTENER_LOGIN_ERROR.getMessage(), ex);
+                } catch (IllegalAccessException ex) {
+                    plugin.getLogger().log(Level.SEVERE, Lang.LISTENER_TPLISTENER_LOGIN_ERROR.getMessage(), ex);
                 }
             }
             plugin.getManager().handleLoginEvent(event);
@@ -245,19 +246,19 @@ public class TPListener implements Listener {
             plugin.debugLog("Reflection debug is enabled");
             return;
         }
-        plugin.getLogger().info(plugin.getLangFile().getString("listener.tplistener.preprocess.activate", event.getPlayer().getName(), event.getMessage()));
+        plugin.log(Level.INFO, Lang.LISTENER_TPLISTENER_PREPROCESS_ACTIVATE, event.getPlayer().getName(), event.getMessage());
         try {
             String command = event.getMessage().split(" ")[0].substring(1);
             Command cmd = Bukkit.getPluginCommand(command);
             if (cmd.testPermissionSilent(event.getPlayer())) {
-                plugin.getLogger().info(plugin.getLangFile().getString("listener.tplistener.preprocess.allow", event.getPlayer().getName(), cmd.getPermission()));
+                plugin.log(Level.INFO, Lang.LISTENER_TPLISTENER_PREPROCESS_ALLOW, event.getPlayer().getName(), cmd.getPermission());
             } else {
-                plugin.getLogger().info(plugin.getLangFile().getString("listener.tplistener.preprocess.deny", event.getPlayer().getName(), cmd.getPermission()));
+                plugin.log(Level.INFO, Lang.LISTENER_TPLISTENER_PREPROCESS_DENY, event.getPlayer().getName());
             }
         } catch (NullPointerException e) {
-            plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("listener.tplistener.preprocess.invalid", event.getMessage()));
+            plugin.log(Level.SEVERE, Lang.LISTENER_TPLISTENER_PREPROCESS_INVALID, event.getMessage());
         } catch (IndexOutOfBoundsException e) {
-            plugin.getLogger().log(Level.SEVERE, plugin.getLangFile().getString("listener.tplistener.preprocess.index", event.getMessage()));
+            plugin.log(Level.SEVERE, Lang.LISTENER_TPLISTENER_PREPROCESS_INDEX, event.getMessage());
         }
     }
 

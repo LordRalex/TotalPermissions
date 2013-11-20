@@ -20,6 +20,7 @@ import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.PermissionBase;
 import net.ae97.totalpermissions.permission.PermissionType;
 import java.io.IOException;
+import net.ae97.totalpermissions.lang.Lang;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -42,7 +43,7 @@ public class AddAction extends SubAction {
         if (field.equalsIgnoreCase("permissions")) {
             try {
                 tar.addPerm(item, world);
-                sender.sendMessage(plugin.getLangFile().getString("command.action.add.permissions", item, target));
+                sender.sendMessage(Lang.COMMAND_ACTION_ADD_PERMISSIONS.getMessage(item, target));
                 return true;
             } catch (IOException ex) {
                 saveError(plugin, tar, sender, ex);
@@ -50,7 +51,7 @@ public class AddAction extends SubAction {
         } else if (field.equalsIgnoreCase("inheritance")) {
             try {
                 tar.addInheritance(item, world);
-                sender.sendMessage(plugin.getLangFile().getString("command.action.add.inheritance", item, target));
+                sender.sendMessage(Lang.COMMAND_ACTION_ADD_INHERITANCE.getMessage(item, target));
                 return true;
             } catch (IOException ex) {
                 saveError(plugin, tar, sender, ex);
@@ -58,7 +59,7 @@ public class AddAction extends SubAction {
         } else if (field.equalsIgnoreCase("commands")) {
             try {
                 tar.addCommand(item, world);
-                sender.sendMessage(plugin.getLangFile().getString("command.action.add.commands", item, target));
+                sender.sendMessage(Lang.COMMAND_ACTION_ADD_COMMANDS.getMessage(item, target));
                 return true;
             } catch (IOException ex) {
                 saveError(plugin, tar, sender, ex);
@@ -66,7 +67,7 @@ public class AddAction extends SubAction {
         } else if (field.equalsIgnoreCase("groups")) {
             try {
                 tar.addGroup(item, world);
-                sender.sendMessage(plugin.getLangFile().getString("command.action.add.groups", item, target));
+                sender.sendMessage(Lang.COMMAND_ACTION_ADD_GROUPS.getMessage(item, target));
                 return true;
             } catch (IOException ex) {
                 saveError(plugin, tar, sender, ex);
@@ -83,10 +84,10 @@ public class AddAction extends SubAction {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "add " + plugin.getLangFile().getString("variables.field")
-            + " " + plugin.getLangFile().getString("variables.value")
-            + " " + plugin.getLangFile().getString("variables.world-optional"),
-            plugin.getLangFile().getString("command.action.add.help")
+            "add " + Lang.VARIABLES_FIELD.getMessage()
+            + " " + Lang.VARIABLES_VALUE.getMessage()
+            + " " + Lang.VARIABLES_WORLDOPTIONAL.getMessage(),
+            Lang.COMMAND_ACTION_ADD_HELP.getMessage()
         };
     }
 

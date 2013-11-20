@@ -20,6 +20,7 @@ import net.ae97.totalpermissions.TotalPermissions;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import net.ae97.totalpermissions.lang.Lang;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -81,19 +82,19 @@ public class ActionHandler {
 
         SubAction executor = actions.get(ackshun.toLowerCase());
         if (executor == null) {
-            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.handler.ifnull"));
+            sender.sendMessage(Lang.COMMAND_ACTION_HANDLER_IFNULL.getMessage());
             return false;
         }
 
         if (args.length < 5 && !((ackshun.equalsIgnoreCase("list")) || field.equalsIgnoreCase("help"))) {
             sender.sendMessage("Invalid use of actions.");
-            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.handler.usage", executor.getHelp()[0]));
+            sender.sendMessage(Lang.COMMAND_ACTION_HANDLER_USAGE.getMessage(executor.getHelp()[0]));
             sender.sendMessage(executor.getHelp()[1]);
             return true;
         }
 
         if ((args.length >= 4) && (field.equalsIgnoreCase("help"))) {
-            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.handler.usage", executor.getHelp()[0]));
+            sender.sendMessage(Lang.COMMAND_ACTION_HANDLER_USAGE.getMessage(executor.getHelp()[0]));
             sender.sendMessage(executor.getHelp()[1]);
             return true;
         }
@@ -102,24 +103,24 @@ public class ActionHandler {
             if (isSupported(field, fields)) {
                 boolean begin = executor.execute(sender, type, target, field, iterm, world);
                 if (!begin) {
-                    sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.handler.invalid", ackshun));
+                    sender.sendMessage(Lang.COMMAND_ACTION_HANDLER_INVALID.getMessage(ackshun));
                     StringBuilder sb = new StringBuilder();
                     for (String item : executor.supportedTypes()) {
                         sb.append(item).append(", ");
                     }
-                    sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.handler.execfields", ackshun, sb.toString().substring(0, sb.length() - 3)));
+                    sender.sendMessage(Lang.COMMAND_ACTION_HANDLER_EXECFIELDS.getMessage(ackshun, sb.toString().substring(0, sb.length() - 3)));
                 }
             } else {
-                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.handler.notsupported", field, type));
+                sender.sendMessage(Lang.COMMAND_ACTION_HANDLER_NOTSUPPORTED.getMessage(field, type));
                 StringBuilder sb = new StringBuilder();
                 for (String item : fields) {
                     sb.append(item).append(", ");
                 }
-                sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.handler.editfields", type, sb.toString().substring(0, sb.length() - 3)));
+                sender.sendMessage(Lang.COMMAND_ACTION_HANDLER_EDITFIELDS.getMessage(type, sb.toString().substring(0, sb.length() - 3)));
             }
             return true;
         } else {
-            sender.sendMessage(TotalPermissions.getPlugin().getLangFile().getString("command.action.handler.denied"));
+            sender.sendMessage(Lang.COMMAND_ACTION_HANDLER_DENIED.getMessage());
         }
         return true;
     }

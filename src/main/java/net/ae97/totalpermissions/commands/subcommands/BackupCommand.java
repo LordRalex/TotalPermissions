@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.data.DataHolder;
 import net.ae97.totalpermissions.data.YamlDataHolder;
+import net.ae97.totalpermissions.lang.Lang;
 import net.ae97.totalpermissions.util.DataHolderMerger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -73,7 +74,7 @@ public class BackupCommand implements SubCommand {
     public String[] getHelp() {
         return new String[]{
             "ttp backup",
-            plugin.getLangFile().getString("command.backup.help")
+            Lang.COMMAND_BACKUP_HELP.getMessage()
         };
     }
 

@@ -19,10 +19,12 @@ package net.ae97.totalpermissions.util;
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
+import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.data.DataHolder;
 import net.ae97.totalpermissions.data.MySQLDataHolder;
 import net.ae97.totalpermissions.data.YamlDataHolder;
+import net.ae97.totalpermissions.lang.Lang;
 import net.ae97.totalpermissions.permission.PermissionType;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -49,10 +51,10 @@ public class DataHolderMerger {
     public void merge(DataHolder mergeFrom) throws IOException, InvalidConfigurationException {
         plugin.getLogger().info("Merging data holders, this might take a second or two");
         if (mergeFrom instanceof MySQLDataHolder) {
-            plugin.getLogger().warning(plugin.getLangFile().getString("merge.mysql-from"));
+            plugin.log(Level.WARNING, Lang.MERGE_MYSQLFROM);
         }
         if (parent instanceof MySQLDataHolder) {
-            plugin.getLogger().warning(plugin.getLangFile().getString("merge.mysql-to"));
+            plugin.log(Level.WARNING, Lang.MERGE_MYSQLTO);
         }
         for (PermissionType type : PermissionType.values()) {
             plugin.debugLog("Checking for: " + type.toString());
@@ -66,6 +68,6 @@ public class DataHolderMerger {
             }
         }
 
-        plugin.getLogger().info(plugin.getLangFile().getString("merge.complete"));
+        plugin.log(Level.INFO, Lang.MERGE_COMPLETE);
     }
 }
