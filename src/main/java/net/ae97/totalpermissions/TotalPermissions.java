@@ -57,6 +57,7 @@ public final class TotalPermissions extends JavaPlugin {
 
     protected String BUKKIT_VERSION = "NONE";
     protected final String[] ACCEPTABLE_VERSIONS = new String[]{
+        "v1_7_R1",
         "v1_6_R3",
         "v1_6_R2",
         "v1_6_R1",
