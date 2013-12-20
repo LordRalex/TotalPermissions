@@ -16,9 +16,9 @@
  */
 package net.ae97.totalpermissions.data;
 
-import net.ae97.totalpermissions.permission.PermissionType;
 import java.io.IOException;
 import java.util.Set;
+import net.ae97.totalpermissions.permission.PermissionType;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 

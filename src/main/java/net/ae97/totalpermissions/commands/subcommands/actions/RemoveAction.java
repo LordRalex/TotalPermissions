@@ -16,11 +16,11 @@
  */
 package net.ae97.totalpermissions.commands.subcommands.actions;
 
+import java.io.IOException;
 import net.ae97.totalpermissions.TotalPermissions;
+import net.ae97.totalpermissions.lang.Lang;
 import net.ae97.totalpermissions.permission.PermissionBase;
 import net.ae97.totalpermissions.permission.PermissionType;
-import java.io.IOException;
-import net.ae97.totalpermissions.lang.Lang;
 import org.bukkit.command.CommandSender;
 
 /**

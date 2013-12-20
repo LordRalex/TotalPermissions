@@ -16,12 +16,12 @@
  */
 package net.ae97.totalpermissions.commands.subcommands.actions;
 
+import java.util.Map;
 import net.ae97.totalpermissions.TotalPermissions;
+import net.ae97.totalpermissions.lang.Lang;
 import net.ae97.totalpermissions.permission.PermissionBase;
 import net.ae97.totalpermissions.permission.PermissionType;
 import net.ae97.totalpermissions.permission.PermissionUser;
-import java.util.Map;
-import net.ae97.totalpermissions.lang.Lang;
 import org.bukkit.command.CommandSender;
 
 /**

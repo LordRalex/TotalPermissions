@@ -18,7 +18,6 @@ package net.ae97.totalpermissions.lang;
 
 import java.io.IOException;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -35,6 +34,9 @@ public class Cipher {
     private final FileConfiguration langFile;
     private final String language;
 
+    /**
+     * @deprecated Use Lang class instead
+     */
     public Cipher(Plugin plugin, String lang) throws InvalidConfigurationException, IOException {
         language = lang;
         langFile = new YamlConfiguration();

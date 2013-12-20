@@ -16,14 +16,6 @@
  */
 package net.ae97.totalpermissions;
 
-import net.ae97.totalpermissions.data.DataHolder;
-import net.ae97.totalpermissions.permission.PermissionBase;
-import net.ae97.totalpermissions.permission.PermissionConsole;
-import net.ae97.totalpermissions.permission.PermissionGroup;
-import net.ae97.totalpermissions.permission.PermissionOp;
-import net.ae97.totalpermissions.permission.PermissionRcon;
-import net.ae97.totalpermissions.permission.PermissionType;
-import net.ae97.totalpermissions.permission.PermissionUser;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,7 +23,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
+import net.ae97.totalpermissions.data.DataHolder;
 import net.ae97.totalpermissions.lang.Lang;
+import net.ae97.totalpermissions.permission.PermissionBase;
+import net.ae97.totalpermissions.permission.PermissionConsole;
+import net.ae97.totalpermissions.permission.PermissionGroup;
+import net.ae97.totalpermissions.permission.PermissionOp;
+import net.ae97.totalpermissions.permission.PermissionRcon;
+import net.ae97.totalpermissions.permission.PermissionType;
+import net.ae97.totalpermissions.permission.PermissionUser;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;

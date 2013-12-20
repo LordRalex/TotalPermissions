@@ -16,12 +16,12 @@
  */
 package net.ae97.totalpermissions.commands.subcommands;
 
-import net.ae97.totalpermissions.TotalPermissions;
-import net.ae97.totalpermissions.commands.subcommands.actions.SubAction;
-import net.ae97.totalpermissions.util.Formatter;
 import java.util.Arrays;
 import java.util.Map;
+import net.ae97.totalpermissions.TotalPermissions;
+import net.ae97.totalpermissions.commands.subcommands.actions.SubAction;
 import net.ae97.totalpermissions.lang.Lang;
+import net.ae97.totalpermissions.util.Formatter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 

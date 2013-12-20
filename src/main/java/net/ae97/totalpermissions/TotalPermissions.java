@@ -16,17 +16,9 @@
  */
 package net.ae97.totalpermissions;
 
-import net.ae97.totalpermissions.logger.DebugLogFormatter;
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebeaninternal.api.SpiEbeanServer;
 import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
-import net.ae97.totalpermissions.commands.CommandHandler;
-import net.ae97.totalpermissions.data.DataHolder;
-import net.ae97.totalpermissions.data.YamlDataHolder;
-import net.ae97.totalpermissions.lang.Cipher;
-import net.ae97.totalpermissions.listeners.TPListener;
-import net.ae97.totalpermissions.mcstats.Metrics;
-import net.ae97.totalpermissions.sql.PermissionPersistance;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,13 +26,20 @@ import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.PersistenceException;
+import net.ae97.totalpermissions.commands.CommandHandler;
+import net.ae97.totalpermissions.data.DataHolder;
 import net.ae97.totalpermissions.data.DataType;
 import net.ae97.totalpermissions.data.FlatFileDataHolder;
 import net.ae97.totalpermissions.data.MySQLDataHolder;
 import net.ae97.totalpermissions.data.SharedDataHolder;
+import net.ae97.totalpermissions.data.YamlDataHolder;
+import net.ae97.totalpermissions.lang.Cipher;
 import net.ae97.totalpermissions.lang.Lang;
+import net.ae97.totalpermissions.listeners.TPListener;
+import net.ae97.totalpermissions.logger.DebugLogFormatter;
+import net.ae97.totalpermissions.mcstats.Metrics;
+import net.ae97.totalpermissions.sql.PermissionPersistance;
 import net.ae97.totalpermissions.updater.Updater;
 import net.ae97.totalpermissions.updater.Updater.UpdateType;
 import org.bukkit.Bukkit;
@@ -54,6 +53,17 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @since 0.1
  */
 public final class TotalPermissions extends JavaPlugin {
+
+    /**
+     * Gets the instance of the plugin.
+     *
+     * @return Instance of the plugin
+     *
+     * @since 0.1
+     */
+    public static TotalPermissions getPlugin() {
+        return (TotalPermissions) Bukkit.getPluginManager().getPlugin("TotalPermissions");
+    }
 
     protected String BUKKIT_VERSION = "NONE";
     protected final String[] ACCEPTABLE_VERSIONS = new String[]{
@@ -285,17 +295,6 @@ public final class TotalPermissions extends JavaPlugin {
      */
     public DataHolder getDataHolder() {
         return dataHolder;
-    }
-
-    /**
-     * Gets the instance of the plugin.
-     *
-     * @return Instance of the plugin
-     *
-     * @since 0.1
-     */
-    public static TotalPermissions getPlugin() {
-        return (TotalPermissions) Bukkit.getPluginManager().getPlugin("TotalPermissions");
     }
 
     /**

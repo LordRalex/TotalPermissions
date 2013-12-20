@@ -1,11 +1,19 @@
 /*
  * Updater for Bukkit.
  *
- * This class provides the means to safely and easily update a plugin, or check to see if it is updated using dev.bukkit.org
+ * This class provides the means to safely and easily update a plugin, 
+ * or check to see if it is updated using dev.bukkit.org
  */
 package net.ae97.totalpermissions.updater;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -22,6 +30,12 @@ import org.bukkit.plugin.Plugin;
 
 public class Updater {
 
+    private static final String DBOUrl = "http://dev.bukkit.org/server-mods/";
+    private static final int BYTE_SIZE = 1024;
+    private static final String TITLE = "title";
+    private static final String LINK = "link";
+    private static final String ITEM = "item";
+
     private final Plugin plugin;
     private final UpdateType type;
     private String versionTitle;
@@ -33,32 +47,9 @@ public class Updater {
     private URL url;
     private final File file;
     private final Thread thread;
-    private static final String DBOUrl = "http://dev.bukkit.org/server-mods/";
     private final String[] noUpdateTag = {"-DEV", "-PRE", "-SNAPSHOT"};
-    private static final int BYTE_SIZE = 1024;
     private final File updateFolder = Bukkit.getUpdateFolderFile();
-    private Updater.UpdateResult result = Updater.UpdateResult.SUCCESS;
-    private static final String TITLE = "title";
-    private static final String LINK = "link";
-    private static final String ITEM = "item";
-
-    public enum UpdateResult {
-
-        SUCCESS,
-        NO_UPDATE,
-        FAIL_DOWNLOAD,
-        FAIL_DBO,
-        FAIL_NOVERSION,
-        FAIL_BADSLUG,
-        UPDATE_AVAILABLE
-    }
-
-    public enum UpdateType {
-
-        DEFAULT,
-        NO_VERSION_CHECK,
-        NO_DOWNLOAD
-    }
+    private UpdateResult result = UpdateResult.SUCCESS;
 
     public Updater(Plugin plugin, String slug, File file, UpdateType type, boolean announce) {
         this.plugin = plugin;
@@ -369,6 +360,24 @@ public class Updater {
             plugin.getLogger().log(Level.WARNING, "Could not reach BukkitDev file stream for update checking. Is dev.bukkit.org offline?", e);
             return null;
         }
+    }
+
+    public enum UpdateResult {
+
+        SUCCESS,
+        NO_UPDATE,
+        FAIL_DOWNLOAD,
+        FAIL_DBO,
+        FAIL_NOVERSION,
+        FAIL_BADSLUG,
+        UPDATE_AVAILABLE
+    }
+
+    public enum UpdateType {
+
+        DEFAULT,
+        NO_VERSION_CHECK,
+        NO_DOWNLOAD
     }
 
     private class UpdateRunnable implements Runnable {

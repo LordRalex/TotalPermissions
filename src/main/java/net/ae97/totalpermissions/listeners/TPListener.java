@@ -17,15 +17,15 @@
 package net.ae97.totalpermissions.listeners;
 
 import java.io.IOException;
-import net.ae97.totalpermissions.TotalPermissions;
-import net.ae97.totalpermissions.permission.PermissionUser;
-import net.ae97.totalpermissions.reflection.TPPermissibleBase;
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
+import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.lang.Lang;
 import net.ae97.totalpermissions.permission.PermissionType;
+import net.ae97.totalpermissions.permission.PermissionUser;
+import net.ae97.totalpermissions.reflection.TPPermissibleBase;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -101,7 +101,9 @@ public class TPListener implements Listener {
             }
             plugin.getManager().handleLoginEvent(event);
         } catch (StackOverflowError e) {
-            plugin.getLogger().severe("Huge error on logging in player " + event.getPlayer().getName() + " during PlayerLoginEvent");
+            plugin.getLogger().log(Level.SEVERE,
+                    "Huge error on logging in player {0} during PlayerLoginEvent",
+                    event.getPlayer().getName());
             StackTraceElement[] elementsInit = e.getStackTrace();
             plugin.getLogger().severe(e.getMessage());
             plugin.getLogger().severe("The debug file will contain the full stacktrace");
@@ -128,7 +130,9 @@ public class TPListener implements Listener {
             PermissionUser user = plugin.getManager().getUser(player);
             user.changeWorld(player, player.getWorld().getName(), plugin.getManager().getAttachment(player));
         } catch (StackOverflowError e) {
-            plugin.getLogger().severe("Huge error on logging in player " + event.getPlayer().getName() + " during PlayerJoinEvent");
+            plugin.getLogger().log(Level.SEVERE,
+                    "Huge error on logging in player {0} during PlayerJoinEvent",
+                    event.getPlayer().getName());
             StackTraceElement[] elementsInit = e.getStackTrace();
             plugin.getLogger().severe(e.getMessage());
             plugin.getLogger().severe("The debug file will contain the full stacktrace");
@@ -178,7 +182,9 @@ public class TPListener implements Listener {
                 }
             }
         } catch (StackOverflowError e) {
-            plugin.getLogger().severe("Huge error on logging in player " + event.getPlayer().getName() + " during PlayerJoinEvent");
+            plugin.getLogger().log(Level.SEVERE,
+                    "Huge error on logging in player {0} during PlayerJoinEvent",
+                    event.getPlayer().getName());
             StackTraceElement[] elementsInit = e.getStackTrace();
             plugin.getLogger().severe(e.getMessage());
             plugin.getLogger().severe("The debug file will contain the full stacktrace");

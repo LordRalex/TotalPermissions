@@ -16,11 +16,11 @@
  */
 package net.ae97.totalpermissions.commands.subcommands;
 
-import net.ae97.totalpermissions.TotalPermissions;
-import net.ae97.totalpermissions.permission.PermissionUser;
 import java.util.Arrays;
 import java.util.List;
+import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.lang.Lang;
+import net.ae97.totalpermissions.permission.PermissionUser;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

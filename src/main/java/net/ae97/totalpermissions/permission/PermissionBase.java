@@ -16,8 +16,6 @@
  */
 package net.ae97.totalpermissions.permission;
 
-import net.ae97.totalpermissions.TotalPermissions;
-import net.ae97.totalpermissions.util.PermissionUtility;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
+import net.ae97.totalpermissions.TotalPermissions;
+import net.ae97.totalpermissions.util.PermissionUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;

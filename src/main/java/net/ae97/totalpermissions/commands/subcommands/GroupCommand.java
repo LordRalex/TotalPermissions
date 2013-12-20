@@ -16,11 +16,11 @@
  */
 package net.ae97.totalpermissions.commands.subcommands;
 
-import net.ae97.totalpermissions.TotalPermissions;
-import net.ae97.totalpermissions.permission.PermissionGroup;
 import java.util.Arrays;
 import java.util.List;
+import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.lang.Lang;
+import net.ae97.totalpermissions.permission.PermissionGroup;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -43,7 +43,7 @@ public class GroupCommand implements SubCommand {
             return true;
         } else if (args.length == 2) {
             PermissionGroup pg = plugin.getManager().getGroup(args[1]);
-            sender.sendMessage(Lang.COMMAND_GROUP_GROUP.getMessage( pg.getName()));
+            sender.sendMessage(Lang.COMMAND_GROUP_GROUP.getMessage(pg.getName()));
             StringBuilder sb = new StringBuilder();
             for (String name : pg.getInheritances(pg.getName())) {
                 sb.append(name).append(", ");
@@ -57,9 +57,9 @@ public class GroupCommand implements SubCommand {
             if (suffix == null) {
                 suffix = "";
             }
-            sender.sendMessage(Lang.COMMAND_GROUP_INHERITS.getMessage( (sb.length() >= 2) ? sb.substring(0, sb.length() - 2) : "None!"));
-            sender.sendMessage(Lang.COMMAND_GROUP_PREFIX.getMessage( prefix));
-            sender.sendMessage(Lang.COMMAND_GROUP_SUFFIX.getMessage( suffix));
+            sender.sendMessage(Lang.COMMAND_GROUP_INHERITS.getMessage((sb.length() >= 2) ? sb.substring(0, sb.length() - 2) : "None!"));
+            sender.sendMessage(Lang.COMMAND_GROUP_PREFIX.getMessage(prefix));
+            sender.sendMessage(Lang.COMMAND_GROUP_SUFFIX.getMessage(suffix));
 
             return true;
         } else if (args.length == 1) {
@@ -67,7 +67,7 @@ public class GroupCommand implements SubCommand {
             for (String group : plugin.getManager().getGroups()) {
                 sb.append(group).append(", ");
             }
-            sender.sendMessage(Lang.COMMAND_GROUP_LIST.getMessage( sb.substring(0, sb.length() - 2)));
+            sender.sendMessage(Lang.COMMAND_GROUP_LIST.getMessage(sb.substring(0, sb.length() - 2)));
             return true;
         }
         return false;

@@ -16,8 +16,6 @@
  */
 package net.ae97.totalpermissions.data;
 
-import net.ae97.totalpermissions.permission.PermissionType;
-import net.ae97.totalpermissions.sql.PermissionPersistance;
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.EbeanServerFactory;
 import com.avaje.ebean.config.DataSourceConfig;
@@ -33,6 +31,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.lang.Lang;
+import net.ae97.totalpermissions.permission.PermissionType;
+import net.ae97.totalpermissions.sql.PermissionPersistance;
 import net.ae97.totalpermissions.util.DataHolderMerger;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;

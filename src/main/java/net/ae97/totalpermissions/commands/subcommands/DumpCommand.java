@@ -16,10 +16,9 @@
  */
 package net.ae97.totalpermissions.commands.subcommands;
 
-import net.ae97.totalpermissions.TotalPermissions;
-import net.ae97.totalpermissions.lang.Cipher;
 import java.util.List;
 import java.util.Set;
+import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.lang.Lang;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;

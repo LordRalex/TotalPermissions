@@ -36,11 +36,6 @@ public enum PermissionType {
     PERMISSIONS("permissions"),
     INHERITENCE("inheritence"),
     OPTIONS("options");
-    private final String name;
-
-    private PermissionType(String aName) {
-        name = aName;
-    }
 
     /**
      * Gets the specific PermissionType for the name given
@@ -89,6 +84,11 @@ public enum PermissionType {
             default:
                 return null;
         }
+    }
+    private final String name;
+
+    private PermissionType(String aName) {
+        name = aName;
     }
 
     @Override

@@ -180,9 +180,22 @@ public enum Lang {
     DATAHOLDER_MYSQL_IMPORT(),
     DATAHOLDER_MYSQL_IMPORTINVALID("dataholder.mysql.import-invalid"),
     DATAHOLDER_MYSQL_IMPORTCOMPLETE("dataholder.mysql.import-complete");
+    private static FileConfiguration file;
+
+    public static void setLanguageConfig(FileConfiguration f) {
+        file = f;
+    }
+
+    public static Lang getLang(String p) {
+        for (Lang lang : Lang.values()) {
+            if (lang.path.equalsIgnoreCase(p)) {
+                return lang;
+            }
+        }
+        return null;
+    }
 
     private final String path;
-    private static FileConfiguration file;
 
     private Lang() {
         path = name().toLowerCase().replace("_", ".");
@@ -190,10 +203,6 @@ public enum Lang {
 
     private Lang(String p) {
         path = p;
-    }
-
-    public static void setLanguageConfig(FileConfiguration f) {
-        file = f;
     }
 
     @Override
@@ -208,14 +217,4 @@ public enum Lang {
         }
         return message;
     }
-
-    public static Lang getLang(String p) {
-        for (Lang lang : Lang.values()) {
-            if (lang.path.equalsIgnoreCase(p)) {
-                return lang;
-            }
-        }
-        return null;
-    }
-
 }

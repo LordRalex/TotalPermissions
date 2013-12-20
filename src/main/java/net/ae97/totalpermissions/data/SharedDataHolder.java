@@ -70,6 +70,10 @@ public class SharedDataHolder implements DataHolder {
                     }
                     break;
                 }
+                if (dataHolder != null) {
+                    dataHolder.setup();
+                    dataHolders.add(dataHolder);
+                }
             } catch (NoSuchFieldException ex) {
                 plugin.getLogger().log(Level.SEVERE, "Error on loading data holder (" + type + ")", ex);
             } catch (IllegalArgumentException ex) {

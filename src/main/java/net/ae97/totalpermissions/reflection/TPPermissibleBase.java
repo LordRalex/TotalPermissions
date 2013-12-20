@@ -39,10 +39,6 @@ public class TPPermissibleBase extends PermissibleBase {
     protected final PermissibleBase initialParent;
     protected final CommandSender parent;
     protected final boolean debug;
-    /**
-     * @deprecated
-     */
-    protected final boolean useReflectionPerm;
     protected final TotalPermissions plugin;
 
     public TPPermissibleBase(CommandSender p, boolean debugTime) {
@@ -50,7 +46,6 @@ public class TPPermissibleBase extends PermissibleBase {
         plugin = TotalPermissions.getPlugin();
         debug = debugTime;
         parent = p;
-        useReflectionPerm = TotalPermissions.getPlugin().getConfig().getBoolean("reflection.starperm", false);
         Object obj = null;
         try {
             Class cl = Class.forName("org.bukkit.craftbukkit." + plugin.getBukkitVersion() + ".entity.CraftPlayer");
@@ -71,35 +66,27 @@ public class TPPermissibleBase extends PermissibleBase {
         initialParent = (PermissibleBase) obj;
     }
 
-    /**
-     * @deprecated
-     */
-    public boolean isUseReflectionPerm() {
-        return useReflectionPerm;
-    }
-
     @Override
     public boolean hasPermission(Permission perm) {
         plugin.debugLog("Checking for " + perm.getName() + " in " + initialParent);
         boolean has = initialParent.hasPermission(perm);
         plugin.debugLog("Has: " + has);
-        if (useReflectionPerm) {
-            if (initialParent.isPermissionSet(perm)) {
-                has = initialParent.hasPermission(perm);
-            } else if (initialParent.isPermissionSet("*")) {
-                has = initialParent.hasPermission("*");
-                if (perm.getDefault() == PermissionDefault.FALSE) {
-                    has = false;
-                }
-            } else if (initialParent.isPermissionSet("**")) {
-                has = initialParent.hasPermission("**");
-
-            } else {
+        if (initialParent.isPermissionSet(perm)) {
+            has = initialParent.hasPermission(perm);
+        } else if (initialParent.isPermissionSet("*")) {
+            has = initialParent.hasPermission("*");
+            if (perm.getDefault() == PermissionDefault.FALSE) {
                 has = false;
             }
+        } else if (initialParent.isPermissionSet("**")) {
+            has = initialParent.hasPermission("**");
+
+        } else {
+            has = false;
         }
         if (debug) {
-            plugin.getLogger().info("Checking if " + parent.getName() + " has " + perm.getName() + ": " + has);
+            plugin.getLogger().log(Level.INFO, "Checking if {0} has {1}: {2}",
+                    new Object[]{parent.getName(), perm.getName(), has});
         }
         return has;
     }
