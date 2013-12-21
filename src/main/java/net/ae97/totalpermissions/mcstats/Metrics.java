@@ -69,7 +69,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.zip.GZIPOutputStream;
-import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -83,19 +82,78 @@ public final class Metrics {
     /**
      * The current revision number
      */
-    private final static int REVISION = 7;
+    private final int REVISION = 7;
     /**
      * The base url of the metrics domain
      */
-    private static final String BASE_URL = "http://report.mcstats.org";
+    private final String BASE_URL = "http://report.mcstats.org";
     /**
      * The url used to report a server's status
      */
-    private static final String REPORT_URL = "/plugin/%s";
+    private final String REPORT_URL = "/plugin/%s";
     /**
      * Interval of time to ping (in minutes)
      */
-    private static final int PING_INTERVAL = 15;
+    private final int PING_INTERVAL = 15;
+    /**
+     * The plugin this metrics submits for
+     */
+    private final Plugin plugin;
+    /**
+     * All of the custom graphs to submit to metrics
+     */
+    private final Set<Graph> graphs = Collections.synchronizedSet(new HashSet<Graph>());
+    /**
+     * The plugin configuration file
+     */
+    private final YamlConfiguration configuration;
+    /**
+     * The plugin configuration file
+     */
+    private final File configurationFile;
+    /**
+     * Unique server id
+     */
+    private final String guid;
+    /**
+     * Debug mode
+     */
+    private final boolean debug;
+    /**
+     * Lock for synchronization
+     */
+    private final Object optOutLock = new Object();
+    /**
+     * The scheduled task
+     */
+    private volatile BukkitTask task = null;
+
+    public Metrics(final Plugin p) throws IOException {
+        if (p == null) {
+            throw new IllegalArgumentException("Plugin cannot be null");
+        }
+
+        plugin = p;
+
+        // load the config
+        configurationFile = getConfigFile();
+        configuration = YamlConfiguration.loadConfiguration(configurationFile);
+
+        // add some defaults
+        configuration.addDefault("opt-out", !plugin.getConfig().getBoolean("metrics-report", true));
+        configuration.addDefault("guid", UUID.randomUUID().toString());
+        configuration.addDefault("debug", false);
+
+        // Do we need to create the file?
+        if (configuration.get("guid", null) == null) {
+            configuration.options().header("http://mcstats.org").copyDefaults(true);
+            configuration.save(configurationFile);
+        }
+
+        // Load the guid then
+        guid = configuration.getString("guid");
+        debug = configuration.getBoolean("debug", false);
+    }
 
     /**
      * GZip compress a string of bytes
@@ -103,7 +161,7 @@ public final class Metrics {
      * @param input
      * @return
      */
-    public static byte[] gzip(String input) {
+    public byte[] gzip(String input) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         GZIPOutputStream gzos = null;
 
@@ -112,7 +170,7 @@ public final class Metrics {
             gzos.write(input.getBytes("UTF-8"));
         } catch (IOException e) {
             //TotalPermissions - Change to use Logger
-            TotalPermissions.getPlugin().getLogger().log(Level.SEVERE, "An Error occurred on gzipping from Metrics", e);
+            plugin.getLogger().log(Level.SEVERE, "An error occurred on gzipping from Metrics", e);
         } finally {
             if (gzos != null) {
                 try {
@@ -133,7 +191,7 @@ public final class Metrics {
      * @param value
      * @throws UnsupportedEncodingException
      */
-    private static void appendJSONPair(StringBuilder json, String key, String value) throws UnsupportedEncodingException {
+    private void appendJSONPair(StringBuilder json, String key, String value) throws UnsupportedEncodingException {
         boolean isValueNumeric;
 
         try {
@@ -163,7 +221,7 @@ public final class Metrics {
      * @param text
      * @return
      */
-    private static String escapeJSON(String text) {
+    private String escapeJSON(String text) {
         StringBuilder builder = new StringBuilder();
 
         builder.append('"');
@@ -210,67 +268,8 @@ public final class Metrics {
      * @param text the text to encode
      * @return the encoded text, as UTF-8
      */
-    private static String urlEncode(final String text) throws UnsupportedEncodingException {
+    private String urlEncode(final String text) throws UnsupportedEncodingException {
         return URLEncoder.encode(text, "UTF-8");
-    }
-    /**
-     * The plugin this metrics submits for
-     */
-    private final Plugin plugin;
-    /**
-     * All of the custom graphs to submit to metrics
-     */
-    private final Set<Graph> graphs = Collections.synchronizedSet(new HashSet<Graph>());
-    /**
-     * The plugin configuration file
-     */
-    private final YamlConfiguration configuration;
-    /**
-     * The plugin configuration file
-     */
-    private final File configurationFile;
-    /**
-     * Unique server id
-     */
-    private final String guid;
-    /**
-     * Debug mode
-     */
-    private final boolean debug;
-    /**
-     * Lock for synchronization
-     */
-    private final Object optOutLock = new Object();
-    /**
-     * The scheduled task
-     */
-    private volatile BukkitTask task = null;
-
-    public Metrics(final Plugin p) throws IOException {
-        if (p == null) {
-            throw new IllegalArgumentException("Plugin cannot be null");
-        }
-
-        plugin = p;
-
-        // load the config
-        configurationFile = getConfigFile();
-        configuration = YamlConfiguration.loadConfiguration(configurationFile);
-
-        // add some defaults
-        configuration.addDefault("opt-out", false);
-        configuration.addDefault("guid", UUID.randomUUID().toString());
-        configuration.addDefault("debug", false);
-
-        // Do we need to create the file?
-        if (configuration.get("guid", null) == null) {
-            configuration.options().header("http://mcstats.org").copyDefaults(true);
-            configuration.save(configurationFile);
-        }
-
-        // Load the guid then
-        guid = configuration.getString("guid");
-        debug = configuration.getBoolean("debug", false);
     }
 
     /**
@@ -392,7 +391,11 @@ public final class Metrics {
                 }
                 return true;
             }
-            return configuration.getBoolean("opt-out", false);
+            if (!plugin.getConfig().getBoolean("metrics-report", true)) {
+                return true;
+            } else {
+                return configuration.getBoolean("opt-out", false);
+            }
         }
     }
 

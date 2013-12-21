@@ -151,6 +151,7 @@ public enum Lang {
     MAIN_CREATE_LISTENER(),
     MAIN_CREATE_COMMAND(),
     MAIN_METRICS(),
+    MAIN_METRICSOFF("main.metrics-off"),
     MAIN_ERROR(),
     MAIN_LOADCRASH(),
     MAIN_STORAGEERROR("main.storage-error"),

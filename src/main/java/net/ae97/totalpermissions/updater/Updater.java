@@ -49,7 +49,7 @@ public class Updater {
     private final Thread thread;
     private final String[] noUpdateTag = {"-DEV", "-PRE", "-SNAPSHOT"};
     private final File updateFolder = Bukkit.getUpdateFolderFile();
-    private UpdateResult result = UpdateResult.SUCCESS;
+    private UpdateResult result = null;
 
     public Updater(Plugin plugin, String slug, File file, UpdateType type, boolean announce) {
         this.plugin = plugin;
@@ -59,16 +59,21 @@ public class Updater {
         try {
             url = new URL(DBOUrl + slug + "/files.rss");
         } catch (MalformedURLException ex) {
-            plugin.getLogger().warning("The author of this plugin (" + plugin.getDescription().getAuthors().get(0) + ") has misconfigured their Auto Update system");
-            plugin.getLogger().warning("The project slug given ('" + slug + "') is invalid. Please nag the author about this.");
+            plugin.getLogger().log(Level.WARNING,
+                    "The project slug given (''{0}'') is invalid.", slug);
             result = Updater.UpdateResult.FAIL_BADSLUG;
         }
-        thread = new Thread(new UpdateRunnable());
-
+        if (result == null || result != Updater.UpdateResult.FAIL_BADSLUG) {
+            thread = new Thread(new UpdateRunnable());
+        } else {
+            thread = null;
+        }
     }
 
     public void checkForUpdate() {
-        thread.start();
+        if (thread != null) {
+            thread.start();
+        }
     }
 
     public UpdateResult getResult() {
@@ -87,6 +92,9 @@ public class Updater {
     }
 
     public void waitForThread() {
+        if (thread == null) {
+            return;
+        }
         if (thread.isAlive()) {
             try {
                 thread.join();
@@ -111,7 +119,8 @@ public class Updater {
             byte[] data = new byte[BYTE_SIZE];
             int count;
             if (announce) {
-                plugin.getLogger().info("About to download a new update: " + versionTitle);
+                plugin.getLogger().log(Level.INFO,
+                        "About to download a new update: {0}", versionTitle);
             }
             long downloaded = 0;
             while ((count = in.read(data, 0, BYTE_SIZE)) != -1) {
@@ -119,7 +128,8 @@ public class Updater {
                 fout.write(data, 0, count);
                 int percent = (int) (downloaded * 100 / fileLength);
                 if (announce & (percent % 10 == 0)) {
-                    plugin.getLogger().info("Downloading update: " + percent + "% of " + fileLength + " bytes.");
+                    plugin.getLogger().log(Level.INFO,
+                            "Downloading update: {0}% of {1} bytes.", new Object[]{percent, fileLength});
                 }
             }
             for (File xFile : updateFolder.listFiles()) {
@@ -284,8 +294,8 @@ public class Updater {
                     return false;
                 }
             } else {
-                plugin.getLogger().warning("The author of this plugin (" + plugin.getDescription().getAuthors().get(0) + ") has misconfigured their Auto Update system");
-                plugin.getLogger().warning("Files uploaded to BukkitDev should contain the version number, seperated from the name by a 'v', such as PluginName v1.0");
+                plugin.getLogger().warning("Files uploaded to BukkitDev should contain the version number, "
+                        + "seperated from the name by a 'v', such as PluginName v1.0");
                 plugin.getLogger().warning("Please notify the author of this error.");
                 result = Updater.UpdateResult.FAIL_NOVERSION;
                 return false;

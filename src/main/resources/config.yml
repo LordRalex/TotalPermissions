@@ -33,6 +33,7 @@ reflection:
 permissions:
   formatter: true
   updater: true
+metrics-report: true
 storage: yaml
 mysql:
   host: localhost

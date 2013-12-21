@@ -167,7 +167,7 @@ public final class TotalPermissions extends JavaPlugin {
                 dataHolder.setup();
             } catch (InvalidConfigurationException e) {
                 log(Level.SEVERE, Lang.MAIN_YAMLERROR);
-                getLogger().log(Level.SEVERE, "-> " + e.getMessage());
+                getLogger().log(Level.SEVERE, "-> {0}", e.getMessage());
                 debugLog(e);
                 getLogger().log(Level.WARNING, Lang.MAIN_LOADBACKUP.getMessage());
                 try {
@@ -230,6 +230,8 @@ public final class TotalPermissions extends JavaPlugin {
             metrics = new Metrics(this);
             if (metrics.start()) {
                 log(Level.INFO, Lang.MAIN_METRICS);
+            } else {
+                log(Level.INFO, Lang.MAIN_METRICSOFF);
             }
         } catch (Exception e) {
             if (e instanceof InvalidConfigurationException) {
