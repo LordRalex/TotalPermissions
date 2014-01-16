@@ -35,7 +35,9 @@ public enum PermissionType {
     WORLD("world"),
     PERMISSIONS("permissions"),
     INHERITENCE("inheritence"),
-    OPTIONS("options");
+    OPTIONS("options"),
+    ENTITIES("entities"),
+    WORLDS("worlds");
 
     /**
      * Gets the specific PermissionType for the name given
