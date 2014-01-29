@@ -37,7 +37,6 @@
                 <includes>
                     <include>plugin.yml</include>
                     <include>config.yml</include>
-                    <include>en_US.yml</include>
                     <include>permissions.yml</include>
                     <include>lang/*</include>
                 </includes>
@@ -70,7 +69,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.7.2-R0.1</version>
+            <version>1.7.2-R0.2</version>
         </dependency>
     </dependencies>
 </project>
