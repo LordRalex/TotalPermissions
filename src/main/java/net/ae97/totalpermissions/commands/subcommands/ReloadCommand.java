@@ -53,7 +53,7 @@ public class ReloadCommand implements SubCommand {
         for (Player player : Bukkit.getOnlinePlayers()) {
             PlayerLoginEvent refreshEvent = new PlayerLoginEvent(player, "", null);
             try {
-                plugin.getListener().onPlayerLogin(refreshEvent);
+                plugin.getListenerManager().getPlayerListener().onPlayerLogin(refreshEvent);
             } catch (Exception e) {
                 sender.sendMessage(Lang.COMMAND_RELOAD_GENERAL.getMessage(player.getName()));
                 plugin.getLogger().log(Level.SEVERE, null, e);

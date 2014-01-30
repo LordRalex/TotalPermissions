@@ -48,11 +48,11 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
  * @author Lord_Ralex
  * @since 0.1
  */
-public class TPListener implements Listener {
+public class PlayerListener implements Listener {
 
     protected final TotalPermissions plugin;
 
-    public TPListener(TotalPermissions p) {
+    public PlayerListener(TotalPermissions p) {
         plugin = p;
     }
 

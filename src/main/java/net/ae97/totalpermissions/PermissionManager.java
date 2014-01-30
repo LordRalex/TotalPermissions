@@ -18,7 +18,9 @@ package net.ae97.totalpermissions;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,15 +29,19 @@ import net.ae97.totalpermissions.data.DataHolder;
 import net.ae97.totalpermissions.lang.Lang;
 import net.ae97.totalpermissions.permission.PermissionBase;
 import net.ae97.totalpermissions.permission.PermissionConsole;
+import net.ae97.totalpermissions.permission.PermissionEntity;
 import net.ae97.totalpermissions.permission.PermissionGroup;
 import net.ae97.totalpermissions.permission.PermissionOp;
 import net.ae97.totalpermissions.permission.PermissionRcon;
 import net.ae97.totalpermissions.permission.PermissionType;
 import net.ae97.totalpermissions.permission.PermissionUser;
+import net.ae97.totalpermissions.permission.PermissionWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -51,6 +57,8 @@ public final class PermissionManager {
 
     protected final Map<String, PermissionGroup> groups = new ConcurrentHashMap<String, PermissionGroup>();
     protected final Map<String, PermissionUser> users = new ConcurrentHashMap<String, PermissionUser>();
+    protected final Map<String, PermissionWorld> worlds = new ConcurrentHashMap<String, PermissionWorld>();
+    protected final Map<EntityType, PermissionEntity> entities = new EnumMap<EntityType, PermissionEntity>(EntityType.class);
     protected final Map<String, PermissionAttachment> permAttMap = new ConcurrentHashMap<String, PermissionAttachment>();
     protected final Map<String, Map<String, Permission>> permissions = new ConcurrentHashMap<String, Map<String, Permission>>();
     protected String defaultGroup;
@@ -117,6 +125,29 @@ public final class PermissionManager {
             plugin.getLogger().log(Level.SEVERE, Lang.ERROR_CONFIG.getMessage("op"), e);
         }
         permAttMap.put("console", console.setPerms(Bukkit.getConsoleSender(), null, null));
+
+        List<World> loadedWorlds = Bukkit.getWorlds();
+        for (World world : loadedWorlds) {
+            try {
+                PermissionWorld pWorld = new PermissionWorld(world);
+                worlds.put(world.getName(), pWorld);
+            } catch (IOException e) {
+                plugin.getLogger().log(Level.SEVERE, Lang.ERROR_CREATION.getMessage("world"), e);
+            } catch (InvalidConfigurationException e) {
+                plugin.getLogger().log(Level.SEVERE, Lang.ERROR_CONFIG.getMessage("world"), e);
+            }
+        }
+
+        for (EntityType type : EntityType.values()) {
+            try {
+                PermissionEntity pEntity = new PermissionEntity(type);
+                entities.put(type, pEntity);
+            } catch (IOException e) {
+                plugin.getLogger().log(Level.SEVERE, Lang.ERROR_CREATION.getMessage("entity"), e);
+            } catch (InvalidConfigurationException e) {
+                plugin.getLogger().log(Level.SEVERE, Lang.ERROR_CONFIG.getMessage("entity"), e);
+            }
+        }
     }
 
     /**
@@ -128,6 +159,8 @@ public final class PermissionManager {
         plugin.debugLog("Unloading permission manager");
         users.clear();
         groups.clear();
+        worlds.clear();
+        entities.clear();
         clearPerms();
         clearRegisteredPerms();
     }
@@ -527,8 +560,8 @@ public final class PermissionManager {
                     map.remove(name);
                 }
             }
-            permissions.remove(org);
         }
+        permissions.clear();
     }
 
     /**

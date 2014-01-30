@@ -34,7 +34,7 @@ import net.ae97.totalpermissions.data.MySQLDataHolder;
 import net.ae97.totalpermissions.data.SharedDataHolder;
 import net.ae97.totalpermissions.data.YamlDataHolder;
 import net.ae97.totalpermissions.lang.Lang;
-import net.ae97.totalpermissions.listeners.TPListener;
+import net.ae97.totalpermissions.listeners.ListenerManager;
 import net.ae97.totalpermissions.logger.DebugLogFormatter;
 import net.ae97.totalpermissions.mcstats.Metrics;
 import net.ae97.totalpermissions.sql.PermissionPersistance;
@@ -64,7 +64,7 @@ public final class TotalPermissions extends JavaPlugin {
     }
     protected DataHolder dataHolder;
     protected PermissionManager manager;
-    protected TPListener listener;
+    protected ListenerManager listenerManager;
     protected Metrics metrics;
     protected CommandHandler commands;
     protected boolean loadingFailed = false;
@@ -187,9 +187,9 @@ public final class TotalPermissions extends JavaPlugin {
             manager.load();
 
             debugLog("Creating listener");
-            listener = new TPListener(this);
-            debugLog("Registering listener");
-            Bukkit.getPluginManager().registerEvents(listener, this);
+            listenerManager = new ListenerManager(this);
+            debugLog("Registering listeners");
+            listenerManager.load();
 
             debugLog("Creating command handler");
             commands = new CommandHandler(this);
@@ -257,14 +257,14 @@ public final class TotalPermissions extends JavaPlugin {
     }
 
     /**
-     * Gets the listener in use
+     * Gets the ListenerManager in use
      *
-     * @return The Listener
+     * @return The ListenerManager loaded
      *
-     * @since 0.1
+     * @since 0.4.0
      */
-    public TPListener getListener() {
-        return listener;
+    public ListenerManager getListenerManager() {
+        return listenerManager;
     }
 
     /**
