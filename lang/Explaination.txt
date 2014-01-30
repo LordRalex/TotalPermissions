@@ -1,8 +1,0 @@
-To explain how this all works here:
-
-The files located in this root are for legacy reasons. 
-0.1 did not have this layout, so exist only to provide support for 0.1. 
-This will be removed once 0.5 or above is released.
-
-The files are organized by the version of TotalPermissions that they were made for. 
-This allows different versions of these files for the different versions and for the future.

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 AE97
+ * Copyright (C) 2014 AE97
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -436,7 +436,7 @@ public final class PermissionManager {
                 continue;
             }
             try {
-                player.removeAttachment(permAttMap.get(name));
+                clearPerms(player);
             } catch (IllegalArgumentException e) {
             }
         }

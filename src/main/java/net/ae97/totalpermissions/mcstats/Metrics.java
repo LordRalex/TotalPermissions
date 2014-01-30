@@ -1,27 +1,4 @@
 /*
- * Copyright (C) 2013 AE97
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
- * This code is from the Metrics github page, with modifications prefixed with
- * comments starting with "TotalPermissions" where changes are made. This is 
- * still the work of the Metrics developer and I do not claim this to be of my
- * own work. Used with permissions given on the Metrics page.
- */
-
-/*
  * Copyright 2011-2013 Tyler Blair. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
@@ -69,90 +46,55 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.zip.GZIPOutputStream;
+import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.scheduler.BukkitTask;
 
-//TotalPermissions - Made class final
 public final class Metrics {
 
-    /**
-     * The current revision number
-     */
-    private final int REVISION = 7;
-    /**
-     * The base url of the metrics domain
-     */
-    private final String BASE_URL = "http://report.mcstats.org";
-    /**
-     * The url used to report a server's status
-     */
-    private final String REPORT_URL = "/plugin/%s";
-    /**
-     * Interval of time to ping (in minutes)
-     */
-    private final int PING_INTERVAL = 15;
-    /**
-     * The plugin this metrics submits for
-     */
-    private final Plugin plugin;
-    /**
-     * All of the custom graphs to submit to metrics
-     */
-    private final Set<Graph> graphs = Collections.synchronizedSet(new HashSet<Graph>());
-    /**
-     * The plugin configuration file
-     */
-    private final YamlConfiguration configuration;
-    /**
-     * The plugin configuration file
-     */
-    private final File configurationFile;
-    /**
-     * Unique server id
-     */
-    private final String guid;
-    /**
-     * Debug mode
-     */
-    private final boolean debug;
-    /**
-     * Lock for synchronization
-     */
-    private final Object optOutLock = new Object();
-    /**
-     * The scheduled task
-     */
     private volatile BukkitTask task = null;
+    private final int REVISION = 7;
+    private final String BASE_URL = "http://report.mcstats.org";
+    private final String REPORT_URL = "/plugin/%s";
+    private final int PING_INTERVAL = 15;
+    private final TotalPermissions plugin;
+    private final Set<Graph> graphs = Collections.synchronizedSet(new HashSet<Graph>());
+    private final YamlConfiguration configuration;
+    private final File configurationFile;
+    private final String guid;
+    private final Object optOutLock = new Object();
+    private final boolean onlineMode = Bukkit.getServer().getOnlineMode();
+    private final String serverVersion = Bukkit.getVersion();
+    private final PluginDescriptionFile description;
+    private final String pluginName;
+    private final String pluginVersion;
 
-    public Metrics(final Plugin p) throws IOException {
+    public Metrics(TotalPermissions p) throws IOException {
         if (p == null) {
             throw new IllegalArgumentException("Plugin cannot be null");
         }
 
         plugin = p;
 
-        // load the config
         configurationFile = getConfigFile();
         configuration = YamlConfiguration.loadConfiguration(configurationFile);
-
-        // add some defaults
         configuration.addDefault("opt-out", !plugin.getConfig().getBoolean("metrics-report", true));
         configuration.addDefault("guid", UUID.randomUUID().toString());
         configuration.addDefault("debug", false);
 
-        // Do we need to create the file?
         if (configuration.get("guid", null) == null) {
             configuration.options().header("http://mcstats.org").copyDefaults(true);
             configuration.save(configurationFile);
         }
 
-        // Load the guid then
         guid = configuration.getString("guid");
-        debug = configuration.getBoolean("debug", false);
+
+        description = plugin.getDescription();
+        pluginName = description.getName();
+        pluginVersion = description.getVersion();
     }
 
     /**
@@ -169,7 +111,6 @@ public final class Metrics {
             gzos = new GZIPOutputStream(baos);
             gzos.write(input.getBytes("UTF-8"));
         } catch (IOException e) {
-            //TotalPermissions - Change to use Logger
             plugin.getLogger().log(Level.SEVERE, "An error occurred on gzipping from Metrics", e);
         } finally {
             if (gzos != null) {
@@ -249,7 +190,6 @@ public final class Metrics {
                 default:
                     if (chr < ' ') {
                         String t = "000" + Integer.toHexString(chr);
-                        //TotalPermissions - String .appends together instead
                         builder.append("\\u").append(t.substring(t.length() - 4));
                     } else {
                         builder.append(chr);
@@ -268,46 +208,8 @@ public final class Metrics {
      * @param text the text to encode
      * @return the encoded text, as UTF-8
      */
-    private String urlEncode(final String text) throws UnsupportedEncodingException {
+    private String urlEncode(String text) throws UnsupportedEncodingException {
         return URLEncoder.encode(text, "UTF-8");
-    }
-
-    /**
-     * Construct and create a Graph that can be used to separate specific
-     * plotters to their own graphs on the metrics website. Plotters can be
-     * added to the graph object returned.
-     *
-     * @param name The name of the graph
-     * @return Graph object created. Will never return NULL under normal
-     * circumstances unless bad parameters are given
-     */
-    public Graph createGraph(final String name) {
-        if (name == null) {
-            throw new IllegalArgumentException("Graph name cannot be null");
-        }
-
-        // Construct the graph object
-        final Graph graph = new Graph(name);
-
-        // Now we can add our graph
-        graphs.add(graph);
-
-        // and return back
-        return graph;
-    }
-
-    /**
-     * Add a Graph object to BukkitMetrics that represents data for the plugin
-     * that should be sent to the backend
-     *
-     * @param graph The name of the graph
-     */
-    public void addGraph(final Graph graph) {
-        if (graph == null) {
-            throw new IllegalArgumentException("Graph cannot be null");
-        }
-
-        graphs.add(graph);
     }
 
     /**
@@ -320,48 +222,34 @@ public final class Metrics {
      */
     public boolean start() {
         synchronized (optOutLock) {
-            // Did we opt out?
             if (isOptOut()) {
                 return false;
             }
 
-            // Is metrics already running?
             if (task != null) {
                 return true;
             }
 
-            // Begin hitting the server with glorious data
             task = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
                 private boolean firstPost = true;
 
                 @Override
                 public void run() {
                     try {
-                        // This has to be synchronized or it can collide with the disable method.
                         synchronized (optOutLock) {
-                            // Disable Task, if it is running and the server owner decided to opt-out
                             if (isOptOut() && task != null) {
                                 task.cancel();
                                 task = null;
-                                // Tell all plotters to stop gathering information.
                                 for (Graph graph : graphs) {
                                     graph.onOptOut();
                                 }
                             }
                         }
 
-                        // We use the inverse of firstPost because if it is the first time we are posting,
-                        // it is not a interval ping, so it evaluates to FALSE
-                        // Each time thereafter it will evaluate to TRUE, i.e PING!
                         postPlugin(!firstPost);
 
-                        // After the first post we set firstPost to false
-                        // Each post thereafter will be a ping
                         firstPost = false;
                     } catch (IOException e) {
-                        if (debug) {
-                            Bukkit.getLogger().log(Level.INFO, "[Metrics] {0}", e.getMessage());
-                        }
                     }
                 }
             }, 0, PING_INTERVAL * 1200);
@@ -375,20 +263,15 @@ public final class Metrics {
      *
      * @return true if metrics should be opted out of it
      */
-    public boolean isOptOut() {
+    private boolean isOptOut() {
         synchronized (optOutLock) {
             try {
-                // Reload the metrics file
                 configuration.load(getConfigFile());
             } catch (IOException ex) {
-                if (debug) {
-                    Bukkit.getLogger().log(Level.INFO, "[Metrics] {0}", ex.getMessage());
-                }
+                plugin.getLogger().log(Level.SEVERE, "[Metrics] ", ex.getMessage());
                 return true;
             } catch (InvalidConfigurationException ex) {
-                if (debug) {
-                    Bukkit.getLogger().log(Level.INFO, "[Metrics] {0}", ex.getMessage());
-                }
+                plugin.getLogger().log(Level.SEVERE, "[Metrics] ", ex.getMessage());
                 return true;
             }
             if (!plugin.getConfig().getBoolean("metrics-report", true)) {
@@ -405,35 +288,19 @@ public final class Metrics {
      *
      * @return the File object for the config file
      */
-    public File getConfigFile() {
-        // I believe the easiest way to get the base folder (e.g craftbukkit set via -P) for plugins to use
-        // is to abuse the plugin object we already have
-        // plugin.getDataFolder() => base/plugins/PluginA/
-        // pluginsFolder => base/plugins/
-        // The base is not necessarily relative to the startup directory.
-        File pluginsFolder = plugin.getDataFolder().getParentFile();
-
-        // return => base/plugins/PluginMetrics/config.yml
-        return new File(new File(pluginsFolder, "PluginMetrics"), "config.yml");
+    private File getConfigFile() {
+        return new File(new File(plugin.getDataFolder().getParentFile(), "PluginMetrics"), "config.yml");
     }
 
     /**
      * Generic method that posts a plugin to the metrics website
      */
-    private void postPlugin(final boolean isPing) throws IOException {
-        // Server software specific section
-        PluginDescriptionFile description = plugin.getDescription();
-        String pluginName = description.getName();
-        boolean onlineMode = Bukkit.getServer().getOnlineMode(); // TRUE if online mode is enabled
-        String pluginVersion = description.getVersion();
-        String serverVersion = Bukkit.getVersion();
+    private void postPlugin(boolean isPing) throws IOException {
         int playersOnline = Bukkit.getServer().getOnlinePlayers().length;
 
-        // Construct the post data
         StringBuilder json = new StringBuilder(1024);
         json.append('{');
 
-        // The plugin's description file containg all of the plugin data such as name, version, author, etc
         appendJSONPair(json, "guid", guid);
         appendJSONPair(json, "plugin_version", pluginVersion);
         appendJSONPair(json, "server_version", serverVersion);
@@ -441,7 +308,6 @@ public final class Metrics {
 
         appendJSONPair(json, "auth_mode", onlineMode ? "1" : "0");
 
-        // If we're pinging, append it
         if (isPing) {
             appendJSONPair(json, "ping", "1");
         }
@@ -486,27 +352,20 @@ public final class Metrics {
             }
         }
 
-        // close json
         json.append('}');
 
-        // Create the url
         URL url = new URL(BASE_URL + String.format(REPORT_URL, urlEncode(pluginName)));
 
-        // Connect to the website
         URLConnection connection;
 
-        // Mineshafter creates a socks proxy, so we can safely bypass it
-        // It does not reroute POST requests so we need to go around it
         if (isMineshafterPresent()) {
             connection = url.openConnection(Proxy.NO_PROXY);
         } else {
             connection = url.openConnection();
         }
 
-        byte[] uncompressed = json.toString().getBytes();
         byte[] compressed = gzip(json.toString());
 
-        // Headers
         connection.addRequestProperty("User-Agent", "MCStats/" + REVISION);
         connection.addRequestProperty("Content-Type", "application/json");
         connection.addRequestProperty("Content-Encoding", "gzip");
@@ -516,22 +375,31 @@ public final class Metrics {
 
         connection.setDoOutput(true);
 
-        if (debug) {
-            System.out.println("[Metrics] Prepared request for " + pluginName + " uncompressed=" + uncompressed.length + " compressed=" + compressed.length);
+        OutputStream os = null;
+        try {
+            os = connection.getOutputStream();
+            os.write(compressed);
+            os.flush();
+        } catch (IOException e) {
+            throw e;
+        } finally {
+            if (os != null) {
+                os.close();
+            }
         }
 
-        // Write the data
-        OutputStream os = connection.getOutputStream();
-        os.write(compressed);
-        os.flush();
-
-        // Now read the response
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        String response = reader.readLine();
-
-        // close resources
-        os.close();
-        reader.close();
+        BufferedReader reader = null;
+        String response;
+        try {
+            reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            response = reader.readLine();
+        } catch (IOException e) {
+            throw e;
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
+        }
 
         if (response == null || response.startsWith("ERR") || response.startsWith("7")) {
             if (response == null) {
@@ -542,7 +410,6 @@ public final class Metrics {
 
             throw new IOException(response);
         } else {
-            // Is this the first update this hour?
             if (response.equals("1") || response.contains("This is your first update this hour")) {
                 synchronized (graphs) {
                     final Iterator<Graph> iter = graphs.iterator();
@@ -577,7 +444,7 @@ public final class Metrics {
     /**
      * Represents a custom graph on the website
      */
-    public static class Graph {
+    private class Graph {
 
         /**
          * The graph's name, alphanumeric and spaces only :) If it does not
@@ -655,7 +522,7 @@ public final class Metrics {
     /**
      * Interface used to collect custom data for a plugin
      */
-    public static abstract class Plotter {
+    private abstract class Plotter {
 
         /**
          * The plot's name

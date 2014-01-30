@@ -1,7 +1,7 @@
 /*
  * Updater for Bukkit.
  *
- * This class provides the means to safely and easily update a plugin, 
+ * This class provides the means to safely and easily update a plugin,
  * or check to see if it is updated using dev.bukkit.org
  */
 package net.ae97.totalpermissions.updater;
@@ -28,7 +28,7 @@ import javax.xml.stream.events.XMLEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
-public class Updater {
+public final class Updater {
 
     private static final String DBOUrl = "http://dev.bukkit.org/server-mods/";
     private static final int BYTE_SIZE = 1024;

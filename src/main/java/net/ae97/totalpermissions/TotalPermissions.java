@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 AE97
+ * Copyright (C) 2014 AE97
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@ import com.avaje.ebean.EbeanServer;
 import com.avaje.ebeaninternal.api.SpiEbeanServer;
 import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.FileHandler;
@@ -34,7 +33,6 @@ import net.ae97.totalpermissions.data.FlatFileDataHolder;
 import net.ae97.totalpermissions.data.MySQLDataHolder;
 import net.ae97.totalpermissions.data.SharedDataHolder;
 import net.ae97.totalpermissions.data.YamlDataHolder;
-import net.ae97.totalpermissions.lang.Cipher;
 import net.ae97.totalpermissions.lang.Lang;
 import net.ae97.totalpermissions.listeners.TPListener;
 import net.ae97.totalpermissions.logger.DebugLogFormatter;
@@ -64,18 +62,6 @@ public final class TotalPermissions extends JavaPlugin {
     public static TotalPermissions getPlugin() {
         return (TotalPermissions) Bukkit.getPluginManager().getPlugin("TotalPermissions");
     }
-
-    protected String BUKKIT_VERSION = "NONE";
-    protected final String[] ACCEPTABLE_VERSIONS = new String[]{
-        "v1_7_R1",
-        "v1_6_R3",
-        "v1_6_R2",
-        "v1_6_R1",
-        "v1_5_R3",
-        "v1_5_R2",
-        "v1_5_R1",
-        "v1_4_R1"
-    };
     protected DataHolder dataHolder;
     protected PermissionManager manager;
     protected TPListener listener;
@@ -107,22 +93,6 @@ public final class TotalPermissions extends JavaPlugin {
             }
 
             Lang.setLanguageConfig(YamlConfiguration.loadConfiguration(this.getResource("lang/" + getConfig().getString("language", "en_US") + ".yml")));
-
-            for (String version : ACCEPTABLE_VERSIONS) {
-                try {
-                    Class.forName("org.bukkit.craftbukkit." + version + ".entity.CraftHumanEntity");
-                    BUKKIT_VERSION = version;
-                    break;
-                } catch (ClassNotFoundException e) {
-                }
-            }
-            debugLog("Detected bukkit version: " + BUKKIT_VERSION);
-            if (BUKKIT_VERSION.equalsIgnoreCase("NONE")) {
-                log(Level.SEVERE, Lang.MAIN_BADVERSION1);
-                log(Level.SEVERE, Lang.MAIN_BADVERSION2);
-                getConfig().set("reflection.debug", false);
-                getConfig().set("reflection.starperm", false);
-            }
 
             String storageType = getConfig().getString("storage", "yaml");
             DataType type = DataType.valueOf(storageType.toUpperCase());
@@ -277,19 +247,6 @@ public final class TotalPermissions extends JavaPlugin {
     }
 
     /**
-     * Gets the permissions file. This does not load the file, this only
-     * provides the stored object.
-     *
-     * @return The perm file in the DataHolder form.
-     *
-     * @since 0.1
-     * @deprecated Use getDataHolder() instead
-     */
-    public DataHolder getPermFile() {
-        return dataHolder;
-    }
-
-    /**
      * Gets the currently active DataHolder
      *
      * @since 0.3
@@ -308,26 +265,6 @@ public final class TotalPermissions extends JavaPlugin {
      */
     public TPListener getListener() {
         return listener;
-    }
-
-    /**
-     * Returns the (@link Cipher) that is loaded
-     *
-     * @return NULL
-     *
-     * @since 0.2
-     *
-     * @deprecated Use {@link Lang} class instead
-     */
-    public Cipher getLangFile() {
-        try {
-            return new Cipher(this, getConfig().getString("language", "en_US"));
-        } catch (InvalidConfigurationException ex) {
-            getLogger().log(Level.SEVERE, "ERROR", ex);
-        } catch (IOException ex) {
-            getLogger().log(Level.SEVERE, "ERROR", ex);
-        }
-        return null;
     }
 
     /**
@@ -377,17 +314,6 @@ public final class TotalPermissions extends JavaPlugin {
         }
 
         return new File(getBackupFolder(), Integer.toString(highest));
-    }
-
-    /**
-     * Gets the Craftbukkit package version that the server is using
-     *
-     * @return Package CB/NMS files are in
-     *
-     * @since 0.1
-     */
-    public String getBukkitVersion() {
-        return BUKKIT_VERSION;
     }
 
     /**

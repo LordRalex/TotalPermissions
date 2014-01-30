@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 AE97
+ * Copyright (C) 2014 AE97
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
 package net.ae97.totalpermissions.listeners;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -25,7 +24,6 @@ import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.lang.Lang;
 import net.ae97.totalpermissions.permission.PermissionType;
 import net.ae97.totalpermissions.permission.PermissionUser;
-import net.ae97.totalpermissions.reflection.TPPermissibleBase;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -73,32 +71,6 @@ public class TPListener implements Listener {
     public void onPlayerLogin(PlayerLoginEvent event) {
         try {
             plugin.debugLog("PlayerLoginEvent fired, handling");
-            PermissionUser user = plugin.getManager().getUser(event.getPlayer());
-            if (plugin.getConfig().getBoolean("reflection.starperm", false)
-                    || (user.getDebugState() && plugin.getConfig().getBoolean("reflection.debug", false))) {
-                plugin.debugLog("Reflection hook enabled, reflecting into the player");
-                //forgive me for saying I did not want to do this, or as squid says
-                //"Forgive me for my sins"
-                Player player = event.getPlayer();
-                try {
-                    Class cl = Class.forName("org.bukkit.craftbukkit." + plugin.getBukkitVersion() + ".entity.CraftPlayer");
-                    Field field = cl.getField("perm");
-                    field.setAccessible(true);
-                    TPPermissibleBase base = new TPPermissibleBase(event.getPlayer(), user.getDebugState());
-                    field.set(player, base);
-                    plugin.log(Level.INFO, Lang.LISTENER_TPLISTENER_LOGIN_HOOKED, event.getPlayer().getName());
-                } catch (ClassNotFoundException ex) {
-                    plugin.getLogger().log(Level.SEVERE, Lang.LISTENER_TPLISTENER_LOGIN_ERROR.getMessage(), ex);
-                } catch (NoSuchFieldException ex) {
-                    plugin.getLogger().log(Level.SEVERE, Lang.LISTENER_TPLISTENER_LOGIN_ERROR.getMessage(), ex);
-                } catch (SecurityException ex) {
-                    plugin.getLogger().log(Level.SEVERE, Lang.LISTENER_TPLISTENER_LOGIN_ERROR.getMessage(), ex);
-                } catch (IllegalArgumentException ex) {
-                    plugin.getLogger().log(Level.SEVERE, Lang.LISTENER_TPLISTENER_LOGIN_ERROR.getMessage(), ex);
-                } catch (IllegalAccessException ex) {
-                    plugin.getLogger().log(Level.SEVERE, Lang.LISTENER_TPLISTENER_LOGIN_ERROR.getMessage(), ex);
-                }
-            }
             plugin.getManager().handleLoginEvent(event);
         } catch (StackOverflowError e) {
             plugin.getLogger().log(Level.SEVERE,
@@ -243,15 +215,11 @@ public class TPListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerCommandPreprocessDebugCheck(PlayerCommandPreprocessEvent event) {
-        plugin.debugLog("Handling command preprocess for debug check");
         PermissionUser user = plugin.getManager().getUser(event.getPlayer());
         if (!user.getDebugState()) {
             return;
         }
-        if (plugin.getConfig().getBoolean("reflection.debug", false)) {
-            plugin.debugLog("Reflection debug is enabled");
-            return;
-        }
+        plugin.debugLog("Handling command preprocess for debug check for player " + event.getPlayer().getName());
         plugin.log(Level.INFO, Lang.LISTENER_TPLISTENER_PREPROCESS_ACTIVATE, event.getPlayer().getName(), event.getMessage());
         try {
             String command = event.getMessage().split(" ")[0].substring(1);
@@ -273,19 +241,5 @@ public class TPListener implements Listener {
         plugin.debugLog("RemoteServerCommandEvent fired, handling");
         CommandSender sender = event.getSender();
         plugin.getManager().getRcon().setPerms(sender, plugin.getManager().getAttachment(sender.getName()), null);
-    }
-
-    //disables this event by not registering it with Bukkit
-    //@EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerCommandPreprocessPermCheck(PlayerCommandPreprocessEvent event) {
-        plugin.debugLog("Handling Commandpreprocess for perm check event");
-        String cmd = event.getMessage().split(" ")[0].substring(1);
-        Command command = Bukkit.getPluginCommand(cmd);
-        if (command == null) {
-            return;
-        }
-        if (!command.testPermissionSilent(event.getPlayer())) {
-            //command.setPermissionMessage(ChatColor.RED + cmd);
-        }
     }
 }

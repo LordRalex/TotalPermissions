@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 AE97
+ * Copyright (C) 2014 AE97
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,6 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 /**
  * @version 0.2
@@ -131,13 +130,10 @@ public final class CommandHandler implements CommandExecutor {
             plugin.debugLog(sender.getName() + " has the permission totalpermissions.cmd " + executor.getName());
             if (!executor.execute(sender, newArgs)) {
                 plugin.debugLog(executor.getName() + " not was executed sucessfully");
-                //This is badly handled, it should not be so easy to break
-                if (sender instanceof Player) {
-                    sender.sendMessage("/" + executor.getHelp()[0]);
-                } else {
-                    sender.sendMessage(executor.getHelp()[0]);
+                String[] help = executor.getHelp();
+                for (String h : help) {
+                    sender.sendMessage(h);
                 }
-                sender.sendMessage(executor.getHelp()[1]);
             }
             return true;
         } else {
