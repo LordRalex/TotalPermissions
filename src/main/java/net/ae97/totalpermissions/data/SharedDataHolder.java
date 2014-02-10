@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.permission.PermissionType;
 import org.bukkit.configuration.ConfigurationSection;
@@ -50,38 +49,24 @@ public class SharedDataHolder implements DataHolder {
         for (String holder : types) {
             DataHolder dataHolder = null;
             DataType type = DataType.valueOf(holder.toUpperCase());
-            try {
-                switch (type) {
-                    case MYSQL: {
-                        if (plugin.getDescription().isDatabaseEnabled()) {
-                            dataHolder = new MySQLDataHolder(plugin.getDatabase());
-                        } else {
-                            dataHolder = new MySQLDataHolder(null);
-                        }
-                    }
-                    break;
+            switch (type) {
+                case MYSQL: {
+                    dataHolder = new MySQLDataHolder();
+                }
+                break;
 
-                    case FLAT: {
-                        dataHolder = new FlatFileDataHolder(new File(plugin.getDataFolder(), "data"));
-                    }
-                    break;
-                    case YAML: {
-                        dataHolder = new YamlDataHolder(new File(plugin.getDataFolder(), "permissions.yml"));
-                    }
-                    break;
+                case FLAT: {
+                    dataHolder = new FlatFileDataHolder(new File(plugin.getDataFolder(), "data"));
                 }
-                if (dataHolder != null) {
-                    dataHolder.setup();
-                    dataHolders.add(dataHolder);
+                break;
+                case YAML: {
+                    dataHolder = new YamlDataHolder(new File(plugin.getDataFolder(), "permissions.yml"));
                 }
-            } catch (NoSuchFieldException ex) {
-                plugin.getLogger().log(Level.SEVERE, "Error on loading data holder (" + type + ")", ex);
-            } catch (IllegalArgumentException ex) {
-                plugin.getLogger().log(Level.SEVERE, "Error on loading data holder (" + type + ")", ex);
-            } catch (IllegalAccessException ex) {
-                plugin.getLogger().log(Level.SEVERE, "Error on loading data holder (" + type + ")", ex);
-            } catch (ClassNotFoundException ex) {
-                plugin.getLogger().log(Level.SEVERE, "Error on loading data holder (" + type + ")", ex);
+                break;
+            }
+            if (dataHolder != null) {
+                dataHolder.setup();
+                dataHolders.add(dataHolder);
             }
         }
         if (dataHolders.isEmpty()) {

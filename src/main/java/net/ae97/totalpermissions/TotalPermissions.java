@@ -16,16 +16,10 @@
  */
 package net.ae97.totalpermissions;
 
-import com.avaje.ebean.EbeanServer;
-import com.avaje.ebeaninternal.api.SpiEbeanServer;
-import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
-import javax.persistence.PersistenceException;
 import net.ae97.totalpermissions.commands.CommandHandler;
 import net.ae97.totalpermissions.data.DataHolder;
 import net.ae97.totalpermissions.data.DataType;
@@ -37,7 +31,6 @@ import net.ae97.totalpermissions.lang.Lang;
 import net.ae97.totalpermissions.listeners.ListenerManager;
 import net.ae97.totalpermissions.logger.DebugLogFormatter;
 import net.ae97.totalpermissions.mcstats.Metrics;
-import net.ae97.totalpermissions.sql.PermissionPersistance;
 import net.ae97.totalpermissions.updater.Updater;
 import net.ae97.totalpermissions.updater.Updater.UpdateType;
 import org.bukkit.Bukkit;
@@ -104,13 +97,7 @@ public final class TotalPermissions extends JavaPlugin {
             debugLog("Storage type to load: " + storageType);
             switch (type) {
                 case MYSQL: {
-                    if (getDescription().isDatabaseEnabled()) {
-                        debugLog("Using builtin system");
-                        dataHolder = new MySQLDataHolder(getDatabase());
-                    } else {
-                        debugLog("Making our own");
-                        dataHolder = new MySQLDataHolder(null);
-                    }
+                    dataHolder = new MySQLDataHolder();
                 }
                 break;
 
@@ -343,34 +330,6 @@ public final class TotalPermissions extends JavaPlugin {
      */
     public boolean isDebugMode() {
         return getConfig().getBoolean("angry-debug", false);
-    }
-
-    public void installDatabase(EbeanServer ebeanServer) {
-        if (ebeanServer == null) {
-            return;
-        }
-        try {
-            ebeanServer.find(PermissionPersistance.class).findRowCount();
-        } catch (PersistenceException ex) {
-            debugLog("Installing database for " + getName() + " due to first time usage (I hope)");
-            debugLog(ex);
-            if (ebeanServer == getDatabase()) {
-                debugLog("Using Bukkit integrated installer");
-                installDDL();
-            } else {
-                debugLog("Using custom installer");
-                SpiEbeanServer serv = (SpiEbeanServer) ebeanServer;
-                DdlGenerator gen = serv.getDdlGenerator();
-                gen.runScript(false, gen.generateCreateDdl());
-            }
-        }
-    }
-
-    @Override
-    public List<Class<?>> getDatabaseClasses() {
-        List<Class<?>> list = new ArrayList<Class<?>>();
-        list.add(PermissionPersistance.class);
-        return list;
     }
 
     @Override
