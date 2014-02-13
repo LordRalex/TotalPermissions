@@ -14,16 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.ae97.totalpermissions.data;
+package net.ae97.totalpermissions.base;
+
+import java.util.Set;
 
 /**
- * @version 1.0
  * @author Lord_Ralex
  */
-public enum DataType {
+public interface PermissionGroup extends PermissionBase {
 
-    YAML_SPLIT,
-    YAML_SHARED,
-    MYSQL,
-    SQLITE;
+    public Set<String> getInheritence();
+
+    public int getRank();
 }

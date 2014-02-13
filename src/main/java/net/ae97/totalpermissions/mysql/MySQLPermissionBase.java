@@ -14,16 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.ae97.totalpermissions.data;
+package net.ae97.totalpermissions.mysql;
+
+import java.sql.Connection;
+import net.ae97.totalpermissions.base.PermissionBase;
 
 /**
- * @version 1.0
  * @author Lord_Ralex
  */
-public enum DataType {
+public abstract class MySQLPermissionBase implements PermissionBase {
 
-    YAML_SPLIT,
-    YAML_SHARED,
-    MYSQL,
-    SQLITE;
+    protected final Connection connection;
+    private boolean debug = false;
+
+    public MySQLPermissionBase(Connection conn) {
+        connection = conn;
+    }
+
+    @Override
+    public final boolean isDebug() {
+        return debug;
+    }
+
+    @Override
+    public final boolean setDebug(boolean d) {
+        return (debug = d);
+    }
+
 }

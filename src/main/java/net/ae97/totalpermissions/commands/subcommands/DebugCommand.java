@@ -17,8 +17,8 @@
 package net.ae97.totalpermissions.commands.subcommands;
 
 import net.ae97.totalpermissions.TotalPermissions;
+import net.ae97.totalpermissions.base.PermissionUser;
 import net.ae97.totalpermissions.lang.Lang;
-import net.ae97.totalpermissions.permission.PermissionUser;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -39,7 +39,7 @@ public class DebugCommand implements SubCommand {
         if (args.length < 1) {
             return false;
         }
-        PermissionUser target = plugin.getManager().getUser(args[0]);
+        PermissionUser target = plugin.getDataManager().getUser(args[0]);
         if (target == null) {
             sender.sendMessage(Lang.COMMAND_DEBUG_NULLTARGET.getMessage(args[1]));
             return true;
@@ -49,19 +49,19 @@ public class DebugCommand implements SubCommand {
             if ((args[1].equalsIgnoreCase("on")) || (args[1].equalsIgnoreCase("enable")) || (args[1].equalsIgnoreCase("true"))) {
                 newState = true;
             } else if (args[1].equalsIgnoreCase("toggle")) {
-                newState = !target.getDebugState();
+                newState = !target.isDebug();
             } else {
                 sender.sendMessage(args[1] + " is an invalid argument");
                 return false;
             }
             target.setDebug(newState);
-            if (target.getDebugState()) {
+            if (target.isDebug()) {
                 sender.sendMessage(Lang.COMMAND_DEBUG_DEBUGON.getMessage(target.getName()));
             } else {
                 sender.sendMessage(Lang.COMMAND_DEBUG_DEBUGOFF.getMessage(target.getName()));
             }
         } else {
-            sender.sendMessage(target.getName() + "'s debug status: " + (target.getDebugState() ? "on" : "off"));
+            sender.sendMessage(target.getName() + "'s debug status: " + (target.isDebug() ? "on" : "off"));
         }
         return true;
     }

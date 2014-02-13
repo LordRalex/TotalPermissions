@@ -30,25 +30,24 @@ import org.bukkit.plugin.Plugin;
 
 public final class Updater {
 
-    private static final String DBOUrl = "http://dev.bukkit.org/server-mods/";
-    private static final int BYTE_SIZE = 1024;
-    private static final String TITLE = "title";
-    private static final String LINK = "link";
-    private static final String ITEM = "item";
-
+    private final String DBOUrl = "http://dev.bukkit.org/bukkit-plugins/";
+    private final int BYTE_SIZE = 1024;
+    private final String TITLE = "title";
+    private final String LINK = "link";
+    private final String ITEM = "item";
     private final Plugin plugin;
     private final UpdateType type;
+    private final boolean announce;
+    private final URL url;
+    private final File file;
+    private final Thread thread;
+    private final String[] noUpdateTag = {"-DEV", "-PRE", "-SNAPSHOT", "-BETA"};
+    private final File updateFolder = Bukkit.getUpdateFolderFile();
     private String versionTitle;
     private String versionLink;
     private long totalSize;
     private int sizeLine;
     private int multiplier;
-    private final boolean announce;
-    private URL url;
-    private final File file;
-    private final Thread thread;
-    private final String[] noUpdateTag = {"-DEV", "-PRE", "-SNAPSHOT"};
-    private final File updateFolder = Bukkit.getUpdateFolderFile();
     private UpdateResult result = null;
 
     public Updater(Plugin plugin, String slug, File file, UpdateType type, boolean announce) {
@@ -56,14 +55,16 @@ public final class Updater {
         this.type = type;
         this.announce = announce;
         this.file = file;
+        URL temp = null;
         try {
-            url = new URL(DBOUrl + slug + "/files.rss");
+            temp = new URL(DBOUrl + slug + "/files.rss");
         } catch (MalformedURLException ex) {
             plugin.getLogger().log(Level.WARNING,
                     "The project slug given (''{0}'') is invalid.", slug);
-            result = Updater.UpdateResult.FAIL_BADSLUG;
+            result = UpdateResult.FAIL_BADSLUG;
         }
-        if (result == null || result != Updater.UpdateResult.FAIL_BADSLUG) {
+        url = temp;
+        if (result == null || result != UpdateResult.FAIL_BADSLUG) {
             thread = new Thread(new UpdateRunnable());
         } else {
             thread = null;
@@ -71,7 +72,7 @@ public final class Updater {
     }
 
     public void checkForUpdate() {
-        if (thread != null) {
+        if (thread != null && !thread.isAlive()) {
             thread.start();
         }
     }
@@ -95,13 +96,12 @@ public final class Updater {
         if (thread == null) {
             return;
         }
-        if (thread.isAlive()) {
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                plugin.getLogger().log(Level.SEVERE, "Unhandled exception", e);
-            }
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            plugin.getLogger().log(Level.SEVERE, "Unhandled exception", e);
         }
+
     }
 
     private void saveFile(File folder, String file, String u) {
@@ -146,7 +146,7 @@ public final class Updater {
             }
         } catch (IOException ex) {
             plugin.getLogger().log(Level.WARNING, "The auto-updater tried to download a new update, but was unsuccessful.", ex);
-            result = Updater.UpdateResult.FAIL_DOWNLOAD;
+            result = UpdateResult.FAIL_DOWNLOAD;
         } finally {
             if (in != null) {
                 try {
@@ -219,13 +219,13 @@ public final class Updater {
             fSourceZip.delete();
         } catch (IOException ex) {
             plugin.getLogger().log(Level.WARNING, "The auto-updater tried to unzip a new update file, but was unsuccessful.", ex);
-            result = Updater.UpdateResult.FAIL_DOWNLOAD;
+            result = UpdateResult.FAIL_DOWNLOAD;
         }
         new File(file).delete();
     }
 
     public boolean pluginFile(String name) {
-        for (File f : new File("plugins").listFiles()) {
+        for (File f : plugin.getDataFolder().getParentFile().listFiles()) {
             if (f.getName().equals(name)) {
                 return true;
             }
@@ -259,11 +259,11 @@ public final class Updater {
             }
         } catch (IOException ex) {
             plugin.getLogger().log(Level.WARNING, "The auto-updater tried to contact dev.bukkit.org, but was unsuccessful.", ex);
-            result = Updater.UpdateResult.FAIL_DBO;
+            result = UpdateResult.FAIL_DBO;
             return null;
         } catch (NumberFormatException ex) {
             plugin.getLogger().log(Level.WARNING, "The auto-updater tried to contact dev.bukkit.org, but was unsuccessful.", ex);
-            result = Updater.UpdateResult.FAIL_DBO;
+            result = UpdateResult.FAIL_DBO;
             return null;
         } finally {
             try {
@@ -290,14 +290,14 @@ public final class Updater {
                     remVer = -1;
                 }
                 if (hasTag(version) || version.equalsIgnoreCase(remoteVersion) || curVer >= remVer) {
-                    result = Updater.UpdateResult.NO_UPDATE;
+                    result = UpdateResult.NO_UPDATE;
                     return false;
                 }
             } else {
                 plugin.getLogger().warning("Files uploaded to BukkitDev should contain the version number, "
                         + "seperated from the name by a 'v', such as PluginName v1.0");
                 plugin.getLogger().warning("Please notify the author of this error.");
-                result = Updater.UpdateResult.FAIL_NOVERSION;
+                result = UpdateResult.FAIL_NOVERSION;
                 return false;
             }
         }
@@ -370,24 +370,6 @@ public final class Updater {
             plugin.getLogger().log(Level.WARNING, "Could not reach BukkitDev file stream for update checking. Is dev.bukkit.org offline?", e);
             return null;
         }
-    }
-
-    public enum UpdateResult {
-
-        SUCCESS,
-        NO_UPDATE,
-        FAIL_DOWNLOAD,
-        FAIL_DBO,
-        FAIL_NOVERSION,
-        FAIL_BADSLUG,
-        UPDATE_AVAILABLE
-    }
-
-    public enum UpdateType {
-
-        DEFAULT,
-        NO_VERSION_CHECK,
-        NO_DOWNLOAD
     }
 
     private class UpdateRunnable implements Runnable {

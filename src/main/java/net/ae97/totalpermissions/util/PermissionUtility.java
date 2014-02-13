@@ -33,7 +33,7 @@ public class PermissionUtility {
 
     /**
      * Provides a list of all perms given by using '*'. This will only look at
-     * registered permissions made by plugins.
+     * registered permissions.
      *
      * @return List of perms given by '*'
      *
@@ -45,7 +45,7 @@ public class PermissionUtility {
 
     /**
      * Provides a list of all perms given by using '*' or '**'. This will only
-     * look at registered permissions made by plugins.
+     * look at registered permissions.
      *
      * @param isAll True if '**', false for '*'
      *
@@ -63,27 +63,6 @@ public class PermissionUtility {
                 perms.add(permTest.getName());
             } else if (isAll) {
                 perms.add(permTest.getName());
-            }
-        }
-        return perms;
-    }
-
-    /**
-     * Gets a list of the permissions for a given list of commands. This list
-     * may not be in the exact order and may not contain the correct perm or may
-     * not be the same size.
-     *
-     * @param commands List of commands to get perms for
-     * @return List of perms for those commands
-     *
-     * @since 0.1
-     */
-    public static List<String> getPermsForCommands(List<String> commands) {
-        List<String> perms = new ArrayList<String>();
-        for (String command : commands) {
-            Command cmd = Bukkit.getPluginCommand(command);
-            if (cmd != null) {
-                perms.add(cmd.getPermission());
             }
         }
         return perms;

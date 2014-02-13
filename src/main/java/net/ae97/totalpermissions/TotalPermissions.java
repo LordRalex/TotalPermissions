@@ -17,31 +17,27 @@
 package net.ae97.totalpermissions;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import net.ae97.totalpermissions.commands.CommandHandler;
 import net.ae97.totalpermissions.data.DataHolder;
+import net.ae97.totalpermissions.data.DataManager;
 import net.ae97.totalpermissions.data.DataType;
-import net.ae97.totalpermissions.data.FlatFileDataHolder;
-import net.ae97.totalpermissions.data.MySQLDataHolder;
-import net.ae97.totalpermissions.data.SharedDataHolder;
-import net.ae97.totalpermissions.data.YamlDataHolder;
+import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import net.ae97.totalpermissions.lang.Lang;
-import net.ae97.totalpermissions.listeners.ListenerManager;
+import net.ae97.totalpermissions.listener.ListenerManager;
 import net.ae97.totalpermissions.logger.DebugLogFormatter;
 import net.ae97.totalpermissions.mcstats.Metrics;
 import net.ae97.totalpermissions.updater.Updater;
-import net.ae97.totalpermissions.updater.Updater.UpdateType;
+import net.ae97.totalpermissions.updater.UpdateType;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * @version 0.2
  * @author Lord_Ralex
- * @since 0.1
  */
 public final class TotalPermissions extends JavaPlugin {
 
@@ -56,14 +52,26 @@ public final class TotalPermissions extends JavaPlugin {
         return (TotalPermissions) Bukkit.getPluginManager().getPlugin("TotalPermissions");
     }
     protected DataHolder dataHolder;
-    protected PermissionManager manager;
     protected ListenerManager listenerManager;
     protected Metrics metrics;
     protected CommandHandler commands;
-    protected boolean loadingFailed = false;
+    protected DataManager dataManager;
 
     @Override
     public void onLoad() {
+        if (getConfig().getBoolean("update.check", true)) {
+            UpdateType updatetype = UpdateType.NO_DOWNLOAD;
+            if (getConfig().getBoolean("update.download", true)) {
+                updatetype = UpdateType.DEFAULT;
+            }
+
+            Updater updater = new Updater(this, "totalpermissions", this.getFile(), updatetype, true);
+            updater.checkForUpdate();
+        }
+    }
+
+    @Override
+    public void onEnable() {
         try {
             getLogger().info("Beginning initial preperations");
             if (!getDataFolder().exists()) {
@@ -87,91 +95,32 @@ public final class TotalPermissions extends JavaPlugin {
 
             Lang.setLanguageConfig(YamlConfiguration.loadConfiguration(this.getResource("lang/" + getConfig().getString("language", "en_US") + ".yml")));
 
-            String storageType = getConfig().getString("storage", "yaml");
+            String storageType = getConfig().getString("storage", "yaml_shared");
             DataType type = DataType.valueOf(storageType.toUpperCase());
             if (type == null) {
                 log(Level.SEVERE, Lang.MAIN_STORAGEERROR, storageType);
-                type = DataType.YAML;
+                type = DataType.YAML_SHARED;
             }
             debugLog("Creating data holder");
             debugLog("Storage type to load: " + storageType);
             switch (type) {
-                case MYSQL: {
-                    dataHolder = new MySQLDataHolder();
-                }
-                break;
-
-                case FLAT: {
-                    dataHolder = new FlatFileDataHolder(new File(getDataFolder(), "data"));
-                }
-                break;
-
-                case SHARED: {
-                    dataHolder = new SharedDataHolder(this);
-                }
-                break;
-
-                //default to use YAML if nothing is set up
                 default:
-                case YAML: {
-                    dataHolder = new YamlDataHolder(new File(getDataFolder(), "permissions.yml"));
+                case YAML_SHARED: {
+                }
+                break;
+                case YAML_SPLIT: {
+                }
+                break;
+                case SQLITE: {
+                }
+                break;
+                case MYSQL: {
                 }
                 break;
             }
 
             debugLog("Loading permissions setup");
-            try {
-                dataHolder.setup();
-            } catch (InvalidConfigurationException e) {
-                log(Level.SEVERE, Lang.MAIN_YAMLERROR);
-                getLogger().log(Level.SEVERE, "-> {0}", e.getMessage());
-                debugLog(e);
-                getLogger().log(Level.WARNING, Lang.MAIN_LOADBACKUP.getMessage());
-                try {
-                    if (dataHolder instanceof YamlDataHolder) {
-                        dataHolder = new YamlDataHolder(new File(getLastBackupFolder(), "permissions.yml"));
-                    } else {
-                        dataHolder = new YamlDataHolder(new File(getDataFolder(), "permissions.yml"));
-                    }
-                    dataHolder.setup();
-                    log(Level.WARNING, Lang.MAIN_LOADED1);
-                    log(Level.WARNING, Lang.MAIN_LOADED2);
-                } catch (InvalidConfigurationException e2) {
-                    log(Level.SEVERE, Lang.MAIN_LOADFAILED1);
-                    log(Level.SEVERE, Lang.MAIN_LOADFAILED2);
-                    throw e2;
-                }
-            }
-
-            getLogger().info("Initial preperations complete");
-        } catch (Exception e) {
-            getLogger().log(Level.SEVERE, Lang.MAIN_ERROR.getMessage(getName(), getDescription().getVersion()), e);
-            loadingFailed = true;
-        }
-    }
-
-    @Override
-    public void onEnable() {
-        try {
-            if (loadingFailed) {
-                log(Level.SEVERE, Lang.MAIN_LOADCRASH);
-                Bukkit.getPluginManager().disablePlugin(this);
-                return;
-            }
-            if (getConfig().getBoolean("update.check", true)) {
-                UpdateType updatetype = UpdateType.NO_DOWNLOAD;
-                if (getConfig().getBoolean("update.download", true)) {
-                    updatetype = UpdateType.DEFAULT;
-                }
-
-                Updater updater = new Updater(this, "totalpermissions", this.getFile(), updatetype, true);
-                updater.checkForUpdate();
-            }
-
-            debugLog("Creating permission manager");
-            manager = new PermissionManager(this);
-            debugLog("Loading permission manager");
-            manager.load();
+            dataManager.load();
 
             debugLog("Creating listener");
             listenerManager = new ListenerManager(this);
@@ -190,24 +139,15 @@ public final class TotalPermissions extends JavaPlugin {
             } else {
                 log(Level.INFO, Lang.MAIN_METRICSOFF);
             }
-        } catch (Exception e) {
-            if (e instanceof InvalidConfigurationException) {
-                log(Level.SEVERE, Lang.MAIN_YAMLERROR);
-                getLogger().log(Level.SEVERE, ((InvalidConfigurationException) e).getMessage());
-            } else {
-                getLogger().log(Level.SEVERE, Lang.MAIN_ERROR.getMessage(getName(), getDescription().getVersion()), e);
-            }
-            Bukkit.getPluginManager().disablePlugin(this);
+        } catch (IOException e) {
+            log(Level.SEVERE, Lang.MAIN_ERROR, e);
+        } catch (DataLoadFailedException e) {
+            log(Level.SEVERE, Lang.MAIN_ERROR, e);
         }
     }
 
     @Override
     public void onDisable() {
-        debugLog("Disabling manager");
-        if (manager != null) {
-            debugLog("Unloading manager");
-            manager.unload();
-        }
         Handler[] handlers = getLogger().getHandlers();
         for (Handler handle : handlers) {
             if (handle.getFormatter() instanceof DebugLogFormatter) {
@@ -216,31 +156,10 @@ public final class TotalPermissions extends JavaPlugin {
         }
         File[] fileList = new File(getDataFolder(), "logs").listFiles();
         for (File file : fileList) {
-            if (file.getName().endsWith("lck")) {
+            if (file.getName().endsWith(".lck")) {
                 file.delete();
             }
         }
-    }
-
-    /**
-     * Gets the {@link PermissionManager} for this plugin.
-     *
-     * @return The {@link PermissionManager} that this is using
-     *
-     * @since 0.1
-     */
-    public PermissionManager getManager() {
-        return manager;
-    }
-
-    /**
-     * Gets the currently active DataHolder
-     *
-     * @since 0.3
-     * @return The DataHolder currently loaded
-     */
-    public DataHolder getDataHolder() {
-        return dataHolder;
     }
 
     /**
@@ -255,55 +174,6 @@ public final class TotalPermissions extends JavaPlugin {
     }
 
     /**
-     * Returns the backup folder
-     *
-     * @return The backup folder
-     *
-     * @since 0.1
-     */
-    public File getBackupFolder() {
-        return new File(getDataFolder(), "backups");
-    }
-
-    /**
-     * Returns the location of the last folder used to back up perms. This may
-     * not be exact, but uses the folder numbers.
-     *
-     * @return The File instance of the folder that contains the last backed up
-     * files
-     *
-     * @since 0.1
-     */
-    public File getLastBackupFolder() {
-        int highest = 0;
-        File[] files = getBackupFolder().listFiles();
-        if (files != null) {
-            for (File file : files) {
-                if (file == null) {
-                    continue;
-                }
-                if (!file.isDirectory()) {
-                    continue;
-                }
-                try {
-                    int num = Integer.parseInt(file.getName());
-                    if (highest < num) {
-                        highest = num;
-                    }
-                } catch (NumberFormatException e) {
-                }
-            }
-        }
-        File dir = new File(getBackupFolder(), Integer.toString(highest));
-        if (dir.listFiles() == null || dir.listFiles().length == 0) {
-            dir.delete();
-            return getLastBackupFolder();
-        }
-
-        return new File(getBackupFolder(), Integer.toString(highest));
-    }
-
-    /**
      * Gets the CommandHandler that is in use by this plugin
      *
      * @return The CommandHandler in use
@@ -314,10 +184,8 @@ public final class TotalPermissions extends JavaPlugin {
         return commands;
     }
 
-    public void debugLog(Object... message) {
-        for (Object m : message) {
-            getLogger().log(Level.FINER, m.toString());
-        }
+    public DataManager getDataManager() {
+        return dataManager;
     }
 
     /**
@@ -332,12 +200,13 @@ public final class TotalPermissions extends JavaPlugin {
         return getConfig().getBoolean("angry-debug", false);
     }
 
-    @Override
-    public File getFile() {
-        return super.getFile();
-    }
-
     public void log(Level level, Lang message, Object... args) {
         getLogger().log(level, message.getMessage(args));
+    }
+
+    public void debugLog(Object... message) {
+        for (Object m : message) {
+            getLogger().log(Level.FINER, m.toString());
+        }
     }
 }

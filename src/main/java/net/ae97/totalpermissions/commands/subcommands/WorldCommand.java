@@ -37,10 +37,6 @@ public class WorldCommand implements SubCommand {
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
-        if (args.length > 2) { // If there is an action command
-            plugin.getCommandHandler().getActionHandler().onAction(sender, args, fields());
-            return true;
-        }
         return false;
     }
 

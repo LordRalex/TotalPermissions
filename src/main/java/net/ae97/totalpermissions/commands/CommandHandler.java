@@ -20,17 +20,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import net.ae97.totalpermissions.TotalPermissions;
-import net.ae97.totalpermissions.commands.subcommands.BackupCommand;
-import net.ae97.totalpermissions.commands.subcommands.DebugCommand;
-import net.ae97.totalpermissions.commands.subcommands.DumpCommand;
-import net.ae97.totalpermissions.commands.subcommands.GroupCommand;
-import net.ae97.totalpermissions.commands.subcommands.HelpCommand;
-import net.ae97.totalpermissions.commands.subcommands.ReloadCommand;
-import net.ae97.totalpermissions.commands.subcommands.SpecialCommand;
-import net.ae97.totalpermissions.commands.subcommands.SubCommand;
-import net.ae97.totalpermissions.commands.subcommands.UserCommand;
-import net.ae97.totalpermissions.commands.subcommands.WorldCommand;
-import net.ae97.totalpermissions.commands.subcommands.actions.ActionHandler;
+import net.ae97.totalpermissions.commands.subcommands.*;
 import net.ae97.totalpermissions.lang.Lang;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.Command;
@@ -45,7 +35,6 @@ import org.bukkit.command.CommandSender;
 public final class CommandHandler implements CommandExecutor {
 
     protected final Map<String, SubCommand> commands = new ConcurrentHashMap<String, SubCommand>();
-    protected final ActionHandler actions;
     protected final TotalPermissions plugin;
 
     public CommandHandler(TotalPermissions p) {
@@ -54,8 +43,6 @@ public final class CommandHandler implements CommandExecutor {
         SubCommand[] cmds = new SubCommand[]{
             new HelpCommand(plugin),
             new DebugCommand(plugin),
-            new ReloadCommand(plugin),
-            new BackupCommand(plugin),
             new UserCommand(plugin),
             new GroupCommand(plugin),
             new SpecialCommand(plugin),
@@ -66,8 +53,6 @@ public final class CommandHandler implements CommandExecutor {
         for (SubCommand sc : cmds) {
             commands.put(sc.getName(), sc);
         }
-
-        actions = new ActionHandler(plugin);
     }
 
     @Override
@@ -152,16 +137,5 @@ public final class CommandHandler implements CommandExecutor {
      */
     public Map<String, SubCommand> getCommandList() {
         return commands;
-    }
-
-    /**
-     * Gets the ActionHandler that is registered
-     *
-     * @return The ActionHandler in use
-     *
-     * @since 0.2
-     */
-    public ActionHandler getActionHandler() {
-        return actions;
     }
 }

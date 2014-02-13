@@ -19,8 +19,8 @@ package net.ae97.totalpermissions.commands.subcommands;
 import java.util.Arrays;
 import java.util.List;
 import net.ae97.totalpermissions.TotalPermissions;
+import net.ae97.totalpermissions.base.PermissionUser;
 import net.ae97.totalpermissions.lang.Lang;
-import net.ae97.totalpermissions.permission.PermissionUser;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -40,10 +40,7 @@ public class UserCommand implements SubCommand {
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
-        if (args.length > 2) { // If there is an action command
-            plugin.getCommandHandler().getActionHandler().onAction(sender, args, fields());
-            return true;
-        } else if ((args.length == 1) || args.length == 2) {
+        if ((args.length == 1) || args.length == 2) {
             Player p = null;
             if (args.length == 2) {
                 p = Bukkit.getPlayer(args[1]);
@@ -55,13 +52,13 @@ public class UserCommand implements SubCommand {
                     return false;
                 }
             }
-            PermissionUser user = plugin.getManager().getUser(p);
+            PermissionUser user = plugin.getDataManager().getUser(p.getName());
             StringBuilder sb = new StringBuilder();
-            for (String group : user.getGroups(null)) {
+            for (String group : user.getGroups()) {
                 sb.append(group).append(", ");
             }
             sender.sendMessage(Lang.COMMAND_USER_PLAYER.getMessage(sender.getName()));
-            sender.sendMessage(Lang.COMMAND_USER_DEBUG.getMessage(user.getDebugState()));
+            sender.sendMessage(Lang.COMMAND_USER_DEBUG.getMessage(user.isDebug()));
             sender.sendMessage(Lang.COMMAND_USER_GROUPS.getMessage(sb.substring(0, sb.length() - 2)));
             return true;
         }

@@ -19,8 +19,8 @@ package net.ae97.totalpermissions.commands.subcommands;
 import java.util.Arrays;
 import java.util.List;
 import net.ae97.totalpermissions.TotalPermissions;
+import net.ae97.totalpermissions.base.PermissionGroup;
 import net.ae97.totalpermissions.lang.Lang;
-import net.ae97.totalpermissions.permission.PermissionGroup;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -38,22 +38,19 @@ public class GroupCommand implements SubCommand {
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
-        if (args.length > 2) { // If there is an action command
-            plugin.getCommandHandler().getActionHandler().onAction(sender, args, fields());
-            return true;
-        } else if (args.length == 2) {
-            PermissionGroup pg = plugin.getManager().getGroup(args[1]);
+        if (args.length == 2) {
+            PermissionGroup pg = plugin.getDataManager().getGroup(args[1]);
             sender.sendMessage(Lang.COMMAND_GROUP_GROUP.getMessage(pg.getName()));
             StringBuilder sb = new StringBuilder();
-            for (String name : pg.getInheritances(pg.getName())) {
+            for (String name : pg.getInheritence()) {
                 sb.append(name).append(", ");
             }
             String name = pg.getName();
-            String prefix = (String) pg.getOption("prefix");
+            String prefix = (String) pg.getOptions().get("prefix");
             if (prefix == null) {
                 prefix = "";
             }
-            String suffix = (String) pg.getOption("suffix");
+            String suffix = (String) pg.getOptions().get("suffix");
             if (suffix == null) {
                 suffix = "";
             }
@@ -64,7 +61,7 @@ public class GroupCommand implements SubCommand {
             return true;
         } else if (args.length == 1) {
             StringBuilder sb = new StringBuilder();
-            for (String group : plugin.getManager().getGroups()) {
+            for (String group : plugin.getDataManager().getGroups()) {
                 sb.append(group).append(", ");
             }
             sender.sendMessage(Lang.COMMAND_GROUP_LIST.getMessage(sb.substring(0, sb.length() - 2)));

@@ -14,16 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.ae97.totalpermissions.data;
+package net.ae97.totalpermissions.base;
+
+import java.util.Set;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 /**
- * @version 1.0
  * @author Lord_Ralex
  */
-public enum DataType {
+public interface PermissionUser extends PermissionBase {
 
-    YAML_SPLIT,
-    YAML_SHARED,
-    MYSQL,
-    SQLITE;
+    public Set<String> getGroups();
+
+    public void apply(Player player, World world);
+
 }

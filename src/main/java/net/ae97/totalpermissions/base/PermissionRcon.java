@@ -14,16 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.ae97.totalpermissions.data;
+package net.ae97.totalpermissions.base;
+
+import org.bukkit.command.RemoteConsoleCommandSender;
 
 /**
- * @version 1.0
  * @author Lord_Ralex
  */
-public enum DataType {
+public interface PermissionRcon extends PermissionBase {
 
-    YAML_SPLIT,
-    YAML_SHARED,
-    MYSQL,
-    SQLITE;
+    public void apply(RemoteConsoleCommandSender sender);
+
 }

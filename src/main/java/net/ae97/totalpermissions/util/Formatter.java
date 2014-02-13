@@ -64,7 +64,7 @@ public class Formatter {
      * @since 0.1
      */
     public static String formatColors(String message) {
-        return ChatColor.translateAlternateColorCodes(ChatColor.COLOR_CHAR, message);
+        return ChatColor.translateAlternateColorCodes('&', message);
     }
 
     /**

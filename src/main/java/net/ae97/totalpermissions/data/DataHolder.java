@@ -16,31 +16,59 @@
  */
 package net.ae97.totalpermissions.data;
 
-import java.io.IOException;
 import java.util.Set;
-import net.ae97.totalpermissions.permission.PermissionType;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
+import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
+import net.ae97.totalpermissions.base.PermissionBase;
+import net.ae97.totalpermissions.base.PermissionConsole;
+import net.ae97.totalpermissions.base.PermissionEntity;
+import net.ae97.totalpermissions.base.PermissionGroup;
+import net.ae97.totalpermissions.base.PermissionOp;
+import net.ae97.totalpermissions.base.PermissionRcon;
+import net.ae97.totalpermissions.base.PermissionUser;
+import net.ae97.totalpermissions.base.PermissionWorld;
+import net.ae97.totalpermissions.exceptions.DataSaveFailedException;
+import net.ae97.totalpermissions.type.PermissionType;
 
 /**
- * @version 1.1
  * @author Lord_Ralex
  */
 public interface DataHolder {
 
-    void setup() throws InvalidConfigurationException;
+    public void load() throws DataLoadFailedException;
 
-    void load(PermissionType type, String name) throws IOException, InvalidConfigurationException;
+    public void loadUser(String name) throws DataLoadFailedException;
 
-    ConfigurationSection getConfigurationSection(PermissionType type, String name);
+    public void loadGroup(String name) throws DataLoadFailedException;
 
-    Set<String> getKeys(PermissionType type);
+    public void loadWorld(String name) throws DataLoadFailedException;
 
-    void update(PermissionType type, String name, ConfigurationSection obj);
+    public void loadEntity(String name) throws DataLoadFailedException;
 
-    ConfigurationSection create(PermissionType type, String name);
+    public void load(PermissionType type, String name) throws DataLoadFailedException;
 
-    void save(PermissionType type, String name) throws IOException;
+    public PermissionUser getUser(String name);
 
-    boolean contains(PermissionType type, String name);
+    public PermissionGroup getGroup(String name);
+
+    public PermissionBase get(PermissionType type, String name);
+
+    public PermissionWorld getWorld(String name);
+
+    public PermissionEntity getEntity(String name);
+
+    public PermissionOp getOP();
+
+    public PermissionConsole getConsole();
+
+    public PermissionRcon getRcon();
+
+    public Set<String> getGroups();
+
+    public Set<String> getUsers();
+
+    public Set<String> getWorlds();
+
+    public Set<String> getEntities();
+
+    public void save(PermissionBase holder) throws DataSaveFailedException;
 }

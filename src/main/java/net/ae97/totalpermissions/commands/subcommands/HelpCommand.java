@@ -19,7 +19,6 @@ package net.ae97.totalpermissions.commands.subcommands;
 import java.util.Arrays;
 import java.util.Map;
 import net.ae97.totalpermissions.TotalPermissions;
-import net.ae97.totalpermissions.commands.subcommands.actions.SubAction;
 import net.ae97.totalpermissions.lang.Lang;
 import net.ae97.totalpermissions.util.Formatter;
 import org.bukkit.ChatColor;
@@ -40,16 +39,6 @@ public class HelpCommand implements SubCommand {
 
     @Override
     public boolean execute(CommandSender cs, String[] args) {
-        if (args.length > 1 && args[1].equalsIgnoreCase("actions")) {
-            if (args.length == 2) {
-                args = new String[]{"help", "actions", "1"};
-                int page = getInt(args[2]);
-                Map actions = plugin.getCommandHandler().getActionHandler().getActionList();
-                cs.sendMessage(getPage(page, actions));
-                cs.sendMessage(Lang.COMMAND_HELP_ACTIONHELP.getMessage());
-            }
-            return true;
-        }
         //don't quite understand what this point of the help arg in this, but to fix a bug, will keep it
         if (args.length == 1 || args.length == 0) {
             args = new String[]{"help", "1"};
@@ -94,9 +83,6 @@ public class HelpCommand implements SubCommand {
             if (test != null) {
                 if (test instanceof SubCommand) {
                     SubCommand db = (SubCommand) map.get(list[i]);
-                    sb.append(db.getHelp()[0]).append(" - ").append(db.getHelp()[1]);
-                } else if (test instanceof SubAction) {
-                    SubAction db = (SubAction) map.get(list[i]);
                     sb.append(db.getHelp()[0]).append(" - ").append(db.getHelp()[1]);
                 }
                 if (i != upper - 1) {

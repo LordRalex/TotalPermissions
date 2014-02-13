@@ -14,16 +14,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.ae97.totalpermissions.data;
+package net.ae97.totalpermissions.yaml.single;
+
+import net.ae97.totalpermissions.base.PermissionBase;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
- * @version 1.0
  * @author Lord_Ralex
  */
-public enum DataType {
+public abstract class SingleYamlPermissionBase implements PermissionBase {
 
-    YAML_SPLIT,
-    YAML_SHARED,
-    MYSQL,
-    SQLITE;
+    protected final YamlConfiguration yamlConfiguration;
+    private boolean debug = false;
+
+    public SingleYamlPermissionBase(YamlConfiguration config) {
+        yamlConfiguration = config;
+    }
+
+    @Override
+    public final boolean isDebug() {
+        return debug;
+    }
+
+    @Override
+    public final boolean setDebug(boolean d) {
+        return (debug = d);
+    }
 }

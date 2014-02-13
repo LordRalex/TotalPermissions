@@ -14,16 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.ae97.totalpermissions.data;
+package net.ae97.totalpermissions.listener;
+
+import net.ae97.totalpermissions.TotalPermissions;
+import org.bukkit.event.Listener;
 
 /**
- * @version 1.0
  * @author Lord_Ralex
  */
-public enum DataType {
+public class EntityListener implements Listener {
 
-    YAML_SPLIT,
-    YAML_SHARED,
-    MYSQL,
-    SQLITE;
+    protected final TotalPermissions plugin;
+
+    public EntityListener(TotalPermissions p) {
+        plugin = p;
+    }
+
 }

@@ -14,16 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.ae97.totalpermissions.data;
+package net.ae97.totalpermissions.type;
 
 /**
- * @version 1.0
  * @author Lord_Ralex
  */
-public enum DataType {
+public enum PermissionType {
 
-    YAML_SPLIT,
-    YAML_SHARED,
-    MYSQL,
-    SQLITE;
+    GROUP,
+    USER,
+    ENTITY,
+    WORLD,
+    RCON,
+    CONSOLE,
+    OP;
+    
+    public static PermissionType get(String name) {
+        for(PermissionType type: values()) {
+            if(type.name().equalsIgnoreCase(name)) {
+                return type;
+            }
+        }
+        return null;
+    }
 }
