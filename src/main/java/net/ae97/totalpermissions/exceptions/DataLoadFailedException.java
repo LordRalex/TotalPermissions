@@ -21,4 +21,8 @@ package net.ae97.totalpermissions.exceptions;
  */
 public class DataLoadFailedException extends Exception {
 
+    public DataLoadFailedException(Exception e) {
+        super("Loading data has failed", e);
+    }
+
 }

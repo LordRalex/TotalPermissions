@@ -56,14 +56,6 @@ public class DataManager implements DataHolder {
 
     }
 
-    public void getList(PermissionType type) throws DataLoadFailedException {
-
-    }
-
-    public void getTypes(String name) throws DataLoadFailedException {
-
-    }
-
     @Override
     public void load() throws DataLoadFailedException {
         dataHolder.load();

@@ -30,9 +30,7 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
 
 /**
- * @version 0.2
  * @author Lord_Ralex
- * @since 0.2
  */
 public class DumpCommand implements SubCommand {
 
@@ -81,7 +79,7 @@ public class DumpCommand implements SubCommand {
                 }
                 permPages[index][i % NUM_PAGE] = "- " + perms.get(i).getName() + ": " + perms.get(i).getDefault().toString();
             }
-            int page = 1;
+            int page;
             try {
                 page = Integer.parseInt(params[2]);
             } catch (NumberFormatException e) {
@@ -96,9 +94,9 @@ public class DumpCommand implements SubCommand {
             page--;
             sender.sendMessage(Lang.COMMAND_DUMP_TITLE.getMessage("plugin", pl.getName()));
             sender.sendMessage(Lang.COMMAND_DUMP_PAGE.getMessage(page + 1, permPages.length));
-            for (int i = 0; i < permPages[page].length; i++) {
-                if (permPages[page][i] != null) {
-                    sender.sendMessage(permPages[page][i]);
+            for (String item : permPages[page]) {
+                if (item != null) {
+                    sender.sendMessage(item);
                 }
             }
         } else if (params[0].equalsIgnoreCase("-player")) {
@@ -113,7 +111,7 @@ public class DumpCommand implements SubCommand {
                 }
                 permPages[index][i % NUM_PAGE] = "- " + perms[i].getPermission() + ": " + perms[i].getValue();
             }
-            int page = 1;
+            int page;
             try {
                 page = Integer.parseInt(params[2]);
             } catch (NumberFormatException e) {
@@ -128,9 +126,9 @@ public class DumpCommand implements SubCommand {
             page--;
             sender.sendMessage(Lang.COMMAND_DUMP_TITLE.getMessage("player", player.getName()));
             sender.sendMessage(Lang.COMMAND_DUMP_PAGE.getMessage(page + 1, permPages.length));
-            for (int i = 0; i < permPages[page].length; i++) {
-                if (permPages[page][i] != null) {
-                    sender.sendMessage(permPages[page][i]);
+            for (String item : permPages[page]) {
+                if (item != null) {
+                    sender.sendMessage(item);
                 }
             }
         } else if (params[0].equalsIgnoreCase("-command")) {

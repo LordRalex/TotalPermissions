@@ -32,7 +32,6 @@ import net.ae97.totalpermissions.logger.DebugLogFormatter;
 import net.ae97.totalpermissions.mcstats.Metrics;
 import net.ae97.totalpermissions.updater.Updater;
 import net.ae97.totalpermissions.updater.UpdateType;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -41,16 +40,6 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public final class TotalPermissions extends JavaPlugin {
 
-    /**
-     * Gets the instance of the plugin.
-     *
-     * @return Instance of the plugin
-     *
-     * @since 0.1
-     */
-    public static TotalPermissions getPlugin() {
-        return (TotalPermissions) Bukkit.getPluginManager().getPlugin("TotalPermissions");
-    }
     protected DataHolder dataHolder;
     protected ListenerManager listenerManager;
     protected Metrics metrics;
@@ -93,7 +82,7 @@ public final class TotalPermissions extends JavaPlugin {
                 saveResource("permissions.yml", true);
             }
 
-            Lang.setLanguageConfig(YamlConfiguration.loadConfiguration(this.getResource("lang/" + getConfig().getString("language", "en_US") + ".yml")));
+            Lang.setLanguageConfig(YamlConfiguration.loadConfiguration(getResource("lang/" + getConfig().getString("language", "en_US") + ".yml")));
 
             String storageType = getConfig().getString("storage", "yaml_shared");
             DataType type = DataType.valueOf(storageType.toUpperCase());
@@ -162,24 +151,10 @@ public final class TotalPermissions extends JavaPlugin {
         }
     }
 
-    /**
-     * Gets the ListenerManager in use
-     *
-     * @return The ListenerManager loaded
-     *
-     * @since 0.4.0
-     */
     public ListenerManager getListenerManager() {
         return listenerManager;
     }
 
-    /**
-     * Gets the CommandHandler that is in use by this plugin
-     *
-     * @return The CommandHandler in use
-     *
-     * @since 0.1
-     */
     public CommandHandler getCommandHandler() {
         return commands;
     }
@@ -188,16 +163,20 @@ public final class TotalPermissions extends JavaPlugin {
         return dataManager;
     }
 
-    /**
-     * Gets the debug mode of the plugin. If this is true, the plugin is in
-     * debug mode.
-     *
-     * @return True if in debug, otherwise false
-     *
-     * @since 0.1
-     */
     public boolean isDebugMode() {
         return getConfig().getBoolean("angry-debug", false);
+    }
+    
+    public void log(String message, Object... args) {
+        log(Level.INFO, message, args);
+    }
+    
+    public void log(Level level, String message, Object... args) {
+        getLogger().log(level, message, args);
+    }
+    
+    public void log(Lang message, Object... args) {
+        log(Level.INFO, message, args);
     }
 
     public void log(Level level, Lang message, Object... args) {
@@ -206,7 +185,7 @@ public final class TotalPermissions extends JavaPlugin {
 
     public void debugLog(Object... message) {
         for (Object m : message) {
-            getLogger().log(Level.FINER, m.toString());
+            log(Level.FINEST, m.toString());
         }
     }
 }

@@ -19,31 +19,13 @@ package net.ae97.totalpermissions.commands.subcommands;
 import org.bukkit.command.CommandSender;
 
 /**
- * @since 0.1
  * @author Lord_Ralex
- * @version 0.1
  */
 public interface SubCommand {
 
-    /**
-     * Executes the command. Only the args and sender are needed.
-     *
-     * @return Success of the command
-     */
     public abstract boolean execute(CommandSender sender, String[] args);
 
-    /**
-     * Returns the command's name. When used, it is the /ttp [name].
-     *
-     * @return Name of the command
-     */
     public abstract String getName();
 
-    /**
-     * Returns a String array of help statements. Index 0 is the command, and
-     * index 1 is what the command does.
-     *
-     * @return Help information
-     */
     public abstract String[] getHelp();
 }

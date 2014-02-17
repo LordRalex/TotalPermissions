@@ -16,17 +16,13 @@
  */
 package net.ae97.totalpermissions.commands.subcommands;
 
-import java.util.Arrays;
-import java.util.List;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.base.PermissionGroup;
 import net.ae97.totalpermissions.lang.Lang;
 import org.bukkit.command.CommandSender;
 
 /**
- * @since 0.2
  * @author 1Rogue
- * @version 0.2
  */
 public class GroupCommand implements SubCommand {
 
@@ -45,7 +41,6 @@ public class GroupCommand implements SubCommand {
             for (String name : pg.getInheritence()) {
                 sb.append(name).append(", ");
             }
-            String name = pg.getName();
             String prefix = (String) pg.getOptions().get("prefix");
             if (prefix == null) {
                 prefix = "";
@@ -81,15 +76,5 @@ public class GroupCommand implements SubCommand {
             "ttp group " + Lang.VARIABLES_GROUP + " [actions..]",
             Lang.COMMAND_GROUP_HELP.getMessage()
         };
-    }
-
-    private List<String> fields() {
-        return Arrays.asList(new String[]{
-            "permissions",
-            "inheritance",
-            "commands",
-            "prefix",
-            "suffix"
-        });
     }
 }

@@ -16,16 +16,12 @@
  */
 package net.ae97.totalpermissions.commands.subcommands;
 
-import java.util.Arrays;
-import java.util.List;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.lang.Lang;
 import org.bukkit.command.CommandSender;
 
 /**
- * @since 0.2
  * @author 1Rogue
- * @version 0.2
  */
 public class WorldCommand implements SubCommand {
 
@@ -51,11 +47,5 @@ public class WorldCommand implements SubCommand {
             "ttp world <worldname> [actions..]",
             Lang.COMMAND_WORLD_HELP.getMessage()
         };
-    }
-
-    private List<String> fields() {
-        return Arrays.asList(new String[]{
-            "inheritance"
-        });
     }
 }

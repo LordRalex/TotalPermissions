@@ -17,7 +17,6 @@
 package net.ae97.totalpermissions.data;
 
 /**
- * @version 1.0
  * @author Lord_Ralex
  */
 public enum DataType {

@@ -20,44 +20,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
 /**
- * @author Lord_Ralex
- * @version 0.1
- * @since 0.1
+ * @author Lord_Ralex1
  */
 public class PermissionUtility {
 
-    /**
-     * Provides a list of all perms given by using '*'. This will only look at
-     * registered permissions.
-     *
-     * @return List of perms given by '*'
-     *
-     * @since 0.1
-     */
     public static List<String> handleWildcard() {
         return handleWildcard(false);
     }
 
-    /**
-     * Provides a list of all perms given by using '*' or '**'. This will only
-     * look at registered permissions.
-     *
-     * @param isAll True if '**', false for '*'
-     *
-     * @return List of perms given
-     *
-     * @since 0.1
-     */
     public static List<String> handleWildcard(boolean isAll) {
         List<String> perms = new ArrayList<String>();
         Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
         for (Permission permTest : permT) {
-            if (permTest.getName().startsWith("totalpermissions")) {
+            if (permTest.getName().startsWith("totalpermissions.")) {
                 continue;
             } else if (permTest.getDefault() != PermissionDefault.FALSE) {
                 perms.add(permTest.getName());

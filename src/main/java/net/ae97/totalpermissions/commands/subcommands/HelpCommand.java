@@ -25,9 +25,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
- * @since 0.1
  * @author 1Rogue
- * @version 0.2
  */
 public class HelpCommand implements SubCommand {
 

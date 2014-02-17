@@ -22,13 +22,12 @@ import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.base.PermissionUser;
 import net.ae97.totalpermissions.lang.Lang;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
- * @since 0.2
  * @author 1Rogue
- * @version 0.2
  */
 public class UserCommand implements SubCommand {
 
@@ -41,9 +40,9 @@ public class UserCommand implements SubCommand {
     @Override
     public boolean execute(CommandSender sender, String[] args) {
         if ((args.length == 1) || args.length == 2) {
-            Player p = null;
+            OfflinePlayer p = null;
             if (args.length == 2) {
-                p = Bukkit.getPlayer(args[1]);
+                p = Bukkit.getOfflinePlayer(args[1]);
             } else if (args.length == 1) {
                 if (sender instanceof Player) {
                     p = (Player) sender;

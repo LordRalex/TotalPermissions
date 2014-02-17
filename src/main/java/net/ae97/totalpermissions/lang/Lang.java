@@ -20,8 +20,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
 /**
- * @version 1.0
  * @author Lord_Ralex
+ * @deprecated The idea of a language system built like this is awful
+ *             This will be deprecated until it is either determined
+ *             to be the best way to handle this, or a new system is
+ *             built.
  */
 public enum Lang {
 

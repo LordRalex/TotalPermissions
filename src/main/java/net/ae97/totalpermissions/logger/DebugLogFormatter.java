@@ -20,13 +20,12 @@ import java.util.logging.LogRecord;
 import java.util.logging.SimpleFormatter;
 
 /**
- * @version 1.0
  * @author Lord_Ralex
  */
 public class DebugLogFormatter extends SimpleFormatter {
 
     @Override
-    public synchronized String format(LogRecord record) {
+    public String format(LogRecord record) {
         StringBuilder builder = new StringBuilder();
         builder.append("[").append(record.getLevel()).append("]");
         builder.append(" ");

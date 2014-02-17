@@ -21,60 +21,24 @@ import org.bukkit.ChatColor;
 
 /**
  * @author Lord_Ralex
- * @version 0.1
- * @since 0.1
  */
 public class Formatter {
 
     private static final String BAR = "--------------------------------------------------------";
     private static final char BAR_CHAR = '-';
 
-    /**
-     * Formats a title bar. The text will be in the center surrounded by "-"
-     *
-     * @param title The title to show
-     * @param barcolor Color for the bars
-     * @param titlecolor Color for the title
-     * @return Title in form of a String
-     *
-     * @since 0.1
-     */
     public static String formatTitle(String title, ChatColor barcolor, ChatColor titlecolor) {
         return StringUtils.center("[" + title + "]", BAR.length(), BAR_CHAR);
     }
 
-    /**
-     * Formats a footer bar.
-     *
-     * @param color The color of the bar
-     * @return A colored bar as a String
-     *
-     * @since 0.1
-     */
     public static String formatFooter(ChatColor color) {
         return (color + BAR);
     }
 
-    /**
-     * Generates the colors in a message
-     *
-     * @param message Message to handle
-     * @return New message with colors shown
-     *
-     * @since 0.1
-     */
     public static String formatColors(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
-    /**
-     * Removes colors from a message
-     *
-     * @param message Message to strip
-     * @return The non-colored version
-     *
-     * @since 0.1
-     */
     public static String stripColors(String message) {
         return ChatColor.stripColor(message);
     }

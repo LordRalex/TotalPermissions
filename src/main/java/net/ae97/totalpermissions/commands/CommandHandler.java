@@ -28,9 +28,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 /**
- * @version 0.2
  * @author Lord_Ralex
- * @since 0.1
  */
 public final class CommandHandler implements CommandExecutor {
 
@@ -128,13 +126,6 @@ public final class CommandHandler implements CommandExecutor {
         return true;
     }
 
-    /**
-     * Gets the registered commands that may be used
-     *
-     * @return Map of registered sub commands
-     *
-     * @since 0.2
-     */
     public Map<String, SubCommand> getCommandList() {
         return commands;
     }

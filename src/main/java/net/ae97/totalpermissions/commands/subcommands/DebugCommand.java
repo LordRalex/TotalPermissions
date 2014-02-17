@@ -22,9 +22,7 @@ import net.ae97.totalpermissions.lang.Lang;
 import org.bukkit.command.CommandSender;
 
 /**
- * @since 0.1
  * @author Lord_Ralex
- * @version 0.2
  */
 public class DebugCommand implements SubCommand {
 

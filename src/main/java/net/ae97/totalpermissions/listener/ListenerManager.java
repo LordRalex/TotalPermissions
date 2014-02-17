@@ -28,18 +28,21 @@ public final class ListenerManager {
     protected final PlayerListener playerListener;
     protected final WorldListener worldListener;
     protected final EntityListener entityListener;
+    protected final ConsoleListener consoleListener;
 
     public ListenerManager(TotalPermissions p) {
         plugin = p;
         playerListener = new PlayerListener(plugin);
         worldListener = new WorldListener(plugin);
         entityListener = new EntityListener(plugin);
+        consoleListener = new ConsoleListener(plugin);
     }
 
     public void load() {
         Bukkit.getPluginManager().registerEvents(playerListener, plugin);
         Bukkit.getPluginManager().registerEvents(entityListener, plugin);
         Bukkit.getPluginManager().registerEvents(worldListener, plugin);
+        Bukkit.getPluginManager().registerEvents(consoleListener, plugin);
     }
 
     public PlayerListener getPlayerListener() {
@@ -52,6 +55,10 @@ public final class ListenerManager {
 
     public EntityListener getEntityListener() {
         return entityListener;
+    }
+
+    public ConsoleListener getConsoleListener() {
+        return consoleListener;
     }
 
 }
