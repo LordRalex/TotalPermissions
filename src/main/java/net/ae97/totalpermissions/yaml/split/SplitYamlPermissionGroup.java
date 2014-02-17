@@ -16,12 +16,8 @@
  */
 package net.ae97.totalpermissions.yaml.split;
 
-import java.util.Map;
 import java.util.Set;
 import net.ae97.totalpermissions.base.PermissionGroup;
-import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
-import net.ae97.totalpermissions.exceptions.DataSaveFailedException;
-import net.ae97.totalpermissions.type.PermissionType;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
@@ -34,36 +30,6 @@ public class SplitYamlPermissionGroup extends SplitYamlPermissionBase implements
     }
 
     @Override
-    public void load() throws DataLoadFailedException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void save() throws DataSaveFailedException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Map<String, Object> getOptions() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Set<String> getDeclaredPermissions() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public String getName() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public PermissionType getType() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public Set<String> getInheritence() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -72,65 +38,4 @@ public class SplitYamlPermissionGroup extends SplitYamlPermissionBase implements
     public int getRank() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
-    @Override
-    public Map<String, Object> getOptions(String world) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Object getOption(String option) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Object getOption(String option, String world) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void setOption(String key, Object option) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void setOption(String key, Object option, String world) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Set<String> getDeclaredPermissions(String world) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Set<String> getPermissions() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Set<String> getPermissions(String world) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public boolean addPermission(String perm) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public boolean addPermission(String perm, String world) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public boolean removePermission(String perm) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public boolean removePermission(String perm, String world) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
 }
