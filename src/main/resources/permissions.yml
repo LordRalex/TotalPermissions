@@ -1,67 +1,11 @@
-#############################
-#  How the file is structured:
-#
-#  groups:
-#    <group info>
-#
-#  users:
-#    <user info>
-#
-#  worlds:
-#    <world inheritances>
-#
-#  special:
-#    <Special Permissions>
-#   This includes rcon (remote console) and console permissions.
-#
-#############################
-
 groups:
-  Member:
+  member:
     default: true
     permissions:
-    - essentials.build
-  Moderator:
-    default: false
+  moderator:
     permissions:
-    - bukkit.command.kick
-    commands:
-    - mute
-    worlds:
-      creative:
-        permissions:
-        - bukkit.command.gamemode
     inheritance:
-    - Member
-  Admin:
-    default: false
+    - member
+  admin:
     permissions:
     - '*'
-
-
-users:
-  Lord_Ralex:
-    groups:
-    - Member
-  Redrouge007:
-    groups:
-    - Member
-    
-    
-worlds:
-  world_nether:
-    inheritance:
-    - world
-  world_the_end:
-    inheritance:
-    - world
-
-
-special:
-  rcon:
-    permissions:
-    - -bukkit.command.stop
-    - -bukkit.command.reload
-  console:
-    permissions:
-    - -bukkit.command.reload

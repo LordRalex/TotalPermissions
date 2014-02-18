@@ -44,4 +44,14 @@ public class MySQLPermissionGroup extends MySQLPermissionBase implements Permiss
     public PermissionType getType() {
         return PermissionType.GROUP;
     }
+
+    @Override
+    public boolean isDefault() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean setDefault(boolean def) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

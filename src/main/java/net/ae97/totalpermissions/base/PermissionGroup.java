@@ -26,4 +26,8 @@ public interface PermissionGroup extends PermissionBase {
     public Set<String> getInheritence();
 
     public int getRank();
+    
+    public boolean isDefault();
+    
+    public boolean setDefault(boolean def);
 }
