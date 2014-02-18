@@ -17,9 +17,19 @@
 package net.ae97.totalpermissions.sqlite;
 
 import net.ae97.totalpermissions.base.PermissionEntity;
+import net.ae97.totalpermissions.type.PermissionType;
 
 /**
  * @author Lord_Ralex
  */
 public class SQLitePermissionEntity extends SQLitePermissionBase implements PermissionEntity {
+
+    public SQLitePermissionEntity(String n) {
+        super(n);
+    }
+
+    @Override
+    public PermissionType getType() {
+        return PermissionType.ENTITY;
+    }
 }

@@ -17,6 +17,7 @@
 package net.ae97.totalpermissions.yaml.split;
 
 import net.ae97.totalpermissions.base.PermissionOp;
+import net.ae97.totalpermissions.type.PermissionType;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
@@ -24,7 +25,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public class SplitYamlPermissionOp extends SplitYamlPermissionBase implements PermissionOp {
 
-    public SplitYamlPermissionOp(YamlConfiguration config) {
-        super(config);
+    public SplitYamlPermissionOp(String n, YamlConfiguration config) {
+        super(n, config);
+    }
+
+    @Override
+    public PermissionType getType() {
+        return PermissionType.OP;
     }
 }

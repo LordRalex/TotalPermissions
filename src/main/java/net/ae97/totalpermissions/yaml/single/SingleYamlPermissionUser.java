@@ -18,6 +18,7 @@ package net.ae97.totalpermissions.yaml.single;
 
 import java.util.Set;
 import net.ae97.totalpermissions.base.PermissionUser;
+import net.ae97.totalpermissions.type.PermissionType;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -27,8 +28,8 @@ import org.bukkit.entity.Player;
  */
 public class SingleYamlPermissionUser extends SingleYamlPermissionBase implements PermissionUser {
 
-    public SingleYamlPermissionUser(YamlConfiguration config) {
-        super(config);
+    public SingleYamlPermissionUser(String n, YamlConfiguration config) {
+        super(n, config);
     }
 
     @Override
@@ -39,5 +40,10 @@ public class SingleYamlPermissionUser extends SingleYamlPermissionBase implement
     @Override
     public void apply(Player player, World world) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public PermissionType getType() {
+        return PermissionType.USER;
     }
 }

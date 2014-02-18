@@ -18,13 +18,19 @@ package net.ae97.totalpermissions.mysql;
 
 import java.sql.Connection;
 import net.ae97.totalpermissions.base.PermissionWorld;
+import net.ae97.totalpermissions.type.PermissionType;
 
 /**
  * @author Lord_Ralex
  */
 public class MySQLPermissionWorld extends MySQLPermissionBase implements PermissionWorld {
 
-    public MySQLPermissionWorld(Connection conn) {
-        super(conn);
+    public MySQLPermissionWorld(String n, Connection conn) {
+        super(n, conn);
+    }
+
+    @Override
+    public PermissionType getType() {
+        return PermissionType.WORLD;
     }
 }

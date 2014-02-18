@@ -16,8 +16,8 @@
  */
 package net.ae97.totalpermissions.base;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import net.ae97.totalpermissions.exceptions.DataSaveFailedException;
 import net.ae97.totalpermissions.type.PermissionType;
@@ -51,13 +51,13 @@ public interface PermissionBase {
 
     public void setOption(String key, Object option, String world);
 
-    public Set<String> getDeclaredPermissions();
+    public List<String> getDeclaredPermissions();
 
-    public Set<String> getDeclaredPermissions(String world);
+    public List<String> getDeclaredPermissions(String world);
 
-    public Set<String> getPermissions();
+    public List<String> getPermissions();
 
-    public Set<String> getPermissions(String world);
+    public List<String> getPermissions(String world);
 
     public boolean addPermission(String perm);
 

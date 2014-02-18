@@ -17,6 +17,7 @@
 package net.ae97.totalpermissions.yaml.single;
 
 import net.ae97.totalpermissions.base.PermissionConsole;
+import net.ae97.totalpermissions.type.PermissionType;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
@@ -24,7 +25,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public class SingleYamlPermissionConsole extends SingleYamlPermissionBase implements PermissionConsole {
 
-    public SingleYamlPermissionConsole(YamlConfiguration config) {
-        super(config);
+    public SingleYamlPermissionConsole(String n, YamlConfiguration config) {
+        super(n, config);
+    }
+
+    @Override
+    public PermissionType getType() {
+        return PermissionType.CONSOLE;
     }
 }

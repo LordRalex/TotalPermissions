@@ -18,6 +18,7 @@ package net.ae97.totalpermissions.sqlite;
 
 import java.util.Set;
 import net.ae97.totalpermissions.base.PermissionUser;
+import net.ae97.totalpermissions.type.PermissionType;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -25,6 +26,10 @@ import org.bukkit.entity.Player;
  * @author Lord_Ralex
  */
 public class SQLitePermissionUser extends SQLitePermissionBase implements PermissionUser {
+
+    public SQLitePermissionUser(String n) {
+        super(n);
+    }
 
     @Override
     public Set<String> getGroups() {
@@ -34,5 +39,10 @@ public class SQLitePermissionUser extends SQLitePermissionBase implements Permis
     @Override
     public void apply(Player player, World world) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public PermissionType getType() {
+        return PermissionType.USER;
     }
 }

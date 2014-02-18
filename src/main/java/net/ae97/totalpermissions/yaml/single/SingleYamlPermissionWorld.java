@@ -17,6 +17,7 @@
 package net.ae97.totalpermissions.yaml.single;
 
 import net.ae97.totalpermissions.base.PermissionWorld;
+import net.ae97.totalpermissions.type.PermissionType;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
@@ -24,7 +25,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public class SingleYamlPermissionWorld extends SingleYamlPermissionBase implements PermissionWorld {
 
-    public SingleYamlPermissionWorld(YamlConfiguration config) {
-        super(config);
+    public SingleYamlPermissionWorld(String n, YamlConfiguration config) {
+        super(n, config);
+    }
+
+    @Override
+    public PermissionType getType() {
+        return PermissionType.WORLD;
     }
 }

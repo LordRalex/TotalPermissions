@@ -18,6 +18,7 @@ package net.ae97.totalpermissions.yaml.single;
 
 import java.util.Set;
 import net.ae97.totalpermissions.base.PermissionGroup;
+import net.ae97.totalpermissions.type.PermissionType;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
@@ -25,8 +26,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public class SingleYamlPermissionGroup extends SingleYamlPermissionBase implements PermissionGroup {
 
-    public SingleYamlPermissionGroup(YamlConfiguration config) {
-        super(config);
+    public SingleYamlPermissionGroup(String n, YamlConfiguration config) {
+        super(n, config);
     }
 
     @Override
@@ -37,5 +38,10 @@ public class SingleYamlPermissionGroup extends SingleYamlPermissionBase implemen
     @Override
     public int getRank() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public PermissionType getType() {
+        return PermissionType.GROUP;
     }
 }

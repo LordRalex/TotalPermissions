@@ -17,9 +17,19 @@
 package net.ae97.totalpermissions.sqlite;
 
 import net.ae97.totalpermissions.base.PermissionWorld;
+import net.ae97.totalpermissions.type.PermissionType;
 
 /**
  * @author Lord_Ralex
  */
 public class SQLitePermissionWorld extends SQLitePermissionBase implements PermissionWorld {
+
+    public SQLitePermissionWorld(String n) {
+        super(n);
+    }
+
+    @Override
+    public PermissionType getType() {
+        return PermissionType.WORLD;
+    }
 }

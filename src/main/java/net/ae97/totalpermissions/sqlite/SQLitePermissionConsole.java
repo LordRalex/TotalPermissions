@@ -17,9 +17,19 @@
 package net.ae97.totalpermissions.sqlite;
 
 import net.ae97.totalpermissions.base.PermissionConsole;
+import net.ae97.totalpermissions.type.PermissionType;
 
 /**
  * @author Lord_Ralex
  */
 public class SQLitePermissionConsole extends SQLitePermissionBase implements PermissionConsole {
+
+    public SQLitePermissionConsole(String n) {
+        super(n);
+    }
+
+    @Override
+    public PermissionType getType() {
+        return PermissionType.CONSOLE;
+    }
 }

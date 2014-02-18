@@ -18,13 +18,19 @@ package net.ae97.totalpermissions.mysql;
 
 import java.sql.Connection;
 import net.ae97.totalpermissions.base.PermissionEntity;
+import net.ae97.totalpermissions.type.PermissionType;
 
 /**
  * @author Lord_Ralex
  */
 public class MySQLPermissionEntity extends MySQLPermissionBase implements PermissionEntity {
 
-    public MySQLPermissionEntity(Connection conn) {
-        super(conn);
+    public MySQLPermissionEntity(String n, Connection conn) {
+        super(n, conn);
+    }
+
+    @Override
+    public PermissionType getType() {
+        return PermissionType.ENTITY;
     }
 }

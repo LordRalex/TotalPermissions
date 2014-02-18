@@ -18,6 +18,7 @@ package net.ae97.totalpermissions.yaml.split;
 
 import java.util.Set;
 import net.ae97.totalpermissions.base.PermissionUser;
+import net.ae97.totalpermissions.type.PermissionType;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -27,8 +28,8 @@ import org.bukkit.entity.Player;
  */
 public class SplitYamlPermissionUser extends SplitYamlPermissionBase implements PermissionUser {
 
-    public SplitYamlPermissionUser(YamlConfiguration config) {
-        super(config);
+    public SplitYamlPermissionUser(String n, YamlConfiguration config) {
+        super(n, config);
     }
 
     @Override
@@ -39,5 +40,10 @@ public class SplitYamlPermissionUser extends SplitYamlPermissionBase implements 
     @Override
     public void apply(Player player, World world) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public PermissionType getType() {
+        return PermissionType.USER;
     }
 }

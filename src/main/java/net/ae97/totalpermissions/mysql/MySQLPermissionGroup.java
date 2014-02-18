@@ -19,14 +19,15 @@ package net.ae97.totalpermissions.mysql;
 import java.sql.Connection;
 import java.util.Set;
 import net.ae97.totalpermissions.base.PermissionGroup;
+import net.ae97.totalpermissions.type.PermissionType;
 
 /**
  * @author Lord_Ralex
  */
 public class MySQLPermissionGroup extends MySQLPermissionBase implements PermissionGroup {
 
-    public MySQLPermissionGroup(Connection conn) {
-        super(conn);
+    public MySQLPermissionGroup(String n, Connection conn) {
+        super(n, conn);
     }
 
     @Override
@@ -37,5 +38,10 @@ public class MySQLPermissionGroup extends MySQLPermissionBase implements Permiss
     @Override
     public int getRank() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public PermissionType getType() {
+        return PermissionType.GROUP;
     }
 }

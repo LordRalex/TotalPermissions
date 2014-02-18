@@ -18,6 +18,7 @@ package net.ae97.totalpermissions.mysql;
 
 import java.sql.Connection;
 import net.ae97.totalpermissions.base.PermissionRcon;
+import net.ae97.totalpermissions.type.PermissionType;
 import org.bukkit.command.RemoteConsoleCommandSender;
 
 /**
@@ -25,12 +26,17 @@ import org.bukkit.command.RemoteConsoleCommandSender;
  */
 public class MySQLPermissionRcon extends MySQLPermissionBase implements PermissionRcon {
 
-    public MySQLPermissionRcon(Connection conn) {
-        super(conn);
+    public MySQLPermissionRcon(String n, Connection conn) {
+        super(n, conn);
     }
 
     @Override
     public void apply(RemoteConsoleCommandSender sender) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public PermissionType getType() {
+        return PermissionType.RCON;
     }
 }

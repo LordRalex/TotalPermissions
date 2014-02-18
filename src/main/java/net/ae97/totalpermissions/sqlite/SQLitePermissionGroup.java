@@ -18,11 +18,16 @@ package net.ae97.totalpermissions.sqlite;
 
 import java.util.Set;
 import net.ae97.totalpermissions.base.PermissionGroup;
+import net.ae97.totalpermissions.type.PermissionType;
 
 /**
  * @author Lord_Ralex
  */
 public class SQLitePermissionGroup extends SQLitePermissionBase implements PermissionGroup {
+
+    public SQLitePermissionGroup(String n) {
+        super(n);
+    }
 
     @Override
     public Set<String> getInheritence() {
@@ -32,5 +37,10 @@ public class SQLitePermissionGroup extends SQLitePermissionBase implements Permi
     @Override
     public int getRank() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public PermissionType getType() {
+        return PermissionType.GROUP;
     }
 }

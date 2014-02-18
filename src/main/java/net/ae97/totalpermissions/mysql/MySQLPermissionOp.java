@@ -18,13 +18,19 @@ package net.ae97.totalpermissions.mysql;
 
 import java.sql.Connection;
 import net.ae97.totalpermissions.base.PermissionOp;
+import net.ae97.totalpermissions.type.PermissionType;
 
 /**
  * @author Lord_Ralex
  */
 public class MySQLPermissionOp extends MySQLPermissionBase implements PermissionOp {
 
-    public MySQLPermissionOp(Connection conn) {
-        super(conn);
+    public MySQLPermissionOp(String n, Connection conn) {
+        super(n, conn);
+    }
+
+    @Override
+    public PermissionType getType() {
+        return PermissionType.OP;
     }
 }
