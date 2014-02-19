@@ -16,14 +16,14 @@
  */
 package net.ae97.totalpermissions.base;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * @author Lord_Ralex
  */
 public interface PermissionGroup extends PermissionBase {
 
-    public Set<String> getInheritence();
+    public List<String> getInheritence();
 
     public int getRank();
     

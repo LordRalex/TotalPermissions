@@ -16,7 +16,7 @@
  */
 package net.ae97.totalpermissions.base;
 
-import java.util.Set;
+import java.util.List;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -25,7 +25,7 @@ import org.bukkit.entity.Player;
  */
 public interface PermissionUser extends PermissionBase {
 
-    public Set<String> getGroups();
+    public List<String> getGroups();
 
     public void apply(Player player, World world);
 

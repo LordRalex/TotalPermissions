@@ -16,9 +16,13 @@
  */
 package net.ae97.totalpermissions.yaml.split;
 
-import java.util.Set;
+import java.util.LinkedList;
+import java.util.List;
+import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.base.PermissionGroup;
+import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import net.ae97.totalpermissions.type.PermissionType;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
@@ -26,18 +30,39 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public class SplitYamlPermissionGroup extends SplitYamlPermissionBase implements PermissionGroup {
 
+    protected final List<String> inheritence = new LinkedList<String>();
+    protected int rank = 0;
+    protected boolean defaultGroup = false;
+
     public SplitYamlPermissionGroup(String n, YamlConfiguration config) {
         super(n, config);
     }
 
     @Override
-    public Set<String> getInheritence() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void load() throws DataLoadFailedException {
+        super.load();
+        if (yamlConfiguration.contains("rank")) {
+            rank = yamlConfiguration.getInt("rank", 0);
+        } else if (yamlConfiguration.contains("options.rank")) {
+            rank = yamlConfiguration.getInt("options.rank", 0);
+        } else {
+            rank = 0;
+        }
+
+        List<String> inher = yamlConfiguration.getStringList("inheritence");
+        if (inher != null) {
+            inheritence.addAll(inher);
+        }
+    }
+
+    @Override
+    public List<String> getInheritence() {
+        return inheritence;
     }
 
     @Override
     public int getRank() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return rank;
     }
 
     @Override
@@ -47,11 +72,26 @@ public class SplitYamlPermissionGroup extends SplitYamlPermissionBase implements
 
     @Override
     public boolean isDefault() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return defaultGroup;
     }
 
     @Override
     public boolean setDefault(boolean def) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return (defaultGroup = def);
+    }
+
+    @Override
+    public List<String> getPermissions(String world) {
+        List<String> perms = super.getPermissions(world);
+
+        TotalPermissions plugin = (TotalPermissions) Bukkit.getPluginManager().getPlugin("TotalPermissions");
+        for (String group : inheritence) {
+            PermissionGroup permGroup = plugin.getDataManager().getGroup(group);
+            if (permGroup != null) {
+                perms.addAll(permGroup.getPermissions());
+            }
+        }
+
+        return perms;
     }
 }

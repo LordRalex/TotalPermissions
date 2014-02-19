@@ -16,7 +16,7 @@
  */
 package net.ae97.totalpermissions.yaml.split;
 
-import java.util.Set;
+import java.util.List;
 import net.ae97.totalpermissions.base.PermissionUser;
 import net.ae97.totalpermissions.type.PermissionType;
 import org.bukkit.World;
@@ -33,7 +33,7 @@ public class SplitYamlPermissionUser extends SplitYamlPermissionBase implements 
     }
 
     @Override
-    public Set<String> getGroups() {
+    public List<String> getGroups() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

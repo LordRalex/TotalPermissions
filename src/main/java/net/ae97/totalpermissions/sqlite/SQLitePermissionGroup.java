@@ -16,27 +16,34 @@
  */
 package net.ae97.totalpermissions.sqlite;
 
-import java.util.Set;
+import java.util.LinkedList;
+import java.util.List;
+import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.base.PermissionGroup;
 import net.ae97.totalpermissions.type.PermissionType;
+import org.bukkit.Bukkit;
 
 /**
  * @author Lord_Ralex
  */
 public class SQLitePermissionGroup extends SQLitePermissionBase implements PermissionGroup {
 
+    protected final List<String> inheritence = new LinkedList<String>();
+    protected int rank = 0;
+    protected boolean defaultGroup = false;
+
     public SQLitePermissionGroup(String n) {
         super(n);
     }
 
     @Override
-    public Set<String> getInheritence() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public List<String> getInheritence() {
+        return inheritence;
     }
 
     @Override
     public int getRank() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return rank;
     }
 
     @Override
@@ -46,11 +53,26 @@ public class SQLitePermissionGroup extends SQLitePermissionBase implements Permi
 
     @Override
     public boolean isDefault() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return defaultGroup;
     }
 
     @Override
     public boolean setDefault(boolean def) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return (defaultGroup = def);
+    }
+
+    @Override
+    public List<String> getPermissions(String world) {
+        List<String> perms = super.getPermissions(world);
+
+        TotalPermissions plugin = (TotalPermissions) Bukkit.getPluginManager().getPlugin("TotalPermissions");
+        for (String group : inheritence) {
+            PermissionGroup permGroup = plugin.getDataManager().getGroup(group);
+            if (permGroup != null) {
+                perms.addAll(permGroup.getPermissions());
+            }
+        }
+
+        return perms;
     }
 }
