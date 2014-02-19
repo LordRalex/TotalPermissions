@@ -27,6 +27,4 @@ public interface PermissionUser extends PermissionBase {
 
     public List<String> getGroups();
 
-    public void apply(Player player, World world);
-
 }

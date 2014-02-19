@@ -16,7 +16,9 @@
  */
 package net.ae97.totalpermissions.data;
 
+import java.util.List;
 import java.util.Set;
+import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.base.PermissionBase;
 import net.ae97.totalpermissions.base.PermissionConsole;
 import net.ae97.totalpermissions.base.PermissionEntity;
@@ -28,6 +30,9 @@ import net.ae97.totalpermissions.base.PermissionWorld;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import net.ae97.totalpermissions.exceptions.DataSaveFailedException;
 import net.ae97.totalpermissions.type.PermissionType;
+import org.bukkit.World;
+import org.bukkit.command.CommandSender;
+import org.bukkit.permissions.PermissionAttachment;
 
 /**
  * @author Lord_Ralex
@@ -35,9 +40,11 @@ import net.ae97.totalpermissions.type.PermissionType;
 public class DataManager implements DataHolder {
 
     private final DataHolder dataHolder;
+    private final TotalPermissions plugin;
 
-    public DataManager(DataHolder holder) {
+    public DataManager(TotalPermissions p, DataHolder holder) {
         dataHolder = holder;
+        plugin = p;
     }
 
     public void saveData(PermissionBase data) throws DataSaveFailedException {
@@ -54,6 +61,14 @@ public class DataManager implements DataHolder {
 
     public void reloadData(PermissionType type, String name) throws DataLoadFailedException, DataSaveFailedException {
 
+    }
+
+    public void apply(PermissionBase base, CommandSender sender, World world) {
+        List<String> permissions = base.getPermissions(world == null ? null : world.getName());
+        PermissionAttachment att = sender.addAttachment(plugin);
+        for (String perm : permissions) {
+            att.setPermission(perm.startsWith("-") ? perm.substring(1) : perm, !perm.startsWith("-"));
+        }
     }
 
     @Override

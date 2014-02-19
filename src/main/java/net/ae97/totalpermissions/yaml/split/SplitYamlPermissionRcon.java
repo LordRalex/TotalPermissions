@@ -18,7 +18,6 @@ package net.ae97.totalpermissions.yaml.split;
 
 import net.ae97.totalpermissions.base.PermissionRcon;
 import net.ae97.totalpermissions.type.PermissionType;
-import org.bukkit.command.RemoteConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
@@ -28,11 +27,6 @@ public class SplitYamlPermissionRcon extends SplitYamlPermissionBase implements 
 
     public SplitYamlPermissionRcon(String n, YamlConfiguration config) {
         super(n, config);
-    }
-
-    @Override
-    public void apply(RemoteConsoleCommandSender sender) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override

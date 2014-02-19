@@ -18,7 +18,6 @@ package net.ae97.totalpermissions.yaml.single;
 
 import net.ae97.totalpermissions.base.PermissionRcon;
 import net.ae97.totalpermissions.type.PermissionType;
-import org.bukkit.command.RemoteConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
@@ -28,11 +27,6 @@ public class SingleYamlPermissionRcon extends SingleYamlPermissionBase implement
 
     public SingleYamlPermissionRcon(String n, YamlConfiguration config) {
         super(n, config);
-    }
-
-    @Override
-    public void apply(RemoteConsoleCommandSender sender) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override

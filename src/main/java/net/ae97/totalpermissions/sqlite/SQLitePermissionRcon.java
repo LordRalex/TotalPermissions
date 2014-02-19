@@ -18,7 +18,6 @@ package net.ae97.totalpermissions.sqlite;
 
 import net.ae97.totalpermissions.base.PermissionRcon;
 import net.ae97.totalpermissions.type.PermissionType;
-import org.bukkit.command.RemoteConsoleCommandSender;
 
 /**
  * @author Lord_Ralex
@@ -27,11 +26,6 @@ public class SQLitePermissionRcon extends SQLitePermissionBase implements Permis
 
     public SQLitePermissionRcon(String n) {
         super(n);
-    }
-
-    @Override
-    public void apply(RemoteConsoleCommandSender sender) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override

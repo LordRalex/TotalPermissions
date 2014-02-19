@@ -39,11 +39,6 @@ public class ConsoleListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onRemoteConsoleEvent(RemoteServerCommandEvent event) {
         plugin.debugLog("RemoteServerCommandEvent fired, handling");
-        if (event.getSender() instanceof RemoteConsoleCommandSender) {
-            RemoteConsoleCommandSender sender = (RemoteConsoleCommandSender) event.getSender();
-            plugin.getDataManager().getRcon().apply(sender);
-        } else {
-            plugin.log(Level.SEVERE, Lang.ERROR_GENERIC, "RemoteServerCommandEvent was fired, but it did not use a RemoteConsoleCommandSender");
-        }
+        plugin.getDataManager().apply(plugin.getDataManager().getRcon(), event.getSender(), null);
     }
 }

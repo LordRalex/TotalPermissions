@@ -23,6 +23,4 @@ import org.bukkit.command.RemoteConsoleCommandSender;
  */
 public interface PermissionRcon extends PermissionBase {
 
-    public void apply(RemoteConsoleCommandSender sender);
-
 }

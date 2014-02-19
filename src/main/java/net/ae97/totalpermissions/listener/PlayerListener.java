@@ -20,7 +20,6 @@ import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.base.PermissionUser;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
-import net.ae97.totalpermissions.exceptions.DataSaveFailedException;
 import net.ae97.totalpermissions.lang.Lang;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -30,10 +29,10 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
- *  0.1
+ * 0.1
+ *
  * @author Lord_Ralex
  * @since 0.1
  */
@@ -58,7 +57,7 @@ public class PlayerListener implements Listener {
     public void onPlayerLogin(PlayerLoginEvent event) {
         plugin.debugLog("PlayerLoginEvent fired, handling");
         PermissionUser user = plugin.getDataManager().getUser(event.getPlayer().getName());
-        user.apply(event.getPlayer(), event.getPlayer().getWorld());
+        plugin.getDataManager().apply(user, event.getPlayer(), event.getPlayer().getWorld());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -66,7 +65,7 @@ public class PlayerListener implements Listener {
         plugin.debugLog("PlayerJoinEvent-Lowest fired, handling");
         Player player = event.getPlayer();
         PermissionUser user = plugin.getDataManager().getUser(player.getName());
-        user.apply(player, event.getPlayer().getWorld());
+        plugin.getDataManager().apply(user, player, player.getWorld());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -74,19 +73,8 @@ public class PlayerListener implements Listener {
         plugin.debugLog("PlayerJoinEvent-Monitor fired, handling");
         Player player = event.getPlayer();
         PermissionUser user = plugin.getDataManager().getUser(player.getName());
-        user.apply(player, player.getWorld());
+        plugin.getDataManager().apply(user, player, player.getWorld());
 
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        plugin.debugLog("PlayerQuitEvent fired, handling");
-        PermissionUser user = plugin.getDataManager().getUser(event.getPlayer().getName());
-        try {
-            user.save();
-        } catch (DataSaveFailedException ex) {
-            plugin.log(Level.SEVERE, Lang.ERROR_GENERIC, ex);
-        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -95,6 +83,6 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         PermissionUser user = plugin.getDataManager().getUser(player.getName());
         plugin.debugLog("Player " + player.getName() + " changed from " + event.getFrom().getName() + " to " + player.getWorld().getName());
-        user.apply(player, player.getWorld());
+        plugin.getDataManager().apply(user, player, player.getWorld());
     }
 }
