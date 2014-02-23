@@ -21,6 +21,7 @@ import java.util.List;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.base.PermissionGroup;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
+import net.ae97.totalpermissions.exceptions.DataSaveFailedException;
 import net.ae97.totalpermissions.type.PermissionType;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -49,9 +50,20 @@ public class SplitYamlPermissionGroup extends SplitYamlPermissionBase implements
             rank = 0;
         }
 
+        inheritence.clear();
         List<String> inher = yamlConfiguration.getStringList("inheritence");
         if (inher != null) {
             inheritence.addAll(inher);
+        }
+    }
+
+    @Override
+    public void save() throws DataSaveFailedException {
+        super.save();
+        yamlConfiguration.set("rank", rank);
+        yamlConfiguration.set("inheritence", inheritence);
+        if (defaultGroup) {
+            yamlConfiguration.set("default", true);
         }
     }
 
