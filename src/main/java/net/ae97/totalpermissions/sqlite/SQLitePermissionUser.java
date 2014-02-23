@@ -35,6 +35,16 @@ public class SQLitePermissionUser extends SQLitePermissionBase implements Permis
     }
 
     @Override
+    public boolean addGroup(String group) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean removeGroup(String group) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
     public PermissionType getType() {
         return PermissionType.USER;
     }

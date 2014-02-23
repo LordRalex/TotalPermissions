@@ -36,6 +36,16 @@ public class MySQLPermissionUser extends MySQLPermissionBase implements Permissi
     }
 
     @Override
+    public boolean addGroup(String group) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean removeGroup(String group) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
     public PermissionType getType() {
         return PermissionType.USER;
     }

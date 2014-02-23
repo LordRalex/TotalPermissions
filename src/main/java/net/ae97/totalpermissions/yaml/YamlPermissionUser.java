@@ -16,7 +16,6 @@
  */
 package net.ae97.totalpermissions.yaml;
 
-import net.ae97.totalpermissions.yaml.YamlPermissionBase;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -114,5 +113,23 @@ public class YamlPermissionUser extends YamlPermissionBase implements Permission
     @Override
     public PermissionType getType() {
         return PermissionType.USER;
+    }
+
+    @Override
+    public boolean addGroup(String group) {
+        if (!groups.contains(group)) {
+            groups.add(group);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean removeGroup(String group) {
+        if (groups.contains(group)) {
+            groups.remove(group);
+            return true;
+        }
+        return false;
     }
 }

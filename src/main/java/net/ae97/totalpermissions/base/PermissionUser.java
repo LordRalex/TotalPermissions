@@ -17,8 +17,6 @@
 package net.ae97.totalpermissions.base;
 
 import java.util.List;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
 
 /**
  * @author Lord_Ralex
@@ -26,5 +24,9 @@ import org.bukkit.entity.Player;
 public interface PermissionUser extends PermissionBase {
 
     public List<String> getGroups();
+
+    public boolean addGroup(String group);
+
+    public boolean removeGroup(String group);
 
 }
