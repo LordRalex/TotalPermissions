@@ -18,15 +18,15 @@ package net.ae97.totalpermissions.yaml;
 
 import net.ae97.totalpermissions.base.PermissionOp;
 import net.ae97.totalpermissions.type.PermissionType;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.ConfigurationSection;
 
 /**
  * @author Lord_Ralex
  */
 public class YamlPermissionOp extends YamlPermissionBase implements PermissionOp {
 
-    public YamlPermissionOp(String n, YamlConfiguration config) {
-        super(n, config);
+    public YamlPermissionOp(ConfigurationSection config) {
+        super("op", config);
     }
 
     @Override

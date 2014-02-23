@@ -24,7 +24,7 @@ import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import net.ae97.totalpermissions.exceptions.DataSaveFailedException;
 import net.ae97.totalpermissions.type.PermissionType;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.ConfigurationSection;
 
 /**
  * @author Lord_Ralex
@@ -35,7 +35,7 @@ public class YamlPermissionGroup extends YamlPermissionBase implements Permissio
     protected int rank = 0;
     protected boolean defaultGroup = false;
 
-    public YamlPermissionGroup(String n, YamlConfiguration config) {
+    public YamlPermissionGroup(String n, ConfigurationSection config) {
         super(n, config);
     }
 

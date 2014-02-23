@@ -18,14 +18,14 @@ package net.ae97.totalpermissions.yaml;
 
 import net.ae97.totalpermissions.base.PermissionEntity;
 import net.ae97.totalpermissions.type.PermissionType;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.ConfigurationSection;
 
 /**
  * @author Lord_Ralex
  */
 public class YamlPermissionEntity extends YamlPermissionBase implements PermissionEntity {
 
-    public YamlPermissionEntity(String n, YamlConfiguration config) {
+    public YamlPermissionEntity(String n, ConfigurationSection config) {
         super(n, config);
     }
 

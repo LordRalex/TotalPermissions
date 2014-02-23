@@ -46,29 +46,29 @@ public interface DataHolder {
 
     public void load(PermissionType type, String name) throws DataLoadFailedException;
 
-    public PermissionUser getUser(String name);
+    public PermissionUser getUser(String name) throws DataLoadFailedException;
 
-    public PermissionGroup getGroup(String name);
+    public PermissionGroup getGroup(String name) throws DataLoadFailedException;
 
-    public PermissionBase get(PermissionType type, String name);
+    public PermissionBase get(PermissionType type, String name) throws DataLoadFailedException;
 
-    public PermissionWorld getWorld(String name);
+    public PermissionWorld getWorld(String name) throws DataLoadFailedException;
 
-    public PermissionEntity getEntity(String name);
+    public PermissionEntity getEntity(String name) throws DataLoadFailedException;
 
-    public PermissionOp getOP();
+    public PermissionOp getOP() throws DataLoadFailedException;
 
-    public PermissionConsole getConsole();
+    public PermissionConsole getConsole() throws DataLoadFailedException;
 
-    public PermissionRcon getRcon();
+    public PermissionRcon getRcon() throws DataLoadFailedException;
 
-    public Set<String> getGroups();
+    public Set<String> getGroups() throws DataLoadFailedException;
 
-    public Set<String> getUsers();
+    public Set<String> getUsers() throws DataLoadFailedException;
 
-    public Set<String> getWorlds();
+    public Set<String> getWorlds() throws DataLoadFailedException;
 
-    public Set<String> getEntities();
+    public Set<String> getEntities() throws DataLoadFailedException;
 
     public void save(PermissionBase holder) throws DataSaveFailedException;
 }

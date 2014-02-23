@@ -18,15 +18,15 @@ package net.ae97.totalpermissions.yaml;
 
 import net.ae97.totalpermissions.base.PermissionRcon;
 import net.ae97.totalpermissions.type.PermissionType;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.ConfigurationSection;
 
 /**
  * @author Lord_Ralex
  */
 public class YamlPermissionRcon extends YamlPermissionBase implements PermissionRcon {
 
-    public YamlPermissionRcon(String n, YamlConfiguration config) {
-        super(n, config);
+    public YamlPermissionRcon(ConfigurationSection config) {
+        super("rcon", config);
     }
 
     @Override

@@ -26,7 +26,6 @@ import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import net.ae97.totalpermissions.exceptions.DataSaveFailedException;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.permissions.Permission;
 
 /**
@@ -34,13 +33,13 @@ import org.bukkit.permissions.Permission;
  */
 public abstract class YamlPermissionBase implements PermissionBase {
 
-    protected final YamlConfiguration yamlConfiguration;
+    protected final ConfigurationSection yamlConfiguration;
     protected final String name;
     protected final Map<String, LinkedList<String>> permissions = new HashMap<String, LinkedList<String>>();
     protected final Map<String, Map<String, Object>> options = new HashMap<String, Map<String, Object>>();
     private boolean debug = false;
 
-    public YamlPermissionBase(String n, YamlConfiguration config) {
+    public YamlPermissionBase(String n, ConfigurationSection config) {
         name = n;
         yamlConfiguration = config;
     }

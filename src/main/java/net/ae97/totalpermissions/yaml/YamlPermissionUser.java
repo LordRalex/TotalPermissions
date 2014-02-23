@@ -26,7 +26,7 @@ import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import net.ae97.totalpermissions.exceptions.DataSaveFailedException;
 import net.ae97.totalpermissions.type.PermissionType;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.ConfigurationSection;
 
 /**
  * @author Lord_Ralex
@@ -35,7 +35,7 @@ public class YamlPermissionUser extends YamlPermissionBase implements Permission
 
     private final LinkedList<String> groups = new LinkedList<String>();
 
-    public YamlPermissionUser(String n, YamlConfiguration config) {
+    public YamlPermissionUser(String n, ConfigurationSection config) {
         super(n, config);
     }
 

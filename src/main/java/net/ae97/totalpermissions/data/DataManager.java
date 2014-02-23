@@ -47,22 +47,6 @@ public class DataManager implements DataHolder {
         plugin = p;
     }
 
-    public void saveData(PermissionBase data) throws DataSaveFailedException {
-
-    }
-
-    public void loadData(PermissionType type, String name) throws DataLoadFailedException {
-
-    }
-
-    public void reloadData(PermissionBase data) throws DataLoadFailedException, DataSaveFailedException {
-
-    }
-
-    public void reloadData(PermissionType type, String name) throws DataLoadFailedException, DataSaveFailedException {
-
-    }
-
     public void apply(PermissionBase base, CommandSender sender, World world) {
         List<String> permissions = base.getPermissions(world == null ? null : world.getName());
         PermissionAttachment att = sender.addAttachment(plugin);

@@ -18,14 +18,14 @@ package net.ae97.totalpermissions.yaml;
 
 import net.ae97.totalpermissions.base.PermissionWorld;
 import net.ae97.totalpermissions.type.PermissionType;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.ConfigurationSection;
 
 /**
  * @author Lord_Ralex
  */
 public class YamlPermissionWorld extends YamlPermissionBase implements PermissionWorld {
 
-    public YamlPermissionWorld(String n, YamlConfiguration config) {
+    public YamlPermissionWorld(String n, ConfigurationSection config) {
         super(n, config);
     }
 
