@@ -16,7 +16,6 @@
  */
 package net.ae97.totalpermissions.yaml;
 
-import net.ae97.totalpermissions.yaml.YamlPermissionBase;
 import java.util.LinkedList;
 import java.util.List;
 import net.ae97.totalpermissions.TotalPermissions;

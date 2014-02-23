@@ -16,7 +16,6 @@
  */
 package net.ae97.totalpermissions.yaml;
 
-import net.ae97.totalpermissions.yaml.YamlPermissionBase;
 import net.ae97.totalpermissions.base.PermissionWorld;
 import net.ae97.totalpermissions.type.PermissionType;
 import org.bukkit.configuration.file.YamlConfiguration;
