@@ -14,23 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.ae97.totalpermissions.yaml.split;
+package net.ae97.totalpermissions.yaml;
 
-import net.ae97.totalpermissions.base.PermissionConsole;
+import net.ae97.totalpermissions.yaml.YamlPermissionBase;
+import net.ae97.totalpermissions.base.PermissionOp;
 import net.ae97.totalpermissions.type.PermissionType;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
  * @author Lord_Ralex
  */
-public class SplitYamlPermissionConsole extends SplitYamlPermissionBase implements PermissionConsole {
+public class YamlPermissionOp extends YamlPermissionBase implements PermissionOp {
 
-    public SplitYamlPermissionConsole(String n, YamlConfiguration config) {
+    public YamlPermissionOp(String n, YamlConfiguration config) {
         super(n, config);
     }
 
     @Override
     public PermissionType getType() {
-        return PermissionType.CONSOLE;
+        return PermissionType.OP;
     }
 }

@@ -14,23 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.ae97.totalpermissions.yaml.single;
+package net.ae97.totalpermissions.yaml;
 
-import net.ae97.totalpermissions.base.PermissionWorld;
+import net.ae97.totalpermissions.yaml.YamlPermissionBase;
+import net.ae97.totalpermissions.base.PermissionConsole;
 import net.ae97.totalpermissions.type.PermissionType;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
  * @author Lord_Ralex
  */
-public class SingleYamlPermissionWorld extends SingleYamlPermissionBase implements PermissionWorld {
+public class YamlPermissionConsole extends YamlPermissionBase implements PermissionConsole {
 
-    public SingleYamlPermissionWorld(String n, YamlConfiguration config) {
+    public YamlPermissionConsole(String n, YamlConfiguration config) {
         super(n, config);
     }
 
     @Override
     public PermissionType getType() {
-        return PermissionType.WORLD;
+        return PermissionType.CONSOLE;
     }
 }

@@ -14,12 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.ae97.totalpermissions.yaml.single;
+package net.ae97.totalpermissions.yaml;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import net.ae97.totalpermissions.base.PermissionBase;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import net.ae97.totalpermissions.exceptions.DataSaveFailedException;
@@ -31,15 +32,15 @@ import org.bukkit.permissions.Permission;
 /**
  * @author Lord_Ralex
  */
-public abstract class SingleYamlPermissionBase implements PermissionBase {
+public abstract class YamlPermissionBase implements PermissionBase {
 
     protected final YamlConfiguration yamlConfiguration;
     protected final String name;
-    protected final Map<String, List<String>> permissions = new HashMap<String, List<String>>();
+    protected final Map<String, LinkedList<String>> permissions = new HashMap<String, LinkedList<String>>();
     protected final Map<String, Map<String, Object>> options = new HashMap<String, Map<String, Object>>();
     private boolean debug = false;
 
-    public SingleYamlPermissionBase(String n, YamlConfiguration config) {
+    public YamlPermissionBase(String n, YamlConfiguration config) {
         name = n;
         yamlConfiguration = config;
     }
@@ -57,7 +58,7 @@ public abstract class SingleYamlPermissionBase implements PermissionBase {
     @Override
     public void load() throws DataLoadFailedException {
         List<String> list = yamlConfiguration.getStringList("permissions");
-        List<String> global = new LinkedList<String>();
+        LinkedList<String> global = new LinkedList<String>();
         for (String l : list) {
             Permission p = Bukkit.getPluginManager().getPermission(l);
             if (p == null) {
@@ -78,7 +79,15 @@ public abstract class SingleYamlPermissionBase implements PermissionBase {
 
     @Override
     public void save() throws DataSaveFailedException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        for (String key : yamlConfiguration.getKeys(true)) {
+            yamlConfiguration.set(key, null);
+        }
+        for (Entry<String, LinkedList<String>> entry : permissions.entrySet()) {
+            yamlConfiguration.set(entry.getKey() == null ? "permissions" : "worlds." + entry.getKey().toLowerCase() + ".permissions", entry.getValue());
+        }
+        for (Entry<String, Map<String, Object>> entry : options.entrySet()) {
+            yamlConfiguration.set(entry.getKey() == null ? "options" : "worlds." + entry.getKey().toLowerCase() + ".options", entry.getValue());
+        }
     }
 
     @Override
@@ -138,12 +147,12 @@ public abstract class SingleYamlPermissionBase implements PermissionBase {
 
     @Override
     public List<String> getDeclaredPermissions(String world) {
-        List<String> perms = permissions.get(world == null || world.isEmpty() ? null : world.toLowerCase());
+        LinkedList<String> perms = permissions.get(world == null || world.isEmpty() ? null : world.toLowerCase());
         if (perms == null) {
             perms = new LinkedList<String>();
             permissions.put(world == null || world.isEmpty() ? null : world.toLowerCase(), perms);
         }
-        return perms;
+        return (LinkedList<String>) perms.clone();
     }
 
     @Override
@@ -169,7 +178,11 @@ public abstract class SingleYamlPermissionBase implements PermissionBase {
     public boolean addPermission(String perm, String world) {
         List<String> perms = getDeclaredPermissions(world);
         boolean added = perms.add(perm);
-        permissions.put(world == null || world.isEmpty() ? null : world.toLowerCase(), perms);
+        LinkedList<String> newPerms = new LinkedList<String>();
+        for (String p : perms) {
+            newPerms.add(p);
+        }
+        permissions.put(world == null || world.isEmpty() ? null : world.toLowerCase(), newPerms);
         return added;
     }
 
@@ -182,7 +195,11 @@ public abstract class SingleYamlPermissionBase implements PermissionBase {
     public boolean removePermission(String perm, String world) {
         List<String> perms = getDeclaredPermissions(world);
         boolean removed = perms.remove(perm);
-        permissions.put(world == null || world.isEmpty() ? null : world.toLowerCase(), perms);
+        LinkedList<String> newPerms = new LinkedList<String>();
+        for (String p : perms) {
+            newPerms.add(p);
+        }
+        permissions.put(world == null || world.isEmpty() ? null : world.toLowerCase(), newPerms);
         return removed;
     }
 }

@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.ae97.totalpermissions.yaml.split;
+package net.ae97.totalpermissions.yaml;
 
+import net.ae97.totalpermissions.yaml.YamlPermissionBase;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -31,11 +32,11 @@ import org.bukkit.configuration.file.YamlConfiguration;
 /**
  * @author Lord_Ralex
  */
-public class SplitYamlPermissionUser extends SplitYamlPermissionBase implements PermissionUser {
+public class YamlPermissionUser extends YamlPermissionBase implements PermissionUser {
 
     private final LinkedList<String> groups = new LinkedList<String>();
 
-    public SplitYamlPermissionUser(String n, YamlConfiguration config) {
+    public YamlPermissionUser(String n, YamlConfiguration config) {
         super(n, config);
     }
 

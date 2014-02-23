@@ -14,13 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.ae97.totalpermissions.yaml.single;
+package net.ae97.totalpermissions.yaml;
 
+import net.ae97.totalpermissions.yaml.YamlPermissionBase;
 import java.util.LinkedList;
 import java.util.List;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.base.PermissionGroup;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
+import net.ae97.totalpermissions.exceptions.DataSaveFailedException;
 import net.ae97.totalpermissions.type.PermissionType;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -28,13 +30,13 @@ import org.bukkit.configuration.file.YamlConfiguration;
 /**
  * @author Lord_Ralex
  */
-public class SingleYamlPermissionGroup extends SingleYamlPermissionBase implements PermissionGroup {
+public class YamlPermissionGroup extends YamlPermissionBase implements PermissionGroup {
 
     protected final List<String> inheritence = new LinkedList<String>();
     protected int rank = 0;
     protected boolean defaultGroup = false;
 
-    public SingleYamlPermissionGroup(String n, YamlConfiguration config) {
+    public YamlPermissionGroup(String n, YamlConfiguration config) {
         super(n, config);
     }
 
@@ -53,6 +55,16 @@ public class SingleYamlPermissionGroup extends SingleYamlPermissionBase implemen
         List<String> inher = yamlConfiguration.getStringList("inheritence");
         if (inher != null) {
             inheritence.addAll(inher);
+        }
+    }
+
+    @Override
+    public void save() throws DataSaveFailedException {
+        super.save();
+        yamlConfiguration.set("rank", rank);
+        yamlConfiguration.set("inheritence", inheritence);
+        if (defaultGroup) {
+            yamlConfiguration.set("default", true);
         }
     }
 

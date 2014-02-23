@@ -14,29 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.ae97.totalpermissions.yaml.single;
+package net.ae97.totalpermissions.yaml;
 
-import java.util.List;
-import net.ae97.totalpermissions.base.PermissionUser;
+import net.ae97.totalpermissions.yaml.YamlPermissionBase;
+import net.ae97.totalpermissions.base.PermissionEntity;
 import net.ae97.totalpermissions.type.PermissionType;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
  * @author Lord_Ralex
  */
-public class SingleYamlPermissionUser extends SingleYamlPermissionBase implements PermissionUser {
+public class YamlPermissionEntity extends YamlPermissionBase implements PermissionEntity {
 
-    public SingleYamlPermissionUser(String n, YamlConfiguration config) {
+    public YamlPermissionEntity(String n, YamlConfiguration config) {
         super(n, config);
     }
 
     @Override
-    public List<String> getGroups() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public PermissionType getType() {
-        return PermissionType.USER;
+        return PermissionType.ENTITY;
     }
 }
