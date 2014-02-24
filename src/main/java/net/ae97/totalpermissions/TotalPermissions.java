@@ -32,7 +32,7 @@ import net.ae97.totalpermissions.mcstats.Metrics;
 import net.ae97.totalpermissions.updater.Updater;
 import net.ae97.totalpermissions.updater.UpdateType;
 import net.ae97.totalpermissions.yaml.SingleYamlDataHolder;
-import org.bukkit.configuration.file.YamlConfiguration;
+import net.ae97.totalpermissions.yaml.SplitYamlDataHolder;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -97,6 +97,7 @@ public final class TotalPermissions extends JavaPlugin {
                 }
                 break;
                 case YAML_SPLIT: {
+                    dataHolder = new SplitYamlDataHolder(getDataFolder());
                 }
                 break;
                 case SQLITE: {
