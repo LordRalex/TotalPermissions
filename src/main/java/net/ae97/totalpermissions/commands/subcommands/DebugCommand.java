@@ -16,9 +16,12 @@
  */
 package net.ae97.totalpermissions.commands.subcommands;
 
+import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.base.PermissionUser;
+import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import net.ae97.totalpermissions.lang.Lang;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -37,7 +40,14 @@ public class DebugCommand implements SubCommand {
         if (args.length < 1) {
             return false;
         }
-        PermissionUser target = plugin.getDataManager().getUser(args[0]);
+        PermissionUser target;
+        try {
+            target = plugin.getDataManager().getUser(args[0]);
+        } catch (DataLoadFailedException ex) {
+            plugin.log(Level.SEVERE, "An error occured on loading " + args[0], ex);
+            sender.sendMessage(ChatColor.RED + "An error occured on loading " + args[0]);
+            return true;
+        }
         if (target == null) {
             sender.sendMessage(Lang.COMMAND_DEBUG_NULLTARGET.getMessage(args[1]));
             return true;

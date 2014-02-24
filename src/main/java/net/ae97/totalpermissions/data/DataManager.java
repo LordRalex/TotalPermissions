@@ -61,62 +61,62 @@ public class DataManager implements DataHolder {
     }
 
     @Override
-    public PermissionUser getUser(String name) {
+    public PermissionUser getUser(String name) throws DataLoadFailedException {
         return dataHolder.getUser(name);
     }
 
     @Override
-    public PermissionGroup getGroup(String name) {
+    public PermissionGroup getGroup(String name) throws DataLoadFailedException {
         return dataHolder.getGroup(name);
     }
 
     @Override
-    public PermissionBase get(PermissionType type, String name) {
+    public PermissionBase get(PermissionType type, String name) throws DataLoadFailedException {
         return dataHolder.get(type, name);
     }
 
     @Override
-    public PermissionWorld getWorld(String name) {
+    public PermissionWorld getWorld(String name) throws DataLoadFailedException {
         return dataHolder.getWorld(name);
     }
 
     @Override
-    public PermissionEntity getEntity(String name) {
+    public PermissionEntity getEntity(String name) throws DataLoadFailedException {
         return dataHolder.getEntity(name);
     }
 
     @Override
-    public PermissionOp getOP() {
+    public PermissionOp getOP() throws DataLoadFailedException {
         return dataHolder.getOP();
     }
 
     @Override
-    public PermissionConsole getConsole() {
+    public PermissionConsole getConsole() throws DataLoadFailedException {
         return dataHolder.getConsole();
     }
 
     @Override
-    public PermissionRcon getRcon() {
+    public PermissionRcon getRcon() throws DataLoadFailedException {
         return dataHolder.getRcon();
     }
 
     @Override
-    public Set<String> getGroups() {
+    public Set<String> getGroups() throws DataLoadFailedException {
         return dataHolder.getGroups();
     }
 
     @Override
-    public Set<String> getUsers() {
+    public Set<String> getUsers() throws DataLoadFailedException {
         return dataHolder.getUsers();
     }
 
     @Override
-    public Set<String> getWorlds() {
+    public Set<String> getWorlds() throws DataLoadFailedException {
         return dataHolder.getWorlds();
     }
 
     @Override
-    public Set<String> getEntities() {
+    public Set<String> getEntities() throws DataLoadFailedException {
         return dataHolder.getEntities();
     }
 

@@ -16,9 +16,12 @@
  */
 package net.ae97.totalpermissions.commands.subcommands;
 
+import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.base.PermissionGroup;
+import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import net.ae97.totalpermissions.lang.Lang;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -35,7 +38,14 @@ public class GroupCommand implements SubCommand {
     @Override
     public boolean execute(CommandSender sender, String[] args) {
         if (args.length == 2) {
-            PermissionGroup pg = plugin.getDataManager().getGroup(args[1]);
+            PermissionGroup pg;
+            try {
+                pg = plugin.getDataManager().getGroup(args[1]);
+            } catch (DataLoadFailedException ex) {
+                plugin.log(Level.SEVERE, "An error occured on loading " + args[0], ex);
+                sender.sendMessage(ChatColor.RED + "An error occured on loading " + args[0]);
+                return true;
+            }
             sender.sendMessage(Lang.COMMAND_GROUP_GROUP.getMessage(pg.getName()));
             StringBuilder sb = new StringBuilder();
             for (String name : pg.getInheritence()) {
@@ -56,10 +66,15 @@ public class GroupCommand implements SubCommand {
             return true;
         } else if (args.length == 1) {
             StringBuilder sb = new StringBuilder();
-            for (String group : plugin.getDataManager().getGroups()) {
-                sb.append(group).append(", ");
+            try {
+                for (String group : plugin.getDataManager().getGroups()) {
+                    sb.append(group).append(", ");
+                }
+                sender.sendMessage(Lang.COMMAND_GROUP_LIST.getMessage(sb.substring(0, sb.length() - 2)));
+            } catch (DataLoadFailedException ex) {
+                sender.sendMessage(ChatColor.RED + "An error occured on loading group list");
+                plugin.log(Level.SEVERE, "An error occured on loading group list", ex);
             }
-            sender.sendMessage(Lang.COMMAND_GROUP_LIST.getMessage(sb.substring(0, sb.length() - 2)));
             return true;
         }
         return false;

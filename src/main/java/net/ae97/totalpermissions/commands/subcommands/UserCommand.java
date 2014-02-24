@@ -18,10 +18,13 @@ package net.ae97.totalpermissions.commands.subcommands;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.base.PermissionUser;
+import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import net.ae97.totalpermissions.lang.Lang;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -51,7 +54,14 @@ public class UserCommand implements SubCommand {
                     return false;
                 }
             }
-            PermissionUser user = plugin.getDataManager().getUser(p.getName());
+            PermissionUser user;
+            try {
+                user = plugin.getDataManager().getUser(p.getName());
+            } catch (DataLoadFailedException ex) {
+                plugin.log(Level.SEVERE, "An error occured on loading " + args[0], ex);
+                sender.sendMessage(ChatColor.RED + "An error occured on loading " + args[0]);
+                return true;
+            }
             StringBuilder sb = new StringBuilder();
             for (String group : user.getGroups()) {
                 sb.append(group).append(", ");

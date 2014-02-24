@@ -18,8 +18,7 @@ package net.ae97.totalpermissions.listener;
 
 import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
-import net.ae97.totalpermissions.lang.Lang;
-import org.bukkit.command.RemoteConsoleCommandSender;
+import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -38,7 +37,11 @@ public class ConsoleListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onRemoteConsoleEvent(RemoteServerCommandEvent event) {
-        plugin.debugLog("RemoteServerCommandEvent fired, handling");
-        plugin.getDataManager().apply(plugin.getDataManager().getRcon(), event.getSender(), null);
+        try {
+            plugin.debugLog("RemoteServerCommandEvent fired, handling");
+            plugin.getDataManager().apply(plugin.getDataManager().getRcon(), event.getSender(), null);
+        } catch (DataLoadFailedException ex) {
+            plugin.log(Level.SEVERE, "An error occured on the RemoteServerCommandEvent", ex);
+        }
     }
 }

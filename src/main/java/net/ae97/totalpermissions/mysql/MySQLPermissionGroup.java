@@ -19,8 +19,10 @@ package net.ae97.totalpermissions.mysql;
 import java.sql.Connection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.base.PermissionGroup;
+import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import net.ae97.totalpermissions.type.PermissionType;
 import org.bukkit.Bukkit;
 
@@ -68,9 +70,13 @@ public class MySQLPermissionGroup extends MySQLPermissionBase implements Permiss
 
         TotalPermissions plugin = (TotalPermissions) Bukkit.getPluginManager().getPlugin("TotalPermissions");
         for (String group : inheritence) {
-            PermissionGroup permGroup = plugin.getDataManager().getGroup(group);
-            if (permGroup != null) {
-                perms.addAll(permGroup.getPermissions());
+            try {
+                PermissionGroup permGroup = plugin.getDataManager().getGroup(group);
+                if (permGroup != null) {
+                    perms.addAll(permGroup.getPermissions());
+                }
+            } catch (DataLoadFailedException ex) {
+                plugin.log(Level.SEVERE, "An error occured on loading " + group, ex);
             }
         }
 

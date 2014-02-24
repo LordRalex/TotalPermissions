@@ -18,6 +18,7 @@ package net.ae97.totalpermissions.yaml;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.base.PermissionGroup;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
@@ -98,9 +99,13 @@ public class YamlPermissionGroup extends YamlPermissionBase implements Permissio
 
         TotalPermissions plugin = (TotalPermissions) Bukkit.getPluginManager().getPlugin("TotalPermissions");
         for (String group : inheritence) {
-            PermissionGroup permGroup = plugin.getDataManager().getGroup(group);
-            if (permGroup != null) {
-                perms.addAll(permGroup.getPermissions());
+            try {
+                PermissionGroup permGroup = plugin.getDataManager().getGroup(group);
+                if (permGroup != null) {
+                    perms.addAll(permGroup.getPermissions());
+                }
+            } catch (DataLoadFailedException ex) {
+                plugin.log(Level.SEVERE, "An error occured on loading " + group, ex);
             }
         }
 

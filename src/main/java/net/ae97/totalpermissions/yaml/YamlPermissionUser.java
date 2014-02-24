@@ -19,6 +19,7 @@ package net.ae97.totalpermissions.yaml;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.base.PermissionGroup;
 import net.ae97.totalpermissions.base.PermissionUser;
@@ -66,9 +67,13 @@ public class YamlPermissionUser extends YamlPermissionBase implements Permission
         perms.addAll(super.getPermissions(world));
         TotalPermissions plugin = (TotalPermissions) Bukkit.getPluginManager().getPlugin("TotalPermissions");
         for (String group : groups) {
-            PermissionGroup permGroup = plugin.getDataManager().getGroup(group);
-            List<String> groupPerms = permGroup.getPermissions();
-            perms.addAll(groupPerms);
+            try {
+                PermissionGroup permGroup = plugin.getDataManager().getGroup(group);
+                List<String> groupPerms = permGroup.getPermissions();
+                perms.addAll(groupPerms);
+            } catch (DataLoadFailedException ex) {
+                plugin.log(Level.SEVERE, "An error occured on loading " + group, ex);
+            }
         }
         return perms;
     }
@@ -95,10 +100,14 @@ public class YamlPermissionUser extends YamlPermissionBase implements Permission
         if (opt == null) {
             TotalPermissions plugin = (TotalPermissions) Bukkit.getPluginManager().getPlugin("TotalPermissions");
             for (String group : groups) {
-                PermissionGroup permGroup = plugin.getDataManager().getGroup(group);
-                opt = permGroup.getOption(option, world);
-                if (opt != null) {
-                    break;
+                try {
+                    PermissionGroup permGroup = plugin.getDataManager().getGroup(group);
+                    opt = permGroup.getOption(option, world);
+                    if (opt != null) {
+                        break;
+                    }
+                } catch (DataLoadFailedException ex) {
+                    plugin.log(Level.SEVERE, "An error occured on loading " + group, ex);
                 }
             }
         }

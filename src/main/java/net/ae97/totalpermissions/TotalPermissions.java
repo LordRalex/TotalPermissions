@@ -166,15 +166,19 @@ public final class TotalPermissions extends JavaPlugin {
     public boolean isDebugMode() {
         return getConfig().getBoolean("angry-debug", false);
     }
-    
+
     public void log(String message, Object... args) {
         log(Level.INFO, message, args);
     }
-    
+
     public void log(Level level, String message, Object... args) {
         getLogger().log(level, message, args);
     }
-    
+
+    public void log(Level level, String message, Exception e) {
+        getLogger().log(level, message, e);
+    }
+
     public void log(Lang message, Object... args) {
         log(Level.INFO, message, args);
     }
