@@ -20,7 +20,6 @@ import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.base.PermissionGroup;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
-import net.ae97.totalpermissions.lang.Lang;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -46,11 +45,7 @@ public class GroupCommand implements SubCommand {
                 sender.sendMessage(ChatColor.RED + "An error occured on loading " + args[0]);
                 return true;
             }
-            sender.sendMessage(Lang.COMMAND_GROUP_GROUP.getMessage(pg.getName()));
-            StringBuilder sb = new StringBuilder();
-            for (String name : pg.getInheritence()) {
-                sb.append(name).append(", ");
-            }
+            sender.sendMessage(ChatColor.YELLOW + "Group: " + pg.getName());
             String prefix = (String) pg.getOptions().get("prefix");
             if (prefix == null) {
                 prefix = "";
@@ -59,18 +54,14 @@ public class GroupCommand implements SubCommand {
             if (suffix == null) {
                 suffix = "";
             }
-            sender.sendMessage(Lang.COMMAND_GROUP_INHERITS.getMessage((sb.length() >= 2) ? sb.substring(0, sb.length() - 2) : "None!"));
-            sender.sendMessage(Lang.COMMAND_GROUP_PREFIX.getMessage(prefix));
-            sender.sendMessage(Lang.COMMAND_GROUP_SUFFIX.getMessage(suffix));
+            sender.sendMessage(ChatColor.YELLOW + "Inheritence: " + pg.getInheritence());
+            sender.sendMessage(ChatColor.YELLOW + "Prefix: " + prefix);
+            sender.sendMessage(ChatColor.YELLOW + "Suffix: " + suffix);
 
             return true;
         } else if (args.length == 1) {
-            StringBuilder sb = new StringBuilder();
             try {
-                for (String group : plugin.getDataManager().getGroups()) {
-                    sb.append(group).append(", ");
-                }
-                sender.sendMessage(Lang.COMMAND_GROUP_LIST.getMessage(sb.substring(0, sb.length() - 2)));
+                sender.sendMessage(ChatColor.YELLOW + "Group list: " + plugin.getDataManager().getGroups());
             } catch (DataLoadFailedException ex) {
                 sender.sendMessage(ChatColor.RED + "An error occured on loading group list");
                 plugin.getLogger().log(Level.SEVERE, "An error occured on loading group list", ex);
@@ -88,8 +79,8 @@ public class GroupCommand implements SubCommand {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "ttp group " + Lang.VARIABLES_GROUP + " [actions..]",
-            Lang.COMMAND_GROUP_HELP.getMessage()
+            "ttp group [group] [actions..]",
+            "Group interface"
         };
     }
 }

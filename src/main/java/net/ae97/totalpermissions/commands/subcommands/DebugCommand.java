@@ -20,7 +20,6 @@ import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.base.PermissionUser;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
-import net.ae97.totalpermissions.lang.Lang;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -49,7 +48,7 @@ public class DebugCommand implements SubCommand {
             return true;
         }
         if (target == null) {
-            sender.sendMessage(Lang.COMMAND_DEBUG_NULLTARGET.getMessage(args[1]));
+            sender.sendMessage(ChatColor.RED + "No target gound with that name");
             return true;
         }
         if (args.length == 2 && !args[1].equalsIgnoreCase("status")) {
@@ -63,13 +62,9 @@ public class DebugCommand implements SubCommand {
                 return false;
             }
             target.setDebug(newState);
-            if (target.isDebug()) {
-                sender.sendMessage(Lang.COMMAND_DEBUG_DEBUGON.getMessage(target.getName()));
-            } else {
-                sender.sendMessage(Lang.COMMAND_DEBUG_DEBUGOFF.getMessage(target.getName()));
-            }
+            sender.sendMessage(ChatColor.YELLOW + target.getName() + "'s new debug state: " + target.isDebug());
         } else {
-            sender.sendMessage(target.getName() + "'s debug status: " + (target.isDebug() ? "on" : "off"));
+            sender.sendMessage(ChatColor.YELLOW + target.getName() + "'s debug status: " + target.isDebug());
         }
         return true;
     }
@@ -82,8 +77,8 @@ public class DebugCommand implements SubCommand {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "ttp debug " + Lang.VARIABLES_USERNAME.getMessage() + " [on/off]",
-            Lang.COMMAND_DEBUG_HELP.getMessage()
+            "ttp debug <username> [on/off]",
+            "Toggles the debug state of a user"
         };
     }
 }

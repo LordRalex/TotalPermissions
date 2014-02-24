@@ -19,9 +19,8 @@ package net.ae97.totalpermissions.commands.subcommands;
 import java.util.List;
 import java.util.Set;
 import net.ae97.totalpermissions.TotalPermissions;
-import net.ae97.totalpermissions.lang.Lang;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -57,7 +56,7 @@ public class DumpCommand implements SubCommand {
             } else if (Bukkit.getPluginManager().getPlugin(args[0]) != null) {
                 params[0] = "-plugin";
             } else {
-                sender.sendMessage("Could not match " + args[0] + " to a player, plugin, or command");
+                sender.sendMessage(ChatColor.RED + "Could not match " + args[0] + " to a player, plugin, or command");
                 return false;
             }
             params[1] = args[0];
@@ -67,7 +66,6 @@ public class DumpCommand implements SubCommand {
             params[1] = args[1];
             params[2] = args.length == 2 ? "0" : args[2];
         }
-        plugin.getLogger().finest("Parameters: " + StringUtils.join(params, ' '));
         if (params[0].equalsIgnoreCase("-plugin")) {
             Plugin pl = Bukkit.getPluginManager().getPlugin(params[1]);
             List<Permission> perms = pl.getDescription().getPermissions();
@@ -92,8 +90,8 @@ public class DumpCommand implements SubCommand {
                 page = 1;
             }
             page--;
-            sender.sendMessage(Lang.COMMAND_DUMP_TITLE.getMessage("plugin", pl.getName()));
-            sender.sendMessage(Lang.COMMAND_DUMP_PAGE.getMessage(page + 1, permPages.length));
+            sender.sendMessage(ChatColor.YELLOW + "Permissions for plugin " + pl.getName());
+            sender.sendMessage(ChatColor.YELLOW + "Page: " + page + 1 + "/" + permPages.length);
             for (String item : permPages[page]) {
                 if (item != null) {
                     sender.sendMessage(item);
@@ -124,8 +122,8 @@ public class DumpCommand implements SubCommand {
                 page = 1;
             }
             page--;
-            sender.sendMessage(Lang.COMMAND_DUMP_TITLE.getMessage("player", player.getName()));
-            sender.sendMessage(Lang.COMMAND_DUMP_PAGE.getMessage(page + 1, permPages.length));
+            sender.sendMessage(ChatColor.YELLOW + "Permissions for player " + player.getName());
+            sender.sendMessage(ChatColor.YELLOW + "Page: " + page + 1 + "/" + permPages.length);
             for (String item : permPages[page]) {
                 if (item != null) {
                     sender.sendMessage(item);
@@ -133,9 +131,9 @@ public class DumpCommand implements SubCommand {
             }
         } else if (params[0].equalsIgnoreCase("-command")) {
             Command command = Bukkit.getPluginCommand(params[1]);
-            sender.sendMessage(Lang.COMMAND_DUMP_TITLE.getMessage(command.getName(), command.getPermission()));
+            sender.sendMessage(ChatColor.YELLOW + "Permission for " + command.getName() + ": " + ChatColor.RED + command.getPermission());
         } else {
-            sender.sendMessage("Unknown prefix: " + params[0]);
+            sender.sendMessage(ChatColor.RED + "Unknown prefix: " + params[0]);
             return false;
         }
         return true;
@@ -149,8 +147,8 @@ public class DumpCommand implements SubCommand {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "ttp dump [-command/-player/-plugin] " + Lang.VARIABLES_USERNAMEOPTIONAL.getMessage() + " [page]",
-            Lang.COMMAND_DUMP_HELP.getMessage()
+            "ttp dump [-command/-player/-plugin] [username] [page]",
+            "Shows the data for a particular field"
         };
     }
 }

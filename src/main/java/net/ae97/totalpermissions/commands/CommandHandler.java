@@ -21,8 +21,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.commands.subcommands.*;
-import net.ae97.totalpermissions.lang.Lang;
-import org.apache.commons.lang.StringUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -92,12 +91,12 @@ public final class CommandHandler implements CommandExecutor {
         subCommand = args[0];
         SubCommand executor = commands.get(subCommand.toLowerCase());
         if (executor == null) {
-            sender.sendMessage(Lang.COMMAND_HANDLER_IFNULLPLAIN.getMessage());
+            sender.sendMessage(ChatColor.RED + "No action found, use /ttp help for the action list");
             return true;
         }
         if ((args.length > 1) && (args[1].equalsIgnoreCase("help"))) {
-            sender.sendMessage(Lang.COMMAND_HANDLER_USAGE.getMessage(executor.getHelp()[0]));
-            sender.sendMessage(executor.getHelp()[1]);
+            sender.sendMessage(ChatColor.YELLOW + "Usage: " + executor.getHelp()[0]);
+            sender.sendMessage(ChatColor.YELLOW + executor.getHelp()[1]);
             return true;
         }
         int length = args.length - 1;
@@ -108,11 +107,8 @@ public final class CommandHandler implements CommandExecutor {
         for (int i = 0; i < newArgs.length; i++) {
             newArgs[i] = args[i + 1];
         }
-        plugin.getLogger().finest(sender.getName() + " is now using: " + executor.getName() + " " + StringUtils.join(newArgs, ' '));
         if (sender.hasPermission("totalpermissions.cmd" + executor.getName())) {
-            plugin.getLogger().finest(sender.getName() + " has the permission totalpermissions.cmd " + executor.getName());
             if (!executor.execute(sender, newArgs)) {
-                plugin.getLogger().finest(executor.getName() + " not was executed sucessfully");
                 String[] help = executor.getHelp();
                 for (String h : help) {
                     sender.sendMessage(h);
@@ -120,8 +116,7 @@ public final class CommandHandler implements CommandExecutor {
             }
             return true;
         } else {
-            plugin.getLogger().finest(sender.getName() + " does not have the permission totalpermissions.cmd " + executor.getName());
-            sender.sendMessage(Lang.COMMAND_HANDLER_DENIED.getMessage());
+            sender.sendMessage(ChatColor.RED + "You do not have permissions to use this command");
         }
         return true;
     }

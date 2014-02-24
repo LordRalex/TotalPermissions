@@ -17,7 +17,6 @@
 package net.ae97.totalpermissions.commands.subcommands;
 
 import net.ae97.totalpermissions.TotalPermissions;
-import net.ae97.totalpermissions.lang.Lang;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -45,7 +44,7 @@ public class SpecialCommand implements SubCommand {
     public String[] getHelp() {
         return new String[]{
             "ttp special [rcon|console|op] [actions..]",
-            Lang.COMMAND_SPECIAL_HELP.getMessage()
+            "Special interface"
         };
     }
 }

@@ -17,7 +17,6 @@
 package net.ae97.totalpermissions.commands.subcommands;
 
 import net.ae97.totalpermissions.TotalPermissions;
-import net.ae97.totalpermissions.lang.Lang;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -45,7 +44,7 @@ public class WorldCommand implements SubCommand {
     public String[] getHelp() {
         return new String[]{
             "ttp world <worldname> [actions..]",
-            Lang.COMMAND_WORLD_HELP.getMessage()
+            "World interface"
         };
     }
 }

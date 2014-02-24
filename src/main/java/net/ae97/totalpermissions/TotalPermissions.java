@@ -26,7 +26,6 @@ import net.ae97.totalpermissions.data.DataHolder;
 import net.ae97.totalpermissions.data.DataManager;
 import net.ae97.totalpermissions.data.DataType;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
-import net.ae97.totalpermissions.lang.Lang;
 import net.ae97.totalpermissions.listener.ListenerManager;
 import net.ae97.totalpermissions.logger.DebugLogFormatter;
 import net.ae97.totalpermissions.mcstats.Metrics;
@@ -83,12 +82,10 @@ public final class TotalPermissions extends JavaPlugin {
                 saveResource("permissions.yml", true);
             }
 
-            Lang.setLanguageConfig(YamlConfiguration.loadConfiguration(getResource("lang/" + getConfig().getString("language", "en_US") + ".yml")));
-
             String storageType = getConfig().getString("storage", "yaml_shared");
             DataType type = DataType.valueOf(storageType.toUpperCase());
             if (type == null) {
-                getLogger().severe(Lang.MAIN_STORAGEERROR.getMessage(storageType));
+                getLogger().severe(storageType + " is not a known storage system, default to YAML_SHARED");
                 type = DataType.YAML_SHARED;
             }
             getLogger().finest("Creating data holder");
@@ -127,14 +124,14 @@ public final class TotalPermissions extends JavaPlugin {
             getLogger().finest("Loading up metrics");
             metrics = new Metrics(this);
             if (metrics.start()) {
-                getLogger().info(Lang.MAIN_METRICS.getMessage());
+                getLogger().info("Metrics stat collecting enabled");
             } else {
-                getLogger().info(Lang.MAIN_METRICSOFF.getMessage());
+                getLogger().info("Metrics stat collecting is not enabled");
             }
         } catch (IOException e) {
-            getLogger().log(Level.SEVERE, Lang.MAIN_ERROR.getMessage(), e);
+            getLogger().log(Level.SEVERE, "An error occured on enabled, please check your configs and other files", e);
         } catch (DataLoadFailedException e) {
-            getLogger().log(Level.SEVERE, Lang.MAIN_ERROR.getMessage(), e);
+            getLogger().log(Level.SEVERE, "An error occured on loading some data, please check the error and fix the issue:", e);
         }
     }
 

@@ -16,13 +16,10 @@
  */
 package net.ae97.totalpermissions.commands.subcommands;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.base.PermissionUser;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
-import net.ae97.totalpermissions.lang.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -46,13 +43,12 @@ public class UserCommand implements SubCommand {
             OfflinePlayer p = null;
             if (args.length == 2) {
                 p = Bukkit.getOfflinePlayer(args[1]);
-            } else if (args.length == 1) {
-                if (sender instanceof Player) {
-                    p = (Player) sender;
-                } else {
-                    sender.sendMessage(Lang.COMMAND_USER_NONPLAYER.getMessage());
-                    return false;
-                }
+            } else if (args.length == 1 && sender instanceof Player) {
+                p = (Player) sender;
+            }
+            if (p == null) {
+                sender.sendMessage(ChatColor.RED + "No player found");
+                return false;
             }
             PermissionUser user;
             try {
@@ -62,13 +58,9 @@ public class UserCommand implements SubCommand {
                 sender.sendMessage(ChatColor.RED + "An error occured on loading " + args[0]);
                 return true;
             }
-            StringBuilder sb = new StringBuilder();
-            for (String group : user.getGroups()) {
-                sb.append(group).append(", ");
-            }
-            sender.sendMessage(Lang.COMMAND_USER_PLAYER.getMessage(sender.getName()));
-            sender.sendMessage(Lang.COMMAND_USER_DEBUG.getMessage(user.isDebug()));
-            sender.sendMessage(Lang.COMMAND_USER_GROUPS.getMessage(sb.substring(0, sb.length() - 2)));
+            sender.sendMessage(ChatColor.YELLOW + "Name: " + user.getName());
+            sender.sendMessage(ChatColor.YELLOW + "Debug:" + user.isDebug());
+            sender.sendMessage(ChatColor.YELLOW + "Groups: " + user.getGroups());
             return true;
         }
         return false;
@@ -82,18 +74,8 @@ public class UserCommand implements SubCommand {
     @Override
     public String[] getHelp() {
         return new String[]{
-            "ttp user " + Lang.VARIABLES_USERNAME.getMessage() + " [actions..]",
-            Lang.COMMAND_USER_HELP.getMessage()
+            "ttp user [username] [actions..]",
+            "User interface"
         };
-    }
-
-    private List<String> fields() {
-        return Arrays.asList(new String[]{
-            "permissions",
-            "commands",
-            "groups",
-            "prefix",
-            "suffix"
-        });
     }
 }

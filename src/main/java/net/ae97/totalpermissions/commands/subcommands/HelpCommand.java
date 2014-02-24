@@ -19,7 +19,6 @@ package net.ae97.totalpermissions.commands.subcommands;
 import java.util.Arrays;
 import java.util.Map;
 import net.ae97.totalpermissions.TotalPermissions;
-import net.ae97.totalpermissions.lang.Lang;
 import net.ae97.totalpermissions.util.Formatter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -56,7 +55,7 @@ public class HelpCommand implements SubCommand {
     public String[] getHelp() {
         return new String[]{
             "ttp help",
-            Lang.COMMAND_HELP_HELP.getMessage()
+            "Displays help information"
         };
     }
 
@@ -73,7 +72,8 @@ public class HelpCommand implements SubCommand {
         }
         StringBuilder sb = new StringBuilder();
         sb.append(Formatter.formatTitle(plugin.getName(), ChatColor.WHITE, ChatColor.RED)).append("\n");
-        sb.append(Lang.COMMAND_HELP_PAGE.getMessage(page, (int) Math.ceil((double) listSize / (double) factor))).append("\n").append(ChatColor.RESET);
+        sb.append("Page ").append(page).append("/").append((int) Math.ceil((double) listSize / (double) factor));
+        sb.append("\n").append(ChatColor.RESET);
         String[] list = map.keySet().toArray(new String[listSize]);
         Arrays.sort(list);
         for (int i = index; i < upper; i++) {
@@ -88,7 +88,7 @@ public class HelpCommand implements SubCommand {
                 }
             }
         }
-        sb.append('\n').append(Lang.COMMAND_HELP_CONTPLAIN.getMessage(Lang.VARIABLES_COMMAND.getMessage()));
+        sb.append('\n').append(ChatColor.YELLOW).append("Use /ttp help <command> to get help for a specific command");
         return sb.toString();
     }
 

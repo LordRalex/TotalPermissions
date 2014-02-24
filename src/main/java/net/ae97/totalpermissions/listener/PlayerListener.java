@@ -20,7 +20,6 @@ import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.base.PermissionUser;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
-import net.ae97.totalpermissions.lang.Lang;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -37,22 +36,22 @@ import org.bukkit.event.player.PlayerLoginEvent;
  * @since 0.1
  */
 public class PlayerListener implements Listener {
-    
+
     protected final TotalPermissions plugin;
-    
+
     public PlayerListener(TotalPermissions p) {
         plugin = p;
     }
-    
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLogin(AsyncPlayerPreLoginEvent event) {
         try {
             plugin.getDataManager().loadUser(event.getName());
         } catch (DataLoadFailedException ex) {
-            plugin.getLogger().log(Level.SEVERE, Lang.LISTENER_TPLISTENER_LOGIN_ERROR.getMessage(), ex);
+            plugin.getLogger().log(Level.SEVERE, "An error occured on " + event.getName() + "'s PreLoginEvent", ex);
         }
     }
-    
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLogin(PlayerLoginEvent event) {
         try {
@@ -60,10 +59,10 @@ public class PlayerListener implements Listener {
             PermissionUser user = plugin.getDataManager().getUser(event.getPlayer().getName());
             plugin.getDataManager().apply(user, event.getPlayer(), event.getPlayer().getWorld());
         } catch (DataLoadFailedException ex) {
-            plugin.getLogger().log(Level.SEVERE, "An error occured on the PlayerLoginEvent", ex);
+            plugin.getLogger().log(Level.SEVERE, "An error occured on " + event.getPlayer().getName() + "'s LoginEvent", ex);
         }
     }
-    
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
         try {
@@ -72,10 +71,10 @@ public class PlayerListener implements Listener {
             PermissionUser user = plugin.getDataManager().getUser(player.getName());
             plugin.getDataManager().apply(user, player, player.getWorld());
         } catch (DataLoadFailedException ex) {
-            plugin.getLogger().log(Level.SEVERE, "An error occured on the PlayerJoinEvent", ex);
+            plugin.getLogger().log(Level.SEVERE, "An error occured on " + event.getPlayer().getName() + "'s JoinEvent", ex);
         }
     }
-    
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoinEventMonitor(PlayerJoinEvent event) {
         plugin.getLogger().finest("PlayerJoinEvent-Monitor fired, handling");
@@ -84,11 +83,11 @@ public class PlayerListener implements Listener {
             PermissionUser user = plugin.getDataManager().getUser(player.getName());
             plugin.getDataManager().apply(user, player, player.getWorld());
         } catch (DataLoadFailedException ex) {
-            plugin.getLogger().log(Level.SEVERE, "An error occured on the PlayerJoinEvent", ex);
+            plugin.getLogger().log(Level.SEVERE, "An error occured on " + event.getPlayer().getName() + "'s JoinEvent", ex);
         }
-        
+
     }
-    
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerWorldChange(PlayerChangedWorldEvent event) {
         try {
@@ -98,7 +97,7 @@ public class PlayerListener implements Listener {
             plugin.getLogger().finest("Player " + player.getName() + " changed from " + event.getFrom().getName() + " to " + player.getWorld().getName());
             plugin.getDataManager().apply(user, player, player.getWorld());
         } catch (DataLoadFailedException ex) {
-            plugin.getLogger().log(Level.SEVERE, "An error occured on the PlayerChangedWorldEvent", ex);
+            plugin.getLogger().log(Level.SEVERE, "An error occured on " + event.getPlayer().getName() + "'s ChangedWorldEvent", ex);
         }
     }
 }
