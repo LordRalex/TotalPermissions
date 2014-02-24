@@ -32,6 +32,7 @@ import net.ae97.totalpermissions.logger.DebugLogFormatter;
 import net.ae97.totalpermissions.mcstats.Metrics;
 import net.ae97.totalpermissions.updater.Updater;
 import net.ae97.totalpermissions.updater.UpdateType;
+import net.ae97.totalpermissions.yaml.SingleYamlDataHolder;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -95,6 +96,7 @@ public final class TotalPermissions extends JavaPlugin {
             switch (type) {
                 default:
                 case YAML_SHARED: {
+                    dataHolder = new SingleYamlDataHolder(new File(getDataFolder(), "permissions.yml"));
                 }
                 break;
                 case YAML_SPLIT: {
@@ -109,6 +111,7 @@ public final class TotalPermissions extends JavaPlugin {
             }
 
             debugLog("Loading permissions setup");
+            dataManager = new DataManager(this, dataHolder);
             dataManager.load();
 
             debugLog("Creating listener");
