@@ -58,7 +58,7 @@ public class UserCommand implements SubCommand {
             try {
                 user = plugin.getDataManager().getUser(p.getName());
             } catch (DataLoadFailedException ex) {
-                plugin.log(Level.SEVERE, "An error occured on loading " + args[0], ex);
+                plugin.getLogger().log(Level.SEVERE, "An error occured on loading " + args[0], ex);
                 sender.sendMessage(ChatColor.RED + "An error occured on loading " + args[0]);
                 return true;
             }

@@ -105,7 +105,7 @@ public class YamlPermissionGroup extends YamlPermissionBase implements Permissio
                     perms.addAll(permGroup.getPermissions());
                 }
             } catch (DataLoadFailedException ex) {
-                plugin.log(Level.SEVERE, "An error occured on loading " + group, ex);
+                plugin.getLogger().log(Level.SEVERE, "An error occured on loading " + group, ex);
             }
         }
 

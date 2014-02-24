@@ -67,7 +67,7 @@ public class DumpCommand implements SubCommand {
             params[1] = args[1];
             params[2] = args.length == 2 ? "0" : args[2];
         }
-        plugin.debugLog("Parameters: " + StringUtils.join(params, ' '));
+        plugin.getLogger().finest("Parameters: " + StringUtils.join(params, ' '));
         if (params[0].equalsIgnoreCase("-plugin")) {
             Plugin pl = Bukkit.getPluginManager().getPlugin(params[1]);
             List<Permission> perms = pl.getDescription().getPermissions();

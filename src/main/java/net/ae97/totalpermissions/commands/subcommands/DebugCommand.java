@@ -44,7 +44,7 @@ public class DebugCommand implements SubCommand {
         try {
             target = plugin.getDataManager().getUser(args[0]);
         } catch (DataLoadFailedException ex) {
-            plugin.log(Level.SEVERE, "An error occured on loading " + args[0], ex);
+            plugin.getLogger().log(Level.SEVERE, "An error occured on loading " + args[0], ex);
             sender.sendMessage(ChatColor.RED + "An error occured on loading " + args[0]);
             return true;
         }

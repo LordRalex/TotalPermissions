@@ -72,7 +72,7 @@ public class YamlPermissionUser extends YamlPermissionBase implements Permission
                 List<String> groupPerms = permGroup.getPermissions();
                 perms.addAll(groupPerms);
             } catch (DataLoadFailedException ex) {
-                plugin.log(Level.SEVERE, "An error occured on loading " + group, ex);
+                plugin.getLogger().log(Level.SEVERE, "An error occured on loading " + group, ex);
             }
         }
         return perms;
@@ -107,7 +107,7 @@ public class YamlPermissionUser extends YamlPermissionBase implements Permission
                         break;
                     }
                 } catch (DataLoadFailedException ex) {
-                    plugin.log(Level.SEVERE, "An error occured on loading " + group, ex);
+                    plugin.getLogger().log(Level.SEVERE, "An error occured on loading " + group, ex);
                 }
             }
         }

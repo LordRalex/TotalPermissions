@@ -42,7 +42,7 @@ public class GroupCommand implements SubCommand {
             try {
                 pg = plugin.getDataManager().getGroup(args[1]);
             } catch (DataLoadFailedException ex) {
-                plugin.log(Level.SEVERE, "An error occured on loading " + args[0], ex);
+                plugin.getLogger().log(Level.SEVERE, "An error occured on loading " + args[0], ex);
                 sender.sendMessage(ChatColor.RED + "An error occured on loading " + args[0]);
                 return true;
             }
@@ -73,7 +73,7 @@ public class GroupCommand implements SubCommand {
                 sender.sendMessage(Lang.COMMAND_GROUP_LIST.getMessage(sb.substring(0, sb.length() - 2)));
             } catch (DataLoadFailedException ex) {
                 sender.sendMessage(ChatColor.RED + "An error occured on loading group list");
-                plugin.log(Level.SEVERE, "An error occured on loading group list", ex);
+                plugin.getLogger().log(Level.SEVERE, "An error occured on loading group list", ex);
             }
             return true;
         }

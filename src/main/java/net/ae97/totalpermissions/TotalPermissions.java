@@ -72,14 +72,14 @@ public final class TotalPermissions extends JavaPlugin {
             FileHandler debugHandler = new FileHandler(new File(new File(getDataFolder(), "logs"), "totalpermissions.log").getPath(), 0, 1, true);
             debugHandler.setFormatter(new DebugLogFormatter());
             getLogger().addHandler(debugHandler);
-            debugLog("---------");
+            getLogger().finest("---------");
 
             if (!(new File(getDataFolder(), "config.yml").exists())) {
-                debugLog("Saving default config");
+                getLogger().finest("Saving default config");
                 saveResource("config.yml", true);
             }
             if (!(new File(getDataFolder(), "permissions.yml").exists())) {
-                debugLog("Saving default permissions.yml");
+                getLogger().finest("Saving default permissions.yml");
                 saveResource("permissions.yml", true);
             }
 
@@ -88,11 +88,11 @@ public final class TotalPermissions extends JavaPlugin {
             String storageType = getConfig().getString("storage", "yaml_shared");
             DataType type = DataType.valueOf(storageType.toUpperCase());
             if (type == null) {
-                log(Level.SEVERE, Lang.MAIN_STORAGEERROR, storageType);
+                getLogger().severe(Lang.MAIN_STORAGEERROR.getMessage(storageType));
                 type = DataType.YAML_SHARED;
             }
-            debugLog("Creating data holder");
-            debugLog("Storage type to load: " + storageType);
+            getLogger().finest("Creating data holder");
+            getLogger().finest("Storage type to load: " + storageType);
             switch (type) {
                 default:
                 case YAML_SHARED: {
@@ -110,31 +110,31 @@ public final class TotalPermissions extends JavaPlugin {
                 break;
             }
 
-            debugLog("Loading permissions setup");
+            getLogger().finest("Loading permissions setup");
             dataManager = new DataManager(this, dataHolder);
             dataManager.load();
 
-            debugLog("Creating listener");
+            getLogger().finest("Creating listener");
             listenerManager = new ListenerManager(this);
-            debugLog("Registering listeners");
+            getLogger().finest("Registering listeners");
             listenerManager.load();
 
-            debugLog("Creating command handler");
+            getLogger().finest("Creating command handler");
             commands = new CommandHandler(this);
-            debugLog("Registering command handler");
+            getLogger().finest("Registering command handler");
             getCommand("totalpermissions").setExecutor(commands);
 
-            debugLog("Loading up metrics");
+            getLogger().finest("Loading up metrics");
             metrics = new Metrics(this);
             if (metrics.start()) {
-                log(Level.INFO, Lang.MAIN_METRICS);
+                getLogger().info(Lang.MAIN_METRICS.getMessage());
             } else {
-                log(Level.INFO, Lang.MAIN_METRICSOFF);
+                getLogger().info(Lang.MAIN_METRICSOFF.getMessage());
             }
         } catch (IOException e) {
-            log(Level.SEVERE, Lang.MAIN_ERROR, e);
+            getLogger().log(Level.SEVERE, Lang.MAIN_ERROR.getMessage(), e);
         } catch (DataLoadFailedException e) {
-            log(Level.SEVERE, Lang.MAIN_ERROR, e);
+            getLogger().log(Level.SEVERE, Lang.MAIN_ERROR.getMessage(), e);
         }
     }
 
@@ -168,31 +168,5 @@ public final class TotalPermissions extends JavaPlugin {
 
     public boolean isDebugMode() {
         return getConfig().getBoolean("angry-debug", false);
-    }
-
-    public void log(String message, Object... args) {
-        log(Level.INFO, message, args);
-    }
-
-    public void log(Level level, String message, Object... args) {
-        getLogger().log(level, message, args);
-    }
-
-    public void log(Level level, String message, Exception e) {
-        getLogger().log(level, message, e);
-    }
-
-    public void log(Lang message, Object... args) {
-        log(Level.INFO, message, args);
-    }
-
-    public void log(Level level, Lang message, Object... args) {
-        getLogger().log(level, message.getMessage(args));
-    }
-
-    public void debugLog(Object... message) {
-        for (Object m : message) {
-            log(Level.FINEST, m.toString());
-        }
     }
 }

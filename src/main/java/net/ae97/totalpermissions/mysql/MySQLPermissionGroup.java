@@ -76,7 +76,7 @@ public class MySQLPermissionGroup extends MySQLPermissionBase implements Permiss
                     perms.addAll(permGroup.getPermissions());
                 }
             } catch (DataLoadFailedException ex) {
-                plugin.log(Level.SEVERE, "An error occured on loading " + group, ex);
+                plugin.getLogger().log(Level.SEVERE, "An error occured on loading " + group, ex);
             }
         }
 

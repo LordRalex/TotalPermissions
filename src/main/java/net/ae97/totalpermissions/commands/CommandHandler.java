@@ -108,11 +108,11 @@ public final class CommandHandler implements CommandExecutor {
         for (int i = 0; i < newArgs.length; i++) {
             newArgs[i] = args[i + 1];
         }
-        plugin.debugLog(sender.getName() + " is now using: " + executor.getName() + " " + StringUtils.join(newArgs, ' '));
+        plugin.getLogger().finest(sender.getName() + " is now using: " + executor.getName() + " " + StringUtils.join(newArgs, ' '));
         if (sender.hasPermission("totalpermissions.cmd" + executor.getName())) {
-            plugin.debugLog(sender.getName() + " has the permission totalpermissions.cmd " + executor.getName());
+            plugin.getLogger().finest(sender.getName() + " has the permission totalpermissions.cmd " + executor.getName());
             if (!executor.execute(sender, newArgs)) {
-                plugin.debugLog(executor.getName() + " not was executed sucessfully");
+                plugin.getLogger().finest(executor.getName() + " not was executed sucessfully");
                 String[] help = executor.getHelp();
                 for (String h : help) {
                     sender.sendMessage(h);
@@ -120,7 +120,7 @@ public final class CommandHandler implements CommandExecutor {
             }
             return true;
         } else {
-            plugin.debugLog(sender.getName() + " does not have the permission totalpermissions.cmd " + executor.getName());
+            plugin.getLogger().finest(sender.getName() + " does not have the permission totalpermissions.cmd " + executor.getName());
             sender.sendMessage(Lang.COMMAND_HANDLER_DENIED.getMessage());
         }
         return true;
