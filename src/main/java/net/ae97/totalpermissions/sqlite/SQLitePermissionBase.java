@@ -22,7 +22,8 @@ import java.util.List;
 import java.util.Map;
 import net.ae97.totalpermissions.base.PermissionBase;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
-import net.ae97.totalpermissions.exceptions.DataSaveFailedException;
+import org.bukkit.Bukkit;
+import org.bukkit.permissions.Permission;
 
 /**
  * @author Lord_Ralex
@@ -50,12 +51,43 @@ public abstract class SQLitePermissionBase implements PermissionBase {
 
     @Override
     public void load() throws DataLoadFailedException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        load(new HashMap<String, Object>());
+    }
+
+    public void load(Map<String, Object> map) throws DataLoadFailedException {
+        Object obj;
+        obj = map.get("permissions");
+        if (obj != null && obj instanceof String) {
+            String data = (String) obj;
+            String[] perms = data.split("\n");
+            List<String> permList = new LinkedList<String>();
+            for (String perm : perms) {
+                Permission p = Bukkit.getPluginManager().getPermission(perm);
+                if (p == null) {
+                    p = new Permission(perm);
+                    Bukkit.getPluginManager().addPermission(p);
+                }
+                if (!permList.contains(p.getName())) {
+                    permList.add(p.getName());
+                }
+            }
+            permissions.put(null, permList);
+        }
+        obj = map.get("options");
+        if (obj != null && obj instanceof Map) {
+            Map optionMap = (Map) obj;
+            Map<String, Object> converted = new HashMap<String, Object>();
+            for (Object k : optionMap.keySet()) {
+                if (k != null && k instanceof String) {
+                    converted.put((String) k, optionMap.get(k));
+                }
+            }
+            options.put(null, converted);
+        }
     }
 
     @Override
-    public void save() throws DataSaveFailedException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void save() {
     }
 
     @Override
@@ -162,5 +194,4 @@ public abstract class SQLitePermissionBase implements PermissionBase {
         permissions.put(world == null || world.isEmpty() ? null : world.toLowerCase(), perms);
         return removed;
     }
-
 }

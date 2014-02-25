@@ -149,4 +149,19 @@ public class DataManager implements DataHolder {
     public void load(PermissionType type, String name) throws DataLoadFailedException {
         dataHolder.load(type, name);
     }
+
+    @Override
+    public void loadConsole() throws DataLoadFailedException {
+        dataHolder.loadConsole();
+    }
+
+    @Override
+    public void loadOp() throws DataLoadFailedException {
+        dataHolder.loadOp();
+    }
+
+    @Override
+    public void loadRcon() throws DataLoadFailedException {
+        dataHolder.loadRcon();
+    }
 }

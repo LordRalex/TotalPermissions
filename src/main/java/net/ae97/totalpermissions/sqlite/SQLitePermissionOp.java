@@ -24,8 +24,8 @@ import net.ae97.totalpermissions.type.PermissionType;
  */
 public class SQLitePermissionOp extends SQLitePermissionBase implements PermissionOp {
 
-    public SQLitePermissionOp(String n) {
-        super(n);
+    public SQLitePermissionOp() {
+        super("op");
     }
 
     @Override

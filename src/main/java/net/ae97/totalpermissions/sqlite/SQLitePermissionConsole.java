@@ -24,8 +24,8 @@ import net.ae97.totalpermissions.type.PermissionType;
  */
 public class SQLitePermissionConsole extends SQLitePermissionBase implements PermissionConsole {
 
-    public SQLitePermissionConsole(String n) {
-        super(n);
+    public SQLitePermissionConsole() {
+        super("console");
     }
 
     @Override

@@ -36,6 +36,8 @@ public interface DataHolder {
 
     public void load() throws DataLoadFailedException;
 
+    public void load(PermissionType type, String name) throws DataLoadFailedException;
+
     public void loadUser(String name) throws DataLoadFailedException;
 
     public void loadGroup(String name) throws DataLoadFailedException;
@@ -44,7 +46,11 @@ public interface DataHolder {
 
     public void loadEntity(String name) throws DataLoadFailedException;
 
-    public void load(PermissionType type, String name) throws DataLoadFailedException;
+    public void loadConsole() throws DataLoadFailedException;
+
+    public void loadOp() throws DataLoadFailedException;
+
+    public void loadRcon() throws DataLoadFailedException;
 
     public PermissionUser getUser(String name) throws DataLoadFailedException;
 

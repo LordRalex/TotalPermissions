@@ -24,8 +24,8 @@ import net.ae97.totalpermissions.type.PermissionType;
  */
 public class SQLitePermissionRcon extends SQLitePermissionBase implements PermissionRcon {
 
-    public SQLitePermissionRcon(String n) {
-        super(n);
+    public SQLitePermissionRcon() {
+        super("rcon");
     }
 
     @Override

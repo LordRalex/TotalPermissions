@@ -77,6 +77,15 @@ public class SingleYamlDataHolder implements DataHolder {
             case ENTITY:
                 loadEntity(name);
                 break;
+            case OP:
+                loadOp();
+                break;
+            case RCON:
+                loadRcon();
+                break;
+            case CONSOLE:
+                loadConsole();
+                break;
         }
     }
 
@@ -142,6 +151,54 @@ public class SingleYamlDataHolder implements DataHolder {
             cache.put(PermissionType.ENTITY, base);
         }
         base.put(name.toLowerCase(), permBase);
+    }
+
+    @Override
+    public void loadConsole() throws DataLoadFailedException {
+        HashMap<String, YamlPermissionBase> base = cache.get(PermissionType.CONSOLE);
+        ConfigurationSection sec = yamlConfiguration.getConfigurationSection("server.console");
+        if (sec == null) {
+            sec = yamlConfiguration.createSection("server.console");
+        }
+        YamlPermissionConsole permBase = new YamlPermissionConsole(sec);
+        permBase.load();
+        if (base == null) {
+            base = new HashMap<String, YamlPermissionBase>();
+            cache.put(PermissionType.CONSOLE, base);
+        }
+        base.put(null, permBase);
+    }
+
+    @Override
+    public void loadOp() throws DataLoadFailedException {
+        HashMap<String, YamlPermissionBase> base = cache.get(PermissionType.OP);
+        ConfigurationSection sec = yamlConfiguration.getConfigurationSection("server.op");
+        if (sec == null) {
+            sec = yamlConfiguration.createSection("server.op");
+        }
+        YamlPermissionOp permBase = new YamlPermissionOp(sec);
+        permBase.load();
+        if (base == null) {
+            base = new HashMap<String, YamlPermissionBase>();
+            cache.put(PermissionType.OP, base);
+        }
+        base.put(null, permBase);
+    }
+
+    @Override
+    public void loadRcon() throws DataLoadFailedException {
+        HashMap<String, YamlPermissionBase> base = cache.get(PermissionType.RCON);
+        ConfigurationSection sec = yamlConfiguration.getConfigurationSection("server.rcon");
+        if (sec == null) {
+            sec = yamlConfiguration.createSection("server.rcon");
+        }
+        YamlPermissionRcon permBase = new YamlPermissionRcon(sec);
+        permBase.load();
+        if (base == null) {
+            base = new HashMap<String, YamlPermissionBase>();
+            cache.put(PermissionType.RCON, base);
+        }
+        base.put(null, permBase);
     }
 
     @Override
