@@ -38,7 +38,6 @@
                     <include>plugin.yml</include>
                     <include>config.yml</include>
                     <include>permissions.yml</include>
-                    <include>lang/*</include>
                 </includes>
             </resource>
         </resources>

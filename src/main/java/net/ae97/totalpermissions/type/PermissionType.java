@@ -28,10 +28,10 @@ public enum PermissionType {
     RCON,
     CONSOLE,
     OP;
-    
+
     public static PermissionType get(String name) {
-        for(PermissionType type: values()) {
-            if(type.name().equalsIgnoreCase(name)) {
+        for (PermissionType type : values()) {
+            if (type.name().equalsIgnoreCase(name)) {
                 return type;
             }
         }
