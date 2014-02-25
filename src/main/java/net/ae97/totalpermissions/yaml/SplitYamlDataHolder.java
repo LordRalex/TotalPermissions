@@ -17,6 +17,7 @@
 package net.ae97.totalpermissions.yaml;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -62,13 +63,61 @@ public class SplitYamlDataHolder implements DataHolder {
     @Override
     public void load() throws DataLoadFailedException {
         try {
-            groupYamlConfiguration.load(groupFile);
-            userYamlConfiguration.load(userFile);
-            cache.clear();
+            try {
+                userYamlConfiguration.load(userFile);
+            } catch (FileNotFoundException ex) {
+            }
+            try {
+                groupYamlConfiguration.load(groupFile);
+            } catch (FileNotFoundException ex) {
+            }
+            try {
+                worldYamlConfiguration.load(worldFile);
+            } catch (FileNotFoundException ex) {
+            }
+            try {
+                entityYamlConfiguration.load(entityFile);
+            } catch (FileNotFoundException ex) {
+            }
+            try {
+                specialYamlConfiguration.load(specialFile);
+            } catch (FileNotFoundException ex) {
+            }
+
         } catch (IOException ex) {
             throw new DataLoadFailedException(ex);
         } catch (InvalidConfigurationException ex) {
             throw new DataLoadFailedException(ex);
+        }
+    }
+
+    @Override
+    public void save(PermissionBase holder) throws DataSaveFailedException {
+        holder.save();
+        try {
+            userYamlConfiguration.save(userFile);
+        } catch (IOException ex) {
+            throw new DataSaveFailedException(ex);
+        }
+        try {
+            groupYamlConfiguration.save(groupFile);
+        } catch (IOException ex) {
+            throw new DataSaveFailedException(ex);
+        }
+        try {
+            worldYamlConfiguration.save(worldFile);
+        } catch (IOException ex) {
+            throw new DataSaveFailedException(ex);
+        }
+        try {
+            entityYamlConfiguration.save(entityFile);
+        } catch (IOException ex) {
+            throw new DataSaveFailedException(ex);
+        }
+        try {
+            specialYamlConfiguration.save(specialFile);
+        } catch (IOException ex) {
+            throw new DataSaveFailedException(ex);
         }
     }
 
@@ -101,114 +150,51 @@ public class SplitYamlDataHolder implements DataHolder {
 
     @Override
     public void loadUser(String name) throws DataLoadFailedException {
-        HashMap<String, YamlPermissionBase> base = cache.get(PermissionType.USER);
-        ConfigurationSection sec = userYamlConfiguration.getConfigurationSection(name);
-        if (sec == null) {
-            sec = userYamlConfiguration.createSection(name);
-        }
+        ConfigurationSection sec = getData(userYamlConfiguration, name);
         YamlPermissionBase permBase = new YamlPermissionUser(name.toLowerCase(), sec);
-        permBase.load();
-        if (base == null) {
-            base = new HashMap<String, YamlPermissionBase>();
-            cache.put(PermissionType.USER, base);
-        }
-        base.put(name.toLowerCase(), permBase);
+        load(PermissionType.USER, permBase);
     }
 
     @Override
     public void loadGroup(String name) throws DataLoadFailedException {
-        HashMap<String, YamlPermissionBase> base = cache.get(PermissionType.GROUP);
-        ConfigurationSection sec = groupYamlConfiguration.getConfigurationSection(name);
-        if (sec == null) {
-            sec = groupYamlConfiguration.createSection(name);
-        }
+        ConfigurationSection sec = getData(groupYamlConfiguration, name);
         YamlPermissionBase permBase = new YamlPermissionGroup(name.toLowerCase(), sec);
-        permBase.load();
-        if (base == null) {
-            base = new HashMap<String, YamlPermissionBase>();
-            cache.put(PermissionType.GROUP, base);
-        }
-        base.put(name.toLowerCase(), permBase);
+        load(PermissionType.GROUP, permBase);
     }
 
     @Override
     public void loadWorld(String name) throws DataLoadFailedException {
-        HashMap<String, YamlPermissionBase> base = cache.get(PermissionType.WORLD);
-        ConfigurationSection sec = worldYamlConfiguration.getConfigurationSection(name);
-        if (sec == null) {
-            sec = worldYamlConfiguration.createSection(name);
-        }
+        ConfigurationSection sec = getData(worldYamlConfiguration, name);
         YamlPermissionBase permBase = new YamlPermissionWorld(name.toLowerCase(), sec);
-        permBase.load();
-        if (base == null) {
-            base = new HashMap<String, YamlPermissionBase>();
-            cache.put(PermissionType.WORLD, base);
-        }
-        base.put(name.toLowerCase(), permBase);
+        load(PermissionType.WORLD, permBase);
     }
 
     @Override
     public void loadEntity(String name) throws DataLoadFailedException {
-        HashMap<String, YamlPermissionBase> base = cache.get(PermissionType.ENTITY);
-        ConfigurationSection sec = entityYamlConfiguration.getConfigurationSection(name);
-        if (sec == null) {
-            sec = entityYamlConfiguration.createSection(name);
-        }
+        ConfigurationSection sec = getData(entityYamlConfiguration, name);
         YamlPermissionBase permBase = new YamlPermissionEntity(name.toLowerCase(), sec);
-        permBase.load();
-        if (base == null) {
-            base = new HashMap<String, YamlPermissionBase>();
-            cache.put(PermissionType.ENTITY, base);
-        }
-        base.put(name.toLowerCase(), permBase);
+        load(PermissionType.ENTITY, permBase);
     }
 
     @Override
     public void loadConsole() throws DataLoadFailedException {
-        HashMap<String, YamlPermissionBase> base = cache.get(PermissionType.CONSOLE);
-        ConfigurationSection sec = specialYamlConfiguration.getConfigurationSection("console");
-        if (sec == null) {
-            sec = specialYamlConfiguration.createSection("console");
-        }
-        YamlPermissionConsole permBase = new YamlPermissionConsole(sec);
-        permBase.load();
-        if (base == null) {
-            base = new HashMap<String, YamlPermissionBase>();
-            cache.put(PermissionType.CONSOLE, base);
-        }
-        base.put(null, permBase);
+        ConfigurationSection sec = getData(specialYamlConfiguration, "console");
+        YamlPermissionBase permBase = new YamlPermissionConsole(sec);
+        load(PermissionType.CONSOLE, permBase);
     }
 
     @Override
     public void loadOp() throws DataLoadFailedException {
-        HashMap<String, YamlPermissionBase> base = cache.get(PermissionType.OP);
-        ConfigurationSection sec = specialYamlConfiguration.getConfigurationSection("op");
-        if (sec == null) {
-            sec = specialYamlConfiguration.createSection("op");
-        }
-        YamlPermissionOp permBase = new YamlPermissionOp(sec);
-        permBase.load();
-        if (base == null) {
-            base = new HashMap<String, YamlPermissionBase>();
-            cache.put(PermissionType.OP, base);
-        }
-        base.put(null, permBase);
+        ConfigurationSection sec = getData(specialYamlConfiguration, "op");
+        YamlPermissionBase permBase = new YamlPermissionOp(sec);
+        load(PermissionType.OP, permBase);
     }
 
     @Override
     public void loadRcon() throws DataLoadFailedException {
-        HashMap<String, YamlPermissionBase> base = cache.get(PermissionType.RCON);
-        ConfigurationSection sec = specialYamlConfiguration.getConfigurationSection("rcon");
-        if (sec == null) {
-            sec = specialYamlConfiguration.createSection("rcon");
-        }
+        ConfigurationSection sec = getData(specialYamlConfiguration, "rcon");
         YamlPermissionRcon permBase = new YamlPermissionRcon(sec);
-        permBase.load();
-        if (base == null) {
-            base = new HashMap<String, YamlPermissionBase>();
-            cache.put(PermissionType.RCON, base);
-        }
-        base.put(null, permBase);
+        load(PermissionType.RCON, permBase);
     }
 
     @Override
@@ -235,191 +221,91 @@ public class SplitYamlDataHolder implements DataHolder {
 
     @Override
     public PermissionUser getUser(String name) throws DataLoadFailedException {
-        HashMap<String, YamlPermissionBase> base = cache.get(PermissionType.GROUP);
-        if (base == null || base.isEmpty() || !base.containsKey(name.toLowerCase()) || base.get(name.toLowerCase()) == null) {
-            ConfigurationSection sec = userYamlConfiguration.getConfigurationSection(name);
-            if (sec == null) {
-                sec = userYamlConfiguration.createSection(name);
-            }
-            YamlPermissionUser user = new YamlPermissionUser(name.toLowerCase(), sec);
-            user.load();
-            if (base == null) {
-                base = new HashMap<String, YamlPermissionBase>();
-                cache.put(PermissionType.USER, base);
-            }
-            base.put(name.toLowerCase(), user);
-            return user;
-        }
-        return (PermissionUser) base.get(name.toLowerCase());
+        checkCache(PermissionType.USER, name);
+        return (PermissionUser) cache.get(PermissionType.USER).get(name.toLowerCase());
     }
 
     @Override
     public PermissionGroup getGroup(String name) throws DataLoadFailedException {
-        HashMap<String, YamlPermissionBase> base = cache.get(PermissionType.GROUP);
-        if (base == null || base.isEmpty() || !base.containsKey(name.toLowerCase()) || base.get(name.toLowerCase()) == null) {
-            ConfigurationSection sec = groupYamlConfiguration.getConfigurationSection(name);
-            if (sec == null) {
-                sec = groupYamlConfiguration.createSection(name);
-            }
-            YamlPermissionGroup group = new YamlPermissionGroup(name.toLowerCase(), sec);
-            group.load();
-            if (base == null) {
-                base = new HashMap<String, YamlPermissionBase>();
-                cache.put(PermissionType.GROUP, base);
-            }
-            base.put(name.toLowerCase(), group);
-            return group;
-        }
-        return (PermissionGroup) base.get(name.toLowerCase());
+        checkCache(PermissionType.GROUP, name);
+        return (PermissionGroup) cache.get(PermissionType.GROUP).get(name.toLowerCase());
     }
 
     @Override
     public PermissionWorld getWorld(String name) throws DataLoadFailedException {
-        HashMap<String, YamlPermissionBase> base = cache.get(PermissionType.WORLD);
-        if (base == null || base.isEmpty() || !base.containsKey(name.toLowerCase()) || base.get(name.toLowerCase()) == null) {
-            ConfigurationSection worldSec = worldYamlConfiguration.getConfigurationSection(name);
-            if (worldSec == null) {
-                worldSec = worldYamlConfiguration.createSection(name);
-            }
-            YamlPermissionWorld world = new YamlPermissionWorld(name.toLowerCase(), worldSec);
-            world.load();
-            if (base == null) {
-                base = new HashMap<String, YamlPermissionBase>();
-                cache.put(PermissionType.WORLD, base);
-            }
-            base.put(name.toLowerCase(), world);
-            return world;
-        }
-        return (PermissionWorld) base.get(name.toLowerCase());
+        checkCache(PermissionType.WORLD, name);
+        return (PermissionWorld) cache.get(PermissionType.WORLD).get(name.toLowerCase());
     }
 
     @Override
     public PermissionEntity getEntity(String name) throws DataLoadFailedException {
-        HashMap<String, YamlPermissionBase> base = cache.get(PermissionType.ENTITY);
-        if (base == null || base.isEmpty() || !base.containsKey(name.toLowerCase()) || base.get(name.toLowerCase()) == null) {
-            ConfigurationSection entitySec = entityYamlConfiguration.getConfigurationSection(name);
-            if (entitySec == null) {
-                entitySec = entityYamlConfiguration.createSection(name);
-            }
-            YamlPermissionEntity entity = new YamlPermissionEntity(name.toLowerCase(), entitySec);
-            entity.load();
-            if (base == null) {
-                base = new HashMap<String, YamlPermissionBase>();
-                cache.put(PermissionType.ENTITY, base);
-            }
-            base.put(name.toLowerCase(), entity);
-            return entity;
-        }
-        return (PermissionEntity) base.get(name.toLowerCase());
+        checkCache(PermissionType.ENTITY, name);
+        return (PermissionEntity) cache.get(PermissionType.ENTITY).get(name.toLowerCase());
     }
 
     @Override
     public PermissionOp getOP() throws DataLoadFailedException {
-        HashMap<String, YamlPermissionBase> base = cache.get(PermissionType.OP);
-        if (base == null || base.isEmpty() || !base.containsKey(null) || base.get(null) == null) {
-            ConfigurationSection opSec = specialYamlConfiguration.getConfigurationSection("op");
-            if (opSec == null) {
-                opSec = specialYamlConfiguration.createSection("op");
-            }
-            YamlPermissionOp op = new YamlPermissionOp(opSec);
-            op.load();
-            if (base == null) {
-                base = new HashMap<String, YamlPermissionBase>();
-                cache.put(PermissionType.OP, base);
-            }
-            base.put(null, op);
-            return op;
-        }
-        return (PermissionOp) base.get(null);
+        checkCache(PermissionType.OP, null);
+        return (PermissionOp) cache.get(PermissionType.OP).get(null);
     }
 
     @Override
     public PermissionConsole getConsole() throws DataLoadFailedException {
-        HashMap<String, YamlPermissionBase> base = cache.get(PermissionType.CONSOLE);
-        if (base == null || base.isEmpty() || !base.containsKey(null) || base.get(null) == null) {
-            ConfigurationSection consoleSec = specialYamlConfiguration.getConfigurationSection("console");
-            if (consoleSec == null) {
-                consoleSec = specialYamlConfiguration.createSection("console");
-            }
-            YamlPermissionConsole console = new YamlPermissionConsole(consoleSec);
-            console.load();
-            if (base == null) {
-                base = new HashMap<String, YamlPermissionBase>();
-                cache.put(PermissionType.CONSOLE, base);
-            }
-            base.put(null, console);
-            return console;
-        }
-        return (PermissionConsole) base.get(null);
+        checkCache(PermissionType.CONSOLE, null);
+        return (PermissionConsole) cache.get(PermissionType.CONSOLE).get(null);
     }
 
     @Override
     public PermissionRcon getRcon() throws DataLoadFailedException {
-        HashMap<String, YamlPermissionBase> base = cache.get(PermissionType.RCON);
-        if (base == null || base.isEmpty() || !base.containsKey(null) || base.get(null) == null) {
-            ConfigurationSection rconSec = specialYamlConfiguration.getConfigurationSection("rcon");
-            if (rconSec == null) {
-                rconSec = specialYamlConfiguration.createSection("rcon");
-            }
-            YamlPermissionRcon rcon = new YamlPermissionRcon(rconSec);
-            rcon.load();
-            if (base == null) {
-                base = new HashMap<String, YamlPermissionBase>();
-                cache.put(PermissionType.RCON, base);
-            }
-            base.put(null, rcon);
-            return rcon;
-        }
-        return (PermissionRcon) base.get(null);
+        checkCache(PermissionType.GROUP, null);
+        return (PermissionRcon) cache.get(PermissionType.RCON).get(null);
     }
 
     @Override
     public Set<String> getGroups() {
-        return groupYamlConfiguration.getKeys(false);
+        return getList(groupYamlConfiguration);
     }
 
     @Override
     public Set<String> getUsers() {
-        return userYamlConfiguration.getKeys(false);
+        return getList(userYamlConfiguration);
     }
 
     @Override
     public Set<String> getWorlds() {
-        return worldYamlConfiguration.getKeys(false);
+        return getList(worldYamlConfiguration);
     }
 
     @Override
     public Set<String> getEntities() {
-        return entityYamlConfiguration.getKeys(false);
+        return getList(entityYamlConfiguration);
     }
 
-    @Override
-    public void save(PermissionBase holder) throws DataSaveFailedException {
-        holder.save();
-        try {
-            userYamlConfiguration.save(userFile);
-        } catch (IOException ex) {
-            throw new DataSaveFailedException(ex);
+    protected final ConfigurationSection getData(ConfigurationSection yamlConfiguration, String name) {
+        ConfigurationSection sec = yamlConfiguration.getConfigurationSection(name);
+        if (sec == null) {
+            sec = yamlConfiguration.createSection(name);
         }
-        try {
-            groupYamlConfiguration.save(groupFile);
-        } catch (IOException ex) {
-            throw new DataSaveFailedException(ex);
+        return sec;
+    }
+
+    protected final Set<String> getList(ConfigurationSection yamlConfiguration) {
+        return yamlConfiguration.getKeys(false);
+    }
+
+    protected void load(PermissionType type, YamlPermissionBase base) throws DataLoadFailedException {
+        HashMap<String, YamlPermissionBase> baseMap = cache.get(type);
+        base.load();
+        if (baseMap == null) {
+            baseMap = new HashMap<String, YamlPermissionBase>();
+            cache.put(type, baseMap);
         }
-        try {
-            worldYamlConfiguration.save(worldFile);
-        } catch (IOException ex) {
-            throw new DataSaveFailedException(ex);
-        }
-        try {
-            entityYamlConfiguration.save(entityFile);
-        } catch (IOException ex) {
-            throw new DataSaveFailedException(ex);
-        }
-        try {
-            specialYamlConfiguration.save(specialFile);
-        } catch (IOException ex) {
-            throw new DataSaveFailedException(ex);
+        baseMap.put(null, base);
+    }
+
+    protected void checkCache(PermissionType type, String name) throws DataLoadFailedException {
+        if (cache.get(type) == null || cache.get(type).get(name == null ? null : name.toLowerCase()) == null) {
+            load(type, name);
         }
     }
 }
