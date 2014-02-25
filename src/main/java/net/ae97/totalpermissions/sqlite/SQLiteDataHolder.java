@@ -50,7 +50,7 @@ public class SQLiteDataHolder implements DataHolder {
     private final EnumMap<PermissionType, HashMap<String, SQLitePermissionBase>> cache = new EnumMap<PermissionType, HashMap<String, SQLitePermissionBase>>(PermissionType.class);
 
     public SQLiteDataHolder() {
-
+        connection = null;
     }
 
     @Override
