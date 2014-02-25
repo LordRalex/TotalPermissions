@@ -186,20 +186,20 @@ public class SingleYamlDataHolder implements DataHolder {
 
     @Override
     public PermissionOp getOP() throws DataLoadFailedException {
-        checkCache(PermissionType.OP, null);
+        checkCache(PermissionType.OP, "op");
         return (PermissionOp) cache.get(PermissionType.OP).get(null);
     }
 
     @Override
     public PermissionConsole getConsole() throws DataLoadFailedException {
-        checkCache(PermissionType.CONSOLE, null);
+        checkCache(PermissionType.CONSOLE, "console");
         return (PermissionConsole) cache.get(PermissionType.CONSOLE).get(null);
     }
 
     @Override
     public PermissionRcon getRcon() throws DataLoadFailedException {
-        checkCache(PermissionType.GROUP, null);
-        return (PermissionRcon) cache.get(PermissionType.RCON).get(null);
+        checkCache(PermissionType.GROUP, "rcon");
+        return (PermissionRcon) cache.get(PermissionType.RCON).get("rcon");
     }
 
     @Override
@@ -255,11 +255,11 @@ public class SingleYamlDataHolder implements DataHolder {
             baseMap = new HashMap<String, YamlPermissionBase>();
             cache.put(type, baseMap);
         }
-        baseMap.put(null, base);
+        baseMap.put(base.getName(), base);
     }
 
     protected void checkCache(PermissionType type, String name) throws DataLoadFailedException {
-        if (cache.get(type) == null || cache.get(type).get(name == null ? null : name.toLowerCase()) == null) {
+        if (cache.get(type) == null || cache.get(type).get(name.toLowerCase()) == null) {
             load(type, name);
         }
     }

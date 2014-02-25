@@ -97,93 +97,51 @@ public class SQLiteDataHolder implements DataHolder {
 
     @Override
     public void loadUser(String name) throws DataLoadFailedException {
-        HashMap<String, SQLitePermissionBase> baseMap = cache.get(PermissionType.USER);
-        if (baseMap == null) {
-            baseMap = new HashMap<String, SQLitePermissionBase>();
-            cache.put(PermissionType.USER, baseMap);
-        }
         Map<String, Object> data = getData("users", "name", name);
         SQLitePermissionBase base = new SQLitePermissionUser(name);
-        base.load(data);
-        baseMap.put(name, base);
+        load(PermissionType.USER, base, data);
     }
 
     @Override
     public void loadGroup(String name) throws DataLoadFailedException {
-        HashMap<String, SQLitePermissionBase> baseMap = cache.get(PermissionType.GROUP);
-        if (baseMap == null) {
-            baseMap = new HashMap<String, SQLitePermissionBase>();
-            cache.put(PermissionType.GROUP, baseMap);
-        }
         Map<String, Object> data = getData("groups", "name", name);
         SQLitePermissionBase base = new SQLitePermissionGroup(name);
-        base.load(data);
-        baseMap.put(name, base);
+        load(PermissionType.GROUP, base, data);
     }
 
     @Override
     public void loadWorld(String name) throws DataLoadFailedException {
-        HashMap<String, SQLitePermissionBase> baseMap = cache.get(PermissionType.WORLD);
-        if (baseMap == null) {
-            baseMap = new HashMap<String, SQLitePermissionBase>();
-            cache.put(PermissionType.WORLD, baseMap);
-        }
         Map<String, Object> data = getData("worlds", "name", name);
         SQLitePermissionBase base = new SQLitePermissionWorld(name);
-        base.load(data);
-        baseMap.put(name, base);
+        load(PermissionType.WORLD, base, data);
     }
 
     @Override
     public void loadEntity(String name) throws DataLoadFailedException {
-        HashMap<String, SQLitePermissionBase> baseMap = cache.get(PermissionType.ENTITY);
-        if (baseMap == null) {
-            baseMap = new HashMap<String, SQLitePermissionBase>();
-            cache.put(PermissionType.ENTITY, baseMap);
-        }
         Map<String, Object> data = getData("entities", "name", name);
         SQLitePermissionBase base = new SQLitePermissionEntity(name);
-        base.load(data);
-        baseMap.put(name, base);
+        load(PermissionType.ENTITY, base, data);
     }
 
     @Override
     public void loadConsole() throws DataLoadFailedException {
-        HashMap<String, SQLitePermissionBase> baseMap = cache.get(PermissionType.CONSOLE);
-        if (baseMap == null) {
-            baseMap = new HashMap<String, SQLitePermissionBase>();
-            cache.put(PermissionType.CONSOLE, baseMap);
-        }
         Map<String, Object> data = getData("server", "name", "console");
         SQLitePermissionBase base = new SQLitePermissionConsole();
-        base.load(data);
-        baseMap.put(null, base);
+        load(PermissionType.CONSOLE, base, data);
     }
 
     @Override
     public void loadOp() throws DataLoadFailedException {
-        HashMap<String, SQLitePermissionBase> baseMap = cache.get(PermissionType.OP);
-        if (baseMap == null) {
-            baseMap = new HashMap<String, SQLitePermissionBase>();
-            cache.put(PermissionType.OP, baseMap);
-        }
         Map<String, Object> data = getData("server", "name", "op");
         SQLitePermissionBase base = new SQLitePermissionOp();
-        base.load(data);
-        baseMap.put(null, base);
+        load(PermissionType.OP, base, data);
     }
 
     @Override
     public void loadRcon() throws DataLoadFailedException {
-        HashMap<String, SQLitePermissionBase> baseMap = cache.get(PermissionType.RCON);
-        if (baseMap == null) {
-            baseMap = new HashMap<String, SQLitePermissionBase>();
-            cache.put(PermissionType.RCON, baseMap);
-        }
         Map<String, Object> data = getData("server", "name", "rcon");
         SQLitePermissionBase base = new SQLitePermissionRcon();
-        base.load(data);
-        baseMap.put(null, base);
+        load(PermissionType.RCON, base, data);
     }
 
     @Override
@@ -210,64 +168,43 @@ public class SQLiteDataHolder implements DataHolder {
 
     @Override
     public PermissionUser getUser(String name) throws DataLoadFailedException {
-        if (cache.get(PermissionType.USER) == null || cache.get(PermissionType.USER).get(name) == null) {
-            loadUser(name);
-        }
-
+        checkCache(PermissionType.USER, name);
         return (PermissionUser) cache.get(PermissionType.USER).get(name);
     }
 
     @Override
     public PermissionGroup getGroup(String name) throws DataLoadFailedException {
-        if (cache.get(PermissionType.GROUP) == null || cache.get(PermissionType.GROUP).get(name) == null) {
-            loadGroup(name);
-        }
-
+        checkCache(PermissionType.GROUP, name);
         return (PermissionGroup) cache.get(PermissionType.GROUP).get(name);
     }
 
     @Override
     public PermissionWorld getWorld(String name) throws DataLoadFailedException {
-        if (cache.get(PermissionType.WORLD) == null || cache.get(PermissionType.WORLD).get(name) == null) {
-            loadWorld(name);
-        }
-
+        checkCache(PermissionType.WORLD, name);
         return (PermissionWorld) cache.get(PermissionType.WORLD).get(name);
     }
 
     @Override
     public PermissionEntity getEntity(String name) throws DataLoadFailedException {
-        if (cache.get(PermissionType.ENTITY) == null || cache.get(PermissionType.ENTITY).get(name) == null) {
-            loadUser(name);
-        }
-
+        checkCache(PermissionType.ENTITY, name);
         return (PermissionEntity) cache.get(PermissionType.ENTITY).get(name);
     }
 
     @Override
     public PermissionOp getOP() throws DataLoadFailedException {
-        if (cache.get(PermissionType.OP) == null || cache.get(PermissionType.OP).get(null) == null) {
-            loadOp();
-        }
-
+        checkCache(PermissionType.OP, null);
         return (PermissionOp) cache.get(PermissionType.OP).get(null);
     }
 
     @Override
     public PermissionConsole getConsole() throws DataLoadFailedException {
-        if (cache.get(PermissionType.CONSOLE) == null || cache.get(PermissionType.CONSOLE).get(null) == null) {
-            loadConsole();
-        }
-
+        checkCache(PermissionType.CONSOLE, null);
         return (PermissionConsole) cache.get(PermissionType.CONSOLE).get(null);
     }
 
     @Override
     public PermissionRcon getRcon() throws DataLoadFailedException {
-        if (cache.get(PermissionType.RCON) == null || cache.get(PermissionType.RCON).get(null) == null) {
-            loadRcon();
-        }
-
+        checkCache(PermissionType.RCON, null);
         return (PermissionRcon) cache.get(PermissionType.RCON).get(null);
     }
 
@@ -369,5 +306,21 @@ public class SQLiteDataHolder implements DataHolder {
                 }
             }
         }
+    }
+
+    protected final void checkCache(PermissionType type, String name) throws DataLoadFailedException {
+        if (cache.get(type) == null || cache.get(type).get(name == null ? null : name.toLowerCase()) == null) {
+            load(type, name);
+        }
+    }
+
+    protected final void load(PermissionType type, SQLitePermissionBase base, Map<String, Object> data) throws DataLoadFailedException {
+        HashMap<String, SQLitePermissionBase> baseMap = cache.get(type);
+        if (baseMap == null) {
+            baseMap = new HashMap<String, SQLitePermissionBase>();
+            cache.put(type, baseMap);
+        }
+        base.load(data);
+        baseMap.put(base.getName(), base);
     }
 }
