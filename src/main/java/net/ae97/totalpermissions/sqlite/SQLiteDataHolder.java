@@ -16,6 +16,7 @@
  */
 package net.ae97.totalpermissions.sqlite;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -38,6 +39,7 @@ import net.ae97.totalpermissions.data.DataHolder;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import net.ae97.totalpermissions.exceptions.DataSaveFailedException;
 import net.ae97.totalpermissions.type.PermissionType;
+import org.bukkit.Bukkit;
 
 /**
  * @author Lord_Ralex
@@ -60,7 +62,7 @@ public class SQLiteDataHolder implements DataHolder {
             throw new DataLoadFailedException(ex);
         }
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:" + new File(Bukkit.getPluginManager().getPlugin("TotalPermissions").getDataFolder(), "permissions.db").getPath());
         } catch (SQLException ex) {
             throw new DataLoadFailedException(ex);
         }
