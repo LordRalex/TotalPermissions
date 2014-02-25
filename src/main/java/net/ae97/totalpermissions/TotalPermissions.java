@@ -18,8 +18,6 @@ package net.ae97.totalpermissions;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
 import java.util.logging.Level;
 import net.ae97.totalpermissions.commands.CommandHandler;
 import net.ae97.totalpermissions.data.DataHolder;
@@ -27,7 +25,6 @@ import net.ae97.totalpermissions.data.DataManager;
 import net.ae97.totalpermissions.data.DataType;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import net.ae97.totalpermissions.listener.ListenerManager;
-import net.ae97.totalpermissions.logger.DebugLogFormatter;
 import net.ae97.totalpermissions.mcstats.Metrics;
 import net.ae97.totalpermissions.updater.Updater;
 import net.ae97.totalpermissions.updater.UpdateType;
@@ -67,12 +64,6 @@ public final class TotalPermissions extends JavaPlugin {
                 getDataFolder().mkdirs();
             }
 
-            new File(getDataFolder(), "logs").mkdirs();
-            FileHandler debugHandler = new FileHandler(new File(new File(getDataFolder(), "logs"), "totalpermissions.log").getPath(), 0, 1, true);
-            debugHandler.setFormatter(new DebugLogFormatter());
-            getLogger().addHandler(debugHandler);
-            getLogger().finest("---------");
-
             if (!(new File(getDataFolder(), "config.yml").exists())) {
                 getLogger().finest("Saving default config");
                 saveResource("config.yml", true);
@@ -85,7 +76,7 @@ public final class TotalPermissions extends JavaPlugin {
             String storageType = getConfig().getString("storage", "yaml_shared");
             DataType type = DataType.valueOf(storageType.toUpperCase());
             if (type == null) {
-                getLogger().severe(storageType + " is not a known storage system, default to YAML_SHARED");
+                getLogger().severe(storageType + " is not a known storage system, defaulting to YAML_SHARED");
                 type = DataType.YAML_SHARED;
             }
             getLogger().finest("Creating data holder");
@@ -138,18 +129,6 @@ public final class TotalPermissions extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        Handler[] handlers = getLogger().getHandlers();
-        for (Handler handle : handlers) {
-            if (handle.getFormatter() instanceof DebugLogFormatter) {
-                getLogger().removeHandler(handle);
-            }
-        }
-        File[] fileList = new File(getDataFolder(), "logs").listFiles();
-        for (File file : fileList) {
-            if (file.getName().endsWith(".lck")) {
-                file.delete();
-            }
-        }
     }
 
     public ListenerManager getListenerManager() {

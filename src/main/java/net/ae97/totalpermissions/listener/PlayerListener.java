@@ -55,7 +55,6 @@ public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLogin(PlayerLoginEvent event) {
         try {
-            plugin.getLogger().finest("PlayerLoginEvent fired, handling");
             PermissionUser user = plugin.getDataManager().getUser(event.getPlayer().getName());
             plugin.getDataManager().apply(user, event.getPlayer(), event.getPlayer().getWorld());
         } catch (DataLoadFailedException ex) {
@@ -66,7 +65,6 @@ public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
         try {
-            plugin.getLogger().finest("PlayerJoinEvent-Lowest fired, handling");
             Player player = event.getPlayer();
             PermissionUser user = plugin.getDataManager().getUser(player.getName());
             plugin.getDataManager().apply(user, player, player.getWorld());
@@ -77,7 +75,6 @@ public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoinEventMonitor(PlayerJoinEvent event) {
-        plugin.getLogger().finest("PlayerJoinEvent-Monitor fired, handling");
         try {
             Player player = event.getPlayer();
             PermissionUser user = plugin.getDataManager().getUser(player.getName());
@@ -91,10 +88,8 @@ public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerWorldChange(PlayerChangedWorldEvent event) {
         try {
-            plugin.getLogger().finest("PlayerChangedWorldEvent fired, handling");
             Player player = event.getPlayer();
             PermissionUser user = plugin.getDataManager().getUser(player.getName());
-            plugin.getLogger().finest("Player " + player.getName() + " changed from " + event.getFrom().getName() + " to " + player.getWorld().getName());
             plugin.getDataManager().apply(user, player, player.getWorld());
         } catch (DataLoadFailedException ex) {
             plugin.getLogger().log(Level.SEVERE, "An error occured on " + event.getPlayer().getName() + "'s ChangedWorldEvent", ex);

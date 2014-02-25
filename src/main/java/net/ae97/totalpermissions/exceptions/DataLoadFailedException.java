@@ -24,5 +24,4 @@ public class DataLoadFailedException extends Exception {
     public DataLoadFailedException(Exception e) {
         super("Loading data has failed", e);
     }
-
 }

@@ -73,6 +73,7 @@ public final class Updater {
 
     public void checkForUpdate() {
         if (thread != null && !thread.isAlive()) {
+            plugin.getLogger().info("Checking for updates");
             thread.start();
         }
     }
@@ -99,7 +100,7 @@ public final class Updater {
         try {
             thread.join();
         } catch (InterruptedException e) {
-            plugin.getLogger().log(Level.SEVERE, "Unhandled exception", e);
+            plugin.getLogger().log(Level.SEVERE, "Waiting for the update check thread was interrupted", e);
         }
 
     }
@@ -118,16 +119,14 @@ public final class Updater {
 
             byte[] data = new byte[BYTE_SIZE];
             int count;
-            if (announce) {
-                plugin.getLogger().log(Level.INFO,
-                        "About to download a new update: {0}", versionTitle);
-            }
+            plugin.getLogger().log(Level.INFO,
+                    "About to download a new update: {0}", versionTitle);
             long downloaded = 0;
             while ((count = in.read(data, 0, BYTE_SIZE)) != -1) {
                 downloaded += count;
                 fout.write(data, 0, count);
                 int percent = (int) (downloaded * 100 / fileLength);
-                if (announce & (percent % 10 == 0)) {
+                if (percent % 10 == 0) {
                     plugin.getLogger().log(Level.INFO,
                             "Downloading update: {0}% of {1} bytes.", new Object[]{percent, fileLength});
                 }
@@ -141,9 +140,7 @@ public final class Updater {
             if (dFile.getName().endsWith(".zip")) {
                 unzip(dFile.getCanonicalPath());
             }
-            if (announce) {
-                plugin.getLogger().info("Finished updating.");
-            }
+            plugin.getLogger().info("Finished updating. Please restart the server.");
         } catch (IOException ex) {
             plugin.getLogger().log(Level.WARNING, "The auto-updater tried to download a new update, but was unsuccessful.", ex);
             result = UpdateResult.FAIL_DOWNLOAD;
@@ -195,7 +192,7 @@ public final class Updater {
             for (File dFile : new File(zipPath).listFiles()) {
                 if (dFile.isDirectory()) {
                     if (pluginFile(dFile.getName())) {
-                        File oFile = new File("plugins/" + dFile.getName());
+                        File oFile = new File(plugin.getDataFolder().getParentFile(), dFile.getName());
                         File[] contents = oFile.listFiles();
                         for (File cFile : dFile.listFiles()) {
                             boolean found = false;
@@ -206,7 +203,7 @@ public final class Updater {
                                 }
                             }
                             if (!found) {
-                                cFile.renameTo(new File(oFile.getCanonicalFile() + "/" + cFile.getName()));
+                                cFile.renameTo(new File(oFile.getCanonicalFile(), cFile.getName()));
                             } else {
                                 cFile.delete();
                             }

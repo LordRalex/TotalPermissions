@@ -20,9 +20,8 @@ package net.ae97.totalpermissions.exceptions;
  * @author Lord_Ralex
  */
 public class DataSaveFailedException extends Exception {
-    
+
     public DataSaveFailedException(Exception e) {
         super("Saving data has failed", e);
     }
-
 }

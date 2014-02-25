@@ -38,7 +38,6 @@ public class ConsoleListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onRemoteConsoleEvent(RemoteServerCommandEvent event) {
         try {
-            plugin.getLogger().finest("RemoteServerCommandEvent fired, handling");
             plugin.getDataManager().apply(plugin.getDataManager().getRcon(), event.getSender(), null);
         } catch (DataLoadFailedException ex) {
             plugin.getLogger().log(Level.SEVERE, "An error occured on the RemoteServerCommandEvent", ex);
