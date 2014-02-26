@@ -27,14 +27,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import net.ae97.totalpermissions.base.PermissionBase;
-import net.ae97.totalpermissions.base.PermissionConsole;
-import net.ae97.totalpermissions.base.PermissionEntity;
-import net.ae97.totalpermissions.base.PermissionGroup;
-import net.ae97.totalpermissions.base.PermissionOp;
-import net.ae97.totalpermissions.base.PermissionRcon;
-import net.ae97.totalpermissions.base.PermissionUser;
-import net.ae97.totalpermissions.base.PermissionWorld;
 import net.ae97.totalpermissions.data.DataHolder;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import net.ae97.totalpermissions.exceptions.DataSaveFailedException;
@@ -44,7 +36,7 @@ import org.bukkit.Bukkit;
 /**
  * @author Lord_Ralex
  */
-public class SQLiteDataHolder implements DataHolder {
+public class SQLiteDataHolder implements DataHolder<SQLitePermissionBase> {
 
     private Connection connection;
     private final EnumMap<PermissionType, HashMap<String, SQLitePermissionBase>> cache = new EnumMap<PermissionType, HashMap<String, SQLitePermissionBase>>(PermissionType.class);
@@ -145,7 +137,7 @@ public class SQLiteDataHolder implements DataHolder {
     }
 
     @Override
-    public PermissionBase get(PermissionType type, String name) throws DataLoadFailedException {
+    public SQLitePermissionBase get(PermissionType type, String name) throws DataLoadFailedException {
         switch (type) {
             case USER:
                 return getUser(name);
@@ -167,45 +159,45 @@ public class SQLiteDataHolder implements DataHolder {
     }
 
     @Override
-    public PermissionUser getUser(String name) throws DataLoadFailedException {
+    public SQLitePermissionUser getUser(String name) throws DataLoadFailedException {
         checkCache(PermissionType.USER, name);
-        return (PermissionUser) cache.get(PermissionType.USER).get(name);
+        return (SQLitePermissionUser) cache.get(PermissionType.USER).get(name);
     }
 
     @Override
-    public PermissionGroup getGroup(String name) throws DataLoadFailedException {
+    public SQLitePermissionGroup getGroup(String name) throws DataLoadFailedException {
         checkCache(PermissionType.GROUP, name);
-        return (PermissionGroup) cache.get(PermissionType.GROUP).get(name);
+        return (SQLitePermissionGroup) cache.get(PermissionType.GROUP).get(name);
     }
 
     @Override
-    public PermissionWorld getWorld(String name) throws DataLoadFailedException {
+    public SQLitePermissionWorld getWorld(String name) throws DataLoadFailedException {
         checkCache(PermissionType.WORLD, name);
-        return (PermissionWorld) cache.get(PermissionType.WORLD).get(name);
+        return (SQLitePermissionWorld) cache.get(PermissionType.WORLD).get(name);
     }
 
     @Override
-    public PermissionEntity getEntity(String name) throws DataLoadFailedException {
+    public SQLitePermissionEntity getEntity(String name) throws DataLoadFailedException {
         checkCache(PermissionType.ENTITY, name);
-        return (PermissionEntity) cache.get(PermissionType.ENTITY).get(name);
+        return (SQLitePermissionEntity) cache.get(PermissionType.ENTITY).get(name);
     }
 
     @Override
-    public PermissionOp getOP() throws DataLoadFailedException {
+    public SQLitePermissionOp getOP() throws DataLoadFailedException {
         checkCache(PermissionType.OP, null);
-        return (PermissionOp) cache.get(PermissionType.OP).get(null);
+        return (SQLitePermissionOp) cache.get(PermissionType.OP).get(null);
     }
 
     @Override
-    public PermissionConsole getConsole() throws DataLoadFailedException {
+    public SQLitePermissionConsole getConsole() throws DataLoadFailedException {
         checkCache(PermissionType.CONSOLE, null);
-        return (PermissionConsole) cache.get(PermissionType.CONSOLE).get(null);
+        return (SQLitePermissionConsole) cache.get(PermissionType.CONSOLE).get(null);
     }
 
     @Override
-    public PermissionRcon getRcon() throws DataLoadFailedException {
+    public SQLitePermissionRcon getRcon() throws DataLoadFailedException {
         checkCache(PermissionType.RCON, null);
-        return (PermissionRcon) cache.get(PermissionType.RCON).get(null);
+        return (SQLitePermissionRcon) cache.get(PermissionType.RCON).get(null);
     }
 
     @Override
@@ -229,13 +221,9 @@ public class SQLiteDataHolder implements DataHolder {
     }
 
     @Override
-    public void save(PermissionBase holder) throws DataSaveFailedException {
+    public void save(SQLitePermissionBase holder) throws DataSaveFailedException {
         holder.save();
-        if (!(holder instanceof SQLitePermissionBase)) {
-            throw new DataSaveFailedException("SQLite cannot save a non-SQLite PermissionBase");
-        }
-        SQLitePermissionBase base = (SQLitePermissionBase) holder;
-        Map<String, Object> saveData = base.getSaveData();
+        Map<String, Object> saveData = holder.getSaveData();
         PreparedStatement statement = null;
         try {
             Connection conn;
@@ -248,7 +236,7 @@ public class SQLiteDataHolder implements DataHolder {
 
             StringBuilder builder = new StringBuilder();
             builder.append("INSERT INTO ");
-            switch (base.getType()) {
+            switch (holder.getType()) {
                 case USER:
                     builder.append("'users'");
                     break;
@@ -289,7 +277,7 @@ public class SQLiteDataHolder implements DataHolder {
             for (int i = 0; i < keys.length; i++) {
                 statement.setObject(i + 1 + keys.length, saveData.get(keys[i]));
             }
-            statement.setString((keys.length * 2) + 1, base.getName());
+            statement.setString((keys.length * 2) + 1, holder.getName());
             statement.execute();
         } catch (SQLException ex) {
             throw new DataSaveFailedException(ex);

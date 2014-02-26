@@ -21,14 +21,6 @@ import java.io.IOException;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Set;
-import net.ae97.totalpermissions.base.PermissionBase;
-import net.ae97.totalpermissions.base.PermissionConsole;
-import net.ae97.totalpermissions.base.PermissionEntity;
-import net.ae97.totalpermissions.base.PermissionGroup;
-import net.ae97.totalpermissions.base.PermissionOp;
-import net.ae97.totalpermissions.base.PermissionRcon;
-import net.ae97.totalpermissions.base.PermissionUser;
-import net.ae97.totalpermissions.base.PermissionWorld;
 import net.ae97.totalpermissions.data.DataHolder;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import net.ae97.totalpermissions.exceptions.DataSaveFailedException;
@@ -40,7 +32,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 /**
  * @author Lord_Ralex
  */
-public class SingleYamlDataHolder implements DataHolder {
+public class SingleYamlDataHolder implements DataHolder<YamlPermissionBase> {
 
     private final File file;
     private final YamlConfiguration yamlConfiguration = new YamlConfiguration();
@@ -139,7 +131,7 @@ public class SingleYamlDataHolder implements DataHolder {
     }
 
     @Override
-    public PermissionBase get(PermissionType type, String name) throws DataLoadFailedException {
+    public YamlPermissionBase get(PermissionType type, String name) throws DataLoadFailedException {
         switch (type) {
             case USER:
                 return getUser(name);
@@ -161,45 +153,45 @@ public class SingleYamlDataHolder implements DataHolder {
     }
 
     @Override
-    public PermissionUser getUser(String name) throws DataLoadFailedException {
+    public YamlPermissionUser getUser(String name) throws DataLoadFailedException {
         checkCache(PermissionType.USER, name);
-        return (PermissionUser) cache.get(PermissionType.USER).get(name.toLowerCase());
+        return (YamlPermissionUser) cache.get(PermissionType.USER).get(name.toLowerCase());
     }
 
     @Override
-    public PermissionGroup getGroup(String name) throws DataLoadFailedException {
+    public YamlPermissionGroup getGroup(String name) throws DataLoadFailedException {
         checkCache(PermissionType.GROUP, name);
-        return (PermissionGroup) cache.get(PermissionType.GROUP).get(name.toLowerCase());
+        return (YamlPermissionGroup) cache.get(PermissionType.GROUP).get(name.toLowerCase());
     }
 
     @Override
-    public PermissionWorld getWorld(String name) throws DataLoadFailedException {
+    public YamlPermissionWorld getWorld(String name) throws DataLoadFailedException {
         checkCache(PermissionType.WORLD, name);
-        return (PermissionWorld) cache.get(PermissionType.WORLD).get(name.toLowerCase());
+        return (YamlPermissionWorld) cache.get(PermissionType.WORLD).get(name.toLowerCase());
     }
 
     @Override
-    public PermissionEntity getEntity(String name) throws DataLoadFailedException {
+    public YamlPermissionEntity getEntity(String name) throws DataLoadFailedException {
         checkCache(PermissionType.ENTITY, name);
-        return (PermissionEntity) cache.get(PermissionType.ENTITY).get(name.toLowerCase());
+        return (YamlPermissionEntity) cache.get(PermissionType.ENTITY).get(name.toLowerCase());
     }
 
     @Override
-    public PermissionOp getOP() throws DataLoadFailedException {
+    public YamlPermissionOp getOP() throws DataLoadFailedException {
         checkCache(PermissionType.OP, "op");
-        return (PermissionOp) cache.get(PermissionType.OP).get(null);
+        return (YamlPermissionOp) cache.get(PermissionType.OP).get(null);
     }
 
     @Override
-    public PermissionConsole getConsole() throws DataLoadFailedException {
+    public YamlPermissionConsole getConsole() throws DataLoadFailedException {
         checkCache(PermissionType.CONSOLE, "console");
-        return (PermissionConsole) cache.get(PermissionType.CONSOLE).get(null);
+        return (YamlPermissionConsole) cache.get(PermissionType.CONSOLE).get(null);
     }
 
     @Override
-    public PermissionRcon getRcon() throws DataLoadFailedException {
+    public YamlPermissionRcon getRcon() throws DataLoadFailedException {
         checkCache(PermissionType.GROUP, "rcon");
-        return (PermissionRcon) cache.get(PermissionType.RCON).get("rcon");
+        return (YamlPermissionRcon) cache.get(PermissionType.RCON).get("rcon");
     }
 
     @Override
@@ -223,7 +215,7 @@ public class SingleYamlDataHolder implements DataHolder {
     }
 
     @Override
-    public void save(PermissionBase holder) throws DataSaveFailedException {
+    public void save(YamlPermissionBase holder) throws DataSaveFailedException {
         holder.save();
         try {
             yamlConfiguration.save(file);

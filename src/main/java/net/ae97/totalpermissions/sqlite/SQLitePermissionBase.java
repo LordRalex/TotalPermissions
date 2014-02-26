@@ -194,7 +194,7 @@ public abstract class SQLitePermissionBase implements PermissionBase {
         permissions.put(world == null || world.isEmpty() ? null : world.toLowerCase(), perms);
         return removed;
     }
-    
+
     public Map<String, Object> getSaveData() {
         Map<String, Object> mappings = new HashMap<String, Object>();
         mappings.put("permissions", permissions);

@@ -82,7 +82,6 @@ public class PlayerListener implements Listener {
         } catch (DataLoadFailedException ex) {
             plugin.getLogger().log(Level.SEVERE, "An error occured on " + event.getPlayer().getName() + "'s JoinEvent", ex);
         }
-
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

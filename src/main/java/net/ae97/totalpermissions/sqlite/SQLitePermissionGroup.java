@@ -85,7 +85,7 @@ public class SQLitePermissionGroup extends SQLitePermissionBase implements Permi
 
     @Override
     public Map<String, Object> getSaveData() {
-        Map<String, Object> mappings =  super.getSaveData();
+        Map<String, Object> mappings = super.getSaveData();
         mappings.put("inheritence", inheritence);
         mappings.put("rank", rank);
         mappings.put("default", defaultGroup);

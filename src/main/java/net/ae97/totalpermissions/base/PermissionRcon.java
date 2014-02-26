@@ -16,8 +16,6 @@
  */
 package net.ae97.totalpermissions.base;
 
-import org.bukkit.command.RemoteConsoleCommandSender;
-
 /**
  * @author Lord_Ralex
  */

@@ -37,7 +37,6 @@ public final class Updater {
     private final String ITEM = "item";
     private final Plugin plugin;
     private final UpdateType type;
-    private final boolean announce;
     private final URL url;
     private final File file;
     private final Thread thread;
@@ -50,10 +49,9 @@ public final class Updater {
     private int multiplier;
     private UpdateResult result = null;
 
-    public Updater(Plugin plugin, String slug, File file, UpdateType type, boolean announce) {
+    public Updater(Plugin plugin, String slug, File file, UpdateType type) {
         this.plugin = plugin;
         this.type = type;
-        this.announce = announce;
         this.file = file;
         URL temp = null;
         try {

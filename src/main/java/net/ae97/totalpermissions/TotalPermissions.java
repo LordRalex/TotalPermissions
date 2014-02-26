@@ -26,6 +26,7 @@ import net.ae97.totalpermissions.data.DataType;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import net.ae97.totalpermissions.listener.ListenerManager;
 import net.ae97.totalpermissions.mcstats.Metrics;
+import net.ae97.totalpermissions.sqlite.SQLiteDataHolder;
 import net.ae97.totalpermissions.updater.Updater;
 import net.ae97.totalpermissions.updater.UpdateType;
 import net.ae97.totalpermissions.yaml.SingleYamlDataHolder;
@@ -51,7 +52,7 @@ public final class TotalPermissions extends JavaPlugin {
                 updatetype = UpdateType.DEFAULT;
             }
 
-            Updater updater = new Updater(this, "totalpermissions", this.getFile(), updatetype, true);
+            Updater updater = new Updater(this, "totalpermissions", this.getFile(), updatetype);
             updater.checkForUpdate();
         }
     }
@@ -92,6 +93,7 @@ public final class TotalPermissions extends JavaPlugin {
                 }
                 break;
                 case SQLITE: {
+                    dataHolder = new SQLiteDataHolder();
                 }
                 break;
                 case MYSQL: {

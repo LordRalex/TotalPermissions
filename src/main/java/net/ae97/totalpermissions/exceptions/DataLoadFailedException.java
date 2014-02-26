@@ -20,7 +20,7 @@ package net.ae97.totalpermissions.exceptions;
  * @author Lord_Ralex
  */
 public class DataLoadFailedException extends Exception {
-    
+
     public DataLoadFailedException(String s) {
         super(s);
     }

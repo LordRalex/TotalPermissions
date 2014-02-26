@@ -32,11 +32,13 @@ import net.ae97.totalpermissions.type.PermissionType;
 /**
  * @author Lord_Ralex
  */
-public interface DataHolder {
+public interface DataHolder<T extends PermissionBase> {
 
     public void load() throws DataLoadFailedException;
 
     public void load(PermissionType type, String name) throws DataLoadFailedException;
+
+    public void save(T holder) throws DataSaveFailedException;
 
     public void loadUser(String name) throws DataLoadFailedException;
 
@@ -56,7 +58,7 @@ public interface DataHolder {
 
     public PermissionGroup getGroup(String name) throws DataLoadFailedException;
 
-    public PermissionBase get(PermissionType type, String name) throws DataLoadFailedException;
+    public T get(PermissionType type, String name) throws DataLoadFailedException;
 
     public PermissionWorld getWorld(String name) throws DataLoadFailedException;
 
@@ -75,6 +77,4 @@ public interface DataHolder {
     public Set<String> getWorlds() throws DataLoadFailedException;
 
     public Set<String> getEntities() throws DataLoadFailedException;
-
-    public void save(PermissionBase holder) throws DataSaveFailedException;
 }

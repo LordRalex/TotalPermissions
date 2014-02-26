@@ -20,7 +20,7 @@ package net.ae97.totalpermissions.exceptions;
  * @author Lord_Ralex
  */
 public class DataSaveFailedException extends Exception {
-    
+
     public DataSaveFailedException(String s) {
         super(s);
     }
