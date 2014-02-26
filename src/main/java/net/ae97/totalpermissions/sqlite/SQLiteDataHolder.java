@@ -231,6 +231,76 @@ public class SQLiteDataHolder implements DataHolder {
     @Override
     public void save(PermissionBase holder) throws DataSaveFailedException {
         holder.save();
+        if (!(holder instanceof SQLitePermissionBase)) {
+            throw new DataSaveFailedException("SQLite cannot save a non-SQLite PermissionBase");
+        }
+        SQLitePermissionBase base = (SQLitePermissionBase) holder;
+        Map<String, Object> saveData = base.getSaveData();
+        PreparedStatement statement = null;
+        try {
+            Connection conn;
+            try {
+                conn = getConnection();
+            } catch (DataLoadFailedException ex) {
+                throw new DataSaveFailedException(ex);
+            }
+            String[] keys = saveData.keySet().toArray(new String[saveData.size()]);
+
+            StringBuilder builder = new StringBuilder();
+            builder.append("INSERT INTO ");
+            switch (base.getType()) {
+                case USER:
+                    builder.append("'users'");
+                    break;
+                case GROUP:
+                    builder.append("'groups'");
+                    break;
+                case WORLD:
+                    builder.append("'worlds'");
+                    break;
+                case ENTITY:
+                    builder.append("'entities'");
+                    break;
+                case OP:
+                case CONSOLE:
+                case RCON:
+                    builder.append("'server'");
+                    break;
+            }
+            builder.append(" (");
+            for (int i = 0; i < keys.length; i++) {
+                builder.append("?");
+                if (i + 1 < keys.length) {
+                    builder.append(",");
+                }
+            }
+            builder.append(") VALUES (");
+            for (int i = 0; i < keys.length; i++) {
+                builder.append("?");
+                if (i + 1 < keys.length) {
+                    builder.append(",");
+                }
+            }
+            builder.append(") WHERE name=?;");
+            statement = conn.prepareStatement(builder.toString());
+            for (int i = 0; i < keys.length; i++) {
+                statement.setString(i + 1, keys[i]);
+            }
+            for (int i = 0; i < keys.length; i++) {
+                statement.setObject(i + 1 + keys.length, saveData.get(keys[i]));
+            }
+            statement.setString((keys.length * 2) + 1, base.getName());
+            statement.execute();
+        } catch (SQLException ex) {
+            throw new DataSaveFailedException(ex);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                }
+            }
+        }
     }
 
     protected final Connection getConnection() throws DataLoadFailedException {

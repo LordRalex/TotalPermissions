@@ -18,6 +18,7 @@ package net.ae97.totalpermissions.sqlite;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.base.PermissionGroup;
@@ -80,5 +81,14 @@ public class SQLitePermissionGroup extends SQLitePermissionBase implements Permi
         }
 
         return perms;
+    }
+
+    @Override
+    public Map<String, Object> getSaveData() {
+        Map<String, Object> mappings =  super.getSaveData();
+        mappings.put("inheritence", inheritence);
+        mappings.put("rank", rank);
+        mappings.put("default", defaultGroup);
+        return mappings;
     }
 }
