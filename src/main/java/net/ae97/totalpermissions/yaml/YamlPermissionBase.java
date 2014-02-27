@@ -33,10 +33,10 @@ import org.bukkit.permissions.Permission;
  */
 public abstract class YamlPermissionBase implements PermissionBase {
 
-    protected final ConfigurationSection yamlConfiguration;
-    protected final String name;
-    protected final Map<String, LinkedList<String>> permissions = new HashMap<String, LinkedList<String>>();
-    protected final Map<String, Map<String, Object>> options = new HashMap<String, Map<String, Object>>();
+    private final ConfigurationSection yamlConfiguration;
+    private final String name;
+    private final Map<String, LinkedList<String>> permissions = new HashMap<String, LinkedList<String>>();
+    private final Map<String, Map<String, Object>> options = new HashMap<String, Map<String, Object>>();
     private boolean debug = false;
 
     public YamlPermissionBase(String n, ConfigurationSection config) {
@@ -56,6 +56,10 @@ public abstract class YamlPermissionBase implements PermissionBase {
 
     @Override
     public void load() throws DataLoadFailedException {
+        permissions.clear();
+        options.clear();
+        debug = false;
+
         List<String> list = yamlConfiguration.getStringList("permissions");
         LinkedList<String> global = new LinkedList<String>();
         for (String l : list) {
@@ -200,5 +204,9 @@ public abstract class YamlPermissionBase implements PermissionBase {
         }
         permissions.put(world == null || world.isEmpty() ? null : world.toLowerCase(), newPerms);
         return removed;
+    }
+    
+    protected ConfigurationSection getSection() {
+        return yamlConfiguration;
     }
 }

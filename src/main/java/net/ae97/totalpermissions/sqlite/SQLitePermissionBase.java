@@ -55,6 +55,10 @@ public abstract class SQLitePermissionBase implements PermissionBase {
     }
 
     public void load(Map<String, Object> map) throws DataLoadFailedException {
+        permissions.clear();
+        options.clear();
+        debug = false;
+
         Object obj;
         obj = map.get("permissions");
         if (obj != null && obj instanceof String) {

@@ -43,16 +43,16 @@ public class YamlPermissionGroup extends YamlPermissionBase implements Permissio
     @Override
     public void load() throws DataLoadFailedException {
         super.load();
-        if (yamlConfiguration.contains("rank")) {
-            rank = yamlConfiguration.getInt("rank", 0);
-        } else if (yamlConfiguration.contains("options.rank")) {
-            rank = yamlConfiguration.getInt("options.rank", 0);
+        if (getSection().contains("rank")) {
+            rank = getSection().getInt("rank", 0);
+        } else if (getSection().contains("options.rank")) {
+            rank = getSection().getInt("options.rank", 0);
         } else {
             rank = 0;
         }
 
         inheritence.clear();
-        List<String> inher = yamlConfiguration.getStringList("inheritence");
+        List<String> inher = getSection().getStringList("inheritence");
         if (inher != null) {
             inheritence.addAll(inher);
         }
@@ -61,10 +61,10 @@ public class YamlPermissionGroup extends YamlPermissionBase implements Permissio
     @Override
     public void save() throws DataSaveFailedException {
         super.save();
-        yamlConfiguration.set("rank", rank);
-        yamlConfiguration.set("inheritence", inheritence);
+        getSection().set("rank", rank);
+        getSection().set("inheritence", inheritence);
         if (defaultGroup) {
-            yamlConfiguration.set("default", true);
+            getSection().set("default", true);
         }
     }
 
@@ -76,6 +76,11 @@ public class YamlPermissionGroup extends YamlPermissionBase implements Permissio
     @Override
     public int getRank() {
         return rank;
+    }
+    
+    @Override
+    public void setRank(int newRank) {
+        rank = newRank;
     }
 
     @Override

@@ -16,29 +16,27 @@
  */
 package net.ae97.totalpermissions.mysql;
 
-import java.sql.Connection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import net.ae97.totalpermissions.base.PermissionBase;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
-import net.ae97.totalpermissions.exceptions.DataSaveFailedException;
+import org.bukkit.Bukkit;
+import org.bukkit.permissions.Permission;
 
 /**
  * @author Lord_Ralex
  */
 public abstract class MySQLPermissionBase implements PermissionBase {
 
-    protected final Connection connection;
-    protected final String name;
-    protected final Map<String, List<String>> permissions = new HashMap<String, List<String>>();
-    protected final Map<String, Map<String, Object>> options = new HashMap<String, Map<String, Object>>();
+    private final String name;
+    private final Map<String, List<String>> permissions = new HashMap<String, List<String>>();
+    private final Map<String, Map<String, Object>> options = new HashMap<String, Map<String, Object>>();
     private boolean debug = false;
 
-    public MySQLPermissionBase(String n, Connection conn) {
+    public MySQLPermissionBase(String n) {
         name = n;
-        connection = conn;
     }
 
     @Override
@@ -53,12 +51,47 @@ public abstract class MySQLPermissionBase implements PermissionBase {
 
     @Override
     public void load() throws DataLoadFailedException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        load(new HashMap<String, Object>());
+    }
+
+    public void load(Map<String, Object> map) throws DataLoadFailedException {
+        permissions.clear();
+        options.clear();
+        debug = false;
+
+        Object obj;
+        obj = map.get("permissions");
+        if (obj != null && obj instanceof String) {
+            String data = (String) obj;
+            String[] perms = data.split("\n");
+            List<String> permList = new LinkedList<String>();
+            for (String perm : perms) {
+                Permission p = Bukkit.getPluginManager().getPermission(perm);
+                if (p == null) {
+                    p = new Permission(perm);
+                    Bukkit.getPluginManager().addPermission(p);
+                }
+                if (!permList.contains(p.getName())) {
+                    permList.add(p.getName());
+                }
+            }
+            permissions.put(null, permList);
+        }
+        obj = map.get("options");
+        if (obj != null && obj instanceof Map) {
+            Map optionMap = (Map) obj;
+            Map<String, Object> converted = new HashMap<String, Object>();
+            for (Object k : optionMap.keySet()) {
+                if (k != null && k instanceof String) {
+                    converted.put((String) k, optionMap.get(k));
+                }
+            }
+            options.put(null, converted);
+        }
     }
 
     @Override
-    public void save() throws DataSaveFailedException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void save() {
     }
 
     @Override
@@ -164,5 +197,13 @@ public abstract class MySQLPermissionBase implements PermissionBase {
         boolean removed = perms.remove(perm);
         permissions.put(world == null || world.isEmpty() ? null : world.toLowerCase(), perms);
         return removed;
+    }
+
+    public Map<String, Object> getSaveData() {
+        Map<String, Object> mappings = new HashMap<String, Object>();
+        mappings.put("permissions", permissions);
+        mappings.put("options", options);
+        mappings.put("name", name);
+        return mappings;
     }
 }

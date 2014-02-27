@@ -16,9 +16,9 @@
  */
 package net.ae97.totalpermissions.mysql;
 
-import java.sql.Connection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.base.PermissionGroup;
@@ -31,12 +31,12 @@ import org.bukkit.Bukkit;
  */
 public class MySQLPermissionGroup extends MySQLPermissionBase implements PermissionGroup {
 
-    protected final List<String> inheritence = new LinkedList<String>();
-    protected int rank = 0;
-    protected boolean defaultGroup = false;
+    private final List<String> inheritence = new LinkedList<String>();
+    private int rank = 0;
+    private boolean defaultGroup = false;
 
-    public MySQLPermissionGroup(String n, Connection conn) {
-        super(n, conn);
+    public MySQLPermissionGroup(String n) {
+        super(n);
     }
 
     @Override
@@ -47,6 +47,11 @@ public class MySQLPermissionGroup extends MySQLPermissionBase implements Permiss
     @Override
     public int getRank() {
         return rank;
+    }
+
+    @Override
+    public void setRank(int newRank) {
+        rank = newRank;
     }
 
     @Override
@@ -81,5 +86,14 @@ public class MySQLPermissionGroup extends MySQLPermissionBase implements Permiss
         }
 
         return perms;
+    }
+
+    @Override
+    public Map<String, Object> getSaveData() {
+        Map<String, Object> mappings = super.getSaveData();
+        mappings.put("inheritence", inheritence);
+        mappings.put("rank", rank);
+        mappings.put("default", defaultGroup);
+        return mappings;
     }
 }

@@ -44,7 +44,7 @@ public class YamlPermissionUser extends YamlPermissionBase implements Permission
     public void load() throws DataLoadFailedException {
         super.load();
         groups.clear();
-        List<String> groupList = yamlConfiguration.getStringList("groups");
+        List<String> groupList = getSection().getStringList("groups");
         if (groupList != null) {
             groups.addAll(groupList);
         }
@@ -53,7 +53,7 @@ public class YamlPermissionUser extends YamlPermissionBase implements Permission
     @Override
     public void save() throws DataSaveFailedException {
         super.save();
-        yamlConfiguration.set("groups", groups);
+        getSection().set("groups", groups);
     }
 
     @Override

@@ -31,9 +31,9 @@ import org.bukkit.Bukkit;
  */
 public class SQLitePermissionGroup extends SQLitePermissionBase implements PermissionGroup {
 
-    protected final List<String> inheritence = new LinkedList<String>();
-    protected int rank = 0;
-    protected boolean defaultGroup = false;
+    private final List<String> inheritence = new LinkedList<String>();
+    private int rank = 0;
+    private boolean defaultGroup = false;
 
     public SQLitePermissionGroup(String n) {
         super(n);
@@ -47,6 +47,11 @@ public class SQLitePermissionGroup extends SQLitePermissionBase implements Permi
     @Override
     public int getRank() {
         return rank;
+    }
+    
+    @Override
+    public void setRank(int newRank) {
+        rank = newRank;
     }
 
     @Override

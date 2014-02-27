@@ -16,7 +16,6 @@
  */
 package net.ae97.totalpermissions.mysql;
 
-import java.sql.Connection;
 import net.ae97.totalpermissions.base.PermissionConsole;
 import net.ae97.totalpermissions.type.PermissionType;
 
@@ -25,8 +24,8 @@ import net.ae97.totalpermissions.type.PermissionType;
  */
 public class MySQLPermissionConsole extends MySQLPermissionBase implements PermissionConsole {
 
-    public MySQLPermissionConsole(String n, Connection conn) {
-        super(n, conn);
+    public MySQLPermissionConsole(String n) {
+        super(n);
     }
 
     @Override

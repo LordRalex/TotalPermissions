@@ -16,7 +16,6 @@
  */
 package net.ae97.totalpermissions.mysql;
 
-import java.sql.Connection;
 import net.ae97.totalpermissions.base.PermissionRcon;
 import net.ae97.totalpermissions.type.PermissionType;
 
@@ -25,8 +24,8 @@ import net.ae97.totalpermissions.type.PermissionType;
  */
 public class MySQLPermissionRcon extends MySQLPermissionBase implements PermissionRcon {
 
-    public MySQLPermissionRcon(String n, Connection conn) {
-        super(n, conn);
+    public MySQLPermissionRcon(String n) {
+        super(n);
     }
 
     @Override
