@@ -31,10 +31,10 @@ import org.bukkit.plugin.Plugin;
 /**
  * @author Lord_Ralex
  */
-public class DumpCommand implements SubCommand {
+public final class DumpCommand implements SubCommand {
 
-    protected final int NUM_PAGE = 8;
-    protected final TotalPermissions plugin;
+    private final int NUM_PAGE = 8;
+    private final TotalPermissions plugin;
 
     public DumpCommand(TotalPermissions p) {
         plugin = p;

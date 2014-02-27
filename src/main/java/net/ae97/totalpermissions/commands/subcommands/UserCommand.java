@@ -29,9 +29,9 @@ import org.bukkit.entity.Player;
 /**
  * @author 1Rogue
  */
-public class UserCommand implements SubCommand {
+public final class UserCommand implements SubCommand {
 
-    protected final TotalPermissions plugin;
+    private final TotalPermissions plugin;
 
     public UserCommand(TotalPermissions p) {
         plugin = p;

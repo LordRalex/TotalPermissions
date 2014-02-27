@@ -24,9 +24,9 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
 /**
- * @author Lord_Ralex1
+ * @author Lord_Ralex
  */
-public class PermissionUtility {
+public final class PermissionUtility {
 
     public static List<String> handleWildcard() {
         return handleWildcard(false);
@@ -45,5 +45,8 @@ public class PermissionUtility {
             }
         }
         return perms;
+    }
+
+    private PermissionUtility() {
     }
 }

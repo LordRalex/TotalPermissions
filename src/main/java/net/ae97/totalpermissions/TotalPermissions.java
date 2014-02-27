@@ -27,8 +27,7 @@ import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import net.ae97.totalpermissions.listener.ListenerManager;
 import net.ae97.totalpermissions.mcstats.Metrics;
 import net.ae97.totalpermissions.sqlite.SQLiteDataHolder;
-import net.ae97.totalpermissions.updater.Updater;
-import net.ae97.totalpermissions.updater.UpdateType;
+import net.ae97.totalpermissions.update.UpdateChecker;
 import net.ae97.totalpermissions.yaml.SingleYamlDataHolder;
 import net.ae97.totalpermissions.yaml.SplitYamlDataHolder;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -38,22 +37,18 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public final class TotalPermissions extends JavaPlugin {
 
-    protected DataHolder dataHolder;
-    protected ListenerManager listenerManager;
-    protected Metrics metrics;
-    protected CommandHandler commands;
-    protected DataManager dataManager;
+    private DataHolder dataHolder;
+    private ListenerManager listenerManager;
+    private Metrics metrics;
+    private CommandHandler commands;
+    private DataManager dataManager;
+    private Thread updateChecker;
 
     @Override
     public void onLoad() {
         if (getConfig().getBoolean("update.check", true)) {
-            UpdateType updatetype = UpdateType.NO_DOWNLOAD;
-            if (getConfig().getBoolean("update.download", true)) {
-                updatetype = UpdateType.DEFAULT;
-            }
-
-            Updater updater = new Updater(this, "totalpermissions", this.getFile(), updatetype);
-            updater.checkForUpdate();
+            updateChecker = new Thread(new UpdateChecker(this, getConfig().getBoolean("update.download", true)));
+            updateChecker.start();
         }
     }
 
@@ -77,11 +72,11 @@ public final class TotalPermissions extends JavaPlugin {
             String storageType = getConfig().getString("storage", "yaml_shared");
             DataType type = DataType.valueOf(storageType.toUpperCase());
             if (type == null) {
-                getLogger().severe(storageType + " is not a known storage system, defaulting to YAML_SHARED");
+                getLogger().log(Level.SEVERE, "{0} is not a known storage system, defaulting to YAML_SHARED", storageType);
                 type = DataType.YAML_SHARED;
             }
             getLogger().finest("Creating data holder");
-            getLogger().finest("Storage type to load: " + storageType);
+            getLogger().log(Level.FINEST, "Storage type to load: {0}", storageType);
             switch (type) {
                 default:
                 case YAML_SHARED: {
@@ -131,6 +126,14 @@ public final class TotalPermissions extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        synchronized (updateChecker) {
+            try {
+                updateChecker.join();
+            } catch (InterruptedException ex) {
+                getLogger().log(Level.SEVERE, "Error while waiting for update check thread", ex);
+            }
+        }
+        metrics.shutdown();
     }
 
     public ListenerManager getListenerManager() {
@@ -147,5 +150,10 @@ public final class TotalPermissions extends JavaPlugin {
 
     public boolean isDebugMode() {
         return getConfig().getBoolean("angry-debug", false);
+    }
+
+    @Override
+    public File getFile() {
+        return super.getFile();
     }
 }

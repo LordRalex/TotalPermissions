@@ -27,56 +27,24 @@
  */
 package net.ae97.totalpermissions.mcstats;
 
-/**
- * Interface used to collect custom data for a plugin
- */
 public abstract class Plotter {
 
-    /**
-     * The plot's name
-     */
     private final String name;
 
-    /**
-     * Construct a plotter with the default plot name
-     */
     public Plotter() {
         this("Default");
     }
 
-    /**
-     * Construct a plotter with a specific plot name
-     *
-     * @param n the name of the plotter to use, which will show up on the
-     * website
-     */
     public Plotter(final String n) {
         name = n;
     }
 
-    /**
-     * Get the current value for the plotted point. Since this function defers
-     * to an external function it may or may not return immediately thus cannot
-     * be guaranteed to be thread friendly or safe. This function can be called
-     * from any thread so care should be taken when accessing resources that
-     * need to be synchronized.
-     *
-     * @return the current value for the point to be plotted.
-     */
     public abstract int getValue();
 
-    /**
-     * Get the column name for the plotted point
-     *
-     * @return the plotted point's column name
-     */
     public String getColumnName() {
         return name;
     }
 
-    /**
-     * Called after the website graphs have been updated
-     */
     public void reset() {
     }
 

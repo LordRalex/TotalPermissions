@@ -31,8 +31,8 @@ import org.bukkit.command.CommandSender;
  */
 public final class CommandHandler implements CommandExecutor {
 
-    protected final Map<String, SubCommand> commands = new ConcurrentHashMap<String, SubCommand>();
-    protected final TotalPermissions plugin;
+    private final Map<String, SubCommand> commands = new ConcurrentHashMap<String, SubCommand>();
+    private final TotalPermissions plugin;
 
     public CommandHandler(TotalPermissions p) {
         plugin = p;

@@ -26,9 +26,9 @@ import org.bukkit.command.CommandSender;
 /**
  * @author Lord_Ralex
  */
-public class DebugCommand implements SubCommand {
+public final class DebugCommand implements SubCommand {
 
-    protected final TotalPermissions plugin;
+    private final TotalPermissions plugin;
 
     public DebugCommand(TotalPermissions p) {
         plugin = p;

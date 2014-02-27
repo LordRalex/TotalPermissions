@@ -19,16 +19,15 @@ package net.ae97.totalpermissions.commands.subcommands;
 import java.util.Arrays;
 import java.util.Map;
 import net.ae97.totalpermissions.TotalPermissions;
-import net.ae97.totalpermissions.util.Formatter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
  * @author 1Rogue
  */
-public class HelpCommand implements SubCommand {
+public final class HelpCommand implements SubCommand {
 
-    protected final TotalPermissions plugin;
+    private final TotalPermissions plugin;
 
     public HelpCommand(TotalPermissions p) {
         plugin = p;
@@ -71,7 +70,7 @@ public class HelpCommand implements SubCommand {
             upper = listSize;
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(Formatter.formatTitle(plugin.getName(), ChatColor.WHITE, ChatColor.RED)).append("\n");
+        sb.append(ChatColor.RED).append(plugin.getName()).append("\n").append(ChatColor.RESET);
         sb.append("Page ").append(page).append("/").append((int) Math.ceil((double) listSize / (double) factor));
         sb.append("\n").append(ChatColor.RESET);
         String[] list = map.keySet().toArray(new String[listSize]);

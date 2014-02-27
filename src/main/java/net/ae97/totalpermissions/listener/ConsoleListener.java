@@ -27,9 +27,9 @@ import org.bukkit.event.server.RemoteServerCommandEvent;
 /**
  * @author Lord_Ralex
  */
-public class ConsoleListener implements Listener {
+public final class ConsoleListener implements Listener {
 
-    protected final TotalPermissions plugin;
+    private final TotalPermissions plugin;
 
     public ConsoleListener(TotalPermissions p) {
         plugin = p;

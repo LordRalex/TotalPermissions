@@ -22,9 +22,9 @@ import org.bukkit.command.CommandSender;
 /**
  * @author 1Rogue
  */
-public class SpecialCommand implements SubCommand {
+public final class SpecialCommand implements SubCommand {
 
-    protected final TotalPermissions plugin;
+    private final TotalPermissions plugin;
 
     public SpecialCommand(TotalPermissions p) {
         plugin = p;

@@ -26,9 +26,9 @@ import org.bukkit.command.CommandSender;
 /**
  * @author 1Rogue
  */
-public class GroupCommand implements SubCommand {
+public final class GroupCommand implements SubCommand {
 
-    protected final TotalPermissions plugin;
+    private final TotalPermissions plugin;
 
     public GroupCommand(TotalPermissions p) {
         plugin = p;

@@ -34,7 +34,7 @@ import java.util.Set;
 /**
  * Represents a custom graph on the website
  */
-public class Graph {
+public final class Graph {
 
     /**
      * The graph's name, alphanumeric and spaces only :) If it does not comply
@@ -99,12 +99,5 @@ public class Graph {
 
         final Graph graph = (Graph) object;
         return graph.name.equals(name);
-    }
-
-    /**
-     * Called when the server owner decides to opt-out of BukkitMetrics while
-     * the server is running.
-     */
-    protected void onOptOut() {
     }
 }

@@ -30,14 +30,11 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
 /**
- * 0.1
- *
  * @author Lord_Ralex
- * @since 0.1
  */
-public class PlayerListener implements Listener {
+public final class PlayerListener implements Listener {
 
-    protected final TotalPermissions plugin;
+    private final TotalPermissions plugin;
 
     public PlayerListener(TotalPermissions p) {
         plugin = p;

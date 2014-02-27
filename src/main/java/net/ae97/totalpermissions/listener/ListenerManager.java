@@ -24,11 +24,11 @@ import org.bukkit.Bukkit;
  */
 public final class ListenerManager {
 
-    protected final TotalPermissions plugin;
-    protected final PlayerListener playerListener;
-    protected final WorldListener worldListener;
-    protected final EntityListener entityListener;
-    protected final ConsoleListener consoleListener;
+    private final TotalPermissions plugin;
+    private final PlayerListener playerListener;
+    private final WorldListener worldListener;
+    private final EntityListener entityListener;
+    private final ConsoleListener consoleListener;
 
     public ListenerManager(TotalPermissions p) {
         plugin = p;

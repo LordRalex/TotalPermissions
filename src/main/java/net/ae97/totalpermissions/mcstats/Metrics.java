@@ -38,7 +38,6 @@ import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -47,23 +46,20 @@ import java.util.logging.Level;
 import java.util.zip.GZIPOutputStream;
 import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.scheduler.BukkitTask;
 
 public final class Metrics {
 
-    private volatile BukkitTask task = null;
+    private final PostRunnable task;
     private final int REVISION = 7;
     private final String BASE_URL = "http://report.mcstats.org";
     private final String REPORT_URL = "/plugin/%s";
     private final int PING_INTERVAL = 15;
     private final TotalPermissions plugin;
-    private final Set<Graph> graphs = Collections.synchronizedSet(new HashSet<Graph>());
+    private final Set<Graph> graphs = new HashSet<Graph>();
     private final YamlConfiguration configuration;
     private final File configurationFile;
     private final String guid;
-    private final Object optOutLock = new Object();
 
     public Metrics(TotalPermissions p) throws IOException {
         if (p == null) {
@@ -72,7 +68,7 @@ public final class Metrics {
 
         plugin = p;
 
-        configurationFile = getConfigFile();
+        configurationFile = new File(new File(plugin.getDataFolder().getParentFile(), "PluginMetrics"), "config.yml");
         configuration = YamlConfiguration.loadConfiguration(configurationFile);
         configuration.addDefault("opt-out", !plugin.getConfig().getBoolean("metrics-report", true));
         configuration.addDefault("guid", UUID.randomUUID().toString());
@@ -84,208 +80,28 @@ public final class Metrics {
         }
 
         guid = configuration.getString("guid");
+        task = new PostRunnable();
     }
 
-    /**
-     * Start measuring statistics. This will immediately create an async
-     * repeating task as the plugin and send the initial data to the metrics
-     * backend, and then after that it will post in increments of PING_INTERVAL
-     * * 1200 ticks.
-     *
-     * @return True if statistics measuring is running, otherwise false.
-     */
     public boolean start() {
-        synchronized (optOutLock) {
-            if (isOptOut()) {
-                return false;
-            }
-
-            if (task != null) {
-                return true;
-            }
-
-            task = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
-                private boolean firstPost = true;
-
-                @Override
-                public void run() {
-                    try {
-                        synchronized (optOutLock) {
-                            if (isOptOut() && task != null) {
-                                task.cancel();
-                                task = null;
-                                for (Graph graph : graphs) {
-                                    graph.onOptOut();
-                                }
-                            }
-                        }
-
-                        postPlugin(!firstPost);
-
-                        firstPost = false;
-                    } catch (IOException e) {
-                    }
-                }
-            }, 0, PING_INTERVAL * 1200);
-
+        if (isOptOut()) {
+            return false;
+        }
+        if (task.isScheduled()) {
             return true;
         }
+        task.setMetrics(this);
+        task.runTaskTimerAsynchronously(plugin, 0, PING_INTERVAL * 1200);
+        return true;
     }
 
-    /**
-     * GZip compress a string of bytes
-     *
-     * @param input
-     * @return
-     */
-    private byte[] gzip(String input) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        GZIPOutputStream gzos = null;
-
-        try {
-            gzos = new GZIPOutputStream(baos);
-            gzos.write(input.getBytes("UTF-8"));
-        } catch (IOException e) {
-            plugin.getLogger().log(Level.SEVERE, "An error occurred on gzipping from Metrics", e);
-        } finally {
-            if (gzos != null) {
-                try {
-                    gzos.close();
-                } catch (IOException ignore) {
-                }
-            }
-        }
-
-        return baos.toByteArray();
-    }
-
-    /**
-     * Appends a json encoded key/value pair to the given string builder.
-     *
-     * @param json
-     * @param key
-     * @param value
-     * @throws UnsupportedEncodingException
-     */
-    private void appendJSONPair(StringBuilder json, String key, String value) throws UnsupportedEncodingException {
-        boolean isValueNumeric;
-
-        try {
-            Double.parseDouble(value);
-            isValueNumeric = true;
-        } catch (NumberFormatException e) {
-            isValueNumeric = false;
-        }
-
-        if (json.charAt(json.length() - 1) != '{') {
-            json.append(',');
-        }
-
-        json.append(escapeJSON(key));
-        json.append(':');
-
-        if (isValueNumeric) {
-            json.append(value);
-        } else {
-            json.append(escapeJSON(value));
+    public void shutdown() {
+        synchronized (task) {
+            task.cancel();
         }
     }
 
-    /**
-     * Escape a string to create a valid JSON string
-     *
-     * @param text
-     * @return
-     */
-    private String escapeJSON(String text) {
-        StringBuilder builder = new StringBuilder();
-
-        builder.append('"');
-        for (int index = 0; index < text.length(); index++) {
-            char chr = text.charAt(index);
-
-            switch (chr) {
-                case '"':
-                case '\\':
-                    builder.append('\\');
-                    builder.append(chr);
-                    break;
-                case '\b':
-                    builder.append("\\b");
-                    break;
-                case '\t':
-                    builder.append("\\t");
-                    break;
-                case '\n':
-                    builder.append("\\n");
-                    break;
-                case '\r':
-                    builder.append("\\r");
-                    break;
-                default:
-                    if (chr < ' ') {
-                        String t = "000" + Integer.toHexString(chr);
-                        builder.append("\\u").append(t.substring(t.length() - 4));
-                    } else {
-                        builder.append(chr);
-                    }
-                    break;
-            }
-        }
-        builder.append('"');
-
-        return builder.toString();
-    }
-
-    /**
-     * Encode text as UTF-8
-     *
-     * @param text the text to encode
-     * @return the encoded text, as UTF-8
-     */
-    private String urlEncode(String text) throws UnsupportedEncodingException {
-        return URLEncoder.encode(text, "UTF-8");
-    }
-
-    /**
-     * Has the server owner denied plugin metrics?
-     *
-     * @return true if metrics should be opted out of it
-     */
-    private boolean isOptOut() {
-        synchronized (optOutLock) {
-            try {
-                configuration.load(getConfigFile());
-            } catch (IOException ex) {
-                plugin.getLogger().log(Level.SEVERE, "[Metrics] ", ex.getMessage());
-                return true;
-            } catch (InvalidConfigurationException ex) {
-                plugin.getLogger().log(Level.SEVERE, "[Metrics] ", ex.getMessage());
-                return true;
-            }
-            if (!plugin.getConfig().getBoolean("metrics-report", true)) {
-                return true;
-            } else {
-                return configuration.getBoolean("opt-out", false);
-            }
-        }
-    }
-
-    /**
-     * Gets the File object of the config file that should be used to store data
-     * such as the GUID and opt-out status
-     *
-     * @return the File object for the config file
-     */
-    private File getConfigFile() {
-        return new File(new File(plugin.getDataFolder().getParentFile(), "PluginMetrics"), "config.yml");
-    }
-
-    /**
-     * Generic method that posts a plugin to the metrics website
-     */
-    private void postPlugin(boolean isPing) throws IOException {
-        int playersOnline = Bukkit.getServer().getOnlinePlayers().length;
+    protected void postPlugin(boolean isPing) throws IOException {
 
         StringBuilder json = new StringBuilder(1024);
         json.append('{');
@@ -293,7 +109,7 @@ public final class Metrics {
         appendJSONPair(json, "guid", guid);
         appendJSONPair(json, "plugin_version", plugin.getDescription().getVersion());
         appendJSONPair(json, "server_version", Bukkit.getBukkitVersion());
-        appendJSONPair(json, "players_online", Integer.toString(playersOnline));
+        appendJSONPair(json, "players_online", Integer.toString(Bukkit.getServer().getOnlinePlayers().length));
 
         appendJSONPair(json, "auth_mode", Bukkit.getOnlineMode() ? "1" : "0");
 
@@ -301,8 +117,8 @@ public final class Metrics {
             appendJSONPair(json, "ping", "1");
         }
 
-        if (graphs.size() > 0) {
-            synchronized (graphs) {
+        synchronized (graphs) {
+            if (graphs.size() > 0) {
                 json.append(',');
                 json.append('"');
                 json.append("graphs");
@@ -415,12 +231,107 @@ public final class Metrics {
         }
     }
 
-    /**
-     * Check if mineshafter is present. If it is, we need to bypass it to send
-     * POST requests
-     *
-     * @return true if mineshafter is installed on the server
-     */
+    protected boolean isOptOut() {
+        if (!plugin.getConfig().getBoolean("metrics-report", true)) {
+            return true;
+        } else {
+            return configuration.getBoolean("opt-out", false);
+        }
+    }
+
+    private byte[] gzip(String input) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        GZIPOutputStream gzos = null;
+
+        try {
+            gzos = new GZIPOutputStream(baos);
+            gzos.write(input.getBytes("UTF-8"));
+        } catch (IOException e) {
+            plugin.getLogger().log(Level.SEVERE, "An error occurred on gzipping from Metrics", e);
+        } finally {
+            if (gzos != null) {
+                try {
+                    gzos.close();
+                } catch (IOException ignore) {
+                }
+            }
+        }
+
+        return baos.toByteArray();
+    }
+
+    private void appendJSONPair(StringBuilder json, String key, String value) throws UnsupportedEncodingException {
+        boolean isValueNumeric;
+
+        try {
+            Double.parseDouble(value);
+            isValueNumeric = true;
+        } catch (NumberFormatException e) {
+            isValueNumeric = false;
+        }
+
+        if (json.charAt(json.length() - 1) != '{') {
+            json.append(',');
+        }
+
+        json.append(escapeJSON(key));
+        json.append(':');
+
+        if (isValueNumeric) {
+            json.append(value);
+        } else {
+            json.append(escapeJSON(value));
+        }
+    }
+
+    private String escapeJSON(String text) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append('"');
+        for (int index = 0; index < text.length(); index++) {
+            char chr = text.charAt(index);
+
+            switch (chr) {
+                case '"':
+                case '\\':
+                    builder.append('\\');
+                    builder.append(chr);
+                    break;
+                case '\b':
+                    builder.append("\\b");
+                    break;
+                case '\t':
+                    builder.append("\\t");
+                    break;
+                case '\n':
+                    builder.append("\\n");
+                    break;
+                case '\r':
+                    builder.append("\\r");
+                    break;
+                default:
+                    if (chr < ' ') {
+                        String t = "000" + Integer.toHexString(chr);
+                        builder.append("\\u").append(t.substring(t.length() - 4));
+                    } else {
+                        builder.append(chr);
+                    }
+                    break;
+            }
+        }
+        builder.append('"');
+
+        return builder.toString();
+    }
+
+    private String urlEncode(String text) throws UnsupportedEncodingException {
+        return URLEncoder.encode(text, "UTF-8");
+    }
+
+    private File getConfigFile() {
+        return configurationFile;
+    }
+
     private boolean isMineshafterPresent() {
         try {
             Class.forName("mineshafter.MineServer");

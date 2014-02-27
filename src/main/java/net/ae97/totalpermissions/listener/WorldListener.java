@@ -22,9 +22,9 @@ import org.bukkit.event.Listener;
 /**
  * @author Lord_Ralex
  */
-public class WorldListener implements Listener {
+public final class WorldListener implements Listener {
 
-    protected final TotalPermissions plugin;
+    private final TotalPermissions plugin;
 
     public WorldListener(TotalPermissions p) {
         plugin = p;

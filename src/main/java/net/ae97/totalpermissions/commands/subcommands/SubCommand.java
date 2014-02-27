@@ -23,9 +23,9 @@ import org.bukkit.command.CommandSender;
  */
 public interface SubCommand {
 
-    public abstract boolean execute(CommandSender sender, String[] args);
+    public boolean execute(CommandSender sender, String[] args);
 
-    public abstract String getName();
+    public String getName();
 
-    public abstract String[] getHelp();
+    public String[] getHelp();
 }

@@ -22,9 +22,9 @@ import org.bukkit.command.CommandSender;
 /**
  * @author 1Rogue
  */
-public class WorldCommand implements SubCommand {
+public final class WorldCommand implements SubCommand {
 
-    protected final TotalPermissions plugin;
+    private final TotalPermissions plugin;
 
     public WorldCommand(TotalPermissions p) {
         plugin = p;
