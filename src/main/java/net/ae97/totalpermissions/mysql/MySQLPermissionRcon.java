@@ -24,8 +24,8 @@ import net.ae97.totalpermissions.type.PermissionType;
  */
 public class MySQLPermissionRcon extends MySQLPermissionBase implements PermissionRcon {
 
-    public MySQLPermissionRcon(String n) {
-        super(n);
+    public MySQLPermissionRcon() {
+        super("rcon");
     }
 
     @Override

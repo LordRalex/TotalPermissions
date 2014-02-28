@@ -24,8 +24,8 @@ import net.ae97.totalpermissions.type.PermissionType;
  */
 public class MySQLPermissionOp extends MySQLPermissionBase implements PermissionOp {
 
-    public MySQLPermissionOp(String n) {
-        super(n);
+    public MySQLPermissionOp() {
+        super("op");
     }
 
     @Override

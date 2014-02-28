@@ -18,6 +18,8 @@ package net.ae97.totalpermissions;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import net.ae97.totalpermissions.commands.CommandHandler;
 import net.ae97.totalpermissions.data.DataHolder;
@@ -26,6 +28,7 @@ import net.ae97.totalpermissions.data.DataType;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import net.ae97.totalpermissions.listener.ListenerManager;
 import net.ae97.totalpermissions.mcstats.Metrics;
+import net.ae97.totalpermissions.mysql.MySQLDataHolder;
 import net.ae97.totalpermissions.sqlite.SQLiteDataHolder;
 import net.ae97.totalpermissions.update.UpdateChecker;
 import net.ae97.totalpermissions.yaml.SingleYamlDataHolder;
@@ -92,6 +95,13 @@ public final class TotalPermissions extends JavaPlugin {
                 }
                 break;
                 case MYSQL: {
+                    Map<String, String> dbInfo = new HashMap<String, String>();
+                    dbInfo.put("host", getConfig().getString("mysql.host", "localhost"));
+                    dbInfo.put("port", getConfig().getString("mysql.port", "3306"));
+                    dbInfo.put("db", getConfig().getString("mysql.database", "totalpermissions"));
+                    dbInfo.put("user", getConfig().getString("mysql.username", "root"));
+                    dbInfo.put("pass", getConfig().getString("mysql.password", ""));
+                    dataHolder = new MySQLDataHolder(dbInfo);
                 }
                 break;
             }

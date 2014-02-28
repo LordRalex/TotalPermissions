@@ -24,8 +24,8 @@ import net.ae97.totalpermissions.type.PermissionType;
  */
 public class MySQLPermissionConsole extends MySQLPermissionBase implements PermissionConsole {
 
-    public MySQLPermissionConsole(String n) {
-        super(n);
+    public MySQLPermissionConsole() {
+        super("console");
     }
 
     @Override
