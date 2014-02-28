@@ -31,6 +31,7 @@
           <include>plugin.yml</include>
           <include>config.yml</include>
           <include>permissions.yml</include>
+          <include>license.txt</include>
         </includes>
       </resource>
     </resources>
