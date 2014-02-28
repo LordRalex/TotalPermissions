@@ -131,9 +131,15 @@ public class SQLitePermissionUser extends SQLitePermissionBase implements Permis
     }
 
     @Override
-    public Map<String, Object> getSaveData() {
+    protected Map<String, Object> getSaveData() {
         Map<String, Object> mappings = super.getSaveData();
         mappings.put("groups", groups);
         return mappings;
+    }
+
+    protected static Map<String, String> getColumns() {
+        Map<String, String> columns = SQLitePermissionBase.getColumns();
+        columns.put("groups", "TEXT");
+        return columns;
     }
 }

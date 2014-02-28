@@ -14,22 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.ae97.totalpermissions.sqlite;
+package net.ae97.totalpermissions.yaml;
 
-import net.ae97.totalpermissions.base.PermissionConsole;
-import net.ae97.totalpermissions.type.PermissionType;
+import net.ae97.totalpermissions.base.PermissionServer;
+import org.bukkit.configuration.ConfigurationSection;
 
 /**
  * @author Lord_Ralex
  */
-public class SQLitePermissionConsole extends SQLitePermissionServer implements PermissionConsole {
+public abstract class YamlPermissionServer extends YamlPermissionBase implements PermissionServer {
 
-    public SQLitePermissionConsole() {
-        super("console");
+    public YamlPermissionServer(String n, ConfigurationSection sec) {
+        super(n, sec);
     }
 
-    @Override
-    public PermissionType getType() {
-        return PermissionType.CONSOLE;
-    }
 }

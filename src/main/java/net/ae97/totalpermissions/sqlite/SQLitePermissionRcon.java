@@ -22,7 +22,7 @@ import net.ae97.totalpermissions.type.PermissionType;
 /**
  * @author Lord_Ralex
  */
-public class SQLitePermissionRcon extends SQLitePermissionBase implements PermissionRcon {
+public class SQLitePermissionRcon extends SQLitePermissionServer implements PermissionRcon {
 
     public SQLitePermissionRcon() {
         super("rcon");

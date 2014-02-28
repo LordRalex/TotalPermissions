@@ -22,7 +22,7 @@ import net.ae97.totalpermissions.type.PermissionType;
 /**
  * @author Lord_Ralex
  */
-public class SQLitePermissionOp extends SQLitePermissionBase implements PermissionOp {
+public class SQLitePermissionOp extends SQLitePermissionServer implements PermissionOp {
 
     public SQLitePermissionOp() {
         super("op");

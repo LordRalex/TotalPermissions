@@ -22,7 +22,7 @@ import net.ae97.totalpermissions.type.PermissionType;
 /**
  * @author Lord_Ralex
  */
-public class MySQLPermissionOp extends MySQLPermissionBase implements PermissionOp {
+public class MySQLPermissionOp extends MySQLPermissionServer implements PermissionOp {
 
     public MySQLPermissionOp() {
         super("op");

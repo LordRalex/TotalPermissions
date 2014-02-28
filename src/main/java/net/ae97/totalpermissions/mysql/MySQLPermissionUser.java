@@ -131,9 +131,15 @@ public class MySQLPermissionUser extends MySQLPermissionBase implements Permissi
     }
 
     @Override
-    public Map<String, Object> getSaveData() {
+    protected Map<String, Object> getSaveData() {
         Map<String, Object> mappings = super.getSaveData();
         mappings.put("groups", groups);
         return mappings;
+    }
+
+    protected static Map<String, String> getColumns() {
+        Map<String, String> columns = MySQLPermissionBase.getColumns();
+        columns.put("groups", "TEXT");
+        return columns;
     }
 }

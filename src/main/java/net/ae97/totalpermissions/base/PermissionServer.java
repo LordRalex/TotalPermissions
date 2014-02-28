@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 AE97
+ * Copyright (C) 2014 Lord_Ralex
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,22 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.ae97.totalpermissions.sqlite;
 
-import net.ae97.totalpermissions.base.PermissionConsole;
-import net.ae97.totalpermissions.type.PermissionType;
+package net.ae97.totalpermissions.base;
 
 /**
  * @author Lord_Ralex
  */
-public class SQLitePermissionConsole extends SQLitePermissionServer implements PermissionConsole {
+public interface PermissionServer extends PermissionBase{
 
-    public SQLitePermissionConsole() {
-        super("console");
-    }
-
-    @Override
-    public PermissionType getType() {
-        return PermissionType.CONSOLE;
-    }
 }

@@ -55,6 +55,11 @@ public class SQLiteDataHolder implements DataHolder<SQLitePermissionBase> {
         }
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:" + new File(Bukkit.getPluginManager().getPlugin("TotalPermissions").getDataFolder(), "permissions.db").getPath());
+            updateTable(connection, "users", SQLitePermissionUser.getColumns());
+            updateTable(connection, "entities", SQLitePermissionEntity.getColumns());
+            updateTable(connection, "groups", SQLitePermissionGroup.getColumns());
+            updateTable(connection, "worlds", SQLitePermissionWorld.getColumns());
+            updateTable(connection, "server", SQLitePermissionServer.getColumns());
         } catch (SQLException ex) {
             throw new DataLoadFailedException(ex);
         }
@@ -380,5 +385,22 @@ public class SQLiteDataHolder implements DataHolder<SQLitePermissionBase> {
         }
         base.load(data);
         baseMap.put(base.getName(), base);
+    }
+
+    protected void updateTable(Connection conn, String name, Map<String, String> columns) throws SQLException {
+        PreparedStatement statement = null;
+        try {
+            statement = conn.prepareStatement("");
+            statement.execute();
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
     }
 }

@@ -89,11 +89,19 @@ public class MySQLPermissionGroup extends MySQLPermissionBase implements Permiss
     }
 
     @Override
-    public Map<String, Object> getSaveData() {
+    protected Map<String, Object> getSaveData() {
         Map<String, Object> mappings = super.getSaveData();
         mappings.put("inheritence", inheritence);
         mappings.put("rank", rank);
         mappings.put("default", defaultGroup);
         return mappings;
+    }
+
+    protected static Map<String, String> getColumns() {
+        Map<String, String> columns = MySQLPermissionBase.getColumns();
+        columns.put("inheritence", "TEXT");
+        columns.put("default", "BOOLEAN");
+        columns.put("rank", "INTEGER");
+        return columns;
     }
 }

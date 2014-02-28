@@ -55,6 +55,11 @@ public class MySQLDataHolder implements DataHolder<MySQLPermissionBase> {
         }
         try {
             connection = DriverManager.getConnection("jdbc:mysql://" + dbInfo.get("host") + ":" + dbInfo.get("port") + "/" + dbInfo.get("db"), dbInfo.get("user"), dbInfo.get("pass"));
+            updateTable(connection, "users", MySQLPermissionUser.getColumns());
+            updateTable(connection, "entities", MySQLPermissionEntity.getColumns());
+            updateTable(connection, "groups", MySQLPermissionGroup.getColumns());
+            updateTable(connection, "worlds", MySQLPermissionWorld.getColumns());
+            updateTable(connection, "server", MySQLPermissionServer.getColumns());
         } catch (SQLException ex) {
             throw new DataLoadFailedException(ex);
         }
@@ -380,5 +385,22 @@ public class MySQLDataHolder implements DataHolder<MySQLPermissionBase> {
         }
         base.load(data);
         baseMap.put(base.getName(), base);
+    }
+
+    protected void updateTable(Connection conn, String name, Map<String, String> columns) throws SQLException {
+        PreparedStatement statement = null;
+        try {
+            statement = conn.prepareStatement("");
+            statement.execute();
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
     }
 }

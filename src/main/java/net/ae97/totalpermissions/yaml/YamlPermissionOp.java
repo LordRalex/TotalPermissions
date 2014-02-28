@@ -23,7 +23,7 @@ import org.bukkit.configuration.ConfigurationSection;
 /**
  * @author Lord_Ralex
  */
-public class YamlPermissionOp extends YamlPermissionBase implements PermissionOp {
+public class YamlPermissionOp extends YamlPermissionServer implements PermissionOp {
 
     public YamlPermissionOp(ConfigurationSection config) {
         super("op", config);

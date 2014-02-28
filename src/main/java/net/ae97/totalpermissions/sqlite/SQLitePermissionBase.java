@@ -199,11 +199,19 @@ public abstract class SQLitePermissionBase implements PermissionBase {
         return removed;
     }
 
-    public Map<String, Object> getSaveData() {
+    protected Map<String, Object> getSaveData() {
         Map<String, Object> mappings = new HashMap<String, Object>();
         mappings.put("permissions", permissions);
         mappings.put("options", options);
         mappings.put("name", name);
         return mappings;
+    }
+
+    protected static Map<String, String> getColumns() {
+        HashMap<String, String> columns = new HashMap<String, String>();
+        columns.put("permissions", "TEXT");
+        columns.put("name", "VARCHAR(255)");
+        columns.put("options", "TEXT");
+        return columns;
     }
 }

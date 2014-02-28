@@ -23,7 +23,7 @@ import org.bukkit.configuration.ConfigurationSection;
 /**
  * @author Lord_Ralex
  */
-public class YamlPermissionRcon extends YamlPermissionBase implements PermissionRcon {
+public class YamlPermissionRcon extends YamlPermissionServer implements PermissionRcon {
 
     public YamlPermissionRcon(ConfigurationSection config) {
         super("rcon", config);

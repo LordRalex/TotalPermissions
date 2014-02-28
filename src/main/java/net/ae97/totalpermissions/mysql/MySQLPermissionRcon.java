@@ -22,7 +22,7 @@ import net.ae97.totalpermissions.type.PermissionType;
 /**
  * @author Lord_Ralex
  */
-public class MySQLPermissionRcon extends MySQLPermissionBase implements PermissionRcon {
+public class MySQLPermissionRcon extends MySQLPermissionServer implements PermissionRcon {
 
     public MySQLPermissionRcon() {
         super("rcon");

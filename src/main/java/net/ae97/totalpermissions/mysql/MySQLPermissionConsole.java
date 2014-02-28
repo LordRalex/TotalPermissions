@@ -22,7 +22,7 @@ import net.ae97.totalpermissions.type.PermissionType;
 /**
  * @author Lord_Ralex
  */
-public class MySQLPermissionConsole extends MySQLPermissionBase implements PermissionConsole {
+public class MySQLPermissionConsole extends MySQLPermissionServer implements PermissionConsole {
 
     public MySQLPermissionConsole() {
         super("console");
