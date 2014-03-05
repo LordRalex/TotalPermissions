@@ -16,6 +16,9 @@
  */
 package net.ae97.totalpermissions.update;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,11 +27,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.ae97.totalpermissions.TotalPermissions;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
  * @author Lord_Ralex
@@ -37,77 +43,99 @@ public class UpdateChecker implements Runnable {
 
     private final TotalPermissions plugin;
     private final boolean download;
+    private final String apikey;
+    private final boolean disabled;
 
     public UpdateChecker(TotalPermissions p, boolean d) {
         plugin = p;
         download = d;
+        YamlConfiguration config = new YamlConfiguration();
+        config.options().header("This configuration file affects all plugins using the Updater system (version 2+ - http://forums.bukkit.org/threads/96681/ )" + '\n'
+                + "If you wish to use your API key, read http://wiki.bukkit.org/ServerMods_API and place it below." + '\n'
+                + "Some updating systems will not adhere to the disabled value, but these may be turned off in their plugin's configuration.");
+        config.addDefault("api-key", "PUT_API_KEY_HERE");
+        config.addDefault("disable", false);
+
+        File updaterFolder = new File(plugin.getDataFolder().getParentFile(), "Updater");
+        File updaterConfigFile = new File(updaterFolder, "config.yml");
+
+        updaterFolder.mkdirs();
+        if (!updaterConfigFile.exists()) {
+            config.options().copyDefaults(true);
+            try {
+                config.save(updaterConfigFile);
+                config.load(updaterConfigFile);
+            } catch (IOException e) {
+                plugin.getLogger().log(Level.SEVERE, "Error saving default Updater config", e);
+                apikey = null;
+                disabled = true;
+                return;
+            } catch (InvalidConfigurationException e) {
+                plugin.getLogger().log(Level.SEVERE, "Error loading default Updater config", e);
+                apikey = null;
+                disabled = true;
+                return;
+            }
+        }
+        apikey = config.getString("api-key", null);
+        disabled = config.getBoolean("disable", false) || !plugin.getConfig().getBoolean("update.check", true);
     }
 
     @Override
     public void run() {
-        String pluginName = plugin.getDescription().getName();
+        if (disabled) {
+            return;
+        }
         String pluginVersion = plugin.getDescription().getVersion();
         try {
-            URL rss = new URL("http://dev.bukkit.org/bukkit-plugins/totalpermissions/files.rss");
-            String pageLink = null;
-            String onlineVersion = pluginName + "-v" + pluginVersion;
+            URL url = new URL("https://api.curseforge.com/servermods/files?projectIds=54850");
+            URLConnection conn = url.openConnection();
+            conn.setConnectTimeout(5000);
+            if (apikey != null && !apikey.isEmpty() && !apikey.equals("PUT_API_KEY_HERE")) {
+                conn.addRequestProperty("X-API-Key", apikey);
+            }
+            conn.addRequestProperty("User-Agent", "Updater - TotalPermissions-v" + pluginVersion);
+            conn.setDoOutput(true);
+
             BufferedReader reader = null;
-            String line;
+            JsonElement details = null;
             try {
-                reader = new BufferedReader(new InputStreamReader(rss.openStream()));
-                while ((line = reader.readLine()) != null) {
-                    if (line.trim().startsWith("<item>")) {
-                        while ((line = reader.readLine()) != null) {
-                            line = line.trim();
-                            if (line.startsWith("<title>")) {
-                                onlineVersion = line.substring("<title>".length(), line.length() - "</title>".length() - 1);
-                            }
-                            if (line.startsWith("<link>")) {
-                                pageLink = line.substring("<link>".length(), line.length() - "</link>".length() - 1);
-                                break;
-                            }
-                        }
-                        break;
-                    }
+                reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String json = reader.readLine();
+                JsonArray array = new JsonParser().parse(json).getAsJsonArray();
+                details = array.get(array.size() - 1);
+            } catch (IOException e) {
+                if (e.getMessage().contains("HTTP response code: 403")) {
+                    throw new IOException("CurseAPI rejected API-KEY", e);
                 }
+                throw e;
             } finally {
                 if (reader != null) {
                     reader.close();
                 }
             }
-            if (pageLink == null) {
+
+            if (details == null) {
                 return;
             }
-            String latest = checkForUpdate(pluginVersion, onlineVersion);
-            if (latest == null || latest.equals(plugin.getDescription().getVersion())) {
+
+            String onlineVersion = details.getAsJsonObject().get("name").getAsString();
+
+            if (!checkForUpdate(pluginVersion, onlineVersion)) {
                 return;
             }
 
             plugin.getLogger().log(Level.INFO, "Update found! Current: {0} Latest: {1}",
-                    new String[]{plugin.getDescription().getVersion(), latest});
+                    new String[]{
+                        StringUtils.join(getVersionInts(pluginVersion), "."),
+                        StringUtils.join(getVersionInts(onlineVersion), ".")
+                    });
 
             if (!download) {
                 return;
             }
 
-            URL filePage = new URL(pageLink);
-            reader = null;
-            String downloadLink = null;
-            try {
-                reader = new BufferedReader(new InputStreamReader(filePage.openStream()));
-                while ((line = reader.readLine()) != null) {
-                    line = line.trim();
-                    if (line.startsWith("<li class=\"user-action user-action-download\">")) {
-                        downloadLink = line.substring("<li class=\"user-action user-action-download\"><span><a href=\"".length(),
-                                "\">Download</a></span></li>".length() - 1);
-                        break;
-                    }
-                }
-            } finally {
-                if (reader != null) {
-                    reader.close();
-                }
-            }
+            String downloadLink = details.getAsJsonObject().get("downloadUrl").getAsString();
 
             String pluginFileName = plugin.getFile().getName();
 
@@ -118,22 +146,25 @@ public class UpdateChecker implements Runnable {
 
             File output = new File(Bukkit.getUpdateFolderFile(), plugin.getName() + ".jar");
             download(downloadLink, output);
+
         } catch (MalformedURLException ex) {
-            Logger.getLogger(UpdateChecker.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UpdateChecker.class
+                    .getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(UpdateChecker.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UpdateChecker.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private String checkForUpdate(String current, String online) {
+    private boolean checkForUpdate(String current, String online) {
         if (current.equals(online)) {
-            return current;
+            return false;
         }
 
-        return StringUtils.join(checkUpdate(getVersionInts(current), getVersionInts(online)), ".");
+        return checkUpdate(getVersionInts(current), getVersionInts(online));
     }
 
-    private Integer[] checkUpdate(Integer[] current, Integer[] online) {
+    private boolean checkUpdate(Integer[] current, Integer[] online) {
         if (current.length > online.length) {
             Integer[] newOnline = new Integer[current.length];
             System.arraycopy(online, 0, newOnline, 0, online.length);
@@ -151,10 +182,10 @@ public class UpdateChecker implements Runnable {
         }
         for (int i = 0; i < current.length; i++) {
             if (online[i] > current[i]) {
-                return online;
+                return true;
             }
         }
-        return current;
+        return false;
     }
 
     private Integer[] getVersionInts(String versionString) {
