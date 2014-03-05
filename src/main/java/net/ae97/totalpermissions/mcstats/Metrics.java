@@ -328,10 +328,6 @@ public final class Metrics {
         return URLEncoder.encode(text, "UTF-8");
     }
 
-    private File getConfigFile() {
-        return configurationFile;
-    }
-
     private boolean isMineshafterPresent() {
         try {
             Class.forName("mineshafter.MineServer");

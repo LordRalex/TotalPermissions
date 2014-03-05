@@ -25,8 +25,12 @@ public interface PermissionGroup extends PermissionBase {
 
     public List<String> getInheritence();
 
+    public void removeInheritence(String substring);
+
+    public void addInheritence(String inheritence);
+
     public int getRank();
-    
+
     public void setRank(int newRank);
 
     public boolean isDefault();

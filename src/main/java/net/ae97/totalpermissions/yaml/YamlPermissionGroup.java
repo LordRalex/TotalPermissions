@@ -74,10 +74,24 @@ public class YamlPermissionGroup extends YamlPermissionBase implements Permissio
     }
 
     @Override
+    public void removeInheritence(String inher) {
+        do {
+            inheritence.remove(inher);
+        } while (inheritence.contains(inher));
+    }
+
+    @Override
+    public void addInheritence(String inher) {
+        if (!inheritence.contains(inher)) {
+            inheritence.add(inher);;
+        }
+    }
+
+    @Override
     public int getRank() {
         return rank;
     }
-    
+
     @Override
     public void setRank(int newRank) {
         rank = newRank;

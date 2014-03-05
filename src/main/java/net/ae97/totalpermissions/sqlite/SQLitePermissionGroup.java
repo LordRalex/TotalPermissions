@@ -45,6 +45,20 @@ public class SQLitePermissionGroup extends SQLitePermissionBase implements Permi
     }
 
     @Override
+    public void removeInheritence(String inher) {
+        do {
+            inheritence.remove(inher);
+        } while (inheritence.contains(inher));
+    }
+
+    @Override
+    public void addInheritence(String inher) {
+        if (!inheritence.contains(inher)) {
+            inheritence.add(inher);;
+        }
+    }
+
+    @Override
     public int getRank() {
         return rank;
     }

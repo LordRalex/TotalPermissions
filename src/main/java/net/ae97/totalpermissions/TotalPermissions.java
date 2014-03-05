@@ -26,6 +26,7 @@ import net.ae97.totalpermissions.data.DataHolder;
 import net.ae97.totalpermissions.data.DataManager;
 import net.ae97.totalpermissions.data.DataType;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
+import net.ae97.totalpermissions.importer.DataHolderImporter;
 import net.ae97.totalpermissions.listener.ListenerManager;
 import net.ae97.totalpermissions.mcstats.Metrics;
 import net.ae97.totalpermissions.mysql.MySQLDataHolder;
@@ -33,6 +34,7 @@ import net.ae97.totalpermissions.sqlite.SQLiteDataHolder;
 import net.ae97.totalpermissions.update.UpdateChecker;
 import net.ae97.totalpermissions.yaml.SingleYamlDataHolder;
 import net.ae97.totalpermissions.yaml.SplitYamlDataHolder;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -46,6 +48,7 @@ public final class TotalPermissions extends JavaPlugin {
     private CommandHandler commands;
     private DataManager dataManager;
     private Thread updateChecker;
+    private DataHolderImporter importer;
 
     @Override
     public void onLoad() {
@@ -57,93 +60,165 @@ public final class TotalPermissions extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        getLogger().info("Beginning initial preperations");
+        if (!getDataFolder().exists()) {
+            getDataFolder().mkdirs();
+        }
+
+        if (!(new File(getDataFolder(), "config.yml").exists())) {
+            getLogger().finest("Saving default config");
+            saveResource("config.yml", true);
+        }
+        if (!(new File(getDataFolder(), "permissions.yml").exists())) {
+            getLogger().finest("Saving default permissions.yml");
+            saveResource("permissions.yml", true);
+        }
+
+        String storageType = getConfig().getString("storage", "yaml_shared");
+        DataType type = DataType.valueOf(storageType.toUpperCase());
+        if (type == null) {
+            getLogger().log(Level.SEVERE, "{0} is not a known storage system, defaulting to YAML_SHARED", storageType);
+            type = DataType.YAML_SHARED;
+        }
+        getLogger().finest("Creating data holder");
+        getLogger().log(Level.FINEST, "Storage type to load: {0}", storageType);
+        switch (type) {
+            default:
+            case YAML_SHARED: {
+                dataHolder = new SingleYamlDataHolder(new File(getDataFolder(), "permissions.yml"));
+            }
+            break;
+            case YAML_SPLIT: {
+                dataHolder = new SplitYamlDataHolder(getDataFolder());
+            }
+            break;
+            case SQLITE: {
+                dataHolder = new SQLiteDataHolder();
+            }
+            break;
+            case MYSQL: {
+                Map<String, String> dbInfo = new HashMap<String, String>();
+                dbInfo.put("host", getConfig().getString("mysql.host", "localhost"));
+                dbInfo.put("port", getConfig().getString("mysql.port", "3306"));
+                dbInfo.put("db", getConfig().getString("mysql.database", "totalpermissions"));
+                dbInfo.put("user", getConfig().getString("mysql.username", "root"));
+                dbInfo.put("pass", getConfig().getString("mysql.password", ""));
+                dataHolder = new MySQLDataHolder(dbInfo);
+            }
+            break;
+        }
+
+        getLogger().finest("Loading permissions setup");
+        dataManager = new DataManager(this, dataHolder);
         try {
-            getLogger().info("Beginning initial preperations");
-            if (!getDataFolder().exists()) {
-                getDataFolder().mkdirs();
-            }
-
-            if (!(new File(getDataFolder(), "config.yml").exists())) {
-                getLogger().finest("Saving default config");
-                saveResource("config.yml", true);
-            }
-            if (!(new File(getDataFolder(), "permissions.yml").exists())) {
-                getLogger().finest("Saving default permissions.yml");
-                saveResource("permissions.yml", true);
-            }
-
-            String storageType = getConfig().getString("storage", "yaml_shared");
-            DataType type = DataType.valueOf(storageType.toUpperCase());
-            if (type == null) {
-                getLogger().log(Level.SEVERE, "{0} is not a known storage system, defaulting to YAML_SHARED", storageType);
-                type = DataType.YAML_SHARED;
-            }
-            getLogger().finest("Creating data holder");
-            getLogger().log(Level.FINEST, "Storage type to load: {0}", storageType);
-            switch (type) {
-                default:
-                case YAML_SHARED: {
-                    dataHolder = new SingleYamlDataHolder(new File(getDataFolder(), "permissions.yml"));
-                }
-                break;
-                case YAML_SPLIT: {
-                    dataHolder = new SplitYamlDataHolder(getDataFolder());
-                }
-                break;
-                case SQLITE: {
-                    dataHolder = new SQLiteDataHolder();
-                }
-                break;
-                case MYSQL: {
-                    Map<String, String> dbInfo = new HashMap<String, String>();
-                    dbInfo.put("host", getConfig().getString("mysql.host", "localhost"));
-                    dbInfo.put("port", getConfig().getString("mysql.port", "3306"));
-                    dbInfo.put("db", getConfig().getString("mysql.database", "totalpermissions"));
-                    dbInfo.put("user", getConfig().getString("mysql.username", "root"));
-                    dbInfo.put("pass", getConfig().getString("mysql.password", ""));
-                    dataHolder = new MySQLDataHolder(dbInfo);
-                }
-                break;
-            }
-
-            getLogger().finest("Loading permissions setup");
-            dataManager = new DataManager(this, dataHolder);
             dataManager.load();
+        } catch (DataLoadFailedException ex) {
+            getLogger().log(Level.SEVERE, "Error on loading permissions", ex);
+            Bukkit.getPluginManager().disablePlugin(this);
+        }
 
-            getLogger().finest("Creating listener");
-            listenerManager = new ListenerManager(this);
-            getLogger().finest("Registering listeners");
-            listenerManager.load();
+        if (getConfig().getBoolean("import.import", false)) {
+            String importFrom = getConfig().getString("storage", "yaml_shared");
+            DataType importType = DataType.valueOf(importFrom.toUpperCase());
+            if (importType == null) {
+                getLogger().log(Level.SEVERE, "{0} is not a known storage system, defaulting to YAML_SHARED", importType);
+                importType = DataType.YAML_SHARED;
+            }
+            getLogger().log(Level.FINEST, "Storage type to import from: {0}", importType);
+            try {
+                DataHolder importHolder;
+                switch (importType) {
+                    default:
+                    case YAML_SHARED: {
+                        importHolder = new SingleYamlDataHolder(new File(getDataFolder(), "import.yml"));
+                    }
+                    break;
+                    case YAML_SPLIT: {
+                        importHolder = new SplitYamlDataHolder(getDataFolder());
+                    }
+                    break;
+                    case SQLITE: {
+                        importHolder = new SQLiteDataHolder();
+                    }
+                    break;
+                    case MYSQL: {
+                        Map<String, String> dbInfo = new HashMap<String, String>();
+                        dbInfo.put("host", getConfig().getString("import.mysql.host", "localhost"));
+                        dbInfo.put("port", getConfig().getString("import.mysql.port", "3306"));
+                        dbInfo.put("db", getConfig().getString("import.mysql.database", "totalpermissions"));
+                        dbInfo.put("user", getConfig().getString("import.mysql.username", "root"));
+                        dbInfo.put("pass", getConfig().getString("import.mysql.password", ""));
+                        importHolder = new MySQLDataHolder(dbInfo);
+                    }
+                    break;
+                }
+                importHolder.load();
+                importer = new DataHolderImporter(importHolder, dataHolder);
+                importer.start();
+            } catch (DataLoadFailedException ex) {
+                getLogger().log(Level.SEVERE, "Error occured on setting up importer", ex);
+            }
+        }
 
-            getLogger().finest("Creating command handler");
-            commands = new CommandHandler(this);
-            getLogger().finest("Registering command handler");
-            getCommand("totalpermissions").setExecutor(commands);
+        getLogger().finest("Creating listener");
+        listenerManager = new ListenerManager(this);
+        getLogger().finest("Registering listeners");
+        listenerManager.load();
 
-            getLogger().finest("Loading up metrics");
+        getLogger().finest("Creating command handler");
+        commands = new CommandHandler(this);
+        getLogger().finest("Registering command handler");
+        getCommand("totalpermissions").setExecutor(commands);
+
+        getLogger().finest("Loading up metrics");
+        try {
             metrics = new Metrics(this);
             if (metrics.start()) {
                 getLogger().info("Metrics stat collecting enabled");
             } else {
                 getLogger().info("Metrics stat collecting is not enabled");
+                metrics = null;
             }
-        } catch (IOException e) {
-            getLogger().log(Level.SEVERE, "An error occured on enabled, please check your configs and other files", e);
-        } catch (DataLoadFailedException e) {
-            getLogger().log(Level.SEVERE, "An error occured on loading some data, please check the error and fix the issue:", e);
+        } catch (IOException ex) {
+            getLogger().log(Level.SEVERE, "Error on loading Metrics", ex);
+        }
+
+        if (importer != null) {
+            synchronized (importer) {
+                try {
+                    getLogger().log(Level.INFO, "Waiting for import process to complete before continuing");
+                    importer.join();
+                    if (importer.hasCrashed()) {
+                        getLogger().log(Level.SEVERE, "Import process failed", importer.getException());
+                    } else {
+                        getLogger().log(Level.INFO, "Import complete");
+                        getConfig().set("import.import", false);
+                        saveConfig();
+                    }
+                } catch (InterruptedException ex) {
+                    getLogger().log(Level.SEVERE, "Error while waiting for importer to complete", ex);
+                }
+            }
+            importer = null;
         }
     }
 
     @Override
     public void onDisable() {
-        synchronized (updateChecker) {
-            try {
-                updateChecker.join();
-            } catch (InterruptedException ex) {
-                getLogger().log(Level.SEVERE, "Error while waiting for update check thread", ex);
+        if (updateChecker != null) {
+            synchronized (updateChecker) {
+                try {
+                    updateChecker.join();
+                } catch (InterruptedException ex) {
+                    getLogger().log(Level.SEVERE, "Error while waiting for update check thread", ex);
+                }
             }
+            updateChecker = null;
         }
-        metrics.shutdown();
+        if (metrics != null) {
+            metrics.shutdown();
+            metrics = null;
+        }
     }
 
     public ListenerManager getListenerManager() {
