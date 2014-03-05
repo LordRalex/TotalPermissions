@@ -60,6 +60,8 @@ public class UpdateChecker implements Runnable {
         File updaterConfigFile = new File(updaterFolder, "config.yml");
 
         updaterFolder.mkdirs();
+        String tempKey = null;
+        boolean tempDisabled = false;
         if (!updaterConfigFile.exists()) {
             config.options().copyDefaults(true);
             try {
@@ -67,18 +69,16 @@ public class UpdateChecker implements Runnable {
                 config.load(updaterConfigFile);
             } catch (IOException e) {
                 plugin.getLogger().log(Level.SEVERE, "Error saving default Updater config", e);
-                apikey = null;
-                disabled = true;
-                return;
+                tempKey = null;
+                tempDisabled = true;
             } catch (InvalidConfigurationException e) {
                 plugin.getLogger().log(Level.SEVERE, "Error loading default Updater config", e);
-                apikey = null;
-                disabled = true;
-                return;
+                tempKey = null;
+                tempDisabled = true;
             }
         }
-        apikey = config.getString("api-key", null);
-        disabled = config.getBoolean("disable", false) || !plugin.getConfig().getBoolean("update.check", true);
+        apikey = tempKey == null ? config.getString("api-key", null) : null;
+        disabled = tempDisabled || config.getBoolean("disable", false) || !plugin.getConfig().getBoolean("update.check", true);
     }
 
     @Override
