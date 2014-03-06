@@ -34,42 +34,37 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.zip.GZIPOutputStream;
 import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public final class Metrics {
 
-    private final PostRunnable task;
-    private final int REVISION = 7;
-    private final String BASE_URL = "http://report.mcstats.org";
-    private final String REPORT_URL = "/plugin/%s";
-    private final int PING_INTERVAL = 15;
     private final TotalPermissions plugin;
-    private final Set<Graph> graphs = new HashSet<Graph>();
-    private final YamlConfiguration configuration;
-    private final File configurationFile;
     private final String guid;
+    private final URL url;
+    private final int REVISION = 7;
+    private final String USER_AGENT = "MCStats/" + REVISION;
+    private final PostRunnable task = new PostRunnable();
+    private final YamlConfiguration configuration = new YamlConfiguration();
+    private final File configurationFile;
 
     public Metrics(TotalPermissions p) throws IOException {
-        if (p == null) {
-            throw new IllegalArgumentException("Plugin cannot be null");
-        }
-
         plugin = p;
 
         configurationFile = new File(new File(plugin.getDataFolder().getParentFile(), "PluginMetrics"), "config.yml");
-        configuration = YamlConfiguration.loadConfiguration(configurationFile);
+        try {
+            configuration.load(configurationFile);
+        } catch (InvalidConfigurationException e) {
+            plugin.getLogger().log(Level.SEVERE, "Metrics config cannot be loaded, going to continue with new config", e);
+        }
         configuration.addDefault("opt-out", !plugin.getConfig().getBoolean("metrics-report", true));
         configuration.addDefault("guid", UUID.randomUUID().toString());
         configuration.addDefault("debug", false);
@@ -80,24 +75,27 @@ public final class Metrics {
         }
 
         guid = configuration.getString("guid");
-        task = new PostRunnable();
+        url = new URL("http://report.mcstats.org/plugin/" + URLEncoder.encode(plugin.getName(), "UTF-8"));
+    }
+
+    public boolean isOptOut() {
+        if (!plugin.getConfig().getBoolean("metrics-report", true)) {
+            return true;
+        } else {
+            return configuration.getBoolean("opt-out", false);
+        }
     }
 
     public boolean start() {
-        if (isOptOut()) {
-            return false;
-        }
-        if (task.isScheduled()) {
-            return true;
-        }
         task.setMetrics(this);
-        task.runTaskTimerAsynchronously(plugin, 0, PING_INTERVAL * 1200);
+        task.start();
         return true;
     }
 
-    public void shutdown() {
+    public void shutdown() throws InterruptedException {
         synchronized (task) {
-            task.cancel();
+            task.interrupt();
+            task.join();
         }
     }
 
@@ -110,74 +108,23 @@ public final class Metrics {
         appendJSONPair(json, "plugin_version", plugin.getDescription().getVersion());
         appendJSONPair(json, "server_version", Bukkit.getBukkitVersion());
         appendJSONPair(json, "players_online", Integer.toString(Bukkit.getServer().getOnlinePlayers().length));
-
         appendJSONPair(json, "auth_mode", Bukkit.getOnlineMode() ? "1" : "0");
 
         if (isPing) {
             appendJSONPair(json, "ping", "1");
         }
 
-        synchronized (graphs) {
-            if (graphs.size() > 0) {
-                json.append(',');
-                json.append('"');
-                json.append("graphs");
-                json.append('"');
-                json.append(':');
-                json.append('{');
-
-                boolean firstGraph = true;
-
-                final Iterator<Graph> iter = graphs.iterator();
-
-                while (iter.hasNext()) {
-                    Graph graph = iter.next();
-
-                    StringBuilder graphJson = new StringBuilder();
-                    graphJson.append('{');
-
-                    for (Plotter plotter : graph.getPlotters()) {
-                        appendJSONPair(graphJson, plotter.getColumnName(), Integer.toString(plotter.getValue()));
-                    }
-
-                    graphJson.append('}');
-
-                    if (!firstGraph) {
-                        json.append(',');
-                    }
-
-                    json.append(escapeJSON(graph.getName()));
-                    json.append(':');
-                    json.append(graphJson);
-
-                    firstGraph = false;
-                }
-
-                json.append('}');
-            }
-        }
-
         json.append('}');
-
-        URL url = new URL(BASE_URL + String.format(REPORT_URL, urlEncode(plugin.getName())));
-
-        URLConnection connection;
-
-        if (isMineshafterPresent()) {
-            connection = url.openConnection(Proxy.NO_PROXY);
-        } else {
-            connection = url.openConnection();
-        }
 
         byte[] compressed = gzip(json.toString());
 
-        connection.addRequestProperty("User-Agent", "MCStats/" + REVISION);
+        URLConnection connection = url.openConnection();
+        connection.addRequestProperty("User-Agent", USER_AGENT);
         connection.addRequestProperty("Content-Type", "application/json");
         connection.addRequestProperty("Content-Encoding", "gzip");
         connection.addRequestProperty("Content-Length", Integer.toString(compressed.length));
         connection.addRequestProperty("Accept", "application/json");
         connection.addRequestProperty("Connection", "close");
-
         connection.setDoOutput(true);
 
         OutputStream os = null;
@@ -205,49 +152,24 @@ public final class Metrics {
                 reader.close();
             }
         }
-
         if (response == null || response.startsWith("ERR") || response.startsWith("7")) {
             if (response == null) {
                 response = "null";
             } else if (response.startsWith("7")) {
                 response = response.substring(response.startsWith("7,") ? 2 : 1);
             }
-
             throw new IOException(response);
-        } else {
-            if (response.equals("1") || response.contains("This is your first update this hour")) {
-                synchronized (graphs) {
-                    final Iterator<Graph> iter = graphs.iterator();
-
-                    while (iter.hasNext()) {
-                        final Graph graph = iter.next();
-
-                        for (Plotter plotter : graph.getPlotters()) {
-                            plotter.reset();
-                        }
-                    }
-                }
-            }
         }
     }
 
-    protected boolean isOptOut() {
-        if (!plugin.getConfig().getBoolean("metrics-report", true)) {
-            return true;
-        } else {
-            return configuration.getBoolean("opt-out", false);
-        }
-    }
-
-    private byte[] gzip(String input) {
+    private byte[] gzip(String input) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         GZIPOutputStream gzos = null;
-
         try {
             gzos = new GZIPOutputStream(baos);
             gzos.write(input.getBytes("UTF-8"));
         } catch (IOException e) {
-            plugin.getLogger().log(Level.SEVERE, "An error occurred on gzipping from Metrics", e);
+            throw new IOException("An error occurred on gzipping from Metrics", e);
         } finally {
             if (gzos != null) {
                 try {
@@ -256,24 +178,20 @@ public final class Metrics {
                 }
             }
         }
-
         return baos.toByteArray();
     }
 
     private void appendJSONPair(StringBuilder json, String key, String value) throws UnsupportedEncodingException {
         boolean isValueNumeric;
-
         try {
             Double.parseDouble(value);
             isValueNumeric = true;
         } catch (NumberFormatException e) {
             isValueNumeric = false;
         }
-
         if (json.charAt(json.length() - 1) != '{') {
             json.append(',');
         }
-
         json.append(escapeJSON(key));
         json.append(':');
 
@@ -286,11 +204,8 @@ public final class Metrics {
 
     private String escapeJSON(String text) {
         StringBuilder builder = new StringBuilder();
-
         builder.append('"');
-        for (int index = 0; index < text.length(); index++) {
-            char chr = text.charAt(index);
-
+        for (char chr : text.toCharArray()) {
             switch (chr) {
                 case '"':
                 case '\\':
@@ -320,20 +235,6 @@ public final class Metrics {
             }
         }
         builder.append('"');
-
         return builder.toString();
-    }
-
-    private String urlEncode(String text) throws UnsupportedEncodingException {
-        return URLEncoder.encode(text, "UTF-8");
-    }
-
-    private boolean isMineshafterPresent() {
-        try {
-            Class.forName("mineshafter.MineServer");
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
     }
 }

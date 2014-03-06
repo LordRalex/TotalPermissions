@@ -16,7 +16,7 @@
  */
 package net.ae97.totalpermissions.util;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import org.bukkit.Bukkit;
@@ -33,15 +33,13 @@ public final class PermissionUtility {
     }
 
     public static List<String> handleWildcard(boolean isAll) {
-        List<String> perms = new ArrayList<String>();
+        List<String> perms = new LinkedList<String>();
         Set<Permission> permT = Bukkit.getPluginManager().getPermissions();
         for (Permission permTest : permT) {
-            if (permTest.getName().startsWith("totalpermissions.")) {
-                continue;
-            } else if (permTest.getDefault() != PermissionDefault.FALSE) {
-                perms.add(permTest.getName());
-            } else if (isAll) {
-                perms.add(permTest.getName());
+            if (!permTest.getName().startsWith("totalpermissions.")) {
+                if (permTest.getDefault() != PermissionDefault.FALSE || isAll) {
+                    perms.add(permTest.getName());
+                }
             }
         }
         return perms;

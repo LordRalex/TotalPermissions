@@ -47,15 +47,12 @@ public final class TotalPermissions extends JavaPlugin {
     private Metrics metrics;
     private CommandHandler commands;
     private DataManager dataManager;
-    private Thread updateChecker;
+    private Thread updateWaiter;
     private DataHolderImporter importer;
 
     @Override
     public void onLoad() {
-        if (getConfig().getBoolean("update.check", true)) {
-            updateChecker = new Thread(new UpdateChecker(this, getConfig().getBoolean("update.download", true)));
-            updateChecker.start();
-        }
+        updateWaiter = new Waiter(this);
     }
 
     @Override
@@ -74,14 +71,13 @@ public final class TotalPermissions extends JavaPlugin {
             saveResource("permissions.yml", true);
         }
 
-        String storageType = getConfig().getString("storage", "yaml_shared");
-        DataType type = DataType.valueOf(storageType.toUpperCase());
+        DataType type = DataType.valueOf(getConfig().getString("storage", "yaml_shared").toUpperCase());
         if (type == null) {
-            getLogger().log(Level.SEVERE, "{0} is not a known storage system, defaulting to YAML_SHARED", storageType);
+            getLogger().log(Level.SEVERE, "{0} is not a known storage system, defaulting to YAML_SHARED", getConfig().getString("storage", "yaml_shared"));
             type = DataType.YAML_SHARED;
         }
         getLogger().finest("Creating data holder");
-        getLogger().log(Level.FINEST, "Storage type to load: {0}", storageType);
+        getLogger().log(Level.FINEST, "Storage type to load: {0}", type);
         switch (type) {
             default:
             case YAML_SHARED: {
@@ -118,10 +114,9 @@ public final class TotalPermissions extends JavaPlugin {
         }
 
         if (getConfig().getBoolean("import.import", false)) {
-            String importFrom = getConfig().getString("storage", "yaml_shared");
-            DataType importType = DataType.valueOf(importFrom.toUpperCase());
+            DataType importType = DataType.valueOf(getConfig().getString("storage", "yaml_shared").toUpperCase());
             if (importType == null) {
-                getLogger().log(Level.SEVERE, "{0} is not a known storage system, defaulting to YAML_SHARED", importType);
+                getLogger().log(Level.SEVERE, "{0} is not a known storage system, defaulting to YAML_SHARED", getConfig().getString("storage", "yaml_shared"));
                 importType = DataType.YAML_SHARED;
             }
             getLogger().log(Level.FINEST, "Storage type to import from: {0}", importType);
@@ -134,7 +129,7 @@ public final class TotalPermissions extends JavaPlugin {
                     }
                     break;
                     case YAML_SPLIT: {
-                        importHolder = new SplitYamlDataHolder(getDataFolder());
+                        importHolder = new SplitYamlDataHolder(new File(getDataFolder(), "import"));
                     }
                     break;
                     case SQLITE: {
@@ -173,14 +168,16 @@ public final class TotalPermissions extends JavaPlugin {
         getLogger().finest("Loading up metrics");
         try {
             metrics = new Metrics(this);
-            if (metrics.start()) {
-                getLogger().info("Metrics stat collecting enabled");
-            } else {
+            if (metrics.isOptOut()) {
                 getLogger().info("Metrics stat collecting is not enabled");
                 metrics = null;
+            } else {
+                getLogger().info("Metrics stat collecting enabled");
+                metrics.start();
             }
         } catch (IOException ex) {
             getLogger().log(Level.SEVERE, "Error on loading Metrics", ex);
+            metrics = null;
         }
 
         if (importer != null) {
@@ -198,26 +195,32 @@ public final class TotalPermissions extends JavaPlugin {
                 } catch (InterruptedException ex) {
                     getLogger().log(Level.SEVERE, "Error while waiting for importer to complete", ex);
                 }
+                importer = null;
             }
-            importer = null;
         }
     }
 
     @Override
     public void onDisable() {
-        if (updateChecker != null) {
-            synchronized (updateChecker) {
+        if (updateWaiter != null) {
+            synchronized (updateWaiter) {
                 try {
-                    updateChecker.join();
+                    updateWaiter.join();
                 } catch (InterruptedException ex) {
                     getLogger().log(Level.SEVERE, "Error while waiting for update check thread", ex);
                 }
+                updateWaiter = null;
             }
-            updateChecker = null;
         }
         if (metrics != null) {
-            metrics.shutdown();
-            metrics = null;
+            synchronized (metrics) {
+                try {
+                    metrics.shutdown();
+                } catch (InterruptedException ex) {
+                    getLogger().log(Level.SEVERE, "Error while waiting for Metrics to shutdown", ex);
+                }
+                metrics = null;
+            }
         }
     }
 
@@ -240,5 +243,24 @@ public final class TotalPermissions extends JavaPlugin {
     @Override
     public File getFile() {
         return super.getFile();
+    }
+
+    private class Waiter extends Thread {
+
+        private final Thread updateChecker;
+
+        public Waiter(TotalPermissions p) {
+            updateChecker = new Thread(new UpdateChecker(p));
+        }
+
+        @Override
+        public void run() {
+            updateChecker.start();
+            try {
+                updateChecker.join();
+            } catch (InterruptedException ex) {
+                getLogger().log(Level.SEVERE, "Error while waiting for update check thread", ex);
+            }
+        }
     }
 }

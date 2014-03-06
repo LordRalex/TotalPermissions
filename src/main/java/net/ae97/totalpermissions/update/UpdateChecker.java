@@ -46,9 +46,8 @@ public class UpdateChecker implements Runnable {
     private final String apikey;
     private final boolean disabled;
 
-    public UpdateChecker(TotalPermissions p, boolean d) {
+    public UpdateChecker(TotalPermissions p) {
         plugin = p;
-        download = d;
         YamlConfiguration config = new YamlConfiguration();
         config.options().header("This configuration file affects all plugins using the Updater system (version 2+ - http://forums.bukkit.org/threads/96681/ )" + '\n'
                 + "If you wish to use your API key, read http://wiki.bukkit.org/ServerMods_API and place it below." + '\n'
@@ -79,6 +78,7 @@ public class UpdateChecker implements Runnable {
         }
         apikey = tempKey == null ? config.getString("api-key", null) : null;
         disabled = tempDisabled || config.getBoolean("disable", false) || !plugin.getConfig().getBoolean("update.check", true);
+        download = plugin.getConfig().getBoolean("update.download", true);
     }
 
     @Override

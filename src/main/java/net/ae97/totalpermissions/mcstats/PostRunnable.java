@@ -17,15 +17,19 @@
 package net.ae97.totalpermissions.mcstats;
 
 import java.io.IOException;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * @author Lord_Ralex
  */
-public final class PostRunnable extends BukkitRunnable {
+final class PostRunnable extends Thread {
 
     private boolean firstPost = false;
     private Metrics metrics;
+    private final int PING_INTERVAL = 1200 * 15;
+    boolean running = false;
+
+    protected PostRunnable() {
+    }
 
     protected void setMetrics(Metrics met) {
         if (metrics == null) {
@@ -35,23 +39,24 @@ public final class PostRunnable extends BukkitRunnable {
 
     @Override
     public void run() {
-        try {
-            if (metrics == null) {
-                this.cancel();
+        while (!isInterrupted()) {
+            try {
+                if (metrics == null) {
+                    return;
+                }
+                if (metrics.isOptOut()) {
+                    return;
+                }
+                metrics.postPlugin(!firstPost);
+                firstPost = false;
+            } catch (IOException e) {
             }
-            if (metrics.isOptOut()) {
+            synchronized (this) {
+                try {
+                    this.wait(PING_INTERVAL);
+                } catch (InterruptedException ex) {
+                }
             }
-            metrics.postPlugin(!firstPost);
-            firstPost = false;
-        } catch (IOException e) {
-        }
-    }
-
-    public boolean isScheduled() {
-        try {
-            return this.getTaskId() != -1;
-        } catch (IllegalStateException e) {
-            return false;
         }
     }
 }

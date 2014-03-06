@@ -16,7 +16,8 @@
  */
 package net.ae97.totalpermissions.commands;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import net.ae97.totalpermissions.TotalPermissions;
@@ -70,7 +71,7 @@ public final class CommandHandler implements CommandExecutor {
         if (sb.toString().contains("\"")) {
             char[] broken = sb.toString().trim().toCharArray();
             StringBuilder usb = new StringBuilder();
-            ArrayList<String> newargs = new ArrayList();
+            List<String> newargs = new LinkedList();
             boolean inquotes = false;
             for (int i = 0; i < broken.length; i++) {
                 if (broken[i] == '"') {
