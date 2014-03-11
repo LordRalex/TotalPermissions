@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.ae97.totalpermissions.mysql;
+package net.ae97.totalpermissions.sql;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -28,14 +28,14 @@ import org.bukkit.permissions.Permission;
 /**
  * @author Lord_Ralex
  */
-public abstract class MySQLPermissionBase implements PermissionBase {
+public abstract class SQLPermissionBase implements PermissionBase {
 
-    private final String name;
-    private final Map<String, List<String>> permissions = new HashMap<String, List<String>>();
-    private final Map<String, Map<String, Object>> options = new HashMap<String, Map<String, Object>>();
+    protected final String name;
+    protected final Map<String, List<String>> permissions = new HashMap<String, List<String>>();
+    protected final Map<String, Map<String, Object>> options = new HashMap<String, Map<String, Object>>();
     private boolean debug = false;
 
-    public MySQLPermissionBase(String n) {
+    public SQLPermissionBase(String n) {
         name = n;
     }
 

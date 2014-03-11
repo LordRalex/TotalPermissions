@@ -14,17 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.ae97.totalpermissions.sqlite;
+package net.ae97.totalpermissions.sql;
 
-import net.ae97.totalpermissions.base.PermissionServer;
+import net.ae97.totalpermissions.base.PermissionWorld;
+import net.ae97.totalpermissions.type.PermissionType;
 
 /**
  * @author Lord_Ralex
  */
-public abstract class SQLitePermissionServer extends SQLitePermissionBase implements PermissionServer {
+public class SQLPermissionWorld extends SQLPermissionBase implements PermissionWorld {
 
-    public SQLitePermissionServer(String n) {
+    public SQLPermissionWorld(String n) {
         super(n);
     }
 
+    @Override
+    public PermissionType getType() {
+        return PermissionType.WORLD;
+    }
 }

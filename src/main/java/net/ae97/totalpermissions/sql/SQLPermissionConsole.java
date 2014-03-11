@@ -14,22 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.ae97.totalpermissions.mysql;
+package net.ae97.totalpermissions.sql;
 
-import net.ae97.totalpermissions.base.PermissionOp;
+import net.ae97.totalpermissions.base.PermissionConsole;
 import net.ae97.totalpermissions.type.PermissionType;
 
 /**
  * @author Lord_Ralex
  */
-public class MySQLPermissionOp extends MySQLPermissionServer implements PermissionOp {
+public class SQLPermissionConsole extends SQLPermissionBase implements PermissionConsole {
 
-    public MySQLPermissionOp() {
-        super("op");
+    public SQLPermissionConsole() {
+        super("console");
     }
 
     @Override
     public PermissionType getType() {
-        return PermissionType.OP;
+        return PermissionType.CONSOLE;
     }
 }

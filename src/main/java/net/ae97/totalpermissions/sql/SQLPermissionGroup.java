@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.ae97.totalpermissions.mysql;
+package net.ae97.totalpermissions.sql;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -29,13 +29,13 @@ import org.bukkit.Bukkit;
 /**
  * @author Lord_Ralex
  */
-public class MySQLPermissionGroup extends MySQLPermissionBase implements PermissionGroup {
+public class SQLPermissionGroup extends SQLPermissionBase implements PermissionGroup {
 
     private final List<String> inheritence = new LinkedList<String>();
     private int rank = 0;
     private boolean defaultGroup = false;
 
-    public MySQLPermissionGroup(String n) {
+    public SQLPermissionGroup(String n) {
         super(n);
     }
 
@@ -54,7 +54,7 @@ public class MySQLPermissionGroup extends MySQLPermissionBase implements Permiss
     @Override
     public void addInheritence(String inher) {
         if (!inheritence.contains(inher)) {
-            inheritence.add(inher);;
+            inheritence.add(inher);
         }
     }
 
@@ -112,7 +112,7 @@ public class MySQLPermissionGroup extends MySQLPermissionBase implements Permiss
     }
 
     protected static Map<String, String> getColumns() {
-        Map<String, String> columns = MySQLPermissionBase.getColumns();
+        Map<String, String> columns = SQLPermissionBase.getColumns();
         columns.put("inheritence", "TEXT");
         columns.put("default", "BOOLEAN");
         columns.put("rank", "INTEGER");

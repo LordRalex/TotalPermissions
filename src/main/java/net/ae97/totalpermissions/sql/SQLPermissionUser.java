@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.ae97.totalpermissions.sqlite;
+package net.ae97.totalpermissions.sql;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -30,11 +30,11 @@ import org.bukkit.Bukkit;
 /**
  * @author Lord_Ralex
  */
-public class SQLitePermissionUser extends SQLitePermissionBase implements PermissionUser {
+public class SQLPermissionUser extends SQLPermissionBase implements PermissionUser {
 
     private final LinkedList<String> groups = new LinkedList<String>();
 
-    public SQLitePermissionUser(String n) {
+    public SQLPermissionUser(String n) {
         super(n);
     }
 
@@ -138,7 +138,7 @@ public class SQLitePermissionUser extends SQLitePermissionBase implements Permis
     }
 
     protected static Map<String, String> getColumns() {
-        Map<String, String> columns = SQLitePermissionBase.getColumns();
+        Map<String, String> columns = SQLPermissionBase.getColumns();
         columns.put("groups", "TEXT");
         return columns;
     }

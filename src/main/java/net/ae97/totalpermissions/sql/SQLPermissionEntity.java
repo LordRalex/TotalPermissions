@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.ae97.totalpermissions.sqlite;
+package net.ae97.totalpermissions.sql;
 
 import net.ae97.totalpermissions.base.PermissionEntity;
 import net.ae97.totalpermissions.type.PermissionType;
@@ -22,9 +22,9 @@ import net.ae97.totalpermissions.type.PermissionType;
 /**
  * @author Lord_Ralex
  */
-public class SQLitePermissionEntity extends SQLitePermissionBase implements PermissionEntity {
+public class SQLPermissionEntity extends SQLPermissionBase implements PermissionEntity {
 
-    public SQLitePermissionEntity(String n) {
+    public SQLPermissionEntity(String n) {
         super(n);
     }
 

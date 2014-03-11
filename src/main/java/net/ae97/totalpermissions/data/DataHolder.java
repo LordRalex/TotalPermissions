@@ -58,7 +58,7 @@ public interface DataHolder<T extends PermissionBase> {
 
     public PermissionGroup getGroup(String name) throws DataLoadFailedException;
 
-    public T get(PermissionType type, String name) throws DataLoadFailedException;
+    public PermissionBase get(PermissionType type, String name) throws DataLoadFailedException;
 
     public PermissionWorld getWorld(String name) throws DataLoadFailedException;
 

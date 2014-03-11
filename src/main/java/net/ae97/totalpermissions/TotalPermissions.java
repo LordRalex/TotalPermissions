@@ -89,7 +89,7 @@ public final class TotalPermissions extends JavaPlugin {
             }
             break;
             case SQLITE: {
-                dataHolder = new SQLiteDataHolder();
+                dataHolder = new SQLiteDataHolder(new File(getDataFolder(), "permissions.db"));
             }
             break;
             case MYSQL: {
@@ -133,7 +133,7 @@ public final class TotalPermissions extends JavaPlugin {
                     }
                     break;
                     case SQLITE: {
-                        importHolder = new SQLiteDataHolder();
+                        importHolder = new SQLiteDataHolder(new File(getDataFolder(), "import.db"));
                     }
                     break;
                     case MYSQL: {

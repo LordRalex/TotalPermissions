@@ -14,22 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.ae97.totalpermissions.sqlite;
+package net.ae97.totalpermissions.sql;
 
-import net.ae97.totalpermissions.base.PermissionConsole;
+import net.ae97.totalpermissions.base.PermissionRcon;
 import net.ae97.totalpermissions.type.PermissionType;
 
 /**
  * @author Lord_Ralex
  */
-public class SQLitePermissionConsole extends SQLitePermissionServer implements PermissionConsole {
+public class SQLPermissionRcon extends SQLPermissionBase implements PermissionRcon {
 
-    public SQLitePermissionConsole() {
-        super("console");
+    public SQLPermissionRcon() {
+        super("rcon");
     }
 
     @Override
     public PermissionType getType() {
-        return PermissionType.CONSOLE;
+        return PermissionType.RCON;
     }
 }
