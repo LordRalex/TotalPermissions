@@ -17,46 +17,45 @@
 package net.ae97.totalpermissions.mcstats;
 
 import java.io.IOException;
+import org.apache.commons.lang.Validate;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 /**
  * @author Lord_Ralex
  */
-final class PostRunnable extends Thread {
+final class PostRunnable extends BukkitRunnable {
 
     private boolean firstPost = false;
-    private Metrics metrics;
     private final int PING_INTERVAL = 1200 * 15;
-    boolean running = false;
+    private Metrics metrics;
+    private BukkitTask task;
 
     protected PostRunnable() {
     }
 
-    protected void setMetrics(Metrics met) {
-        if (metrics == null) {
-            metrics = met;
+    public boolean start(Plugin pl, Metrics m) {
+        Validate.notNull(m, "Metrics instance cannot be null");
+        if (task != null) {
+            return false;
         }
+        metrics = m;
+        task = runTaskTimerAsynchronously(pl, PING_INTERVAL, PING_INTERVAL);
+        return true;
     }
 
     @Override
     public void run() {
-        while (!isInterrupted()) {
-            try {
-                if (metrics == null) {
-                    return;
-                }
-                if (metrics.isOptOut()) {
-                    return;
-                }
+        try {
+            if (metrics == null) {
+                cancel();
+            } else if (metrics.isOptOut()) {
+            } else {
                 metrics.postPlugin(!firstPost);
                 firstPost = false;
-            } catch (IOException e) {
             }
-            synchronized (this) {
-                try {
-                    this.wait(PING_INTERVAL);
-                } catch (InterruptedException ex) {
-                }
-            }
+        } catch (IOException e) {
         }
     }
 }

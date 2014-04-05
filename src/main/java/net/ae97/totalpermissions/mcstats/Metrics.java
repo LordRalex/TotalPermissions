@@ -30,15 +30,18 @@ package net.ae97.totalpermissions.mcstats;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.UUID;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
 import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.Bukkit;
@@ -56,7 +59,7 @@ public final class Metrics {
     private final YamlConfiguration configuration = new YamlConfiguration();
     private final File configurationFile;
 
-    public Metrics(TotalPermissions p) throws IOException {
+    public Metrics(TotalPermissions p) {
         plugin = p;
 
         configurationFile = new File(new File(plugin.getDataFolder().getParentFile(), "PluginMetrics"), "config.yml");
@@ -64,6 +67,9 @@ public final class Metrics {
             configuration.load(configurationFile);
         } catch (InvalidConfigurationException e) {
             plugin.getLogger().log(Level.SEVERE, "Metrics config cannot be loaded, going to continue with new config", e);
+        } catch (FileNotFoundException ex) {
+        } catch (IOException ex) {
+            plugin.getLogger().log(Level.SEVERE, "Metrics config cannot be loaded, going to continue with new config", ex);
         }
         configuration.addDefault("opt-out", !plugin.getConfig().getBoolean("metrics-report", true));
         configuration.addDefault("guid", UUID.randomUUID().toString());
@@ -71,11 +77,23 @@ public final class Metrics {
 
         if (configuration.get("guid", null) == null) {
             configuration.options().header("http://mcstats.org").copyDefaults(true);
-            configuration.save(configurationFile);
+            try {
+                configuration.save(configurationFile);
+            } catch (IOException ex) {
+                plugin.getLogger().log(Level.SEVERE, "Metrics config could not be saved", ex);
+            }
         }
 
         guid = configuration.getString("guid");
-        url = new URL("http://report.mcstats.org/plugin/" + URLEncoder.encode(plugin.getName(), "UTF-8"));
+        URL temp = null;
+        try {
+            temp = new URL("http://report.mcstats.org/plugin/" + URLEncoder.encode(plugin.getName(), "UTF-8"));
+        } catch (MalformedURLException ex) {
+            plugin.getLogger().log(Level.SEVERE, "Error on generating URL", ex);
+        } catch (UnsupportedEncodingException ex) {
+            plugin.getLogger().log(Level.SEVERE, "Error on generating URL", ex);
+        }
+        url = temp;
     }
 
     public boolean isOptOut() {
@@ -87,15 +105,12 @@ public final class Metrics {
     }
 
     public boolean start() {
-        task.setMetrics(this);
-        task.start();
-        return true;
+        return task.start(plugin, this);
     }
 
     public void shutdown() throws InterruptedException {
         synchronized (task) {
-            task.interrupt();
-            task.join();
+            task.cancel();
         }
     }
 

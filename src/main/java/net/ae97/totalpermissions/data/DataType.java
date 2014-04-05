@@ -25,4 +25,16 @@ public enum DataType {
     YAML_SHARED,
     MYSQL,
     SQLITE;
+
+    public static DataType getType(String type) {
+        if (type.equalsIgnoreCase("YAML")) {
+            return YAML_SHARED;
+        }
+        for (DataType dt : DataType.values()) {
+            if (dt.name().equalsIgnoreCase(type)) {
+                return dt;
+            }
+        }
+        return null;
+    }
 }

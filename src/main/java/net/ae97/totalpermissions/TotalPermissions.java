@@ -48,7 +48,6 @@ public final class TotalPermissions extends JavaPlugin {
     private CommandHandler commands;
     private DataManager dataManager;
     private Thread updateWaiter;
-    private DataHolderImporter importer;
 
     @Override
     public void onLoad() {
@@ -71,7 +70,7 @@ public final class TotalPermissions extends JavaPlugin {
             saveResource("permissions.yml", true);
         }
 
-        DataType type = DataType.valueOf(getConfig().getString("storage", "yaml_shared").toUpperCase());
+        DataType type = DataType.getType(getConfig().getString("storage", "yaml_shared").toUpperCase());
         if (type == null) {
             getLogger().log(Level.SEVERE, "{0} is not a known storage system, defaulting to YAML_SHARED", getConfig().getString("storage", "yaml_shared"));
             type = DataType.YAML_SHARED;
@@ -113,6 +112,7 @@ public final class TotalPermissions extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
         }
 
+        DataHolderImporter importer = null;
         if (getConfig().getBoolean("import.import", false)) {
             DataType importType = DataType.valueOf(getConfig().getString("storage", "yaml_shared").toUpperCase());
             if (importType == null) {
@@ -166,18 +166,13 @@ public final class TotalPermissions extends JavaPlugin {
         getCommand("totalpermissions").setExecutor(commands);
 
         getLogger().finest("Loading up metrics");
-        try {
-            metrics = new Metrics(this);
-            if (metrics.isOptOut()) {
-                getLogger().info("Metrics stat collecting is not enabled");
-                metrics = null;
-            } else {
-                getLogger().info("Metrics stat collecting enabled");
-                metrics.start();
-            }
-        } catch (IOException ex) {
-            getLogger().log(Level.SEVERE, "Error on loading Metrics", ex);
+        metrics = new Metrics(this);
+        if (metrics.isOptOut()) {
+            getLogger().info("Metrics stat collecting is not enabled");
             metrics = null;
+        } else {
+            getLogger().info("Metrics stat collecting enabled");
+            metrics.start();
         }
 
         if (importer != null) {
@@ -205,6 +200,7 @@ public final class TotalPermissions extends JavaPlugin {
         if (updateWaiter != null) {
             synchronized (updateWaiter) {
                 try {
+                    getLogger().info("Waiting for updater to complete");
                     updateWaiter.join();
                 } catch (InterruptedException ex) {
                     getLogger().log(Level.SEVERE, "Error while waiting for update check thread", ex);
@@ -215,6 +211,7 @@ public final class TotalPermissions extends JavaPlugin {
         if (metrics != null) {
             synchronized (metrics) {
                 try {
+                    getLogger().info("Waiting for metrics to shut down");
                     metrics.shutdown();
                 } catch (InterruptedException ex) {
                     getLogger().log(Level.SEVERE, "Error while waiting for Metrics to shutdown", ex);
