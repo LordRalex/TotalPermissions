@@ -8,6 +8,7 @@
   <url>http://dev.bukkit.org/server-mods/totalpermissions/</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <bukkit_version>1.7.2-R0.3</bukkit_version>
   </properties>
   <repositories>
     <repository>
@@ -62,7 +63,13 @@
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>1.7.2-R0.3</version>
+      <version>${bukkit_version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.bukkit</groupId>
+      <artifactId>craftbukkit</artifactId>
+      <version>${bukkit_version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -75,12 +82,6 @@
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
       <version>5.1.27</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>1.6</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>

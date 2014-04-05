@@ -40,13 +40,17 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
 import net.ae97.totalpermissions.TotalPermissions;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.craftbukkit.libs.com.google.gson.Gson;
+import org.bukkit.craftbukkit.libs.com.google.gson.JsonObject;
 
 public final class Metrics {
 
@@ -58,6 +62,8 @@ public final class Metrics {
     private final PostRunnable task = new PostRunnable();
     private final YamlConfiguration configuration = new YamlConfiguration();
     private final File configurationFile;
+    private final String bukkit_version, auth_mode, plugin_version;
+    private final Gson gson = new Gson();
 
     public Metrics(TotalPermissions p) {
         plugin = p;
@@ -85,6 +91,10 @@ public final class Metrics {
         }
 
         guid = configuration.getString("guid");
+
+        bukkit_version = Bukkit.getBukkitVersion();
+        auth_mode = Bukkit.getOnlineMode() ? "1" : "0";
+        plugin_version = plugin.getDescription().getVersion();
         URL temp = null;
         try {
             temp = new URL("http://report.mcstats.org/plugin/" + URLEncoder.encode(plugin.getName(), "UTF-8"));
@@ -115,23 +125,39 @@ public final class Metrics {
     }
 
     protected void postPlugin(boolean isPing) throws IOException {
+        Future<Integer> onlineCount = Bukkit.getScheduler().callSyncMethod(plugin, new Callable<Integer>() {
 
-        StringBuilder json = new StringBuilder(1024);
-        json.append('{');
+            @Override
+            public Integer call() {
+                return Bukkit.getServer().getOnlinePlayers().length;
+            }
 
-        appendJSONPair(json, "guid", guid);
-        appendJSONPair(json, "plugin_version", plugin.getDescription().getVersion());
-        appendJSONPair(json, "server_version", Bukkit.getBukkitVersion());
-        appendJSONPair(json, "players_online", Integer.toString(Bukkit.getServer().getOnlinePlayers().length));
-        appendJSONPair(json, "auth_mode", Bukkit.getOnlineMode() ? "1" : "0");
+        });
+
+        JsonObject jsonBuilder = new JsonObject();
+        jsonBuilder.addProperty("guid", guid);
+        jsonBuilder.addProperty("plugin_version", plugin_version);
+        jsonBuilder.addProperty("server_version", bukkit_version);
+        int player_count;
+        try {
+            player_count = onlineCount.get();
+        } catch (InterruptedException e) {
+            player_count = Bukkit.getServer().getOnlinePlayers().length;
+        } catch (ExecutionException e) {
+            player_count = Bukkit.getServer().getOnlinePlayers().length;
+        }
+        jsonBuilder.addProperty("players_online", Integer.toString(player_count));
+        jsonBuilder.addProperty("auth_mode", auth_mode);
 
         if (isPing) {
-            appendJSONPair(json, "ping", "1");
+            jsonBuilder.addProperty("ping", "1");
         }
 
-        json.append('}');
-
-        byte[] compressed = gzip(json.toString());
+        String jsonString;
+        synchronized (gson) {
+            jsonString = gson.toJson(jsonBuilder);
+        }
+        byte[] compressed = gzip(jsonString);
 
         URLConnection connection = url.openConnection();
         connection.addRequestProperty("User-Agent", USER_AGENT);
@@ -194,62 +220,5 @@ public final class Metrics {
             }
         }
         return baos.toByteArray();
-    }
-
-    private void appendJSONPair(StringBuilder json, String key, String value) throws UnsupportedEncodingException {
-        boolean isValueNumeric;
-        try {
-            Double.parseDouble(value);
-            isValueNumeric = true;
-        } catch (NumberFormatException e) {
-            isValueNumeric = false;
-        }
-        if (json.charAt(json.length() - 1) != '{') {
-            json.append(',');
-        }
-        json.append(escapeJSON(key));
-        json.append(':');
-
-        if (isValueNumeric) {
-            json.append(value);
-        } else {
-            json.append(escapeJSON(value));
-        }
-    }
-
-    private String escapeJSON(String text) {
-        StringBuilder builder = new StringBuilder();
-        builder.append('"');
-        for (char chr : text.toCharArray()) {
-            switch (chr) {
-                case '"':
-                case '\\':
-                    builder.append('\\');
-                    builder.append(chr);
-                    break;
-                case '\b':
-                    builder.append("\\b");
-                    break;
-                case '\t':
-                    builder.append("\\t");
-                    break;
-                case '\n':
-                    builder.append("\\n");
-                    break;
-                case '\r':
-                    builder.append("\\r");
-                    break;
-                default:
-                    if (chr < ' ') {
-                        String t = "000" + Integer.toHexString(chr);
-                        builder.append("\\u").append(t.substring(t.length() - 4));
-                    } else {
-                        builder.append(chr);
-                    }
-                    break;
-            }
-        }
-        builder.append('"');
-        return builder.toString();
     }
 }

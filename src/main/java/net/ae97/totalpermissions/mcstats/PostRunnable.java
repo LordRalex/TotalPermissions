@@ -41,7 +41,7 @@ final class PostRunnable extends BukkitRunnable {
             return false;
         }
         metrics = m;
-        task = runTaskTimerAsynchronously(pl, PING_INTERVAL, PING_INTERVAL);
+        task = runTaskTimerAsynchronously(pl, 0, PING_INTERVAL);
         return true;
     }
 
