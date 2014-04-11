@@ -16,6 +16,9 @@
  */
 package net.ae97.totalpermissions.update;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -32,22 +35,33 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.libs.com.google.gson.JsonArray;
-import org.bukkit.craftbukkit.libs.com.google.gson.JsonElement;
-import org.bukkit.craftbukkit.libs.com.google.gson.JsonParser;
 
 /**
  * @author Lord_Ralex
  */
-public class UpdateChecker implements Runnable {
+public class UpdateChecker extends Thread {
 
-    private final TotalPermissions plugin;
-    private final boolean download;
-    private final String apikey;
-    private final boolean disabled;
+    private boolean download;
+    private String apikey;
+    private boolean disabled;
+    private Logger pluginLogger;
+    private File pluginFile;
+    private String pluginName, pluginVersion;
 
-    public UpdateChecker(TotalPermissions p) {
-        plugin = p;
+    public UpdateChecker() {
+
+    }
+
+    @Override
+    public void start() {
+        throw new UnsupportedOperationException("Cannot run an update on an unknown plugin");
+    }
+
+    public void start(TotalPermissions plugin) {
+        pluginLogger = plugin.getLogger();
+        pluginFile = plugin.getFile();
+        pluginName = plugin.getName();
+        pluginVersion = plugin.getDescription().getVersion();
         YamlConfiguration config = new YamlConfiguration();
         config.options().header("This configuration file affects all plugins using the Updater system (version 2+ - http://forums.bukkit.org/threads/96681/ )" + '\n'
                 + "If you wish to use your API key, read http://wiki.bukkit.org/ServerMods_API and place it below." + '\n'
@@ -67,11 +81,11 @@ public class UpdateChecker implements Runnable {
                 config.save(updaterConfigFile);
                 config.load(updaterConfigFile);
             } catch (IOException e) {
-                plugin.getLogger().log(Level.SEVERE, "Error saving default Updater config", e);
+                pluginLogger.log(Level.SEVERE, "Error saving default Updater config", e);
                 tempKey = null;
                 tempDisabled = true;
             } catch (InvalidConfigurationException e) {
-                plugin.getLogger().log(Level.SEVERE, "Error loading default Updater config", e);
+                pluginLogger.log(Level.SEVERE, "Error loading default Updater config", e);
                 tempKey = null;
                 tempDisabled = true;
             }
@@ -79,6 +93,7 @@ public class UpdateChecker implements Runnable {
         apikey = tempKey == null ? config.getString("api-key", null) : null;
         disabled = tempDisabled || config.getBoolean("disable", false) || !plugin.getConfig().getBoolean("update.check", true);
         download = !disabled && plugin.getConfig().getBoolean("update.download", true);
+        super.start();
     }
 
     @Override
@@ -86,7 +101,6 @@ public class UpdateChecker implements Runnable {
         if (disabled) {
             return;
         }
-        String pluginVersion = plugin.getDescription().getVersion();
         try {
             URL url = new URL("https://api.curseforge.com/servermods/files?projectIds=54850");
             URLConnection conn = url.openConnection();
@@ -125,7 +139,7 @@ public class UpdateChecker implements Runnable {
                 return;
             }
 
-            plugin.getLogger().log(Level.INFO, "Update found! Current: {0} Latest: {1}",
+            pluginLogger.log(Level.INFO, "Update found! Current: {0} Latest: {1}",
                     new String[]{
                         StringUtils.join(getVersionInts(pluginVersion), "."),
                         StringUtils.join(getVersionInts(onlineVersion), ".")
@@ -137,22 +151,20 @@ public class UpdateChecker implements Runnable {
 
             String downloadLink = details.getAsJsonObject().get("downloadUrl").getAsString();
 
-            String pluginFileName = plugin.getFile().getName();
+            String pluginFileName = pluginFile.getName();
 
-            if (!pluginFileName.equalsIgnoreCase(plugin.getName() + ".jar")) {
-                plugin.getLogger().log(Level.WARNING, "FILE NAME IS NOT {0}.jar! Forcing rename", plugin.getName());
-                plugin.getFile().deleteOnExit();
+            if (!pluginFileName.equalsIgnoreCase(pluginName + ".jar")) {
+                pluginLogger.log(Level.WARNING, "FILE NAME IS NOT {0}.jar! Forcing rename", pluginName);
+                pluginFile.deleteOnExit();
             }
 
-            File output = new File(Bukkit.getUpdateFolderFile(), plugin.getName() + ".jar");
+            File output = new File(Bukkit.getUpdateFolderFile(), pluginName + ".jar");
             download(downloadLink, output);
 
         } catch (MalformedURLException ex) {
-            Logger.getLogger(UpdateChecker.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            pluginLogger.log(Level.SEVERE, "URL could not be created", ex);
         } catch (IOException ex) {
-            Logger.getLogger(UpdateChecker.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            pluginLogger.log(Level.SEVERE, "Error occurred on checking for update for " + pluginName, ex);
         }
     }
 
@@ -224,7 +236,7 @@ public class UpdateChecker implements Runnable {
             while (in.read(buffer) != -1) {
                 out.write(buffer);
             }
-            plugin.getLogger().info("Download complete, restart server to apply");
+            pluginLogger.info("Download complete, restart server to apply");
             return true;
         } catch (IOException e) {
             return false;

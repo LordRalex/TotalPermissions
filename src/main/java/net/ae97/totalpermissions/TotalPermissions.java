@@ -44,11 +44,11 @@ public final class TotalPermissions extends JavaPlugin {
     private ListenerManager listenerManager;
     private CommandHandler commands;
     private DataManager dataManager;
-    private Thread updateChecker;
+    private final UpdateChecker updateChecker = new UpdateChecker();
 
     @Override
     public void onLoad() {
-        updateChecker = new Thread(new UpdateChecker(this));
+        updateChecker.start(this);
     }
 
     @Override
@@ -177,22 +177,18 @@ public final class TotalPermissions extends JavaPlugin {
                 } catch (InterruptedException ex) {
                     getLogger().log(Level.SEVERE, "Error while waiting for importer to complete", ex);
                 }
-                importer = null;
             }
         }
     }
 
     @Override
     public void onDisable() {
-        if (updateChecker != null) {
-            synchronized (updateChecker) {
-                try {
-                    getLogger().info("Waiting for updater to complete");
-                    updateChecker.join();
-                } catch (InterruptedException ex) {
-                    getLogger().log(Level.SEVERE, "Error while waiting for update check thread", ex);
-                }
-                updateChecker = null;
+        synchronized (updateChecker) {
+            try {
+                getLogger().info("Waiting for updater to complete");
+                updateChecker.join();
+            } catch (InterruptedException ex) {
+                getLogger().log(Level.SEVERE, "Error while waiting for update check thread", ex);
             }
         }
     }
