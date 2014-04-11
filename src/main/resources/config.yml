@@ -2,5 +2,4 @@ update:
   check: true
   download: true
 language: en_US
-metrics-report: true
-storage: yaml
+storage: yaml_shared

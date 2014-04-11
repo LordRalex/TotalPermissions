@@ -78,7 +78,7 @@ public class UpdateChecker implements Runnable {
         }
         apikey = tempKey == null ? config.getString("api-key", null) : null;
         disabled = tempDisabled || config.getBoolean("disable", false) || !plugin.getConfig().getBoolean("update.check", true);
-        download = plugin.getConfig().getBoolean("update.download", true);
+        download = !disabled && plugin.getConfig().getBoolean("update.download", true);
     }
 
     @Override

@@ -17,7 +17,6 @@
 package net.ae97.totalpermissions;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -28,7 +27,6 @@ import net.ae97.totalpermissions.data.DataType;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import net.ae97.totalpermissions.importer.DataHolderImporter;
 import net.ae97.totalpermissions.listener.ListenerManager;
-import net.ae97.totalpermissions.mcstats.Metrics;
 import net.ae97.totalpermissions.mysql.MySQLDataHolder;
 import net.ae97.totalpermissions.sqlite.SQLiteDataHolder;
 import net.ae97.totalpermissions.update.UpdateChecker;
@@ -44,14 +42,13 @@ public final class TotalPermissions extends JavaPlugin {
 
     private DataHolder dataHolder;
     private ListenerManager listenerManager;
-    private Metrics metrics;
     private CommandHandler commands;
     private DataManager dataManager;
-    private Thread updateWaiter;
+    private Thread updateChecker;
 
     @Override
     public void onLoad() {
-        updateWaiter = new Waiter(this);
+        updateChecker = new Thread(new UpdateChecker(this));
     }
 
     @Override
@@ -165,16 +162,6 @@ public final class TotalPermissions extends JavaPlugin {
         getLogger().finest("Registering command handler");
         getCommand("totalpermissions").setExecutor(commands);
 
-        getLogger().finest("Loading up metrics");
-        metrics = new Metrics(this);
-        if (metrics.isOptOut()) {
-            getLogger().info("Metrics stat collecting is not enabled");
-            metrics = null;
-        } else {
-            getLogger().info("Metrics stat collecting enabled");
-            metrics.start();
-        }
-
         if (importer != null) {
             synchronized (importer) {
                 try {
@@ -197,26 +184,15 @@ public final class TotalPermissions extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (updateWaiter != null) {
-            synchronized (updateWaiter) {
+        if (updateChecker != null) {
+            synchronized (updateChecker) {
                 try {
                     getLogger().info("Waiting for updater to complete");
-                    updateWaiter.join();
+                    updateChecker.join();
                 } catch (InterruptedException ex) {
                     getLogger().log(Level.SEVERE, "Error while waiting for update check thread", ex);
                 }
-                updateWaiter = null;
-            }
-        }
-        if (metrics != null) {
-            synchronized (metrics) {
-                try {
-                    getLogger().info("Waiting for metrics to shut down");
-                    metrics.shutdown();
-                } catch (InterruptedException ex) {
-                    getLogger().log(Level.SEVERE, "Error while waiting for Metrics to shutdown", ex);
-                }
-                metrics = null;
+                updateChecker = null;
             }
         }
     }
@@ -240,24 +216,5 @@ public final class TotalPermissions extends JavaPlugin {
     @Override
     public File getFile() {
         return super.getFile();
-    }
-
-    private class Waiter extends Thread {
-
-        private final Thread updateChecker;
-
-        public Waiter(TotalPermissions p) {
-            updateChecker = new Thread(new UpdateChecker(p));
-        }
-
-        @Override
-        public void run() {
-            updateChecker.start();
-            try {
-                updateChecker.join();
-            } catch (InterruptedException ex) {
-                getLogger().log(Level.SEVERE, "Error while waiting for update check thread", ex);
-            }
-        }
     }
 }
