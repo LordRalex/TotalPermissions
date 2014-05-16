@@ -17,7 +17,7 @@
 package net.ae97.totalpermissions.data;
 
 import java.util.Set;
-import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
+import java.util.UUID;
 import net.ae97.totalpermissions.base.PermissionBase;
 import net.ae97.totalpermissions.base.PermissionConsole;
 import net.ae97.totalpermissions.base.PermissionEntity;
@@ -26,6 +26,7 @@ import net.ae97.totalpermissions.base.PermissionOp;
 import net.ae97.totalpermissions.base.PermissionRcon;
 import net.ae97.totalpermissions.base.PermissionUser;
 import net.ae97.totalpermissions.base.PermissionWorld;
+import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import net.ae97.totalpermissions.exceptions.DataSaveFailedException;
 import net.ae97.totalpermissions.type.PermissionType;
 
@@ -38,15 +39,25 @@ public interface DataHolder<T extends PermissionBase> {
 
     public void load(PermissionType type, String name) throws DataLoadFailedException;
 
+    public void load(PermissionType type, UUID name) throws DataLoadFailedException;
+
     public void save(T holder) throws DataSaveFailedException;
 
     public void loadUser(String name) throws DataLoadFailedException;
 
+    public void loadUser(UUID name) throws DataLoadFailedException;
+
     public void loadGroup(String name) throws DataLoadFailedException;
+
+    public void loadGroup(UUID name) throws DataLoadFailedException;
 
     public void loadWorld(String name) throws DataLoadFailedException;
 
+    public void loadWorld(UUID name) throws DataLoadFailedException;
+
     public void loadEntity(String name) throws DataLoadFailedException;
+
+    public void loadEntity(UUID name) throws DataLoadFailedException;
 
     public void loadConsole() throws DataLoadFailedException;
 
@@ -54,15 +65,25 @@ public interface DataHolder<T extends PermissionBase> {
 
     public void loadRcon() throws DataLoadFailedException;
 
+    public PermissionBase get(PermissionType type, String name) throws DataLoadFailedException;
+
+    public PermissionBase get(PermissionType type, UUID name) throws DataLoadFailedException;
+
     public PermissionUser getUser(String name) throws DataLoadFailedException;
+
+    public PermissionUser getUser(UUID name) throws DataLoadFailedException;
 
     public PermissionGroup getGroup(String name) throws DataLoadFailedException;
 
-    public PermissionBase get(PermissionType type, String name) throws DataLoadFailedException;
+    public PermissionGroup getGroup(UUID name) throws DataLoadFailedException;
 
     public PermissionWorld getWorld(String name) throws DataLoadFailedException;
 
+    public PermissionWorld getWorld(UUID name) throws DataLoadFailedException;
+
     public PermissionEntity getEntity(String name) throws DataLoadFailedException;
+
+    public PermissionEntity getEntity(UUID name) throws DataLoadFailedException;
 
     public PermissionOp getOP() throws DataLoadFailedException;
 

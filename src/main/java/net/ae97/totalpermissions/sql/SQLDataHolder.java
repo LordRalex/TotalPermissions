@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import net.ae97.totalpermissions.data.DataHolder;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import net.ae97.totalpermissions.exceptions.DataSaveFailedException;
@@ -91,9 +92,19 @@ public abstract class SQLDataHolder<T> implements DataHolder<SQLPermissionBase> 
     }
 
     @Override
+    public void load(PermissionType type, UUID uuid) throws DataLoadFailedException {
+        load(type, uuid.toString());
+    }
+
+    @Override
     public void loadUser(String name) throws DataLoadFailedException {
         Map<String, Object> data = getData("users", "name", name);
         load(PermissionType.USER, name, data);
+    }
+
+    @Override
+    public void loadUser(UUID uuid) throws DataLoadFailedException {
+        loadUser(uuid.toString());
     }
 
     @Override
@@ -103,15 +114,30 @@ public abstract class SQLDataHolder<T> implements DataHolder<SQLPermissionBase> 
     }
 
     @Override
+    public void loadGroup(UUID uuid) throws DataLoadFailedException {
+        loadGroup(uuid.toString());
+    }
+
+    @Override
     public void loadWorld(String name) throws DataLoadFailedException {
         Map<String, Object> data = getData("worlds", "name", name);
         load(PermissionType.WORLD, name, data);
     }
 
     @Override
+    public void loadWorld(UUID uuid) throws DataLoadFailedException {
+        loadWorld(uuid.toString());
+    }
+
+    @Override
     public void loadEntity(String name) throws DataLoadFailedException {
         Map<String, Object> data = getData("entities", "name", name);
         load(PermissionType.ENTITY, name, data);
+    }
+
+    @Override
+    public void loadEntity(UUID uuid) throws DataLoadFailedException {
+        loadEntity(uuid.toString());
     }
 
     @Override
@@ -155,9 +181,19 @@ public abstract class SQLDataHolder<T> implements DataHolder<SQLPermissionBase> 
     }
 
     @Override
+    public SQLPermissionBase get(PermissionType type, UUID uuid) throws DataLoadFailedException {
+        return get(type, uuid.toString());
+    }
+
+    @Override
     public SQLPermissionUser getUser(String name) throws DataLoadFailedException {
         checkCache(PermissionType.USER, name);
         return (SQLPermissionUser) cache.get(PermissionType.USER).get(name);
+    }
+
+    @Override
+    public SQLPermissionUser getUser(UUID uuid) throws DataLoadFailedException {
+        return getUser(uuid.toString());
     }
 
     @Override
@@ -167,15 +203,30 @@ public abstract class SQLDataHolder<T> implements DataHolder<SQLPermissionBase> 
     }
 
     @Override
+    public SQLPermissionGroup getGroup(UUID uuid) throws DataLoadFailedException {
+        return getGroup(uuid.toString());
+    }
+
+    @Override
     public SQLPermissionWorld getWorld(String name) throws DataLoadFailedException {
         checkCache(PermissionType.WORLD, name);
         return (SQLPermissionWorld) cache.get(PermissionType.WORLD).get(name);
     }
 
     @Override
+    public SQLPermissionWorld getWorld(UUID uuid) throws DataLoadFailedException {
+        return getWorld(uuid.toString());
+    }
+
+    @Override
     public SQLPermissionEntity getEntity(String name) throws DataLoadFailedException {
         checkCache(PermissionType.ENTITY, name);
         return (SQLPermissionEntity) cache.get(PermissionType.ENTITY).get(name);
+    }
+
+    @Override
+    public SQLPermissionEntity getEntity(UUID uuid) throws DataLoadFailedException {
+        return getEntity(uuid.toString());
     }
 
     @Override

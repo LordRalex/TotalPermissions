@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.UUID;
 import net.ae97.totalpermissions.data.DataHolder;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import net.ae97.totalpermissions.exceptions.DataSaveFailedException;
@@ -82,10 +83,42 @@ public class SingleYamlDataHolder implements DataHolder<YamlPermissionBase> {
     }
 
     @Override
+    public void load(PermissionType type, UUID uuid) throws DataLoadFailedException {
+        switch (type) {
+            case USER:
+                loadUser(uuid);
+                break;
+            case GROUP:
+                loadGroup(uuid);
+                break;
+            case WORLD:
+                loadWorld(uuid);
+                break;
+            case ENTITY:
+                loadEntity(uuid);
+                break;
+            case OP:
+                loadOp();
+                break;
+            case RCON:
+                loadRcon();
+                break;
+            case CONSOLE:
+                loadConsole();
+                break;
+        }
+    }
+
+    @Override
     public void loadUser(String name) throws DataLoadFailedException {
         ConfigurationSection sec = getData("users", name);
         YamlPermissionBase permBase = new YamlPermissionUser(name.toLowerCase(), sec);
         load(PermissionType.USER, permBase);
+    }
+
+    @Override
+    public void loadUser(UUID uuid) throws DataLoadFailedException {
+        loadUser(uuid.toString());
     }
 
     @Override
@@ -96,6 +129,11 @@ public class SingleYamlDataHolder implements DataHolder<YamlPermissionBase> {
     }
 
     @Override
+    public void loadGroup(UUID uuid) throws DataLoadFailedException {
+        loadGroup(uuid.toString());
+    }
+
+    @Override
     public void loadWorld(String name) throws DataLoadFailedException {
         ConfigurationSection sec = getData("worlds", name);
         YamlPermissionBase permBase = new YamlPermissionWorld(name.toLowerCase(), sec);
@@ -103,10 +141,20 @@ public class SingleYamlDataHolder implements DataHolder<YamlPermissionBase> {
     }
 
     @Override
+    public void loadWorld(UUID uuid) throws DataLoadFailedException {
+        loadWorld(uuid.toString());
+    }
+
+    @Override
     public void loadEntity(String name) throws DataLoadFailedException {
         ConfigurationSection sec = getData("entities", name);
         YamlPermissionBase permBase = new YamlPermissionEntity(name.toLowerCase(), sec);
         load(PermissionType.ENTITY, permBase);
+    }
+
+    @Override
+    public void loadEntity(UUID uuid) throws DataLoadFailedException {
+        loadUser(uuid.toString());
     }
 
     @Override
@@ -153,9 +201,36 @@ public class SingleYamlDataHolder implements DataHolder<YamlPermissionBase> {
     }
 
     @Override
+    public YamlPermissionBase get(PermissionType type, UUID uuid) throws DataLoadFailedException {
+        switch (type) {
+            case USER:
+                return getUser(uuid);
+            case GROUP:
+                return getGroup(uuid);
+            case WORLD:
+                return getWorld(uuid);
+            case ENTITY:
+                return getEntity(uuid);
+            case OP:
+                return getOP();
+            case CONSOLE:
+                return getConsole();
+            case RCON:
+                return getRcon();
+            default:
+                return null;
+        }
+    }
+
+    @Override
     public YamlPermissionUser getUser(String name) throws DataLoadFailedException {
         checkCache(PermissionType.USER, name);
         return (YamlPermissionUser) cache.get(PermissionType.USER).get(name.toLowerCase());
+    }
+
+    @Override
+    public YamlPermissionUser getUser(UUID uuid) throws DataLoadFailedException {
+        return getUser(uuid.toString());
     }
 
     @Override
@@ -165,15 +240,30 @@ public class SingleYamlDataHolder implements DataHolder<YamlPermissionBase> {
     }
 
     @Override
+    public YamlPermissionGroup getGroup(UUID uuid) throws DataLoadFailedException {
+        return getGroup(uuid.toString());
+    }
+
+    @Override
     public YamlPermissionWorld getWorld(String name) throws DataLoadFailedException {
         checkCache(PermissionType.WORLD, name);
         return (YamlPermissionWorld) cache.get(PermissionType.WORLD).get(name.toLowerCase());
     }
 
     @Override
+    public YamlPermissionWorld getWorld(UUID uuid) throws DataLoadFailedException {
+        return getWorld(uuid.toString());
+    }
+
+    @Override
     public YamlPermissionEntity getEntity(String name) throws DataLoadFailedException {
         checkCache(PermissionType.ENTITY, name);
         return (YamlPermissionEntity) cache.get(PermissionType.ENTITY).get(name.toLowerCase());
+    }
+
+    @Override
+    public YamlPermissionEntity getEntity(UUID uuid) throws DataLoadFailedException {
+        return getEntity(uuid.toString());
     }
 
     @Override

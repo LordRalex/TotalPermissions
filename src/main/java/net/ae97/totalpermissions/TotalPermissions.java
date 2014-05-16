@@ -17,10 +17,10 @@
 package net.ae97.totalpermissions;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
-import net.ae97.totalpermissions.base.PermissionBase;
 import net.ae97.totalpermissions.commands.CommandHandler;
 import net.ae97.totalpermissions.data.DataHolder;
 import net.ae97.totalpermissions.data.DataManager;
@@ -34,6 +34,7 @@ import net.ae97.totalpermissions.update.UpdateChecker;
 import net.ae97.totalpermissions.yaml.SingleYamlDataHolder;
 import net.ae97.totalpermissions.yaml.SplitYamlDataHolder;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -45,6 +46,20 @@ public final class TotalPermissions extends JavaPlugin {
     private CommandHandler commands;
     private DataManager dataManager;
     private final UpdateChecker updateChecker = new UpdateChecker();
+    private final boolean useUUID;
+
+    public TotalPermissions() {
+        super();
+        boolean found = false;
+        Method[] methods = OfflinePlayer.class.getDeclaredMethods();
+        for (Method method : methods) {
+            if (method.getName().equals("getUniqueId")) {
+                found = true;
+                break;
+            }
+        }
+        useUUID = found;
+    }
 
     @Override
     public void onLoad() {
@@ -74,7 +89,7 @@ public final class TotalPermissions extends JavaPlugin {
         }
         getLogger().finest("Creating data holder");
         getLogger().log(Level.FINEST, "Storage type to load: {0}", type);
-        DataHolder<? extends PermissionBase> dataHolder;
+        DataHolder dataHolder;
         switch (type) {
             default:
             case YAML_SHARED: {
@@ -208,6 +223,10 @@ public final class TotalPermissions extends JavaPlugin {
 
     public boolean isDebugMode() {
         return getConfig().getBoolean("angry-debug", false);
+    }
+
+    public boolean isUseUUID() {
+        return useUUID;
     }
 
     @Override

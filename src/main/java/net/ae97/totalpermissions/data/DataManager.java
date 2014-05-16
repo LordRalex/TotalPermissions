@@ -18,6 +18,7 @@ package net.ae97.totalpermissions.data;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import net.ae97.totalpermissions.TotalPermissions;
 import net.ae97.totalpermissions.base.PermissionBase;
 import net.ae97.totalpermissions.base.PermissionConsole;
@@ -37,14 +38,13 @@ import org.bukkit.permissions.PermissionAttachment;
 /**
  * @author Lord_Ralex
  */
-public final class DataManager implements DataHolder<PermissionBase> {
+public final class DataManager {
 
     private final DataHolder<PermissionBase> dataHolder;
     private final TotalPermissions plugin;
 
-    @SuppressWarnings("unchecked")
-    public DataManager(TotalPermissions p, DataHolder<? extends PermissionBase> holder) {
-        dataHolder = (DataHolder<PermissionBase>) holder;
+    public DataManager(TotalPermissions p, DataHolder< PermissionBase> holder) {
+        dataHolder = holder;
         plugin = p;
     }
 
@@ -56,112 +56,130 @@ public final class DataManager implements DataHolder<PermissionBase> {
         }
     }
 
-    @Override
     public void load() throws DataLoadFailedException {
         dataHolder.load();
     }
 
-    @Override
-    public PermissionUser getUser(String name) throws DataLoadFailedException {
-        return dataHolder.getUser(name);
-    }
-
-    @Override
-    public PermissionGroup getGroup(String name) throws DataLoadFailedException {
-        return dataHolder.getGroup(name);
-    }
-
-    @Override
     public PermissionBase get(PermissionType type, String name) throws DataLoadFailedException {
         return dataHolder.get(type, name);
     }
 
-    @Override
+    public PermissionBase get(PermissionType type, UUID uuid) throws DataLoadFailedException {
+        return dataHolder.get(type, uuid);
+    }
+
+    public PermissionUser getUser(String name) throws DataLoadFailedException {
+        return dataHolder.getUser(name);
+    }
+
+    public PermissionUser getUser(UUID uuid) throws DataLoadFailedException {
+        return dataHolder.getUser(uuid);
+    }
+
+    public PermissionGroup getGroup(String name) throws DataLoadFailedException {
+        return dataHolder.getGroup(name);
+    }
+
+    public PermissionGroup getGroup(UUID uuid) throws DataLoadFailedException {
+        return dataHolder.getGroup(uuid);
+    }
+
     public PermissionWorld getWorld(String name) throws DataLoadFailedException {
         return dataHolder.getWorld(name);
     }
 
-    @Override
+    public PermissionWorld getWorld(UUID uuid) throws DataLoadFailedException {
+        return dataHolder.getWorld(uuid);
+    }
+
     public PermissionEntity getEntity(String name) throws DataLoadFailedException {
         return dataHolder.getEntity(name);
     }
 
-    @Override
+    public PermissionEntity getEntity(UUID uuid) throws DataLoadFailedException {
+        return dataHolder.getEntity(uuid);
+    }
+
     public PermissionOp getOP() throws DataLoadFailedException {
         return dataHolder.getOP();
     }
 
-    @Override
     public PermissionConsole getConsole() throws DataLoadFailedException {
         return dataHolder.getConsole();
     }
 
-    @Override
     public PermissionRcon getRcon() throws DataLoadFailedException {
         return dataHolder.getRcon();
     }
 
-    @Override
     public Set<String> getGroups() throws DataLoadFailedException {
         return dataHolder.getGroups();
     }
 
-    @Override
     public Set<String> getUsers() throws DataLoadFailedException {
         return dataHolder.getUsers();
     }
 
-    @Override
     public Set<String> getWorlds() throws DataLoadFailedException {
         return dataHolder.getWorlds();
     }
 
-    @Override
     public Set<String> getEntities() throws DataLoadFailedException {
         return dataHolder.getEntities();
     }
 
-    @Override
     public void save(PermissionBase holder) throws DataSaveFailedException {
         dataHolder.save(holder);
     }
 
-    @Override
-    public void loadUser(String name) throws DataLoadFailedException {
-        dataHolder.loadUser(name);
-    }
-
-    @Override
-    public void loadGroup(String name) throws DataLoadFailedException {
-        dataHolder.loadGroup(name);
-    }
-
-    @Override
-    public void loadWorld(String name) throws DataLoadFailedException {
-        dataHolder.loadWorld(name);
-    }
-
-    @Override
-    public void loadEntity(String name) throws DataLoadFailedException {
-        dataHolder.loadEntity(name);
-    }
-
-    @Override
     public void load(PermissionType type, String name) throws DataLoadFailedException {
         dataHolder.load(type, name);
     }
 
-    @Override
+    public void load(PermissionType type, UUID uuid) throws DataLoadFailedException {
+        dataHolder.load(type, uuid);
+    }
+
+    public void loadUser(String name) throws DataLoadFailedException {
+        dataHolder.loadUser(name);
+    }
+
+    public void loadUser(UUID uuid) throws DataLoadFailedException {
+        dataHolder.loadUser(uuid);
+    }
+
+    public void loadGroup(String name) throws DataLoadFailedException {
+        dataHolder.loadGroup(name);
+    }
+
+    public void loadGroup(UUID uuid) throws DataLoadFailedException {
+        dataHolder.loadGroup(uuid);
+    }
+
+    public void loadWorld(String name) throws DataLoadFailedException {
+        dataHolder.loadWorld(name);
+    }
+
+    public void loadWorld(UUID uuid) throws DataLoadFailedException {
+        dataHolder.loadWorld(uuid);
+    }
+
+    public void loadEntity(String name) throws DataLoadFailedException {
+        dataHolder.loadEntity(name);
+    }
+
+    public void loadEntity(UUID uuid) throws DataLoadFailedException {
+        dataHolder.loadEntity(uuid);
+    }
+
     public void loadConsole() throws DataLoadFailedException {
         dataHolder.loadConsole();
     }
 
-    @Override
     public void loadOp() throws DataLoadFailedException {
         dataHolder.loadOp();
     }
 
-    @Override
     public void loadRcon() throws DataLoadFailedException {
         dataHolder.loadRcon();
     }
