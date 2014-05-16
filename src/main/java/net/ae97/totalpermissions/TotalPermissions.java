@@ -20,6 +20,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
+import net.ae97.totalpermissions.base.PermissionBase;
 import net.ae97.totalpermissions.commands.CommandHandler;
 import net.ae97.totalpermissions.data.DataHolder;
 import net.ae97.totalpermissions.data.DataManager;
@@ -40,7 +41,6 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public final class TotalPermissions extends JavaPlugin {
 
-    private DataHolder dataHolder;
     private ListenerManager listenerManager;
     private CommandHandler commands;
     private DataManager dataManager;
@@ -74,6 +74,7 @@ public final class TotalPermissions extends JavaPlugin {
         }
         getLogger().finest("Creating data holder");
         getLogger().log(Level.FINEST, "Storage type to load: {0}", type);
+        DataHolder<? extends PermissionBase> dataHolder;
         switch (type) {
             default:
             case YAML_SHARED: {
@@ -118,7 +119,7 @@ public final class TotalPermissions extends JavaPlugin {
             }
             getLogger().log(Level.FINEST, "Storage type to import from: {0}", importType);
             try {
-                DataHolder importHolder;
+                DataHolder<?> importHolder;
                 switch (importType) {
                     default:
                     case YAML_SHARED: {
