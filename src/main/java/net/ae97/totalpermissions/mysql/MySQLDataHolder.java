@@ -16,20 +16,18 @@
  */
 package net.ae97.totalpermissions.mysql;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import net.ae97.totalpermissions.sql.SQLDataHolder;
+import net.ae97.totalpermissions.sql.SQLPermissionBase;
 
 /**
  * @author Lord_Ralex
  */
-public class MySQLDataHolder extends SQLDataHolder {
+public class MySQLDataHolder extends SQLDataHolder<SQLPermissionBase> {
 
     private final Map<String, String> dbInfo = new HashMap<String, String>();
 

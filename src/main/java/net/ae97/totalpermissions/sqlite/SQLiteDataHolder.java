@@ -21,11 +21,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import net.ae97.totalpermissions.exceptions.DataLoadFailedException;
 import net.ae97.totalpermissions.sql.SQLDataHolder;
+import net.ae97.totalpermissions.sql.SQLPermissionBase;
 
 /**
  * @author Lord_Ralex
  */
-public class SQLiteDataHolder extends SQLDataHolder {
+public class SQLiteDataHolder extends SQLDataHolder<SQLPermissionBase> {
 
     private final String path;
 

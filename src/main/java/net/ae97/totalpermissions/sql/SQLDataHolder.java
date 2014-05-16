@@ -39,19 +39,29 @@ public abstract class SQLDataHolder<T> implements DataHolder<SQLPermissionBase> 
     private final EnumMap<PermissionType, HashMap<String, SQLPermissionBase>> cache = new EnumMap<PermissionType, HashMap<String, SQLPermissionBase>>(PermissionType.class);
 
     @Override
-    public final void load() throws DataLoadFailedException {
+    public void load() throws DataLoadFailedException {
         cache.clear();
         loadDatabase();
+        PreparedStatement createDatabase = null;
         try {
             connection = getConnection();
-            PreparedStatement createDatabase = connection.prepareStatement("CREATE IF NOT EXISTS totalpermissions");
+            createDatabase = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS totalpermissions ()");
             createDatabase.execute();
-            createDatabase.close();
             updateTables();
         } catch (SQLException ex) {
             throw new DataLoadFailedException(ex);
+        } finally {
+            if (createDatabase != null) {
+                try {
+                    createDatabase.close();
+                } catch (SQLException ex) {
+                    throw new DataLoadFailedException(ex);
+                }
+            }
         }
     }
+
+    protected abstract void loadDatabase() throws DataLoadFailedException;
 
     @Override
     public void load(PermissionType type, String name) throws DataLoadFailedException {
@@ -345,7 +355,7 @@ public abstract class SQLDataHolder<T> implements DataHolder<SQLPermissionBase> 
         }
     }
 
-    protected final void checkCache(PermissionType type, String name) throws DataLoadFailedException {
+    protected void checkCache(PermissionType type, String name) throws DataLoadFailedException {
         if (cache.get(type) == null || cache.get(type).get(name == null ? null : name.toLowerCase()) == null) {
             load(type, name);
         }
@@ -366,7 +376,7 @@ public abstract class SQLDataHolder<T> implements DataHolder<SQLPermissionBase> 
         PreparedStatement statement = null;
         try {
             StringBuilder builder = new StringBuilder();
-            builder.append("CREATE TABLE ? (");
+            builder.append("CREATE TABLE IF NOT EXISTS ? (");
             for (int i = 0; i < columns.size(); i++) {
                 builder.append("? ?");
                 if (i + 1 < columns.size()) {
@@ -396,8 +406,6 @@ public abstract class SQLDataHolder<T> implements DataHolder<SQLPermissionBase> 
         }
         return connection;
     }
-
-    protected abstract void loadDatabase() throws DataLoadFailedException;
 
     protected void updateTables() throws SQLException {
         updateTable("users", SQLPermissionUser.getColumns());

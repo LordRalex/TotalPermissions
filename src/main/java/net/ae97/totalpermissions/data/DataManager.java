@@ -39,7 +39,7 @@ import org.bukkit.permissions.PermissionAttachment;
  */
 public final class DataManager implements DataHolder<PermissionBase> {
 
-    private final DataHolder<PermissionBase> dataHolder;
+    private final DataHolder dataHolder;
     private final TotalPermissions plugin;
 
     public DataManager(TotalPermissions p, DataHolder<PermissionBase> holder) {
